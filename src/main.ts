@@ -1,17 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import 'dotenv/config';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
 
-  app.enableVersioning({
-    type: VersioningType.URI,
-    prefix: 'v',
-    defaultVersion: '1',
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
 
+  // Global Validation Pipe
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -20,16 +18,21 @@ async function bootstrap() {
     }),
   );
 
+  // CORS
   app.enableCors({
     origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
     credentials: true,
   });
 
+  // Global Prefix - THIS IS IMPORTANT
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT || 3000);
-  console.log(
+  logger.log(
     `🚀 Application running on: http://localhost:${process.env.PORT || 3000}`,
+  );
+  logger.log(
+    `📚 API Base URL: http://localhost:${process.env.PORT || 3000}/api`,
   );
 }
 bootstrap();

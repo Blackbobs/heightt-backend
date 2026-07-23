@@ -21,8 +21,8 @@ model User {
   id           String  @id @default(cuid())
   email        String  @unique
   passwordHash String // Hashed password
-  firstName    String?
-  lastName     String?
+  firstName    String
+  lastName     String
 
   // Account status
   emailVerified Boolean @default(false)
