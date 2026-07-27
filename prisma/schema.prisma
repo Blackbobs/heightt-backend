@@ -18,77 +18,81 @@ datasource db {
 // ============================================
 
 model User {
-  id           String  @id @default(cuid())
-  email        String  @unique
-  passwordHash String // Hashed password
-  firstName    String
-  lastName     String
-
-  // Account status
-  emailVerified Boolean @default(false)
-  isActive      Boolean @default(true)
-  isDeleted     Boolean @default(false)
-
-  // Timestamps
-  lastLoginAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  profile            UserProfile?
-  sessions           Session[]
-  passwordResets     PasswordReset[]
-  auditLogs          AuditLog[]
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  passwordHash  String
+  
+  emailVerified Boolean   @default(false)
+  isActive      Boolean   @default(true)
+  isDeleted     Boolean   @default(false)
+  
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  profile       UserProfile?
+  sessions      Session[]
+  passwordResets PasswordReset[]
   emailVerifications EmailVerification[]
-
+  auditLogs     AuditLog[]
+  
   @@index([email])
+  @@index([username])
   @@map("users")
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
-  token     String   @unique
-  expiresAt DateTime
-  ipAddress String?
-  userAgent String?
-  isRevoked Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id              String    @id @default(cuid())
+  userId          String
+  
+  refreshTokenHash String   @unique
+  
+  deviceName      String?
+  browser         String?
+  operatingSystem String?
+  ipAddress       String?
+  userAgent       String?
+  
+  createdAt       DateTime  @default(now())
+  expiresAt       DateTime
+  lastUsedAt      DateTime  @default(now())
+  revokedAt       DateTime?
+  isActive        Boolean   @default(true)
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@index([userId])
-  @@index([token])
+  @@index([refreshTokenHash])
   @@map("sessions")
 }
 
 model PasswordReset {
-  id        String    @id @default(cuid())
-  userId    String
-  token     String    @unique
-  expiresAt DateTime
-  usedAt    DateTime?
-  createdAt DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id            String    @id @default(cuid())
+  userId        String
+  token         String    @unique
+  expiresAt     DateTime
+  usedAt        DateTime?
+  createdAt     DateTime  @default(now())
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@index([userId])
   @@index([token])
   @@map("password_resets")
 }
 
 model EmailVerification {
-  id         String    @id @default(cuid())
-  userId     String
-  email      String
-  token      String    @unique
-  expiresAt  DateTime
-  verifiedAt DateTime?
-  createdAt  DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  id            String    @id @default(cuid())
+  userId        String
+  email         String
+  token         String    @unique
+  expiresAt     DateTime
+  verifiedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@index([userId])
   @@index([token])
   @@map("email_verifications")
@@ -99,55 +103,52 @@ model EmailVerification {
 // ============================================
 
 model UserProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-
-  // Personal Information
-  firstName  String
-  lastName   String
-  middleName String?
-  phone      String?
-  avatar     String?
-
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  
+  // Personal Information (filled during onboarding)
+  firstName       String
+  lastName        String
+  middleName      String?
+  phone           String?
+  avatar          String?
+  
   // Demographics
-  gender      Gender?
-  dateOfBirth DateTime?
-  country     String?
-  state       String?
-  city        String?
-  address     String?
-
+  gender          Gender?
+  dateOfBirth     DateTime?
+  country         String?
+  state           String?
+  city            String?
+  address         String?
+  
   // Institution Details
-  institutionId  String? // References Institution model (future)
-  facultyId      String? // References Faculty model (future)
-  departmentId   String? // References Department model (future)
-  levelId        String? // References Level model (future)
-  matricNumber   String?
-  graduationYear Int?
-
+  institutionId   String?
+  facultyId       String?
+  departmentId    String?
+  levelId         String?
+  matricNumber    String?
+  graduationYear  Int?
+  
   // Bio
-  bio       String?
-  interests String[] // Array of interests
-
+  bio             String?
+  interests       String[]
+  
   // Onboarding
-  onboardingStep        OnboardingStep @default(PERSONAL_INFO)
-  onboardingCompleted   Boolean        @default(false)
+  onboardingStep  OnboardingStep @default(PERSONAL_INFO)
+  onboardingCompleted Boolean @default(false)
   onboardingCompletedAt DateTime?
-
+  
   // Status
   verificationStatus VerificationStatus @default(UNVERIFIED)
-  verifiedAt         DateTime?
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  verifiedAt      DateTime?
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   @@map("user_profiles")
 }
-
 // ============================================
 // ENUMS
 // ============================================
@@ -178,18 +179,18 @@ enum OnboardingStep {
 // ============================================
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String?
-  action    String
-  entity    String?
-  entityId  String?
-  metadata  Json?
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
+  id            String    @id @default(cuid())
+  userId        String?
+  action        String
+  entity        String?
+  entityId      String?
+  metadata      Json?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime  @default(now())
+  
+  user          User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
   @@index([userId])
   @@index([createdAt])
   @@map("audit_logs")

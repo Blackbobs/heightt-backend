@@ -895,9 +895,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
+  username: 'username',
   passwordHash: 'passwordHash',
-  firstName: 'firstName',
-  lastName: 'lastName',
   emailVerified: 'emailVerified',
   isActive: 'isActive',
   isDeleted: 'isDeleted',
@@ -912,13 +911,17 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  token: 'token',
-  expiresAt: 'expiresAt',
+  refreshTokenHash: 'refreshTokenHash',
+  deviceName: 'deviceName',
+  browser: 'browser',
+  operatingSystem: 'operatingSystem',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  isRevoked: 'isRevoked',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  expiresAt: 'expiresAt',
+  lastUsedAt: 'lastUsedAt',
+  revokedAt: 'revokedAt',
+  isActive: 'isActive'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]

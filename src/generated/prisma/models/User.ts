@@ -27,9 +27,8 @@ export type AggregateUser = {
 export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
+  username: string | null
   passwordHash: string | null
-  firstName: string | null
-  lastName: string | null
   emailVerified: boolean | null
   isActive: boolean | null
   isDeleted: boolean | null
@@ -41,9 +40,8 @@ export type UserMinAggregateOutputType = {
 export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
+  username: string | null
   passwordHash: string | null
-  firstName: string | null
-  lastName: string | null
   emailVerified: boolean | null
   isActive: boolean | null
   isDeleted: boolean | null
@@ -55,9 +53,8 @@ export type UserMaxAggregateOutputType = {
 export type UserCountAggregateOutputType = {
   id: number
   email: number
+  username: number
   passwordHash: number
-  firstName: number
-  lastName: number
   emailVerified: number
   isActive: number
   isDeleted: number
@@ -71,9 +68,8 @@ export type UserCountAggregateOutputType = {
 export type UserMinAggregateInputType = {
   id?: true
   email?: true
+  username?: true
   passwordHash?: true
-  firstName?: true
-  lastName?: true
   emailVerified?: true
   isActive?: true
   isDeleted?: true
@@ -85,9 +81,8 @@ export type UserMinAggregateInputType = {
 export type UserMaxAggregateInputType = {
   id?: true
   email?: true
+  username?: true
   passwordHash?: true
-  firstName?: true
-  lastName?: true
   emailVerified?: true
   isActive?: true
   isDeleted?: true
@@ -99,9 +94,8 @@ export type UserMaxAggregateInputType = {
 export type UserCountAggregateInputType = {
   id?: true
   email?: true
+  username?: true
   passwordHash?: true
-  firstName?: true
-  lastName?: true
   emailVerified?: true
   isActive?: true
   isDeleted?: true
@@ -186,9 +180,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   id: string
   email: string
+  username: string
   passwordHash: string
-  firstName: string | null
-  lastName: string | null
   emailVerified: boolean
   isActive: boolean
   isDeleted: boolean
@@ -221,9 +214,8 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
+  username?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
-  firstName?: Prisma.StringNullableFilter<"User"> | string | null
-  lastName?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   isDeleted?: Prisma.BoolFilter<"User"> | boolean
@@ -233,16 +225,15 @@ export type UserWhereInput = {
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   passwordResets?: Prisma.PasswordResetListRelationFilter
-  auditLogs?: Prisma.AuditLogListRelationFilter
   emailVerifications?: Prisma.EmailVerificationListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
-  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -252,19 +243,18 @@ export type UserOrderByWithRelationInput = {
   profile?: Prisma.UserProfileOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   passwordResets?: Prisma.PasswordResetOrderByRelationAggregateInput
-  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   emailVerifications?: Prisma.EmailVerificationOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  username?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   passwordHash?: Prisma.StringFilter<"User"> | string
-  firstName?: Prisma.StringNullableFilter<"User"> | string | null
-  lastName?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   isDeleted?: Prisma.BoolFilter<"User"> | boolean
@@ -274,16 +264,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   passwordResets?: Prisma.PasswordResetListRelationFilter
-  auditLogs?: Prisma.AuditLogListRelationFilter
   emailVerifications?: Prisma.EmailVerificationListRelationFilter
-}, "id" | "email">
+  auditLogs?: Prisma.AuditLogListRelationFilter
+}, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
-  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -301,9 +290,8 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
+  username?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
-  firstName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  lastName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isDeleted?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
@@ -315,9 +303,8 @@ export type UserScalarWhereWithAggregatesInput = {
 export type UserCreateInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -327,16 +314,15 @@ export type UserCreateInput = {
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -346,16 +332,15 @@ export type UserUncheckedCreateInput = {
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -365,16 +350,15 @@ export type UserUpdateInput = {
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -384,16 +368,15 @@ export type UserUncheckedUpdateInput = {
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -405,9 +388,8 @@ export type UserCreateManyInput = {
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -419,9 +401,8 @@ export type UserUpdateManyMutationInput = {
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -433,9 +414,8 @@ export type UserUncheckedUpdateManyInput = {
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  firstName?: Prisma.SortOrder
-  lastName?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -447,9 +427,8 @@ export type UserCountOrderByAggregateInput = {
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  firstName?: Prisma.SortOrder
-  lastName?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -461,9 +440,8 @@ export type UserMaxOrderByAggregateInput = {
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
-  firstName?: Prisma.SortOrder
-  lastName?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
@@ -484,10 +462,6 @@ export type UserNullableScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -577,9 +551,8 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -588,16 +561,15 @@ export type UserCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -606,8 +578,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   updatedAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -629,9 +601,8 @@ export type UserUpdateToOneWithWhereWithoutSessionsInput = {
 export type UserUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -640,16 +611,15 @@ export type UserUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -658,16 +628,15 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -676,16 +645,15 @@ export type UserCreateWithoutPasswordResetsInput = {
   updatedAt?: Date | string
   profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -694,8 +662,8 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   updatedAt?: Date | string
   profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -717,9 +685,8 @@ export type UserUpdateToOneWithWhereWithoutPasswordResetsInput = {
 export type UserUpdateWithoutPasswordResetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -728,16 +695,15 @@ export type UserUpdateWithoutPasswordResetsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -746,16 +712,15 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmailVerificationsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -771,9 +736,8 @@ export type UserCreateWithoutEmailVerificationsInput = {
 export type UserUncheckedCreateWithoutEmailVerificationsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -805,9 +769,8 @@ export type UserUpdateToOneWithWhereWithoutEmailVerificationsInput = {
 export type UserUpdateWithoutEmailVerificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -823,9 +786,8 @@ export type UserUpdateWithoutEmailVerificationsInput = {
 export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -841,9 +803,8 @@ export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
 export type UserCreateWithoutProfileInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -852,16 +813,15 @@ export type UserCreateWithoutProfileInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -870,8 +830,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   updatedAt?: Date | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -893,9 +853,8 @@ export type UserUpdateToOneWithWhereWithoutProfileInput = {
 export type UserUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -904,16 +863,15 @@ export type UserUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -922,16 +880,15 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -947,9 +904,8 @@ export type UserCreateWithoutAuditLogsInput = {
 export type UserUncheckedCreateWithoutAuditLogsInput = {
   id?: string
   email: string
+  username: string
   passwordHash: string
-  firstName?: string | null
-  lastName?: string | null
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -981,9 +937,8 @@ export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
 export type UserUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -999,9 +954,8 @@ export type UserUpdateWithoutAuditLogsInput = {
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1022,15 +976,15 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
 export type UserCountOutputType = {
   sessions: number
   passwordResets: number
-  auditLogs: number
   emailVerifications: number
+  auditLogs: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   passwordResets?: boolean | UserCountOutputTypeCountPasswordResetsArgs
-  auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   emailVerifications?: boolean | UserCountOutputTypeCountEmailVerificationsArgs
+  auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
 }
 
 /**
@@ -1060,24 +1014,23 @@ export type UserCountOutputTypeCountPasswordResetsArgs<ExtArgs extends runtime.T
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AuditLogWhereInput
+export type UserCountOutputTypeCountEmailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailVerificationWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountEmailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EmailVerificationWhereInput
+export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
 }
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
+  username?: boolean
   passwordHash?: boolean
-  firstName?: boolean
-  lastName?: boolean
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -1087,17 +1040,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
-  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   emailVerifications?: boolean | Prisma.User$emailVerificationsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
+  username?: boolean
   passwordHash?: boolean
-  firstName?: boolean
-  lastName?: boolean
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -1109,9 +1061,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
+  username?: boolean
   passwordHash?: boolean
-  firstName?: boolean
-  lastName?: boolean
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -1123,9 +1074,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectScalar = {
   id?: boolean
   email?: boolean
+  username?: boolean
   passwordHash?: boolean
-  firstName?: boolean
-  lastName?: boolean
   emailVerified?: boolean
   isActive?: boolean
   isDeleted?: boolean
@@ -1134,13 +1084,13 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "firstName" | "lastName" | "emailVerified" | "isActive" | "isDeleted" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "username" | "passwordHash" | "emailVerified" | "isActive" | "isDeleted" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   profile?: boolean | Prisma.User$profileArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
-  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   emailVerifications?: boolean | Prisma.User$emailVerificationsArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1152,15 +1102,14 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     profile: Prisma.$UserProfilePayload<ExtArgs> | null
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     passwordResets: Prisma.$PasswordResetPayload<ExtArgs>[]
-    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     emailVerifications: Prisma.$EmailVerificationPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
+    username: string
     passwordHash: string
-    firstName: string | null
-    lastName: string | null
     emailVerified: boolean
     isActive: boolean
     isDeleted: boolean
@@ -1564,8 +1513,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__UserProfileClient<runtime.Types.Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResets<T extends Prisma.User$passwordResetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   emailVerifications<T extends Prisma.User$emailVerificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emailVerificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1597,9 +1546,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly username: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
-  readonly firstName: Prisma.FieldRef<"User", 'String'>
-  readonly lastName: Prisma.FieldRef<"User", 'String'>
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly isDeleted: Prisma.FieldRef<"User", 'Boolean'>
@@ -2066,30 +2014,6 @@ export type User$passwordResetsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * User.auditLogs
- */
-export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AuditLog
-   */
-  select?: Prisma.AuditLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AuditLog
-   */
-  omit?: Prisma.AuditLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AuditLogInclude<ExtArgs> | null
-  where?: Prisma.AuditLogWhereInput
-  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
-  cursor?: Prisma.AuditLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
-}
-
-/**
  * User.emailVerifications
  */
 export type User$emailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2111,6 +2035,30 @@ export type User$emailVerificationsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.EmailVerificationScalarFieldEnum | Prisma.EmailVerificationScalarFieldEnum[]
+}
+
+/**
+ * User.auditLogs
+ */
+export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

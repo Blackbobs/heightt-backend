@@ -3,7 +3,7 @@ import {
   IsString,
   MinLength,
   MaxLength,
-  IsOptional,
+  Matches,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -12,20 +12,14 @@ export class RegisterDto {
   email: string;
 
   @IsString()
+  @MinLength(3, { message: 'Username must be at least 3 characters long' })
+  @MaxLength(30, { message: 'Username cannot exceed 30 characters' })
+  @Matches(/^[a-zA-Z0-9_]+$/, {
+    message: 'Username can only contain letters, numbers, and underscores',
+  })
+  username: string;
+
+  @IsString()
   @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password: string;
-
-  @IsString()
-  @MinLength(2, { message: 'First name must be at least 2 characters' })
-  @MaxLength(50)
-  firstName: string;
-
-  @IsString()
-  @MinLength(2, { message: 'Last name must be at least 2 characters' })
-  @MaxLength(50)
-  lastName: string;
-
-  @IsOptional()
-  @IsString()
-  gender?: string;
 }

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, Logger } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -8,6 +9,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
+
+  // Cookie parser
+  app.use(cookieParser());
 
   // Global Validation Pipe
   app.useGlobalPipes(
@@ -20,19 +24,19 @@ async function bootstrap() {
 
   // CORS
   app.enableCors({
-    origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
+    origin: process.env.FRONTEND_URL?.split(',') || [
+      'http://localhost:3000',
+      'http://localhost:3001',
+    ],
     credentials: true,
   });
 
-  // Global Prefix - THIS IS IMPORTANT
+  // Global Prefix
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT || 3000);
   logger.log(
     `🚀 Application running on: http://localhost:${process.env.PORT || 3000}`,
-  );
-  logger.log(
-    `📚 API Base URL: http://localhost:${process.env.PORT || 3000}/api`,
   );
 }
 bootstrap();
