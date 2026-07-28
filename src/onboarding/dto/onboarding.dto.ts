@@ -6,6 +6,7 @@ import {
   IsEnum,
   IsDateString,
   IsPhoneNumber,
+  IsUUID,
 } from 'class-validator';
 
 export class OnboardingPersonalInfoDto {
@@ -25,7 +26,7 @@ export class OnboardingPersonalInfoDto {
   middleName?: string;
 
   @IsOptional()
-  @IsPhoneNumber()
+  @IsPhoneNumber(undefined, { message: 'Please provide a valid phone number' })
   phone?: string;
 
   @IsOptional()
@@ -59,39 +60,22 @@ export class OnboardingPersonalInfoDto {
   @IsOptional()
   @IsString()
   bio?: string;
-
-  @IsOptional()
-  @IsString({ each: true })
-  interests?: string[];
 }
 
 export class OnboardingInstitutionDto {
-  @IsString()
+  @IsUUID()
   institutionId: string;
 
-  @IsString()
+  @IsUUID()
   facultyId: string;
 
-  @IsString()
+  @IsUUID()
   departmentId: string;
 
-  @IsString()
+  @IsUUID()
   levelId: string;
 
   @IsOptional()
   @IsString()
   matricNumber?: string;
-
-  @IsOptional()
-  graduationYear?: number;
-}
-
-export class CompleteOnboardingDto {
-  @IsOptional()
-  @IsString()
-  bio?: string;
-
-  @IsOptional()
-  @IsString({ each: true })
-  interests?: string[];
 }

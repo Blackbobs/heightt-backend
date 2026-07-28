@@ -6,6 +6,8 @@ import {
   Request,
   Patch,
   Get,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { OnboardingService } from './onboarding.service';
 import { JwtGuard } from '../common/guards/jwt.guard';
@@ -13,6 +15,7 @@ import {
   OnboardingPersonalInfoDto,
   OnboardingInstitutionDto,
 } from './dto/onboarding.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('onboarding')
 @UseGuards(JwtGuard)
@@ -33,17 +36,6 @@ export class OnboardingController {
     @Body() dto: OnboardingInstitutionDto,
   ) {
     return this.onboardingService.updateInstitutionInfo(req.user.id, dto);
-  }
-
-  @Post('complete')
-  async completeOnboarding(
-    @Request() req: any,
-    @Body() body: { interests?: string[] },
-  ) {
-    return this.onboardingService.completeOnboarding(
-      req.user.id,
-      body.interests,
-    );
   }
 
   @Get('status')

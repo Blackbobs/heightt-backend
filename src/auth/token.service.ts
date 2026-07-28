@@ -19,9 +19,15 @@ export class TokenService {
       type: 'access',
     };
 
+    // JWT expects seconds, not a string with 'm'
+    const expiresIn = parseInt(
+      this.configService.get('JWT_ACCESS_EXPIRY', '900'),
+      10,
+    );
+    this.logger.debug(`Generating access token with expiry: ${expiresIn}s`);
+
     return this.jwtService.signAsync(payload, {
-      secret: this.configService.get('JWT_ACCESS_SECRET'),
-      expiresIn: this.configService.get('JWT_ACCESS_EXPIRY', 900), // 15 minutes
+      expiresIn: expiresIn, // seconds
     });
   }
 
@@ -32,9 +38,14 @@ export class TokenService {
       type: 'refresh',
     };
 
+    const expiresIn = parseInt(
+      this.configService.get('JWT_REFRESH_EXPIRY', '2592000'),
+      10,
+    );
+    this.logger.debug(`Generating refresh token with expiry: ${expiresIn}s`);
+
     return this.jwtService.signAsync(payload, {
-      secret: this.configService.get('JWT_REFRESH_SECRET'),
-      expiresIn: this.configService.get('JWT_REFRESH_EXPIRY', 2592000), // 30 days
+      expiresIn: expiresIn, // seconds
     });
   }
 

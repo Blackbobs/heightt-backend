@@ -65,7 +65,297 @@ export type EmailVerification = Prisma.EmailVerificationModel
  */
 export type UserProfile = Prisma.UserProfileModel
 /**
+ * Model Institution
+ * 
+ */
+export type Institution = Prisma.InstitutionModel
+/**
+ * Model Faculty
+ * 
+ */
+export type Faculty = Prisma.FacultyModel
+/**
+ * Model Department
+ * 
+ */
+export type Department = Prisma.DepartmentModel
+/**
+ * Model AcademicLevel
+ * 
+ */
+export type AcademicLevel = Prisma.AcademicLevelModel
+/**
+ * Model AcademicSession
+ * 
+ */
+export type AcademicSession = Prisma.AcademicSessionModel
+/**
+ * Model StudentProfile
+ * 
+ */
+export type StudentProfile = Prisma.StudentProfileModel
+/**
+ * Model StudentAcademicRecord
+ * 
+ */
+export type StudentAcademicRecord = Prisma.StudentAcademicRecordModel
+/**
+ * Model StudentPromotion
+ * 
+ */
+export type StudentPromotion = Prisma.StudentPromotionModel
+/**
+ * Model StudentEnrollment
+ * 
+ */
+export type StudentEnrollment = Prisma.StudentEnrollmentModel
+/**
+ * Model StudentVerification
+ * 
+ */
+export type StudentVerification = Prisma.StudentVerificationModel
+/**
+ * Model Organization
+ * 
+ */
+export type Organization = Prisma.OrganizationModel
+/**
+ * Model OrganizationMembership
+ * 
+ */
+export type OrganizationMembership = Prisma.OrganizationMembershipModel
+/**
+ * Model Role
+ * 
+ */
+export type Role = Prisma.RoleModel
+/**
+ * Model Permission
+ * 
+ */
+export type Permission = Prisma.PermissionModel
+/**
+ * Model RolePermission
+ * 
+ */
+export type RolePermission = Prisma.RolePermissionModel
+/**
+ * Model MembershipRole
+ * 
+ */
+export type MembershipRole = Prisma.MembershipRoleModel
+/**
+ * Model Wallet
+ * 
+ */
+export type Wallet = Prisma.WalletModel
+/**
+ * Model WalletHold
+ * 
+ */
+export type WalletHold = Prisma.WalletHoldModel
+/**
+ * Model LedgerAccount
+ * 
+ */
+export type LedgerAccount = Prisma.LedgerAccountModel
+/**
+ * Model LedgerEntry
+ * 
+ */
+export type LedgerEntry = Prisma.LedgerEntryModel
+/**
+ * Model Transaction
+ * 
+ */
+export type Transaction = Prisma.TransactionModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
+ * Model Due
+ * 
+ */
+export type Due = Prisma.DueModel
+/**
+ * Model DueAssignment
+ * 
+ */
+export type DueAssignment = Prisma.DueAssignmentModel
+/**
+ * Model DuePayment
+ * 
+ */
+export type DuePayment = Prisma.DuePaymentModel
+/**
+ * Model Withdrawal
+ * 
+ */
+export type Withdrawal = Prisma.WithdrawalModel
+/**
+ * Model Refund
+ * 
+ */
+export type Refund = Prisma.RefundModel
+/**
+ * Model Settlement
+ * 
+ */
+export type Settlement = Prisma.SettlementModel
+/**
+ * Model SavingsGoal
+ * 
+ */
+export type SavingsGoal = Prisma.SavingsGoalModel
+/**
+ * Model SavingsTransaction
+ * 
+ */
+export type SavingsTransaction = Prisma.SavingsTransactionModel
+/**
+ * Model Announcement
+ * 
+ */
+export type Announcement = Prisma.AnnouncementModel
+/**
+ * Model AnnouncementRead
+ * 
+ */
+export type AnnouncementRead = Prisma.AnnouncementReadModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model NotificationPreference
+ * 
+ */
+export type NotificationPreference = Prisma.NotificationPreferenceModel
+/**
+ * Model EmailQueue
+ * 
+ */
+export type EmailQueue = Prisma.EmailQueueModel
+/**
+ * Model PushQueue
+ * 
+ */
+export type PushQueue = Prisma.PushQueueModel
+/**
+ * Model FeatureFlag
+ * 
+ */
+export type FeatureFlag = Prisma.FeatureFlagModel
+/**
+ * Model FeatureFlagTarget
+ * 
+ */
+export type FeatureFlagTarget = Prisma.FeatureFlagTargetModel
+/**
+ * Model MaintenanceMode
+ * 
+ */
+export type MaintenanceMode = Prisma.MaintenanceModeModel
+/**
+ * Model KillSwitch
+ * 
+ */
+export type KillSwitch = Prisma.KillSwitchModel
+/**
+ * Model PlatformSetting
+ * 
+ */
+export type PlatformSetting = Prisma.PlatformSettingModel
+/**
+ * Model ReleaseChannel
+ * 
+ */
+export type ReleaseChannel = Prisma.ReleaseChannelModel
+/**
+ * Model DeploymentWave
+ * 
+ */
+export type DeploymentWave = Prisma.DeploymentWaveModel
+/**
+ * Model ScheduledJob
+ * 
+ */
+export type ScheduledJob = Prisma.ScheduledJobModel
+/**
+ * Model OperationalAuditLog
+ * 
+ */
+export type OperationalAuditLog = Prisma.OperationalAuditLogModel
+/**
  * Model AuditLog
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model ActivityLog
+ * 
+ */
+export type ActivityLog = Prisma.ActivityLogModel
+/**
+ * Model Election
+ * 
+ */
+export type Election = Prisma.ElectionModel
+/**
+ * Model ElectionPosition
+ * 
+ */
+export type ElectionPosition = Prisma.ElectionPositionModel
+/**
+ * Model Candidate
+ * 
+ */
+export type Candidate = Prisma.CandidateModel
+/**
+ * Model Vote
+ * 
+ */
+export type Vote = Prisma.VoteModel
+/**
+ * Model ExecutiveTerm
+ * 
+ */
+export type ExecutiveTerm = Prisma.ExecutiveTermModel
+/**
+ * Model ExecutiveMember
+ * 
+ */
+export type ExecutiveMember = Prisma.ExecutiveMemberModel
+/**
+ * Model Committee
+ * 
+ */
+export type Committee = Prisma.CommitteeModel
+/**
+ * Model Event
+ * 
+ */
+export type Event = Prisma.EventModel
+/**
+ * Model Ticket
+ * 
+ */
+export type Ticket = Prisma.TicketModel
+/**
+ * Model TicketPurchase
+ * 
+ */
+export type TicketPurchase = Prisma.TicketPurchaseModel
+/**
+ * Model EventRegistration
+ * 
+ */
+export type EventRegistration = Prisma.EventRegistrationModel
+/**
+ * Model Attendance
+ * 
+ */
+export type Attendance = Prisma.AttendanceModel

@@ -1,94 +1,88 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class CookieService {
   private readonly logger = new Logger(CookieService.name);
 
-  /**
-   * Set access token cookie
-   * Short-lived (15 minutes), HttpOnly, Secure
-   */
+  constructor(private readonly configService: ConfigService) {}
+
   setAccessTokenCookie(response: Response, token: string): void {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    // Get expiry in seconds from config, default to 900 (15 minutes)
+    const expirySeconds = parseInt(this.configService.get('JWT_ACCESS_EXPIRY', '900'), 10);
+    const maxAgeMs = expirySeconds * 1000; // Convert to milliseconds
+    
+    this.logger.debug(`Setting access token cookie with maxAge: ${maxAgeMs}ms (${expirySeconds}s)`);
+
     response.cookie('accessToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      secure: isProduction,
+      sameSite: isProduction ? 'strict' : 'lax',
       path: '/',
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      maxAge: maxAgeMs, // Express expects milliseconds
     });
   }
 
-  /**
-   * Set refresh token cookie
-   * Long-lived (30 days), HttpOnly, Secure, Strict SameSite
-   */
   setRefreshTokenCookie(response: Response, token: string): void {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    // Get expiry in seconds from config, default to 2592000 (30 days)
+    const expirySeconds = parseInt(this.configService.get('JWT_REFRESH_EXPIRY', '2592000'), 10);
+    const maxAgeMs = expirySeconds * 1000; // Convert to milliseconds
+    
+    this.logger.debug(`Setting refresh token cookie with maxAge: ${maxAgeMs}ms (${expirySeconds}s)`);
+
     response.cookie('refreshToken', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'strict',
       path: '/',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      maxAge: maxAgeMs, // Express expects milliseconds
     });
   }
 
-  /**
-   * Clear access token cookie
-   */
   clearAccessTokenCookie(response: Response): void {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     response.clearCookie('accessToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'strict',
       path: '/',
     });
   }
 
-  /**
-   * Clear refresh token cookie
-   */
   clearRefreshTokenCookie(response: Response): void {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     response.clearCookie('refreshToken', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isProduction,
       sameSite: 'strict',
       path: '/',
     });
   }
 
-  /**
-   * Clear all authentication cookies
-   */
   clearAllCookies(response: Response): void {
     this.clearAccessTokenCookie(response);
     this.clearRefreshTokenCookie(response);
   }
 
-  /**
-   * Get refresh token from request cookies
-   */
   getRefreshTokenFromCookie(request: any): string | null {
     return request?.cookies?.refreshToken || null;
   }
 
-  /**
-   * Get access token from request cookies
-   */
   getAccessTokenFromCookie(request: any): string | null {
     return request?.cookies?.accessToken || null;
   }
 
-  /**
-   * Check if refresh token exists in cookies
-   */
   hasRefreshToken(request: any): boolean {
     return !!this.getRefreshTokenFromCookie(request);
   }
 
-  /**
-   * Check if access token exists in cookies
-   */
   hasAccessToken(request: any): boolean {
     return !!this.getAccessTokenFromCookie(request);
   }

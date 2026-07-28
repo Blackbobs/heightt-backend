@@ -20,18 +20,8 @@ export type UserProfileModel = runtime.Types.Result.DefaultSelection<Prisma.$Use
 
 export type AggregateUserProfile = {
   _count: UserProfileCountAggregateOutputType | null
-  _avg: UserProfileAvgAggregateOutputType | null
-  _sum: UserProfileSumAggregateOutputType | null
   _min: UserProfileMinAggregateOutputType | null
   _max: UserProfileMaxAggregateOutputType | null
-}
-
-export type UserProfileAvgAggregateOutputType = {
-  graduationYear: number | null
-}
-
-export type UserProfileSumAggregateOutputType = {
-  graduationYear: number | null
 }
 
 export type UserProfileMinAggregateOutputType = {
@@ -48,12 +38,6 @@ export type UserProfileMinAggregateOutputType = {
   state: string | null
   city: string | null
   address: string | null
-  institutionId: string | null
-  facultyId: string | null
-  departmentId: string | null
-  levelId: string | null
-  matricNumber: string | null
-  graduationYear: number | null
   bio: string | null
   onboardingStep: $Enums.OnboardingStep | null
   onboardingCompleted: boolean | null
@@ -78,12 +62,6 @@ export type UserProfileMaxAggregateOutputType = {
   state: string | null
   city: string | null
   address: string | null
-  institutionId: string | null
-  facultyId: string | null
-  departmentId: string | null
-  levelId: string | null
-  matricNumber: string | null
-  graduationYear: number | null
   bio: string | null
   onboardingStep: $Enums.OnboardingStep | null
   onboardingCompleted: boolean | null
@@ -108,14 +86,7 @@ export type UserProfileCountAggregateOutputType = {
   state: number
   city: number
   address: number
-  institutionId: number
-  facultyId: number
-  departmentId: number
-  levelId: number
-  matricNumber: number
-  graduationYear: number
   bio: number
-  interests: number
   onboardingStep: number
   onboardingCompleted: number
   onboardingCompletedAt: number
@@ -126,14 +97,6 @@ export type UserProfileCountAggregateOutputType = {
   _all: number
 }
 
-
-export type UserProfileAvgAggregateInputType = {
-  graduationYear?: true
-}
-
-export type UserProfileSumAggregateInputType = {
-  graduationYear?: true
-}
 
 export type UserProfileMinAggregateInputType = {
   id?: true
@@ -149,12 +112,6 @@ export type UserProfileMinAggregateInputType = {
   state?: true
   city?: true
   address?: true
-  institutionId?: true
-  facultyId?: true
-  departmentId?: true
-  levelId?: true
-  matricNumber?: true
-  graduationYear?: true
   bio?: true
   onboardingStep?: true
   onboardingCompleted?: true
@@ -179,12 +136,6 @@ export type UserProfileMaxAggregateInputType = {
   state?: true
   city?: true
   address?: true
-  institutionId?: true
-  facultyId?: true
-  departmentId?: true
-  levelId?: true
-  matricNumber?: true
-  graduationYear?: true
   bio?: true
   onboardingStep?: true
   onboardingCompleted?: true
@@ -209,14 +160,7 @@ export type UserProfileCountAggregateInputType = {
   state?: true
   city?: true
   address?: true
-  institutionId?: true
-  facultyId?: true
-  departmentId?: true
-  levelId?: true
-  matricNumber?: true
-  graduationYear?: true
   bio?: true
-  interests?: true
   onboardingStep?: true
   onboardingCompleted?: true
   onboardingCompletedAt?: true
@@ -265,18 +209,6 @@ export type UserProfileAggregateArgs<ExtArgs extends runtime.Types.Extensions.In
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: UserProfileAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: UserProfileSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserProfileMinAggregateInputType
@@ -307,8 +239,6 @@ export type UserProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   _count?: UserProfileCountAggregateInputType | true
-  _avg?: UserProfileAvgAggregateInputType
-  _sum?: UserProfileSumAggregateInputType
   _min?: UserProfileMinAggregateInputType
   _max?: UserProfileMaxAggregateInputType
 }
@@ -327,14 +257,7 @@ export type UserProfileGroupByOutputType = {
   state: string | null
   city: string | null
   address: string | null
-  institutionId: string | null
-  facultyId: string | null
-  departmentId: string | null
-  levelId: string | null
-  matricNumber: string | null
-  graduationYear: number | null
   bio: string | null
-  interests: string[]
   onboardingStep: $Enums.OnboardingStep
   onboardingCompleted: boolean
   onboardingCompletedAt: Date | null
@@ -343,8 +266,6 @@ export type UserProfileGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: UserProfileCountAggregateOutputType | null
-  _avg: UserProfileAvgAggregateOutputType | null
-  _sum: UserProfileSumAggregateOutputType | null
   _min: UserProfileMinAggregateOutputType | null
   _max: UserProfileMaxAggregateOutputType | null
 }
@@ -381,14 +302,7 @@ export type UserProfileWhereInput = {
   state?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   city?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   address?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  institutionId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  facultyId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  departmentId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  levelId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  matricNumber?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  graduationYear?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   bio?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  interests?: Prisma.StringNullableListFilter<"UserProfile">
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"UserProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"UserProfile"> | boolean
   onboardingCompletedAt?: Prisma.DateTimeNullableFilter<"UserProfile"> | Date | string | null
@@ -413,14 +327,7 @@ export type UserProfileOrderByWithRelationInput = {
   state?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
-  institutionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  levelId?: Prisma.SortOrderInput | Prisma.SortOrder
-  matricNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  graduationYear?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
-  interests?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -448,14 +355,7 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   state?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   city?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   address?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  institutionId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  facultyId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  departmentId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  levelId?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  matricNumber?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  graduationYear?: Prisma.IntNullableFilter<"UserProfile"> | number | null
   bio?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  interests?: Prisma.StringNullableListFilter<"UserProfile">
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"UserProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"UserProfile"> | boolean
   onboardingCompletedAt?: Prisma.DateTimeNullableFilter<"UserProfile"> | Date | string | null
@@ -480,14 +380,7 @@ export type UserProfileOrderByWithAggregationInput = {
   state?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
-  institutionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
-  departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  levelId?: Prisma.SortOrderInput | Prisma.SortOrder
-  matricNumber?: Prisma.SortOrderInput | Prisma.SortOrder
-  graduationYear?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
-  interests?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -496,10 +389,8 @@ export type UserProfileOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserProfileCountOrderByAggregateInput
-  _avg?: Prisma.UserProfileAvgOrderByAggregateInput
   _max?: Prisma.UserProfileMaxOrderByAggregateInput
   _min?: Prisma.UserProfileMinOrderByAggregateInput
-  _sum?: Prisma.UserProfileSumOrderByAggregateInput
 }
 
 export type UserProfileScalarWhereWithAggregatesInput = {
@@ -519,14 +410,7 @@ export type UserProfileScalarWhereWithAggregatesInput = {
   state?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   city?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  institutionId?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  facultyId?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  departmentId?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  levelId?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  matricNumber?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  graduationYear?: Prisma.IntNullableWithAggregatesFilter<"UserProfile"> | number | null
   bio?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  interests?: Prisma.StringNullableListFilter<"UserProfile">
   onboardingStep?: Prisma.EnumOnboardingStepWithAggregatesFilter<"UserProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolWithAggregatesFilter<"UserProfile"> | boolean
   onboardingCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProfile"> | Date | string | null
@@ -549,14 +433,7 @@ export type UserProfileCreateInput = {
   state?: string | null
   city?: string | null
   address?: string | null
-  institutionId?: string | null
-  facultyId?: string | null
-  departmentId?: string | null
-  levelId?: string | null
-  matricNumber?: string | null
-  graduationYear?: number | null
   bio?: string | null
-  interests?: Prisma.UserProfileCreateinterestsInput | string[]
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -581,14 +458,7 @@ export type UserProfileUncheckedCreateInput = {
   state?: string | null
   city?: string | null
   address?: string | null
-  institutionId?: string | null
-  facultyId?: string | null
-  departmentId?: string | null
-  levelId?: string | null
-  matricNumber?: string | null
-  graduationYear?: number | null
   bio?: string | null
-  interests?: Prisma.UserProfileCreateinterestsInput | string[]
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -611,14 +481,7 @@ export type UserProfileUpdateInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  levelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  interests?: Prisma.UserProfileUpdateinterestsInput | string[]
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -643,14 +506,7 @@ export type UserProfileUncheckedUpdateInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  levelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  interests?: Prisma.UserProfileUpdateinterestsInput | string[]
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -674,14 +530,7 @@ export type UserProfileCreateManyInput = {
   state?: string | null
   city?: string | null
   address?: string | null
-  institutionId?: string | null
-  facultyId?: string | null
-  departmentId?: string | null
-  levelId?: string | null
-  matricNumber?: string | null
-  graduationYear?: number | null
   bio?: string | null
-  interests?: Prisma.UserProfileCreateinterestsInput | string[]
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -704,14 +553,7 @@ export type UserProfileUpdateManyMutationInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  levelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  interests?: Prisma.UserProfileUpdateinterestsInput | string[]
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -735,14 +577,7 @@ export type UserProfileUncheckedUpdateManyInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  levelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  interests?: Prisma.UserProfileUpdateinterestsInput | string[]
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -755,14 +590,6 @@ export type UserProfileUncheckedUpdateManyInput = {
 export type UserProfileNullableScalarRelationFilter = {
   is?: Prisma.UserProfileWhereInput | null
   isNot?: Prisma.UserProfileWhereInput | null
-}
-
-export type StringNullableListFilter<$PrismaModel = never> = {
-  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
-  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
-  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
 }
 
 export type UserProfileCountOrderByAggregateInput = {
@@ -779,14 +606,7 @@ export type UserProfileCountOrderByAggregateInput = {
   state?: Prisma.SortOrder
   city?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  institutionId?: Prisma.SortOrder
-  facultyId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  levelId?: Prisma.SortOrder
-  matricNumber?: Prisma.SortOrder
-  graduationYear?: Prisma.SortOrder
   bio?: Prisma.SortOrder
-  interests?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrder
@@ -794,10 +614,6 @@ export type UserProfileCountOrderByAggregateInput = {
   verifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type UserProfileAvgOrderByAggregateInput = {
-  graduationYear?: Prisma.SortOrder
 }
 
 export type UserProfileMaxOrderByAggregateInput = {
@@ -814,12 +630,6 @@ export type UserProfileMaxOrderByAggregateInput = {
   state?: Prisma.SortOrder
   city?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  institutionId?: Prisma.SortOrder
-  facultyId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  levelId?: Prisma.SortOrder
-  matricNumber?: Prisma.SortOrder
-  graduationYear?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -844,12 +654,6 @@ export type UserProfileMinOrderByAggregateInput = {
   state?: Prisma.SortOrder
   city?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  institutionId?: Prisma.SortOrder
-  facultyId?: Prisma.SortOrder
-  departmentId?: Prisma.SortOrder
-  levelId?: Prisma.SortOrder
-  matricNumber?: Prisma.SortOrder
-  graduationYear?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -858,10 +662,6 @@ export type UserProfileMinOrderByAggregateInput = {
   verifiedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type UserProfileSumOrderByAggregateInput = {
-  graduationYear?: Prisma.SortOrder
 }
 
 export type UserProfileCreateNestedOneWithoutUserInput = {
@@ -896,25 +696,8 @@ export type UserProfileUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserProfileUpdateToOneWithWhereWithoutUserInput, Prisma.UserProfileUpdateWithoutUserInput>, Prisma.UserProfileUncheckedUpdateWithoutUserInput>
 }
 
-export type UserProfileCreateinterestsInput = {
-  set: string[]
-}
-
 export type NullableEnumGenderFieldUpdateOperationsInput = {
   set?: $Enums.Gender | null
-}
-
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type UserProfileUpdateinterestsInput = {
-  set?: string[]
-  push?: string | string[]
 }
 
 export type EnumOnboardingStepFieldUpdateOperationsInput = {
@@ -938,14 +721,7 @@ export type UserProfileCreateWithoutUserInput = {
   state?: string | null
   city?: string | null
   address?: string | null
-  institutionId?: string | null
-  facultyId?: string | null
-  departmentId?: string | null
-  levelId?: string | null
-  matricNumber?: string | null
-  graduationYear?: number | null
   bio?: string | null
-  interests?: Prisma.UserProfileCreateinterestsInput | string[]
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -968,14 +744,7 @@ export type UserProfileUncheckedCreateWithoutUserInput = {
   state?: string | null
   city?: string | null
   address?: string | null
-  institutionId?: string | null
-  facultyId?: string | null
-  departmentId?: string | null
-  levelId?: string | null
-  matricNumber?: string | null
-  graduationYear?: number | null
   bio?: string | null
-  interests?: Prisma.UserProfileCreateinterestsInput | string[]
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -1014,14 +783,7 @@ export type UserProfileUpdateWithoutUserInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  levelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  interests?: Prisma.UserProfileUpdateinterestsInput | string[]
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1044,14 +806,7 @@ export type UserProfileUncheckedUpdateWithoutUserInput = {
   state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  levelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  graduationYear?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  interests?: Prisma.UserProfileUpdateinterestsInput | string[]
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1077,14 +832,7 @@ export type UserProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   state?: boolean
   city?: boolean
   address?: boolean
-  institutionId?: boolean
-  facultyId?: boolean
-  departmentId?: boolean
-  levelId?: boolean
-  matricNumber?: boolean
-  graduationYear?: boolean
   bio?: boolean
-  interests?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -1109,14 +857,7 @@ export type UserProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   state?: boolean
   city?: boolean
   address?: boolean
-  institutionId?: boolean
-  facultyId?: boolean
-  departmentId?: boolean
-  levelId?: boolean
-  matricNumber?: boolean
-  graduationYear?: boolean
   bio?: boolean
-  interests?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -1141,14 +882,7 @@ export type UserProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   state?: boolean
   city?: boolean
   address?: boolean
-  institutionId?: boolean
-  facultyId?: boolean
-  departmentId?: boolean
-  levelId?: boolean
-  matricNumber?: boolean
-  graduationYear?: boolean
   bio?: boolean
-  interests?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -1173,14 +907,7 @@ export type UserProfileSelectScalar = {
   state?: boolean
   city?: boolean
   address?: boolean
-  institutionId?: boolean
-  facultyId?: boolean
-  departmentId?: boolean
-  levelId?: boolean
-  matricNumber?: boolean
-  graduationYear?: boolean
   bio?: boolean
-  interests?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -1190,7 +917,7 @@ export type UserProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "middleName" | "phone" | "avatar" | "gender" | "dateOfBirth" | "country" | "state" | "city" | "address" | "institutionId" | "facultyId" | "departmentId" | "levelId" | "matricNumber" | "graduationYear" | "bio" | "interests" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
+export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "middleName" | "phone" | "avatar" | "gender" | "dateOfBirth" | "country" | "state" | "city" | "address" | "bio" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
 export type UserProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -1220,14 +947,7 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
     state: string | null
     city: string | null
     address: string | null
-    institutionId: string | null
-    facultyId: string | null
-    departmentId: string | null
-    levelId: string | null
-    matricNumber: string | null
-    graduationYear: number | null
     bio: string | null
-    interests: string[]
     onboardingStep: $Enums.OnboardingStep
     onboardingCompleted: boolean
     onboardingCompletedAt: Date | null
@@ -1672,14 +1392,7 @@ export interface UserProfileFieldRefs {
   readonly state: Prisma.FieldRef<"UserProfile", 'String'>
   readonly city: Prisma.FieldRef<"UserProfile", 'String'>
   readonly address: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly institutionId: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly facultyId: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly departmentId: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly levelId: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly matricNumber: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly graduationYear: Prisma.FieldRef<"UserProfile", 'Int'>
   readonly bio: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly interests: Prisma.FieldRef<"UserProfile", 'String[]'>
   readonly onboardingStep: Prisma.FieldRef<"UserProfile", 'OnboardingStep'>
   readonly onboardingCompleted: Prisma.FieldRef<"UserProfile", 'Boolean'>
   readonly onboardingCompletedAt: Prisma.FieldRef<"UserProfile", 'DateTime'>

@@ -91,4 +91,18 @@ export class AuthController {
     this.logger.log('Revoke session endpoint called');
     return this.authService.revokeSession(req.user.id, id);
   }
+  @Post('verify-email')
+  @HttpCode(HttpStatus.OK)
+  async verifyEmail(@Body() body: { token: string }) {
+    this.logger.log('Verify email endpoint called');
+    return this.authService.verifyEmail(body.token);
+  }
+
+  // ✅ NEW: Resend Verification Email
+  @Post('resend-verification')
+  @HttpCode(HttpStatus.OK)
+  async resendVerification(@Body() body: { email: string }) {
+    this.logger.log(`Resend verification email called for: ${body.email}`);
+    return this.authService.resendVerificationEmail(body.email);
+  }
 }

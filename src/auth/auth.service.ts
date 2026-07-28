@@ -92,6 +92,7 @@ export class AuthService {
           verificationStatus: 'UNVERIFIED',
         },
       });
+      //  297f2193d05e346a15bc14a2564a927848eb0b4a0b0af0394024744065a36f14
 
       // Create email verification token
       const verificationToken = randomBytes(32).toString('hex');
@@ -156,10 +157,18 @@ export class AuthService {
           { username: dto.identifier.toLowerCase() },
         ],
       },
-      include: { profile: true },
+      include: {
+        profile: true,
+        studentProfile: true,
+      },
     });
 
-    if (!user || !user.isActive || user.isDeleted) {
+    if (
+      !user ||
+      user.status === 'DELETED' ||
+      user.status === 'INACTIVE' ||
+      user.status === 'SUSPENDED'
+    ) {
       await this.rateLimitService.incrementLoginAttempt(rateLimitKey);
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -426,6 +435,120 @@ export class AuthService {
     this.logger.log(`User logged out from all devices`);
 
     return { message: 'Logged out from all devices' };
+  }
+
+  async verifyEmail(token: string) {
+    this.logger.log(`Verifying email with token: ${token.substring(0, 10)}...`);
+
+    // Find the verification record
+    const verification = await this.prisma.emailVerification.findUnique({
+      where: { token },
+      include: { user: true },
+    });
+
+    if (!verification) {
+      throw new BadRequestException('Invalid verification token');
+    }
+
+    // Check if already verified
+    if (verification.verifiedAt) {
+      throw new BadRequestException('Email already verified');
+    }
+
+    // Check if token is expired
+    if (verification.expiresAt < new Date()) {
+      throw new BadRequestException(
+        'Verification token has expired. Please request a new one.',
+      );
+    }
+
+    // Update user and verification record in transaction
+    await this.prisma.$transaction([
+      // Mark user as verified
+      this.prisma.user.update({
+        where: { id: verification.userId },
+        data: { emailVerified: true },
+      }),
+      // Mark verification as used
+      this.prisma.emailVerification.update({
+        where: { id: verification.id },
+        data: { verifiedAt: new Date() },
+      }),
+      // Update user profile verification status
+      this.prisma.userProfile.update({
+        where: { userId: verification.userId },
+        data: { verificationStatus: 'VERIFIED', verifiedAt: new Date() },
+      }),
+      // Log the action
+      this.prisma.auditLog.create({
+        data: {
+          userId: verification.userId,
+          action: 'EMAIL_VERIFIED',
+          entity: 'User',
+          entityId: verification.userId,
+          metadata: { email: verification.email },
+        },
+      }),
+    ]);
+
+    // Send welcome email
+    await this.emailService.sendWelcomeEmail(
+      verification.user.email,
+      verification.user.username,
+    );
+
+    this.logger.log(
+      `Email verified successfully for user: ${verification.userId}`,
+    );
+
+    return {
+      message: 'Email verified successfully',
+      email: verification.email,
+    };
+  }
+
+  async resendVerificationEmail(email: string) {
+    this.logger.log(`Resending verification email to: ${email}`);
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.emailVerified) {
+      throw new BadRequestException('Email already verified');
+    }
+
+    // Delete old verification tokens
+    await this.prisma.emailVerification.deleteMany({
+      where: {
+        userId: user.id,
+        verifiedAt: null,
+      },
+    });
+
+    // Create new verification token
+    const verificationToken = randomBytes(32).toString('hex');
+    await this.prisma.emailVerification.create({
+      data: {
+        userId: user.id,
+        email: user.email,
+        token: verificationToken,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      },
+    });
+
+    // Send verification email
+    await this.emailService.sendVerificationEmail(user.email, user.username);
+
+    this.logger.log(`Verification email resent to: ${email}`);
+
+    return {
+      message: 'Verification email sent successfully. Please check your inbox.',
+    };
   }
 
   async getCurrentUser(userId: string) {

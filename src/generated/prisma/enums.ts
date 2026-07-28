@@ -9,6 +9,16 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  DELETED: 'DELETED'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
+
 export const Gender = {
   MALE: 'MALE',
   FEMALE: 'FEMALE',
@@ -21,8 +31,8 @@ export type Gender = (typeof Gender)[keyof typeof Gender]
 
 export const VerificationStatus = {
   UNVERIFIED: 'UNVERIFIED',
-  VERIFIED: 'VERIFIED',
   PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
   REJECTED: 'REJECTED'
 } as const
 
@@ -37,3 +47,438 @@ export const OnboardingStep = {
 } as const
 
 export type OnboardingStep = (typeof OnboardingStep)[keyof typeof OnboardingStep]
+
+
+export const InstitutionStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type InstitutionStatus = (typeof InstitutionStatus)[keyof typeof InstitutionStatus]
+
+
+export const FacultyStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type FacultyStatus = (typeof FacultyStatus)[keyof typeof FacultyStatus]
+
+
+export const DepartmentStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type DepartmentStatus = (typeof DepartmentStatus)[keyof typeof DepartmentStatus]
+
+
+export const AcademicLevelStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type AcademicLevelStatus = (typeof AcademicLevelStatus)[keyof typeof AcademicLevelStatus]
+
+
+export const AcademicSessionStatus = {
+  UPCOMING: 'UPCOMING',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type AcademicSessionStatus = (typeof AcademicSessionStatus)[keyof typeof AcademicSessionStatus]
+
+
+export const PromotionType = {
+  AUTOMATIC: 'AUTOMATIC',
+  MANUAL: 'MANUAL'
+} as const
+
+export type PromotionType = (typeof PromotionType)[keyof typeof PromotionType]
+
+
+export const AcademicStatus = {
+  ACTIVE: 'ACTIVE',
+  GRADUATED: 'GRADUATED',
+  WITHDRAWN: 'WITHDRAWN',
+  PROBATION: 'PROBATION',
+  SUSPENDED: 'SUSPENDED'
+} as const
+
+export type AcademicStatus = (typeof AcademicStatus)[keyof typeof AcademicStatus]
+
+
+export const EnrollmentStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  DROPPED: 'DROPPED'
+} as const
+
+export type EnrollmentStatus = (typeof EnrollmentStatus)[keyof typeof EnrollmentStatus]
+
+
+export const OrganizationType = {
+  INSTITUTION: 'INSTITUTION',
+  FACULTY: 'FACULTY',
+  DEPARTMENT: 'DEPARTMENT',
+  LEVEL: 'LEVEL',
+  ASSOCIATION: 'ASSOCIATION',
+  CLUB: 'CLUB',
+  RELIGIOUS: 'RELIGIOUS',
+  SPORTS: 'SPORTS',
+  SPECIAL: 'SPECIAL'
+} as const
+
+export type OrganizationType = (typeof OrganizationType)[keyof typeof OrganizationType]
+
+
+export const OrganizationScope = {
+  INSTITUTION: 'INSTITUTION',
+  FACULTY: 'FACULTY',
+  DEPARTMENT: 'DEPARTMENT',
+  LEVEL: 'LEVEL',
+  CROSS_DEPARTMENT: 'CROSS_DEPARTMENT',
+  CROSS_LEVEL: 'CROSS_LEVEL',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type OrganizationScope = (typeof OrganizationScope)[keyof typeof OrganizationScope]
+
+
+export const OrganizationStatus = {
+  DRAFT: 'DRAFT',
+  PENDING_ACTIVATION: 'PENDING_ACTIVATION',
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof OrganizationStatus]
+
+
+export const MembershipType = {
+  STUDENT: 'STUDENT',
+  ADMIN: 'ADMIN',
+  STAFF: 'STAFF',
+  ALUMNI: 'ALUMNI',
+  HONORARY: 'HONORARY'
+} as const
+
+export type MembershipType = (typeof MembershipType)[keyof typeof MembershipType]
+
+
+export const MembershipStatus = {
+  INVITED: 'INVITED',
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  LEFT: 'LEFT',
+  REMOVED: 'REMOVED'
+} as const
+
+export type MembershipStatus = (typeof MembershipStatus)[keyof typeof MembershipStatus]
+
+
+export const WalletStatus = {
+  ACTIVE: 'ACTIVE',
+  SUSPENDED: 'SUSPENDED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type WalletStatus = (typeof WalletStatus)[keyof typeof WalletStatus]
+
+
+export const HoldStatus = {
+  ACTIVE: 'ACTIVE',
+  RELEASED: 'RELEASED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type HoldStatus = (typeof HoldStatus)[keyof typeof HoldStatus]
+
+
+export const TransactionType = {
+  CREDIT: 'CREDIT',
+  DEBIT: 'DEBIT',
+  TRANSFER: 'TRANSFER',
+  FEE: 'FEE',
+  REFUND: 'REFUND',
+  REVERSAL: 'REVERSAL'
+} as const
+
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType]
+
+
+export const TransactionStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TransactionStatus = (typeof TransactionStatus)[keyof typeof TransactionStatus]
+
+
+export const LedgerAccountType = {
+  ASSET: 'ASSET',
+  LIABILITY: 'LIABILITY',
+  EQUITY: 'EQUITY',
+  REVENUE: 'REVENUE',
+  EXPENSE: 'EXPENSE'
+} as const
+
+export type LedgerAccountType = (typeof LedgerAccountType)[keyof typeof LedgerAccountType]
+
+
+export const LedgerEntryType = {
+  DEBIT: 'DEBIT',
+  CREDIT: 'CREDIT'
+} as const
+
+export type LedgerEntryType = (typeof LedgerEntryType)[keyof typeof LedgerEntryType]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const PaymentMethodType = {
+  CARD: 'CARD',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  USSD: 'USSD',
+  QR_CODE: 'QR_CODE',
+  WALLET: 'WALLET'
+} as const
+
+export type PaymentMethodType = (typeof PaymentMethodType)[keyof typeof PaymentMethodType]
+
+
+export const DueStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type DueStatus = (typeof DueStatus)[keyof typeof DueStatus]
+
+
+export const WithdrawalStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type WithdrawalStatus = (typeof WithdrawalStatus)[keyof typeof WithdrawalStatus]
+
+
+export const RefundStatus = {
+  PENDING: 'PENDING',
+  PROCESSED: 'PROCESSED',
+  FAILED: 'FAILED'
+} as const
+
+export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus]
+
+
+export const SettlementStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type SettlementStatus = (typeof SettlementStatus)[keyof typeof SettlementStatus]
+
+
+export const SavingsStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type SavingsStatus = (typeof SavingsStatus)[keyof typeof SavingsStatus]
+
+
+export const SavingsTransactionType = {
+  DEPOSIT: 'DEPOSIT',
+  WITHDRAWAL: 'WITHDRAWAL',
+  INTEREST: 'INTEREST',
+  PENALTY: 'PENALTY'
+} as const
+
+export type SavingsTransactionType = (typeof SavingsTransactionType)[keyof typeof SavingsTransactionType]
+
+
+export const AnnouncementType = {
+  GENERAL: 'GENERAL',
+  IMPORTANT: 'IMPORTANT',
+  URGENT: 'URGENT',
+  FINANCIAL: 'FINANCIAL',
+  ACADEMIC: 'ACADEMIC',
+  EVENT: 'EVENT'
+} as const
+
+export type AnnouncementType = (typeof AnnouncementType)[keyof typeof AnnouncementType]
+
+
+export const AnnouncementPriority = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type AnnouncementPriority = (typeof AnnouncementPriority)[keyof typeof AnnouncementPriority]
+
+
+export const NotificationType = {
+  SYSTEM: 'SYSTEM',
+  FINANCIAL: 'FINANCIAL',
+  ACADEMIC: 'ACADEMIC',
+  EVENT: 'EVENT',
+  REMINDER: 'REMINDER',
+  SECURITY: 'SECURITY'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const NotificationPriority = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type NotificationPriority = (typeof NotificationPriority)[keyof typeof NotificationPriority]
+
+
+export const QueueStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type QueueStatus = (typeof QueueStatus)[keyof typeof QueueStatus]
+
+
+export const FeatureFlagTargetType = {
+  USER: 'USER',
+  ORGANIZATION: 'ORGANIZATION',
+  ROLE: 'ROLE',
+  PERCENTAGE: 'PERCENTAGE'
+} as const
+
+export type FeatureFlagTargetType = (typeof FeatureFlagTargetType)[keyof typeof FeatureFlagTargetType]
+
+
+export const JobStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus]
+
+
+export const ElectionStatus = {
+  DRAFT: 'DRAFT',
+  NOMINATION: 'NOMINATION',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ElectionStatus = (typeof ElectionStatus)[keyof typeof ElectionStatus]
+
+
+export const CandidateStatus = {
+  NOMINATED: 'NOMINATED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  WITHDRAWN: 'WITHDRAWN'
+} as const
+
+export type CandidateStatus = (typeof CandidateStatus)[keyof typeof CandidateStatus]
+
+
+export const TermStatus = {
+  UPCOMING: 'UPCOMING',
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type TermStatus = (typeof TermStatus)[keyof typeof TermStatus]
+
+
+export const CommitteeStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  DISSOLVED: 'DISSOLVED'
+} as const
+
+export type CommitteeStatus = (typeof CommitteeStatus)[keyof typeof CommitteeStatus]
+
+
+export const EventStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus]
+
+
+export const RegistrationStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  CANCELLED: 'CANCELLED',
+  WAITING: 'WAITING'
+} as const
+
+export type RegistrationStatus = (typeof RegistrationStatus)[keyof typeof RegistrationStatus]
+
+
+export const TicketStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type TicketStatus = (typeof TicketStatus)[keyof typeof TicketStatus]
+
+
+export const TicketType = {
+  REGULAR: 'REGULAR',
+  VIP: 'VIP',
+  VVIP: 'VVIP',
+  FREE: 'FREE'
+} as const
+
+export type TicketType = (typeof TicketType)[keyof typeof TicketType]
