@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { TokenService } from './token.service';
 import { CookieService } from './cookie.service';
+import { PermissionService } from './permission.service';
 import { PasswordUtil } from '../common/utils/password.util';
 import { RateLimitService } from '../redis/rate-limit.service';
 import { OtpService } from '../redis/otp.service';
@@ -33,6 +34,7 @@ export class AuthService {
     private readonly otpService: OtpService,
     private readonly cacheService: CacheService,
     private readonly emailService: EmailService,
+    private readonly permissionService: PermissionService,
   ) {}
 
   async register(dto: RegisterDto, request: any) {
@@ -642,5 +644,180 @@ export class AuthService {
     });
 
     return { message: 'Session revoked successfully' };
+  }
+
+  async isAdmin(userId: string): Promise<boolean> {
+    const admin = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+    });
+    return !!admin;
+  }
+
+  /**
+   * Get user's admin type
+   */
+  async getAdminType(userId: string): Promise<string | null> {
+    try {
+      const admin = await (this.prisma as any).admin.findFirst({
+        where: {
+          userId,
+          status: 'ACTIVE',
+        },
+      });
+      return admin?.adminType || null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Check if user has specific admin permission
+   */
+  async hasPermission(
+    userId: string,
+    permission: string,
+    resourceId?: string,
+  ): Promise<boolean> {
+    return this.permissionService.checkPermission(
+      userId,
+      permission,
+      resourceId,
+    );
+  }
+
+  /**
+   * Get user's admin scope (institution, faculty, department, organization)
+   */
+  async getAdminScope(userId: string): Promise<{
+    adminType?: string;
+    institutionId?: string;
+    facultyId?: string;
+    departmentId?: string;
+    organizationId?: string;
+  } | null> {
+    try {
+      const admin = await (this.prisma as any).admin.findFirst({
+        where: {
+          userId,
+          status: 'ACTIVE',
+        },
+      });
+
+      if (!admin) {
+        return null;
+      }
+
+      return {
+        adminType: admin.adminType,
+        institutionId: admin.institutionId || undefined,
+        facultyId: admin.facultyId || undefined,
+        departmentId: admin.departmentId || undefined,
+        organizationId: admin.organizationId || undefined,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Check if user can access a specific resource
+   * Used for resource-level authorization
+   */
+  async canAccessResource(
+    userId: string,
+    resourceType:
+      'institution' | 'faculty' | 'department' | 'organization' | 'student',
+    resourceId: string,
+  ): Promise<boolean> {
+    const admin = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!admin) {
+      return false;
+    }
+
+    // Platform admins can access everything
+    if (admin.adminType === 'PLATFORM_ADMIN') {
+      return true;
+    }
+
+    // Check based on admin type and resource type
+    switch (resourceType) {
+      case 'institution':
+        return admin.institutionId === resourceId;
+      case 'faculty':
+        return (
+          admin.facultyId === resourceId || admin.institutionId === resourceId
+        );
+      case 'department':
+        return (
+          admin.departmentId === resourceId || admin.facultyId === resourceId
+        );
+      case 'organization':
+        return admin.organizationId === resourceId;
+      case 'student':
+        // Check if student belongs to admin's scope
+        const student = await this.prisma.studentProfile.findUnique({
+          where: { id: resourceId },
+          select: { institutionId: true, facultyId: true, departmentId: true },
+        });
+        if (!student) return false;
+
+        if (
+          admin.adminType === 'INSTITUTION_ADMIN' &&
+          admin.institutionId === student.institutionId
+        ) {
+          return true;
+        }
+        if (
+          admin.adminType === 'FACULTY_ADMIN' &&
+          admin.facultyId === student.facultyId
+        ) {
+          return true;
+        }
+        if (
+          admin.adminType === 'DEPARTMENT_ADMIN' &&
+          admin.departmentId === student.departmentId
+        ) {
+          return true;
+        }
+        return false;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Get user's permissions
+   */
+  async getUserPermissions(userId: string): Promise<string[]> {
+    return this.permissionService.getUserPermissions(userId);
+  }
+
+  /**
+   * Check if user has any of the given permissions
+   */
+  async hasAnyPermission(
+    userId: string,
+    permissions: string[],
+  ): Promise<boolean> {
+    return this.permissionService.hasAnyPermission(userId, permissions);
+  }
+
+  /**
+   * Check multiple permissions at once
+   */
+  async checkPermissions(
+    userId: string,
+    permissions: string[],
+  ): Promise<{ [key: string]: boolean }> {
+    return this.permissionService.checkPermissions(userId, permissions);
   }
 }

@@ -27,25 +27,25 @@ export type AggregateLedgerEntry = {
 }
 
 export type LedgerEntryAvgAggregateOutputType = {
-  amount: runtime.Decimal | null
-  balanceBefore: runtime.Decimal | null
-  balanceAfter: runtime.Decimal | null
+  amount: number | null
+  balanceBefore: number | null
+  balanceAfter: number | null
 }
 
 export type LedgerEntrySumAggregateOutputType = {
-  amount: runtime.Decimal | null
-  balanceBefore: runtime.Decimal | null
-  balanceAfter: runtime.Decimal | null
+  amount: number | null
+  balanceBefore: number | null
+  balanceAfter: number | null
 }
 
 export type LedgerEntryMinAggregateOutputType = {
   id: string | null
   accountId: string | null
   transactionId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   type: $Enums.LedgerEntryType | null
-  balanceBefore: runtime.Decimal | null
-  balanceAfter: runtime.Decimal | null
+  balanceBefore: number | null
+  balanceAfter: number | null
   description: string | null
   createdAt: Date | null
 }
@@ -54,10 +54,10 @@ export type LedgerEntryMaxAggregateOutputType = {
   id: string | null
   accountId: string | null
   transactionId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   type: $Enums.LedgerEntryType | null
-  balanceBefore: runtime.Decimal | null
-  balanceAfter: runtime.Decimal | null
+  balanceBefore: number | null
+  balanceAfter: number | null
   description: string | null
   createdAt: Date | null
 }
@@ -215,10 +215,10 @@ export type LedgerEntryGroupByOutputType = {
   id: string
   accountId: string
   transactionId: string
-  amount: runtime.Decimal
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal
-  balanceAfter: runtime.Decimal
+  balanceBefore: number
+  balanceAfter: number
   description: string | null
   createdAt: Date
   _count: LedgerEntryCountAggregateOutputType | null
@@ -250,10 +250,10 @@ export type LedgerEntryWhereInput = {
   id?: Prisma.StringFilter<"LedgerEntry"> | string
   accountId?: Prisma.StringFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringFilter<"LedgerEntry"> | string
-  amount?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"LedgerEntry"> | number
   type?: Prisma.EnumLedgerEntryTypeFilter<"LedgerEntry"> | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFilter<"LedgerEntry"> | number
+  balanceAfter?: Prisma.IntFilter<"LedgerEntry"> | number
   description?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LedgerEntry"> | Date | string
   account?: Prisma.XOR<Prisma.LedgerAccountScalarRelationFilter, Prisma.LedgerAccountWhereInput>
@@ -281,10 +281,10 @@ export type LedgerEntryWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.LedgerEntryWhereInput | Prisma.LedgerEntryWhereInput[]
   accountId?: Prisma.StringFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringFilter<"LedgerEntry"> | string
-  amount?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"LedgerEntry"> | number
   type?: Prisma.EnumLedgerEntryTypeFilter<"LedgerEntry"> | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFilter<"LedgerEntry"> | number
+  balanceAfter?: Prisma.IntFilter<"LedgerEntry"> | number
   description?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LedgerEntry"> | Date | string
   account?: Prisma.XOR<Prisma.LedgerAccountScalarRelationFilter, Prisma.LedgerAccountWhereInput>
@@ -315,20 +315,20 @@ export type LedgerEntryScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"LedgerEntry"> | string
   accountId?: Prisma.StringWithAggregatesFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringWithAggregatesFilter<"LedgerEntry"> | string
-  amount?: Prisma.DecimalWithAggregatesFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntWithAggregatesFilter<"LedgerEntry"> | number
   type?: Prisma.EnumLedgerEntryTypeWithAggregatesFilter<"LedgerEntry"> | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalWithAggregatesFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalWithAggregatesFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntWithAggregatesFilter<"LedgerEntry"> | number
+  balanceAfter?: Prisma.IntWithAggregatesFilter<"LedgerEntry"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"LedgerEntry"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerEntry"> | Date | string
 }
 
 export type LedgerEntryCreateInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
   account: Prisma.LedgerAccountCreateNestedOneWithoutEntriesInput
@@ -339,20 +339,20 @@ export type LedgerEntryUncheckedCreateInput = {
   id?: string
   accountId: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account?: Prisma.LedgerAccountUpdateOneRequiredWithoutEntriesNestedInput
@@ -363,10 +363,10 @@ export type LedgerEntryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -375,20 +375,20 @@ export type LedgerEntryCreateManyInput = {
   id?: string
   accountId: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -397,10 +397,10 @@ export type LedgerEntryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -553,10 +553,10 @@ export type LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput = {
 
 export type LedgerEntryCreateWithoutAccountInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
   transaction: Prisma.TransactionCreateNestedOneWithoutEntriesInput
@@ -565,10 +565,10 @@ export type LedgerEntryCreateWithoutAccountInput = {
 export type LedgerEntryUncheckedCreateWithoutAccountInput = {
   id?: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
 }
@@ -606,20 +606,20 @@ export type LedgerEntryScalarWhereInput = {
   id?: Prisma.StringFilter<"LedgerEntry"> | string
   accountId?: Prisma.StringFilter<"LedgerEntry"> | string
   transactionId?: Prisma.StringFilter<"LedgerEntry"> | string
-  amount?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"LedgerEntry"> | number
   type?: Prisma.EnumLedgerEntryTypeFilter<"LedgerEntry"> | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFilter<"LedgerEntry"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFilter<"LedgerEntry"> | number
+  balanceAfter?: Prisma.IntFilter<"LedgerEntry"> | number
   description?: Prisma.StringNullableFilter<"LedgerEntry"> | string | null
   createdAt?: Prisma.DateTimeFilter<"LedgerEntry"> | Date | string
 }
 
 export type LedgerEntryCreateWithoutTransactionInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
   account: Prisma.LedgerAccountCreateNestedOneWithoutEntriesInput
@@ -628,10 +628,10 @@ export type LedgerEntryCreateWithoutTransactionInput = {
 export type LedgerEntryUncheckedCreateWithoutTransactionInput = {
   id?: string
   accountId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
 }
@@ -665,20 +665,20 @@ export type LedgerEntryUpdateManyWithWhereWithoutTransactionInput = {
 export type LedgerEntryCreateManyAccountInput = {
   id?: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   transaction?: Prisma.TransactionUpdateOneRequiredWithoutEntriesNestedInput
@@ -687,10 +687,10 @@ export type LedgerEntryUpdateWithoutAccountInput = {
 export type LedgerEntryUncheckedUpdateWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -698,10 +698,10 @@ export type LedgerEntryUncheckedUpdateWithoutAccountInput = {
 export type LedgerEntryUncheckedUpdateManyWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -709,20 +709,20 @@ export type LedgerEntryUncheckedUpdateManyWithoutAccountInput = {
 export type LedgerEntryCreateManyTransactionInput = {
   id?: string
   accountId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   type: $Enums.LedgerEntryType
-  balanceBefore: runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore: number
+  balanceAfter: number
   description?: string | null
   createdAt?: Date | string
 }
 
 export type LedgerEntryUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account?: Prisma.LedgerAccountUpdateOneRequiredWithoutEntriesNestedInput
@@ -731,10 +731,10 @@ export type LedgerEntryUpdateWithoutTransactionInput = {
 export type LedgerEntryUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -742,10 +742,10 @@ export type LedgerEntryUncheckedUpdateWithoutTransactionInput = {
 export type LedgerEntryUncheckedUpdateManyWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumLedgerEntryTypeFieldUpdateOperationsInput | $Enums.LedgerEntryType
-  balanceBefore?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceBefore?: Prisma.IntFieldUpdateOperationsInput | number
+  balanceAfter?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -830,10 +830,10 @@ export type $LedgerEntryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     accountId: string
     transactionId: string
-    amount: runtime.Decimal
+    amount: number
     type: $Enums.LedgerEntryType
-    balanceBefore: runtime.Decimal
-    balanceAfter: runtime.Decimal
+    balanceBefore: number
+    balanceAfter: number
     description: string | null
     createdAt: Date
   }, ExtArgs["result"]["ledgerEntry"]>
@@ -1264,10 +1264,10 @@ export interface LedgerEntryFieldRefs {
   readonly id: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly accountId: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly transactionId: Prisma.FieldRef<"LedgerEntry", 'String'>
-  readonly amount: Prisma.FieldRef<"LedgerEntry", 'Decimal'>
+  readonly amount: Prisma.FieldRef<"LedgerEntry", 'Int'>
   readonly type: Prisma.FieldRef<"LedgerEntry", 'LedgerEntryType'>
-  readonly balanceBefore: Prisma.FieldRef<"LedgerEntry", 'Decimal'>
-  readonly balanceAfter: Prisma.FieldRef<"LedgerEntry", 'Decimal'>
+  readonly balanceBefore: Prisma.FieldRef<"LedgerEntry", 'Int'>
+  readonly balanceAfter: Prisma.FieldRef<"LedgerEntry", 'Int'>
   readonly description: Prisma.FieldRef<"LedgerEntry", 'String'>
   readonly createdAt: Prisma.FieldRef<"LedgerEntry", 'DateTime'>
 }

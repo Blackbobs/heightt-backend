@@ -145,6 +145,21 @@ export type RolePermission = Prisma.RolePermissionModel
  */
 export type MembershipRole = Prisma.MembershipRoleModel
 /**
+ * Model Admin
+ * 
+ */
+export type Admin = Prisma.AdminModel
+/**
+ * Model AdminPermission
+ * 
+ */
+export type AdminPermission = Prisma.AdminPermissionModel
+/**
+ * Model SystemRole
+ * 
+ */
+export type SystemRole = Prisma.SystemRoleModel
+/**
  * Model Wallet
  * 
  */
@@ -359,3 +374,8 @@ export type EventRegistration = Prisma.EventRegistrationModel
  * 
  */
 export type Attendance = Prisma.AttendanceModel
+/**
+ * Model Receipt
+ * 
+ */
+export type Receipt = Prisma.ReceiptModel

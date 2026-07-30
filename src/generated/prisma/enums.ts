@@ -9,6 +9,81 @@
 * 🟢 You can import this file directly.
 */
 
+export const AdminType = {
+  PLATFORM_ADMIN: 'PLATFORM_ADMIN',
+  INSTITUTION_ADMIN: 'INSTITUTION_ADMIN',
+  FACULTY_ADMIN: 'FACULTY_ADMIN',
+  DEPARTMENT_ADMIN: 'DEPARTMENT_ADMIN',
+  ORGANIZATION_ADMIN: 'ORGANIZATION_ADMIN',
+  CLUB_ADMIN: 'CLUB_ADMIN'
+} as const
+
+export type AdminType = (typeof AdminType)[keyof typeof AdminType]
+
+
+export const PermissionCategory = {
+  USER: 'USER',
+  INSTITUTION: 'INSTITUTION',
+  ORGANIZATION: 'ORGANIZATION',
+  FINANCE: 'FINANCE',
+  STUDENT: 'STUDENT',
+  ACADEMIC: 'ACADEMIC',
+  COMMUNICATION: 'COMMUNICATION',
+  EVENT: 'EVENT',
+  GOVERNANCE: 'GOVERNANCE',
+  SYSTEM: 'SYSTEM',
+  ANALYTICS: 'ANALYTICS'
+} as const
+
+export type PermissionCategory = (typeof PermissionCategory)[keyof typeof PermissionCategory]
+
+
+export const PermissionAction = {
+  CREATE: 'CREATE',
+  READ: 'READ',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  APPROVE: 'APPROVE',
+  REJECT: 'REJECT',
+  REVIEW: 'REVIEW',
+  EXPORT: 'EXPORT',
+  IMPORT: 'IMPORT',
+  MANAGE: 'MANAGE',
+  ASSIGN: 'ASSIGN',
+  REVOKE: 'REVOKE'
+} as const
+
+export type PermissionAction = (typeof PermissionAction)[keyof typeof PermissionAction]
+
+
+export const AdminStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  REVOKED: 'REVOKED'
+} as const
+
+export type AdminStatus = (typeof AdminStatus)[keyof typeof AdminStatus]
+
+
+export const SystemRoleCategory = {
+  PLATFORM: 'PLATFORM',
+  INSTITUTION: 'INSTITUTION',
+  ORGANIZATION: 'ORGANIZATION',
+  CLUB: 'CLUB'
+} as const
+
+export type SystemRoleCategory = (typeof SystemRoleCategory)[keyof typeof SystemRoleCategory]
+
+
+export const ReceiptStatus = {
+  ISSUED: 'ISSUED',
+  VOIDED: 'VOIDED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ReceiptStatus = (typeof ReceiptStatus)[keyof typeof ReceiptStatus]
+
+
 export const UserStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',

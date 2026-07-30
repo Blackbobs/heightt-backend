@@ -27,21 +27,21 @@ export type AggregateWallet = {
 }
 
 export type WalletAvgAggregateOutputType = {
-  balance: runtime.Decimal | null
-  heldBalance: runtime.Decimal | null
+  balance: number | null
+  heldBalance: number | null
 }
 
 export type WalletSumAggregateOutputType = {
-  balance: runtime.Decimal | null
-  heldBalance: runtime.Decimal | null
+  balance: number | null
+  heldBalance: number | null
 }
 
 export type WalletMinAggregateOutputType = {
   id: string | null
   userId: string | null
   organizationId: string | null
-  balance: runtime.Decimal | null
-  heldBalance: runtime.Decimal | null
+  balance: number | null
+  heldBalance: number | null
   currency: string | null
   status: $Enums.WalletStatus | null
   createdAt: Date | null
@@ -52,8 +52,8 @@ export type WalletMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   organizationId: string | null
-  balance: runtime.Decimal | null
-  heldBalance: runtime.Decimal | null
+  balance: number | null
+  heldBalance: number | null
   currency: string | null
   status: $Enums.WalletStatus | null
   createdAt: Date | null
@@ -211,8 +211,8 @@ export type WalletGroupByOutputType = {
   id: string
   userId: string | null
   organizationId: string | null
-  balance: runtime.Decimal
-  heldBalance: runtime.Decimal
+  balance: number
+  heldBalance: number
   currency: string
   status: $Enums.WalletStatus
   createdAt: Date
@@ -246,8 +246,8 @@ export type WalletWhereInput = {
   id?: Prisma.StringFilter<"Wallet"> | string
   userId?: Prisma.StringNullableFilter<"Wallet"> | string | null
   organizationId?: Prisma.StringNullableFilter<"Wallet"> | string | null
-  balance?: Prisma.DecimalFilter<"Wallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFilter<"Wallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFilter<"Wallet"> | number
+  heldBalance?: Prisma.IntFilter<"Wallet"> | number
   currency?: Prisma.StringFilter<"Wallet"> | string
   status?: Prisma.EnumWalletStatusFilter<"Wallet"> | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFilter<"Wallet"> | Date | string
@@ -283,8 +283,8 @@ export type WalletWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.WalletWhereInput | Prisma.WalletWhereInput[]
   OR?: Prisma.WalletWhereInput[]
   NOT?: Prisma.WalletWhereInput | Prisma.WalletWhereInput[]
-  balance?: Prisma.DecimalFilter<"Wallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFilter<"Wallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFilter<"Wallet"> | number
+  heldBalance?: Prisma.IntFilter<"Wallet"> | number
   currency?: Prisma.StringFilter<"Wallet"> | string
   status?: Prisma.EnumWalletStatusFilter<"Wallet"> | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFilter<"Wallet"> | Date | string
@@ -320,8 +320,8 @@ export type WalletScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Wallet"> | string
   userId?: Prisma.StringNullableWithAggregatesFilter<"Wallet"> | string | null
   organizationId?: Prisma.StringNullableWithAggregatesFilter<"Wallet"> | string | null
-  balance?: Prisma.DecimalWithAggregatesFilter<"Wallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalWithAggregatesFilter<"Wallet"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntWithAggregatesFilter<"Wallet"> | number
+  heldBalance?: Prisma.IntWithAggregatesFilter<"Wallet"> | number
   currency?: Prisma.StringWithAggregatesFilter<"Wallet"> | string
   status?: Prisma.EnumWalletStatusWithAggregatesFilter<"Wallet"> | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Wallet"> | Date | string
@@ -330,8 +330,8 @@ export type WalletScalarWhereWithAggregatesInput = {
 
 export type WalletCreateInput = {
   id?: string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -347,8 +347,8 @@ export type WalletUncheckedCreateInput = {
   id?: string
   userId?: string | null
   organizationId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -360,8 +360,8 @@ export type WalletUncheckedCreateInput = {
 
 export type WalletUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -377,8 +377,8 @@ export type WalletUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -392,8 +392,8 @@ export type WalletCreateManyInput = {
   id?: string
   userId?: string | null
   organizationId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -402,8 +402,8 @@ export type WalletCreateManyInput = {
 
 export type WalletUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -414,8 +414,8 @@ export type WalletUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -542,14 +542,6 @@ export type WalletUncheckedUpdateOneWithoutOrganizationNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WalletUpdateToOneWithWhereWithoutOrganizationInput, Prisma.WalletUpdateWithoutOrganizationInput>, Prisma.WalletUncheckedUpdateWithoutOrganizationInput>
 }
 
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
 export type EnumWalletStatusFieldUpdateOperationsInput = {
   set?: $Enums.WalletStatus
 }
@@ -598,8 +590,8 @@ export type WalletUpdateOneRequiredWithoutWithdrawalsNestedInput = {
 
 export type WalletCreateWithoutUserInput = {
   id?: string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -613,8 +605,8 @@ export type WalletCreateWithoutUserInput = {
 export type WalletUncheckedCreateWithoutUserInput = {
   id?: string
   organizationId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -642,8 +634,8 @@ export type WalletUpdateToOneWithWhereWithoutUserInput = {
 
 export type WalletUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -657,8 +649,8 @@ export type WalletUpdateWithoutUserInput = {
 export type WalletUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -670,8 +662,8 @@ export type WalletUncheckedUpdateWithoutUserInput = {
 
 export type WalletCreateWithoutOrganizationInput = {
   id?: string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -685,8 +677,8 @@ export type WalletCreateWithoutOrganizationInput = {
 export type WalletUncheckedCreateWithoutOrganizationInput = {
   id?: string
   userId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -714,8 +706,8 @@ export type WalletUpdateToOneWithWhereWithoutOrganizationInput = {
 
 export type WalletUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -729,8 +721,8 @@ export type WalletUpdateWithoutOrganizationInput = {
 export type WalletUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -742,8 +734,8 @@ export type WalletUncheckedUpdateWithoutOrganizationInput = {
 
 export type WalletCreateWithoutHoldsInput = {
   id?: string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -758,8 +750,8 @@ export type WalletUncheckedCreateWithoutHoldsInput = {
   id?: string
   userId?: string | null
   organizationId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -786,8 +778,8 @@ export type WalletUpdateToOneWithWhereWithoutHoldsInput = {
 
 export type WalletUpdateWithoutHoldsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -802,8 +794,8 @@ export type WalletUncheckedUpdateWithoutHoldsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -814,8 +806,8 @@ export type WalletUncheckedUpdateWithoutHoldsInput = {
 
 export type WalletCreateWithoutTransactionsInput = {
   id?: string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -830,8 +822,8 @@ export type WalletUncheckedCreateWithoutTransactionsInput = {
   id?: string
   userId?: string | null
   organizationId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -858,8 +850,8 @@ export type WalletUpdateToOneWithWhereWithoutTransactionsInput = {
 
 export type WalletUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -874,8 +866,8 @@ export type WalletUncheckedUpdateWithoutTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -886,8 +878,8 @@ export type WalletUncheckedUpdateWithoutTransactionsInput = {
 
 export type WalletCreateWithoutWithdrawalsInput = {
   id?: string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -902,8 +894,8 @@ export type WalletUncheckedCreateWithoutWithdrawalsInput = {
   id?: string
   userId?: string | null
   organizationId?: string | null
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: number
+  heldBalance?: number
   currency?: string
   status?: $Enums.WalletStatus
   createdAt?: Date | string
@@ -930,8 +922,8 @@ export type WalletUpdateToOneWithWhereWithoutWithdrawalsInput = {
 
 export type WalletUpdateWithoutWithdrawalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -946,8 +938,8 @@ export type WalletUncheckedUpdateWithoutWithdrawalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  heldBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balance?: Prisma.IntFieldUpdateOperationsInput | number
+  heldBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumWalletStatusFieldUpdateOperationsInput | $Enums.WalletStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1094,8 +1086,8 @@ export type $WalletPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: string
     userId: string | null
     organizationId: string | null
-    balance: runtime.Decimal
-    heldBalance: runtime.Decimal
+    balance: number
+    heldBalance: number
     currency: string
     status: $Enums.WalletStatus
     createdAt: Date
@@ -1531,8 +1523,8 @@ export interface WalletFieldRefs {
   readonly id: Prisma.FieldRef<"Wallet", 'String'>
   readonly userId: Prisma.FieldRef<"Wallet", 'String'>
   readonly organizationId: Prisma.FieldRef<"Wallet", 'String'>
-  readonly balance: Prisma.FieldRef<"Wallet", 'Decimal'>
-  readonly heldBalance: Prisma.FieldRef<"Wallet", 'Decimal'>
+  readonly balance: Prisma.FieldRef<"Wallet", 'Int'>
+  readonly heldBalance: Prisma.FieldRef<"Wallet", 'Int'>
   readonly currency: Prisma.FieldRef<"Wallet", 'String'>
   readonly status: Prisma.FieldRef<"Wallet", 'WalletStatus'>
   readonly createdAt: Prisma.FieldRef<"Wallet", 'DateTime'>

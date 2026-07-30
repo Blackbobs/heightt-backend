@@ -27,18 +27,18 @@ export type AggregateSettlement = {
 }
 
 export type SettlementAvgAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type SettlementSumAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type SettlementMinAggregateOutputType = {
   id: string | null
   organizationId: string | null
   transactionId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   reference: string | null
   status: $Enums.SettlementStatus | null
   settledAt: Date | null
@@ -49,7 +49,7 @@ export type SettlementMaxAggregateOutputType = {
   id: string | null
   organizationId: string | null
   transactionId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   reference: string | null
   status: $Enums.SettlementStatus | null
   settledAt: Date | null
@@ -201,7 +201,7 @@ export type SettlementGroupByOutputType = {
   id: string
   organizationId: string
   transactionId: string
-  amount: runtime.Decimal
+  amount: number
   reference: string
   status: $Enums.SettlementStatus
   settledAt: Date | null
@@ -235,7 +235,7 @@ export type SettlementWhereInput = {
   id?: Prisma.StringFilter<"Settlement"> | string
   organizationId?: Prisma.StringFilter<"Settlement"> | string
   transactionId?: Prisma.StringFilter<"Settlement"> | string
-  amount?: Prisma.DecimalFilter<"Settlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Settlement"> | number
   reference?: Prisma.StringFilter<"Settlement"> | string
   status?: Prisma.EnumSettlementStatusFilter<"Settlement"> | $Enums.SettlementStatus
   settledAt?: Prisma.DateTimeNullableFilter<"Settlement"> | Date | string | null
@@ -265,7 +265,7 @@ export type SettlementWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SettlementWhereInput[]
   NOT?: Prisma.SettlementWhereInput | Prisma.SettlementWhereInput[]
   organizationId?: Prisma.StringFilter<"Settlement"> | string
-  amount?: Prisma.DecimalFilter<"Settlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Settlement"> | number
   status?: Prisma.EnumSettlementStatusFilter<"Settlement"> | $Enums.SettlementStatus
   settledAt?: Prisma.DateTimeNullableFilter<"Settlement"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Settlement"> | Date | string
@@ -296,7 +296,7 @@ export type SettlementScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Settlement"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Settlement"> | string
   transactionId?: Prisma.StringWithAggregatesFilter<"Settlement"> | string
-  amount?: Prisma.DecimalWithAggregatesFilter<"Settlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntWithAggregatesFilter<"Settlement"> | number
   reference?: Prisma.StringWithAggregatesFilter<"Settlement"> | string
   status?: Prisma.EnumSettlementStatusWithAggregatesFilter<"Settlement"> | $Enums.SettlementStatus
   settledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Settlement"> | Date | string | null
@@ -305,7 +305,7 @@ export type SettlementScalarWhereWithAggregatesInput = {
 
 export type SettlementCreateInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -318,7 +318,7 @@ export type SettlementUncheckedCreateInput = {
   id?: string
   organizationId: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -327,7 +327,7 @@ export type SettlementUncheckedCreateInput = {
 
 export type SettlementUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -340,7 +340,7 @@ export type SettlementUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -351,7 +351,7 @@ export type SettlementCreateManyInput = {
   id?: string
   organizationId: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -360,7 +360,7 @@ export type SettlementCreateManyInput = {
 
 export type SettlementUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -371,7 +371,7 @@ export type SettlementUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -514,7 +514,7 @@ export type EnumSettlementStatusFieldUpdateOperationsInput = {
 
 export type SettlementCreateWithoutOrganizationInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -525,7 +525,7 @@ export type SettlementCreateWithoutOrganizationInput = {
 export type SettlementUncheckedCreateWithoutOrganizationInput = {
   id?: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -565,7 +565,7 @@ export type SettlementScalarWhereInput = {
   id?: Prisma.StringFilter<"Settlement"> | string
   organizationId?: Prisma.StringFilter<"Settlement"> | string
   transactionId?: Prisma.StringFilter<"Settlement"> | string
-  amount?: Prisma.DecimalFilter<"Settlement"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Settlement"> | number
   reference?: Prisma.StringFilter<"Settlement"> | string
   status?: Prisma.EnumSettlementStatusFilter<"Settlement"> | $Enums.SettlementStatus
   settledAt?: Prisma.DateTimeNullableFilter<"Settlement"> | Date | string | null
@@ -574,7 +574,7 @@ export type SettlementScalarWhereInput = {
 
 export type SettlementCreateWithoutTransactionInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -585,7 +585,7 @@ export type SettlementCreateWithoutTransactionInput = {
 export type SettlementUncheckedCreateWithoutTransactionInput = {
   id?: string
   organizationId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -610,7 +610,7 @@ export type SettlementUpdateToOneWithWhereWithoutTransactionInput = {
 
 export type SettlementUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -621,7 +621,7 @@ export type SettlementUpdateWithoutTransactionInput = {
 export type SettlementUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -631,7 +631,7 @@ export type SettlementUncheckedUpdateWithoutTransactionInput = {
 export type SettlementCreateManyOrganizationInput = {
   id?: string
   transactionId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reference: string
   status?: $Enums.SettlementStatus
   settledAt?: Date | string | null
@@ -640,7 +640,7 @@ export type SettlementCreateManyOrganizationInput = {
 
 export type SettlementUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -651,7 +651,7 @@ export type SettlementUpdateWithoutOrganizationInput = {
 export type SettlementUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -661,7 +661,7 @@ export type SettlementUncheckedUpdateWithoutOrganizationInput = {
 export type SettlementUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSettlementStatusFieldUpdateOperationsInput | $Enums.SettlementStatus
   settledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -744,7 +744,7 @@ export type $SettlementPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: string
     organizationId: string
     transactionId: string
-    amount: runtime.Decimal
+    amount: number
     reference: string
     status: $Enums.SettlementStatus
     settledAt: Date | null
@@ -1177,7 +1177,7 @@ export interface SettlementFieldRefs {
   readonly id: Prisma.FieldRef<"Settlement", 'String'>
   readonly organizationId: Prisma.FieldRef<"Settlement", 'String'>
   readonly transactionId: Prisma.FieldRef<"Settlement", 'String'>
-  readonly amount: Prisma.FieldRef<"Settlement", 'Decimal'>
+  readonly amount: Prisma.FieldRef<"Settlement", 'Int'>
   readonly reference: Prisma.FieldRef<"Settlement", 'String'>
   readonly status: Prisma.FieldRef<"Settlement", 'SettlementStatus'>
   readonly settledAt: Prisma.FieldRef<"Settlement", 'DateTime'>

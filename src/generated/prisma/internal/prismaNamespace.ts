@@ -405,6 +405,9 @@ export const ModelName = {
   Permission: 'Permission',
   RolePermission: 'RolePermission',
   MembershipRole: 'MembershipRole',
+  Admin: 'Admin',
+  AdminPermission: 'AdminPermission',
+  SystemRole: 'SystemRole',
   Wallet: 'Wallet',
   WalletHold: 'WalletHold',
   LedgerAccount: 'LedgerAccount',
@@ -447,7 +450,8 @@ export const ModelName = {
   Ticket: 'Ticket',
   TicketPurchase: 'TicketPurchase',
   EventRegistration: 'EventRegistration',
-  Attendance: 'Attendance'
+  Attendance: 'Attendance',
+  Receipt: 'Receipt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -463,7 +467,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "role" | "permission" | "rolePermission" | "membershipRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance"
+    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "receipt"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2018,6 +2022,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MembershipRoleCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MembershipRoleCountAggregateOutputType> | number
+        }
+      }
+    }
+    Admin: {
+      payload: Prisma.$AdminPayload<ExtArgs>
+      fields: Prisma.AdminFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        findMany: {
+          args: Prisma.AdminFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>[]
+        }
+        create: {
+          args: Prisma.AdminCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        createMany: {
+          args: Prisma.AdminCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        update: {
+          args: Prisma.AdminUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdmin>
+        }
+        groupBy: {
+          args: Prisma.AdminGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdminPermission: {
+      payload: Prisma.$AdminPermissionPayload<ExtArgs>
+      fields: Prisma.AdminPermissionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminPermissionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminPermissionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>
+        }
+        findFirst: {
+          args: Prisma.AdminPermissionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminPermissionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>
+        }
+        findMany: {
+          args: Prisma.AdminPermissionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>[]
+        }
+        create: {
+          args: Prisma.AdminPermissionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>
+        }
+        createMany: {
+          args: Prisma.AdminPermissionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminPermissionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>[]
+        }
+        delete: {
+          args: Prisma.AdminPermissionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>
+        }
+        update: {
+          args: Prisma.AdminPermissionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminPermissionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminPermissionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminPermissionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminPermissionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminPermissionPayload>
+        }
+        aggregate: {
+          args: Prisma.AdminPermissionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminPermission>
+        }
+        groupBy: {
+          args: Prisma.AdminPermissionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminPermissionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminPermissionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminPermissionCountAggregateOutputType> | number
+        }
+      }
+    }
+    SystemRole: {
+      payload: Prisma.$SystemRolePayload<ExtArgs>
+      fields: Prisma.SystemRoleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SystemRoleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SystemRoleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>
+        }
+        findFirst: {
+          args: Prisma.SystemRoleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SystemRoleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>
+        }
+        findMany: {
+          args: Prisma.SystemRoleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>[]
+        }
+        create: {
+          args: Prisma.SystemRoleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>
+        }
+        createMany: {
+          args: Prisma.SystemRoleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SystemRoleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>[]
+        }
+        delete: {
+          args: Prisma.SystemRoleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>
+        }
+        update: {
+          args: Prisma.SystemRoleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>
+        }
+        deleteMany: {
+          args: Prisma.SystemRoleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SystemRoleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SystemRoleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>[]
+        }
+        upsert: {
+          args: Prisma.SystemRoleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemRolePayload>
+        }
+        aggregate: {
+          args: Prisma.SystemRoleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSystemRole>
+        }
+        groupBy: {
+          args: Prisma.SystemRoleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemRoleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SystemRoleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemRoleCountAggregateOutputType> | number
         }
       }
     }
@@ -5203,6 +5429,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Receipt: {
+      payload: Prisma.$ReceiptPayload<ExtArgs>
+      fields: Prisma.ReceiptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReceiptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReceiptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>
+        }
+        findFirst: {
+          args: Prisma.ReceiptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReceiptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>
+        }
+        findMany: {
+          args: Prisma.ReceiptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>[]
+        }
+        create: {
+          args: Prisma.ReceiptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>
+        }
+        createMany: {
+          args: Prisma.ReceiptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReceiptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>[]
+        }
+        delete: {
+          args: Prisma.ReceiptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>
+        }
+        update: {
+          args: Prisma.ReceiptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReceiptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReceiptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReceiptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReceiptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReceiptPayload>
+        }
+        aggregate: {
+          args: Prisma.ReceiptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReceipt>
+        }
+        groupBy: {
+          args: Prisma.ReceiptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReceiptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReceiptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReceiptCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -5585,6 +5885,53 @@ export const MembershipRoleScalarFieldEnum = {
 } as const
 
 export type MembershipRoleScalarFieldEnum = (typeof MembershipRoleScalarFieldEnum)[keyof typeof MembershipRoleScalarFieldEnum]
+
+
+export const AdminScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  adminType: 'adminType',
+  institutionId: 'institutionId',
+  facultyId: 'facultyId',
+  departmentId: 'departmentId',
+  organizationId: 'organizationId',
+  assignedBy: 'assignedBy',
+  assignedAt: 'assignedAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  revokedAt: 'revokedAt',
+  revokedReason: 'revokedReason'
+} as const
+
+export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
+
+
+export const AdminPermissionScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  permissionKey: 'permissionKey',
+  permissionCategory: 'permissionCategory',
+  permissionAction: 'permissionAction',
+  resourceId: 'resourceId',
+  grantedBy: 'grantedBy',
+  grantedAt: 'grantedAt'
+} as const
+
+export type AdminPermissionScalarFieldEnum = (typeof AdminPermissionScalarFieldEnum)[keyof typeof AdminPermissionScalarFieldEnum]
+
+
+export const SystemRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  isDefault: 'isDefault',
+  permissions: 'permissions',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemRoleScalarFieldEnum = (typeof SystemRoleScalarFieldEnum)[keyof typeof SystemRoleScalarFieldEnum]
 
 
 export const WalletScalarFieldEnum = {
@@ -6162,6 +6509,7 @@ export type CommitteeScalarFieldEnum = (typeof CommitteeScalarFieldEnum)[keyof t
 export const EventScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  createdBy: 'createdBy',
   title: 'title',
   description: 'description',
   location: 'location',
@@ -6170,6 +6518,11 @@ export const EventScalarFieldEnum = {
   capacity: 'capacity',
   isFree: 'isFree',
   price: 'price',
+  isPublic: 'isPublic',
+  isApproved: 'isApproved',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectionReason: 'rejectionReason',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -6225,6 +6578,38 @@ export const AttendanceScalarFieldEnum = {
 } as const
 
 export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+export const ReceiptScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  userId: 'userId',
+  organizationId: 'organizationId',
+  receiptNumber: 'receiptNumber',
+  reference: 'reference',
+  amount: 'amount',
+  serviceFee: 'serviceFee',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  payerName: 'payerName',
+  payerEmail: 'payerEmail',
+  payerPhone: 'payerPhone',
+  paymentMethod: 'paymentMethod',
+  paymentDate: 'paymentDate',
+  description: 'description',
+  organizationName: 'organizationName',
+  organizationSlug: 'organizationSlug',
+  metadata: 'metadata',
+  items: 'items',
+  status: 'status',
+  downloadCount: 'downloadCount',
+  lastDownloaded: 'lastDownloaded',
+  viewedAt: 'viewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReceiptScalarFieldEnum = (typeof ReceiptScalarFieldEnum)[keyof typeof ReceiptScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -6576,16 +6961,72 @@ export type ListEnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
- * Reference to a field of type 'Decimal'
+ * Reference to a field of type 'AdminType'
  */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+export type EnumAdminTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminType'>
     
 
 
 /**
- * Reference to a field of type 'Decimal[]'
+ * Reference to a field of type 'AdminType[]'
  */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+export type ListEnumAdminTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AdminStatus'
+ */
+export type EnumAdminStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AdminStatus[]'
+ */
+export type ListEnumAdminStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PermissionCategory'
+ */
+export type EnumPermissionCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PermissionCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'PermissionCategory[]'
+ */
+export type ListEnumPermissionCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PermissionCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'PermissionAction'
+ */
+export type EnumPermissionActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PermissionAction'>
+    
+
+
+/**
+ * Reference to a field of type 'PermissionAction[]'
+ */
+export type ListEnumPermissionActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PermissionAction[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SystemRoleCategory'
+ */
+export type EnumSystemRoleCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SystemRoleCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'SystemRoleCategory[]'
+ */
+export type ListEnumSystemRoleCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SystemRoleCategory[]'>
     
 
 
@@ -6982,6 +7423,20 @@ export type ListEnumTicketTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
  * Reference to a field of type 'TicketStatus'
  */
 export type EnumTicketStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TicketStatus'>
@@ -7006,6 +7461,20 @@ export type EnumRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'RegistrationStatus[]'
  */
 export type ListEnumRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ReceiptStatus'
+ */
+export type EnumReceiptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReceiptStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ReceiptStatus[]'
+ */
+export type ListEnumReceiptStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReceiptStatus[]'>
     
 
 /**
@@ -7139,6 +7608,9 @@ export type GlobalOmitConfig = {
   permission?: Prisma.PermissionOmit
   rolePermission?: Prisma.RolePermissionOmit
   membershipRole?: Prisma.MembershipRoleOmit
+  admin?: Prisma.AdminOmit
+  adminPermission?: Prisma.AdminPermissionOmit
+  systemRole?: Prisma.SystemRoleOmit
   wallet?: Prisma.WalletOmit
   walletHold?: Prisma.WalletHoldOmit
   ledgerAccount?: Prisma.LedgerAccountOmit
@@ -7182,6 +7654,7 @@ export type GlobalOmitConfig = {
   ticketPurchase?: Prisma.TicketPurchaseOmit
   eventRegistration?: Prisma.EventRegistrationOmit
   attendance?: Prisma.AttendanceOmit
+  receipt?: Prisma.ReceiptOmit
 }
 
 /* Types for Logging */

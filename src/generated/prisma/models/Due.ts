@@ -27,13 +27,13 @@ export type AggregateDue = {
 }
 
 export type DueAvgAggregateOutputType = {
-  amount: runtime.Decimal | null
-  lateFee: runtime.Decimal | null
+  amount: number | null
+  lateFee: number | null
 }
 
 export type DueSumAggregateOutputType = {
-  amount: runtime.Decimal | null
-  lateFee: runtime.Decimal | null
+  amount: number | null
+  lateFee: number | null
 }
 
 export type DueMinAggregateOutputType = {
@@ -43,9 +43,9 @@ export type DueMinAggregateOutputType = {
   institutionId: string | null
   name: string | null
   description: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   dueDate: Date | null
-  lateFee: runtime.Decimal | null
+  lateFee: number | null
   isRequired: boolean | null
   status: $Enums.DueStatus | null
   createdAt: Date | null
@@ -59,9 +59,9 @@ export type DueMaxAggregateOutputType = {
   institutionId: string | null
   name: string | null
   description: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   dueDate: Date | null
-  lateFee: runtime.Decimal | null
+  lateFee: number | null
   isRequired: boolean | null
   status: $Enums.DueStatus | null
   createdAt: Date | null
@@ -238,9 +238,9 @@ export type DueGroupByOutputType = {
   institutionId: string | null
   name: string
   description: string | null
-  amount: runtime.Decimal
+  amount: number
   dueDate: Date
-  lateFee: runtime.Decimal
+  lateFee: number
   isRequired: boolean
   status: $Enums.DueStatus
   createdAt: Date
@@ -277,9 +277,9 @@ export type DueWhereInput = {
   institutionId?: Prisma.StringNullableFilter<"Due"> | string | null
   name?: Prisma.StringFilter<"Due"> | string
   description?: Prisma.StringNullableFilter<"Due"> | string | null
-  amount?: Prisma.DecimalFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Due"> | number
   dueDate?: Prisma.DateTimeFilter<"Due"> | Date | string
-  lateFee?: Prisma.DecimalFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFilter<"Due"> | number
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
@@ -320,9 +320,9 @@ export type DueWhereUniqueInput = Prisma.AtLeast<{
   institutionId?: Prisma.StringNullableFilter<"Due"> | string | null
   name?: Prisma.StringFilter<"Due"> | string
   description?: Prisma.StringNullableFilter<"Due"> | string | null
-  amount?: Prisma.DecimalFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Due"> | number
   dueDate?: Prisma.DateTimeFilter<"Due"> | Date | string
-  lateFee?: Prisma.DecimalFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFilter<"Due"> | number
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
@@ -364,9 +364,9 @@ export type DueScalarWhereWithAggregatesInput = {
   institutionId?: Prisma.StringNullableWithAggregatesFilter<"Due"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Due"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Due"> | string | null
-  amount?: Prisma.DecimalWithAggregatesFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntWithAggregatesFilter<"Due"> | number
   dueDate?: Prisma.DateTimeWithAggregatesFilter<"Due"> | Date | string
-  lateFee?: Prisma.DecimalWithAggregatesFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntWithAggregatesFilter<"Due"> | number
   isRequired?: Prisma.BoolWithAggregatesFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusWithAggregatesFilter<"Due"> | $Enums.DueStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Due"> | Date | string
@@ -377,9 +377,9 @@ export type DueCreateInput = {
   id?: string
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -397,9 +397,9 @@ export type DueUncheckedCreateInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -411,9 +411,9 @@ export type DueUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -431,9 +431,9 @@ export type DueUncheckedUpdateInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -448,9 +448,9 @@ export type DueCreateManyInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -461,9 +461,9 @@ export type DueUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -477,9 +477,9 @@ export type DueUncheckedUpdateManyInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -707,9 +707,9 @@ export type DueCreateWithoutInstitutionInput = {
   id?: string
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -725,9 +725,9 @@ export type DueUncheckedCreateWithoutInstitutionInput = {
   sessionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -771,9 +771,9 @@ export type DueScalarWhereInput = {
   institutionId?: Prisma.StringNullableFilter<"Due"> | string | null
   name?: Prisma.StringFilter<"Due"> | string
   description?: Prisma.StringNullableFilter<"Due"> | string | null
-  amount?: Prisma.DecimalFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Due"> | number
   dueDate?: Prisma.DateTimeFilter<"Due"> | Date | string
-  lateFee?: Prisma.DecimalFilter<"Due"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFilter<"Due"> | number
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
@@ -784,9 +784,9 @@ export type DueCreateWithoutSessionInput = {
   id?: string
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -802,9 +802,9 @@ export type DueUncheckedCreateWithoutSessionInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -842,9 +842,9 @@ export type DueCreateWithoutOrganizationInput = {
   id?: string
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -860,9 +860,9 @@ export type DueUncheckedCreateWithoutOrganizationInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -900,9 +900,9 @@ export type DueCreateWithoutAssignmentsInput = {
   id?: string
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -919,9 +919,9 @@ export type DueUncheckedCreateWithoutAssignmentsInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -948,9 +948,9 @@ export type DueUpdateWithoutAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -967,9 +967,9 @@ export type DueUncheckedUpdateWithoutAssignmentsInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -982,9 +982,9 @@ export type DueCreateManyInstitutionInput = {
   sessionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -995,9 +995,9 @@ export type DueUpdateWithoutInstitutionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1013,9 +1013,9 @@ export type DueUncheckedUpdateWithoutInstitutionInput = {
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1029,9 +1029,9 @@ export type DueUncheckedUpdateManyWithoutInstitutionInput = {
   sessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1044,9 +1044,9 @@ export type DueCreateManySessionInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -1057,9 +1057,9 @@ export type DueUpdateWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1075,9 +1075,9 @@ export type DueUncheckedUpdateWithoutSessionInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1091,9 +1091,9 @@ export type DueUncheckedUpdateManyWithoutSessionInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1106,9 +1106,9 @@ export type DueCreateManyOrganizationInput = {
   institutionId?: string | null
   name: string
   description?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   dueDate: Date | string
-  lateFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: number
   isRequired?: boolean
   status?: $Enums.DueStatus
   createdAt?: Date | string
@@ -1119,9 +1119,9 @@ export type DueUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1137,9 +1137,9 @@ export type DueUncheckedUpdateWithoutOrganizationInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1153,9 +1153,9 @@ export type DueUncheckedUpdateManyWithoutOrganizationInput = {
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lateFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  lateFee?: Prisma.IntFieldUpdateOperationsInput | number
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1302,9 +1302,9 @@ export type $DuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     institutionId: string | null
     name: string
     description: string | null
-    amount: runtime.Decimal
+    amount: number
     dueDate: Date
-    lateFee: runtime.Decimal
+    lateFee: number
     isRequired: boolean
     status: $Enums.DueStatus
     createdAt: Date
@@ -1742,9 +1742,9 @@ export interface DueFieldRefs {
   readonly institutionId: Prisma.FieldRef<"Due", 'String'>
   readonly name: Prisma.FieldRef<"Due", 'String'>
   readonly description: Prisma.FieldRef<"Due", 'String'>
-  readonly amount: Prisma.FieldRef<"Due", 'Decimal'>
+  readonly amount: Prisma.FieldRef<"Due", 'Int'>
   readonly dueDate: Prisma.FieldRef<"Due", 'DateTime'>
-  readonly lateFee: Prisma.FieldRef<"Due", 'Decimal'>
+  readonly lateFee: Prisma.FieldRef<"Due", 'Int'>
   readonly isRequired: Prisma.FieldRef<"Due", 'Boolean'>
   readonly status: Prisma.FieldRef<"Due", 'DueStatus'>
   readonly createdAt: Prisma.FieldRef<"Due", 'DateTime'>

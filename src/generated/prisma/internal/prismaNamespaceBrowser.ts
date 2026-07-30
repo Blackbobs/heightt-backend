@@ -72,6 +72,9 @@ export const ModelName = {
   Permission: 'Permission',
   RolePermission: 'RolePermission',
   MembershipRole: 'MembershipRole',
+  Admin: 'Admin',
+  AdminPermission: 'AdminPermission',
+  SystemRole: 'SystemRole',
   Wallet: 'Wallet',
   WalletHold: 'WalletHold',
   LedgerAccount: 'LedgerAccount',
@@ -114,7 +117,8 @@ export const ModelName = {
   Ticket: 'Ticket',
   TicketPurchase: 'TicketPurchase',
   EventRegistration: 'EventRegistration',
-  Attendance: 'Attendance'
+  Attendance: 'Attendance',
+  Receipt: 'Receipt'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -476,6 +480,53 @@ export const MembershipRoleScalarFieldEnum = {
 } as const
 
 export type MembershipRoleScalarFieldEnum = (typeof MembershipRoleScalarFieldEnum)[keyof typeof MembershipRoleScalarFieldEnum]
+
+
+export const AdminScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  adminType: 'adminType',
+  institutionId: 'institutionId',
+  facultyId: 'facultyId',
+  departmentId: 'departmentId',
+  organizationId: 'organizationId',
+  assignedBy: 'assignedBy',
+  assignedAt: 'assignedAt',
+  updatedAt: 'updatedAt',
+  status: 'status',
+  revokedAt: 'revokedAt',
+  revokedReason: 'revokedReason'
+} as const
+
+export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
+
+
+export const AdminPermissionScalarFieldEnum = {
+  id: 'id',
+  adminId: 'adminId',
+  permissionKey: 'permissionKey',
+  permissionCategory: 'permissionCategory',
+  permissionAction: 'permissionAction',
+  resourceId: 'resourceId',
+  grantedBy: 'grantedBy',
+  grantedAt: 'grantedAt'
+} as const
+
+export type AdminPermissionScalarFieldEnum = (typeof AdminPermissionScalarFieldEnum)[keyof typeof AdminPermissionScalarFieldEnum]
+
+
+export const SystemRoleScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  isDefault: 'isDefault',
+  permissions: 'permissions',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemRoleScalarFieldEnum = (typeof SystemRoleScalarFieldEnum)[keyof typeof SystemRoleScalarFieldEnum]
 
 
 export const WalletScalarFieldEnum = {
@@ -1053,6 +1104,7 @@ export type CommitteeScalarFieldEnum = (typeof CommitteeScalarFieldEnum)[keyof t
 export const EventScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
+  createdBy: 'createdBy',
   title: 'title',
   description: 'description',
   location: 'location',
@@ -1061,6 +1113,11 @@ export const EventScalarFieldEnum = {
   capacity: 'capacity',
   isFree: 'isFree',
   price: 'price',
+  isPublic: 'isPublic',
+  isApproved: 'isApproved',
+  approvedBy: 'approvedBy',
+  approvedAt: 'approvedAt',
+  rejectionReason: 'rejectionReason',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1116,6 +1173,38 @@ export const AttendanceScalarFieldEnum = {
 } as const
 
 export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+export const ReceiptScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  userId: 'userId',
+  organizationId: 'organizationId',
+  receiptNumber: 'receiptNumber',
+  reference: 'reference',
+  amount: 'amount',
+  serviceFee: 'serviceFee',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  payerName: 'payerName',
+  payerEmail: 'payerEmail',
+  payerPhone: 'payerPhone',
+  paymentMethod: 'paymentMethod',
+  paymentDate: 'paymentDate',
+  description: 'description',
+  organizationName: 'organizationName',
+  organizationSlug: 'organizationSlug',
+  metadata: 'metadata',
+  items: 'items',
+  status: 'status',
+  downloadCount: 'downloadCount',
+  lastDownloaded: 'lastDownloaded',
+  viewedAt: 'viewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReceiptScalarFieldEnum = (typeof ReceiptScalarFieldEnum)[keyof typeof ReceiptScalarFieldEnum]
 
 
 export const SortOrder = {

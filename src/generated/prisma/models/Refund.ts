@@ -27,18 +27,18 @@ export type AggregateRefund = {
 }
 
 export type RefundAvgAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type RefundSumAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type RefundMinAggregateOutputType = {
   id: string | null
   paymentId: string | null
   withdrawalId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   reason: string | null
   status: $Enums.RefundStatus | null
   transactionId: string | null
@@ -50,7 +50,7 @@ export type RefundMaxAggregateOutputType = {
   id: string | null
   paymentId: string | null
   withdrawalId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   reason: string | null
   status: $Enums.RefundStatus | null
   transactionId: string | null
@@ -207,7 +207,7 @@ export type RefundGroupByOutputType = {
   id: string
   paymentId: string
   withdrawalId: string | null
-  amount: runtime.Decimal
+  amount: number
   reason: string | null
   status: $Enums.RefundStatus
   transactionId: string | null
@@ -242,7 +242,7 @@ export type RefundWhereInput = {
   id?: Prisma.StringFilter<"Refund"> | string
   paymentId?: Prisma.StringFilter<"Refund"> | string
   withdrawalId?: Prisma.StringNullableFilter<"Refund"> | string | null
-  amount?: Prisma.DecimalFilter<"Refund"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Refund"> | number
   reason?: Prisma.StringNullableFilter<"Refund"> | string | null
   status?: Prisma.EnumRefundStatusFilter<"Refund"> | $Enums.RefundStatus
   transactionId?: Prisma.StringNullableFilter<"Refund"> | string | null
@@ -276,7 +276,7 @@ export type RefundWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.RefundWhereInput | Prisma.RefundWhereInput[]
   OR?: Prisma.RefundWhereInput[]
   NOT?: Prisma.RefundWhereInput | Prisma.RefundWhereInput[]
-  amount?: Prisma.DecimalFilter<"Refund"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"Refund"> | number
   reason?: Prisma.StringNullableFilter<"Refund"> | string | null
   status?: Prisma.EnumRefundStatusFilter<"Refund"> | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFilter<"Refund"> | Date | string
@@ -310,7 +310,7 @@ export type RefundScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Refund"> | string
   paymentId?: Prisma.StringWithAggregatesFilter<"Refund"> | string
   withdrawalId?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
-  amount?: Prisma.DecimalWithAggregatesFilter<"Refund"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntWithAggregatesFilter<"Refund"> | number
   reason?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
   status?: Prisma.EnumRefundStatusWithAggregatesFilter<"Refund"> | $Enums.RefundStatus
   transactionId?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
@@ -320,7 +320,7 @@ export type RefundScalarWhereWithAggregatesInput = {
 
 export type RefundCreateInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   createdAt?: Date | string
@@ -334,7 +334,7 @@ export type RefundUncheckedCreateInput = {
   id?: string
   paymentId: string
   withdrawalId?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
@@ -344,7 +344,7 @@ export type RefundUncheckedCreateInput = {
 
 export type RefundUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -358,7 +358,7 @@ export type RefundUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -370,7 +370,7 @@ export type RefundCreateManyInput = {
   id?: string
   paymentId: string
   withdrawalId?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
@@ -380,7 +380,7 @@ export type RefundCreateManyInput = {
 
 export type RefundUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -391,7 +391,7 @@ export type RefundUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -550,7 +550,7 @@ export type EnumRefundStatusFieldUpdateOperationsInput = {
 
 export type RefundCreateWithoutTransactionInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   createdAt?: Date | string
@@ -563,7 +563,7 @@ export type RefundUncheckedCreateWithoutTransactionInput = {
   id?: string
   paymentId: string
   withdrawalId?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   createdAt?: Date | string
@@ -588,7 +588,7 @@ export type RefundUpdateToOneWithWhereWithoutTransactionInput = {
 
 export type RefundUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -601,7 +601,7 @@ export type RefundUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
   withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -610,7 +610,7 @@ export type RefundUncheckedUpdateWithoutTransactionInput = {
 
 export type RefundCreateWithoutPaymentInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   createdAt?: Date | string
@@ -622,7 +622,7 @@ export type RefundCreateWithoutPaymentInput = {
 export type RefundUncheckedCreateWithoutPaymentInput = {
   id?: string
   withdrawalId?: string | null
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
@@ -648,7 +648,7 @@ export type RefundUpdateToOneWithWhereWithoutPaymentInput = {
 
 export type RefundUpdateWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -660,7 +660,7 @@ export type RefundUpdateWithoutPaymentInput = {
 export type RefundUncheckedUpdateWithoutPaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   withdrawalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -670,7 +670,7 @@ export type RefundUncheckedUpdateWithoutPaymentInput = {
 
 export type RefundCreateWithoutWithdrawalInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   createdAt?: Date | string
@@ -682,7 +682,7 @@ export type RefundCreateWithoutWithdrawalInput = {
 export type RefundUncheckedCreateWithoutWithdrawalInput = {
   id?: string
   paymentId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
@@ -708,7 +708,7 @@ export type RefundUpdateToOneWithWhereWithoutWithdrawalInput = {
 
 export type RefundUpdateWithoutWithdrawalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -720,7 +720,7 @@ export type RefundUpdateWithoutWithdrawalInput = {
 export type RefundUncheckedUpdateWithoutWithdrawalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   paymentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -815,7 +815,7 @@ export type $RefundPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: string
     paymentId: string
     withdrawalId: string | null
-    amount: runtime.Decimal
+    amount: number
     reason: string | null
     status: $Enums.RefundStatus
     transactionId: string | null
@@ -1250,7 +1250,7 @@ export interface RefundFieldRefs {
   readonly id: Prisma.FieldRef<"Refund", 'String'>
   readonly paymentId: Prisma.FieldRef<"Refund", 'String'>
   readonly withdrawalId: Prisma.FieldRef<"Refund", 'String'>
-  readonly amount: Prisma.FieldRef<"Refund", 'Decimal'>
+  readonly amount: Prisma.FieldRef<"Refund", 'Int'>
   readonly reason: Prisma.FieldRef<"Refund", 'String'>
   readonly status: Prisma.FieldRef<"Refund", 'RefundStatus'>
   readonly transactionId: Prisma.FieldRef<"Refund", 'String'>

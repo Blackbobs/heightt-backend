@@ -27,17 +27,17 @@ export type AggregateWalletHold = {
 }
 
 export type WalletHoldAvgAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type WalletHoldSumAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type WalletHoldMinAggregateOutputType = {
   id: string | null
   walletId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   reason: string | null
   expiresAt: Date | null
   status: $Enums.HoldStatus | null
@@ -48,7 +48,7 @@ export type WalletHoldMinAggregateOutputType = {
 export type WalletHoldMaxAggregateOutputType = {
   id: string | null
   walletId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   reason: string | null
   expiresAt: Date | null
   status: $Enums.HoldStatus | null
@@ -200,7 +200,7 @@ export type WalletHoldGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inter
 export type WalletHoldGroupByOutputType = {
   id: string
   walletId: string
-  amount: runtime.Decimal
+  amount: number
   reason: string | null
   expiresAt: Date | null
   status: $Enums.HoldStatus
@@ -234,7 +234,7 @@ export type WalletHoldWhereInput = {
   NOT?: Prisma.WalletHoldWhereInput | Prisma.WalletHoldWhereInput[]
   id?: Prisma.StringFilter<"WalletHold"> | string
   walletId?: Prisma.StringFilter<"WalletHold"> | string
-  amount?: Prisma.DecimalFilter<"WalletHold"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"WalletHold"> | number
   reason?: Prisma.StringNullableFilter<"WalletHold"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"WalletHold"> | Date | string | null
   status?: Prisma.EnumHoldStatusFilter<"WalletHold"> | $Enums.HoldStatus
@@ -261,7 +261,7 @@ export type WalletHoldWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.WalletHoldWhereInput[]
   NOT?: Prisma.WalletHoldWhereInput | Prisma.WalletHoldWhereInput[]
   walletId?: Prisma.StringFilter<"WalletHold"> | string
-  amount?: Prisma.DecimalFilter<"WalletHold"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"WalletHold"> | number
   reason?: Prisma.StringNullableFilter<"WalletHold"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"WalletHold"> | Date | string | null
   status?: Prisma.EnumHoldStatusFilter<"WalletHold"> | $Enums.HoldStatus
@@ -292,7 +292,7 @@ export type WalletHoldScalarWhereWithAggregatesInput = {
   NOT?: Prisma.WalletHoldScalarWhereWithAggregatesInput | Prisma.WalletHoldScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"WalletHold"> | string
   walletId?: Prisma.StringWithAggregatesFilter<"WalletHold"> | string
-  amount?: Prisma.DecimalWithAggregatesFilter<"WalletHold"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntWithAggregatesFilter<"WalletHold"> | number
   reason?: Prisma.StringNullableWithAggregatesFilter<"WalletHold"> | string | null
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"WalletHold"> | Date | string | null
   status?: Prisma.EnumHoldStatusWithAggregatesFilter<"WalletHold"> | $Enums.HoldStatus
@@ -302,7 +302,7 @@ export type WalletHoldScalarWhereWithAggregatesInput = {
 
 export type WalletHoldCreateInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   expiresAt?: Date | string | null
   status?: $Enums.HoldStatus
@@ -314,7 +314,7 @@ export type WalletHoldCreateInput = {
 export type WalletHoldUncheckedCreateInput = {
   id?: string
   walletId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   expiresAt?: Date | string | null
   status?: $Enums.HoldStatus
@@ -324,7 +324,7 @@ export type WalletHoldUncheckedCreateInput = {
 
 export type WalletHoldUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -336,7 +336,7 @@ export type WalletHoldUpdateInput = {
 export type WalletHoldUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -347,7 +347,7 @@ export type WalletHoldUncheckedUpdateInput = {
 export type WalletHoldCreateManyInput = {
   id?: string
   walletId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   expiresAt?: Date | string | null
   status?: $Enums.HoldStatus
@@ -357,7 +357,7 @@ export type WalletHoldCreateManyInput = {
 
 export type WalletHoldUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -368,7 +368,7 @@ export type WalletHoldUpdateManyMutationInput = {
 export type WalletHoldUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   walletId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -475,7 +475,7 @@ export type EnumHoldStatusFieldUpdateOperationsInput = {
 
 export type WalletHoldCreateWithoutWalletInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   expiresAt?: Date | string | null
   status?: $Enums.HoldStatus
@@ -485,7 +485,7 @@ export type WalletHoldCreateWithoutWalletInput = {
 
 export type WalletHoldUncheckedCreateWithoutWalletInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   expiresAt?: Date | string | null
   status?: $Enums.HoldStatus
@@ -525,7 +525,7 @@ export type WalletHoldScalarWhereInput = {
   NOT?: Prisma.WalletHoldScalarWhereInput | Prisma.WalletHoldScalarWhereInput[]
   id?: Prisma.StringFilter<"WalletHold"> | string
   walletId?: Prisma.StringFilter<"WalletHold"> | string
-  amount?: Prisma.DecimalFilter<"WalletHold"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"WalletHold"> | number
   reason?: Prisma.StringNullableFilter<"WalletHold"> | string | null
   expiresAt?: Prisma.DateTimeNullableFilter<"WalletHold"> | Date | string | null
   status?: Prisma.EnumHoldStatusFilter<"WalletHold"> | $Enums.HoldStatus
@@ -535,7 +535,7 @@ export type WalletHoldScalarWhereInput = {
 
 export type WalletHoldCreateManyWalletInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   reason?: string | null
   expiresAt?: Date | string | null
   status?: $Enums.HoldStatus
@@ -545,7 +545,7 @@ export type WalletHoldCreateManyWalletInput = {
 
 export type WalletHoldUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -555,7 +555,7 @@ export type WalletHoldUpdateWithoutWalletInput = {
 
 export type WalletHoldUncheckedUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -565,7 +565,7 @@ export type WalletHoldUncheckedUpdateWithoutWalletInput = {
 
 export type WalletHoldUncheckedUpdateManyWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumHoldStatusFieldUpdateOperationsInput | $Enums.HoldStatus
@@ -641,7 +641,7 @@ export type $WalletHoldPayload<ExtArgs extends runtime.Types.Extensions.Internal
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     walletId: string
-    amount: runtime.Decimal
+    amount: number
     reason: string | null
     expiresAt: Date | null
     status: $Enums.HoldStatus
@@ -1073,7 +1073,7 @@ export interface Prisma__WalletHoldClient<T, Null = never, ExtArgs extends runti
 export interface WalletHoldFieldRefs {
   readonly id: Prisma.FieldRef<"WalletHold", 'String'>
   readonly walletId: Prisma.FieldRef<"WalletHold", 'String'>
-  readonly amount: Prisma.FieldRef<"WalletHold", 'Decimal'>
+  readonly amount: Prisma.FieldRef<"WalletHold", 'Int'>
   readonly reason: Prisma.FieldRef<"WalletHold", 'String'>
   readonly expiresAt: Prisma.FieldRef<"WalletHold", 'DateTime'>
   readonly status: Prisma.FieldRef<"WalletHold", 'HoldStatus'>

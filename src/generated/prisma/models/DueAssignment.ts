@@ -27,18 +27,18 @@ export type AggregateDueAssignment = {
 }
 
 export type DueAssignmentAvgAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type DueAssignmentSumAggregateOutputType = {
-  amount: runtime.Decimal | null
+  amount: number | null
 }
 
 export type DueAssignmentMinAggregateOutputType = {
   id: string | null
   dueId: string | null
   studentId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   isPaid: boolean | null
   paidAt: Date | null
   createdAt: Date | null
@@ -49,7 +49,7 @@ export type DueAssignmentMaxAggregateOutputType = {
   id: string | null
   dueId: string | null
   studentId: string | null
-  amount: runtime.Decimal | null
+  amount: number | null
   isPaid: boolean | null
   paidAt: Date | null
   createdAt: Date | null
@@ -201,7 +201,7 @@ export type DueAssignmentGroupByOutputType = {
   id: string
   dueId: string
   studentId: string
-  amount: runtime.Decimal
+  amount: number
   isPaid: boolean
   paidAt: Date | null
   createdAt: Date
@@ -235,7 +235,7 @@ export type DueAssignmentWhereInput = {
   id?: Prisma.StringFilter<"DueAssignment"> | string
   dueId?: Prisma.StringFilter<"DueAssignment"> | string
   studentId?: Prisma.StringFilter<"DueAssignment"> | string
-  amount?: Prisma.DecimalFilter<"DueAssignment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"DueAssignment"> | number
   isPaid?: Prisma.BoolFilter<"DueAssignment"> | boolean
   paidAt?: Prisma.DateTimeNullableFilter<"DueAssignment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DueAssignment"> | Date | string
@@ -267,7 +267,7 @@ export type DueAssignmentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DueAssignmentWhereInput | Prisma.DueAssignmentWhereInput[]
   dueId?: Prisma.StringFilter<"DueAssignment"> | string
   studentId?: Prisma.StringFilter<"DueAssignment"> | string
-  amount?: Prisma.DecimalFilter<"DueAssignment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"DueAssignment"> | number
   isPaid?: Prisma.BoolFilter<"DueAssignment"> | boolean
   paidAt?: Prisma.DateTimeNullableFilter<"DueAssignment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DueAssignment"> | Date | string
@@ -300,7 +300,7 @@ export type DueAssignmentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"DueAssignment"> | string
   dueId?: Prisma.StringWithAggregatesFilter<"DueAssignment"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"DueAssignment"> | string
-  amount?: Prisma.DecimalWithAggregatesFilter<"DueAssignment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntWithAggregatesFilter<"DueAssignment"> | number
   isPaid?: Prisma.BoolWithAggregatesFilter<"DueAssignment"> | boolean
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DueAssignment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DueAssignment"> | Date | string
@@ -309,7 +309,7 @@ export type DueAssignmentScalarWhereWithAggregatesInput = {
 
 export type DueAssignmentCreateInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -323,7 +323,7 @@ export type DueAssignmentUncheckedCreateInput = {
   id?: string
   dueId: string
   studentId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -333,7 +333,7 @@ export type DueAssignmentUncheckedCreateInput = {
 
 export type DueAssignmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,7 +347,7 @@ export type DueAssignmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dueId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -359,7 +359,7 @@ export type DueAssignmentCreateManyInput = {
   id?: string
   dueId: string
   studentId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -368,7 +368,7 @@ export type DueAssignmentCreateManyInput = {
 
 export type DueAssignmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -379,7 +379,7 @@ export type DueAssignmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dueId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -547,7 +547,7 @@ export type DueAssignmentUpdateOneRequiredWithoutDuePaymentsNestedInput = {
 
 export type DueAssignmentCreateWithoutStudentInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -559,7 +559,7 @@ export type DueAssignmentCreateWithoutStudentInput = {
 export type DueAssignmentUncheckedCreateWithoutStudentInput = {
   id?: string
   dueId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -600,7 +600,7 @@ export type DueAssignmentScalarWhereInput = {
   id?: Prisma.StringFilter<"DueAssignment"> | string
   dueId?: Prisma.StringFilter<"DueAssignment"> | string
   studentId?: Prisma.StringFilter<"DueAssignment"> | string
-  amount?: Prisma.DecimalFilter<"DueAssignment"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFilter<"DueAssignment"> | number
   isPaid?: Prisma.BoolFilter<"DueAssignment"> | boolean
   paidAt?: Prisma.DateTimeNullableFilter<"DueAssignment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DueAssignment"> | Date | string
@@ -609,7 +609,7 @@ export type DueAssignmentScalarWhereInput = {
 
 export type DueAssignmentCreateWithoutDueInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -621,7 +621,7 @@ export type DueAssignmentCreateWithoutDueInput = {
 export type DueAssignmentUncheckedCreateWithoutDueInput = {
   id?: string
   studentId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -657,7 +657,7 @@ export type DueAssignmentUpdateManyWithWhereWithoutDueInput = {
 
 export type DueAssignmentCreateWithoutDuePaymentsInput = {
   id?: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -670,7 +670,7 @@ export type DueAssignmentUncheckedCreateWithoutDuePaymentsInput = {
   id?: string
   dueId: string
   studentId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -695,7 +695,7 @@ export type DueAssignmentUpdateToOneWithWhereWithoutDuePaymentsInput = {
 
 export type DueAssignmentUpdateWithoutDuePaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -708,7 +708,7 @@ export type DueAssignmentUncheckedUpdateWithoutDuePaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dueId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -718,7 +718,7 @@ export type DueAssignmentUncheckedUpdateWithoutDuePaymentsInput = {
 export type DueAssignmentCreateManyStudentInput = {
   id?: string
   dueId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -727,7 +727,7 @@ export type DueAssignmentCreateManyStudentInput = {
 
 export type DueAssignmentUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -739,7 +739,7 @@ export type DueAssignmentUpdateWithoutStudentInput = {
 export type DueAssignmentUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dueId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -750,7 +750,7 @@ export type DueAssignmentUncheckedUpdateWithoutStudentInput = {
 export type DueAssignmentUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   dueId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -760,7 +760,7 @@ export type DueAssignmentUncheckedUpdateManyWithoutStudentInput = {
 export type DueAssignmentCreateManyDueInput = {
   id?: string
   studentId: string
-  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount: number
   isPaid?: boolean
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -769,7 +769,7 @@ export type DueAssignmentCreateManyDueInput = {
 
 export type DueAssignmentUpdateWithoutDueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -781,7 +781,7 @@ export type DueAssignmentUpdateWithoutDueInput = {
 export type DueAssignmentUncheckedUpdateWithoutDueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -792,7 +792,7 @@ export type DueAssignmentUncheckedUpdateWithoutDueInput = {
 export type DueAssignmentUncheckedUpdateManyWithoutDueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -909,7 +909,7 @@ export type $DueAssignmentPayload<ExtArgs extends runtime.Types.Extensions.Inter
     id: string
     dueId: string
     studentId: string
-    amount: runtime.Decimal
+    amount: number
     isPaid: boolean
     paidAt: Date | null
     createdAt: Date
@@ -1343,7 +1343,7 @@ export interface DueAssignmentFieldRefs {
   readonly id: Prisma.FieldRef<"DueAssignment", 'String'>
   readonly dueId: Prisma.FieldRef<"DueAssignment", 'String'>
   readonly studentId: Prisma.FieldRef<"DueAssignment", 'String'>
-  readonly amount: Prisma.FieldRef<"DueAssignment", 'Decimal'>
+  readonly amount: Prisma.FieldRef<"DueAssignment", 'Int'>
   readonly isPaid: Prisma.FieldRef<"DueAssignment", 'Boolean'>
   readonly paidAt: Prisma.FieldRef<"DueAssignment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"DueAssignment", 'DateTime'>

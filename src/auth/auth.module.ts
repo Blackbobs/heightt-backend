@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
 import { CookieService } from './cookie.service';
 import { JwtStrategy } from '../strategies/jwt.startegy';
+import { PermissionService } from './permission.service';
 
 @Module({
   imports: [
@@ -31,7 +32,13 @@ import { JwtStrategy } from '../strategies/jwt.startegy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, TokenService, CookieService, JwtStrategy],
-  exports: [AuthService, TokenService, CookieService],
+  providers: [
+    AuthService,
+    TokenService,
+    CookieService,
+    JwtStrategy,
+    PermissionService,
+  ],
+  exports: [AuthService, TokenService, CookieService, PermissionService],
 })
 export class AuthModule {}
