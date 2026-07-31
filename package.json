@@ -31,7 +31,17 @@
     "db:deploy": "npx prisma migrate deploy",
     "db:studio": "npx prisma studio",
     "db:generate": "npx prisma generate",
-    "schema:merge": "node scripts/merge-schema.js"
+    "schema:merge": "node scripts/merge-schema.js",
+    "docker:build": "docker build -t heightt-api:latest .",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:restart": "docker compose restart",
+    "docker:ps": "docker compose ps",
+    "docker:dev": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
+    "docker:migrate": "docker compose run --rm migrate",
+    "docker:clean": "docker compose down -v && docker system prune -f",
+    "deploy": "bash scripts/docker-deploy.sh"
   },
   "dependencies": {
     "@nestjs/bull": "^11.0.4",
@@ -43,11 +53,12 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-socket.io": "^11.1.28",
+    "@nestjs/serve-static": "^5.0.5",
     "@nestjs/swagger": "^11.4.6",
     "@nestjs/throttler": "^6.5.0",
     "@nestjs/websockets": "^11.1.28",
     "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^7.9.1",
     "@types/ioredis": "^5.0.0",
     "@types/socket.io": "^3.0.2",
     "argon2": "^0.45.0",
@@ -56,6 +67,9 @@
     "class-validator": "^0.15.1",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
+    "csurf": "^1.11.0",
+    "express-rate-limit": "^8.6.1",
+    "helmet": "^8.3.0",
     "ioredis": "^5.11.1",
     "ms": "^2.1.3",
     "passport": "^0.7.0",
@@ -64,9 +78,11 @@
     "pg": "^8.22.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "sanitize-html": "^2.17.6",
     "socket.io": "^4.8.3",
     "swagger-ui-express": "^5.0.1",
-    "useragent": "^2.3.0"
+    "useragent": "^2.3.0",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -76,12 +92,14 @@
     "@nestjs/testing": "^11.0.1",
     "@types/argon2": "^0.15.4",
     "@types/cookie-parser": "^1.4.10",
+    "@types/csurf": "^1.11.5",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/pg": "^8.20.0",
+    "@types/sanitize-html": "^2.16.1",
     "@types/supertest": "^7.0.0",
     "@types/useragent": "^2.3.4",
     "dotenv": "^17.4.2",
@@ -91,7 +109,7 @@
     "globals": "^17.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
-    "prisma": "^7.8.0",
+    "prisma": "^7.9.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
@@ -118,5 +136,5 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "packageManager": "pnpm@11.17.0+sha512.cca3cea332ad254bb84145f966d19f4879615210346fc92c79a047f23a0d7b3cca3c3792f0076ba1f1831d277efbcf0a9119b31a9a60eca7fb3d6231f331ef72"
+  "packageManager": "pnpm@11.18.0+sha512.33d83c77da82f49fba836925c6f1b841181ec3132b670639bd012f7075f5c7cf634c5f870147c19aae7478fac01df09d8892e880454896edd23ee9b33757563c"
 }

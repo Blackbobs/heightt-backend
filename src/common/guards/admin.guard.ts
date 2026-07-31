@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from '../../prisma/prisma.service';
-import { PermissionService } from '../../auth/permission.service';
+import { PermissionService } from '../../v1/auth/permission.service';
 
 // Remove the AdminType import
 

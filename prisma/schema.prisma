@@ -1,16 +1,12 @@
 generator client {
   provider     = "prisma-client"
-  output       = "../src/generated/prisma"
+  output       = "../src/v1/generated/prisma"
   moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
 }
-
-// ============================================
-// DOMAIN 1: AUTHENTICATION
-// ============================================
 
 model User {
   id           String @id @default(cuid())
@@ -28,7 +24,6 @@ model User {
   deletedAt DateTime?
   deletedBy String?
 
-  // Relations
   profile                 UserProfile?
   sessions                Session[]
   passwordResets          PasswordReset[]
@@ -56,10 +51,10 @@ model User {
   organizationMemberships OrganizationMembership[]
   admins                  Admin[]
 
-  // Event relations - add these with matching relation names
   createdEvents  Event[]   @relation("EventCreator")
   approvedEvents Event[]   @relation("EventApprover")
   receipts       Receipt[]
+  files          File[]
 
   @@index([email])
   @@index([username])
@@ -126,10 +121,6 @@ model EmailVerification {
   @@map("email_verifications")
 }
 
-// ============================================
-// DOMAIN 2: USER PROFILE
-// ============================================
-
 model UserProfile {
   id     String @id @default(cuid())
   userId String @unique
@@ -164,10 +155,6 @@ model UserProfile {
   @@map("user_profiles")
 }
 
-// ============================================
-// DOMAIN 3: INSTITUTION MANAGEMENT
-// ============================================
-
 model Institution {
   id        String  @id @default(cuid())
   name      String
@@ -198,7 +185,7 @@ model Institution {
   organizations Organization[]
   students      StudentProfile[]
   dues          Due[]
-  admins        Admin[] // <-- ADD THIS
+  admins        Admin[]
 
   @@index([code])
   @@map("institutions")
@@ -221,7 +208,7 @@ model Faculty {
   departments   Department[]
   organizations Organization[]
   students      StudentProfile[]
-  admins        Admin[] // <-- ADD THIS
+  admins        Admin[]
 
   @@unique([institutionId, code])
   @@index([institutionId])
@@ -248,7 +235,7 @@ model Department {
   organizations   Organization[]
   studentProfiles StudentProfile[]
   students        StudentAcademicRecord[]
-  admins          Admin[] // <-- ADD THIS
+  admins          Admin[]
 
   @@unique([facultyId, code])
   @@index([facultyId])
@@ -308,10 +295,6 @@ model AcademicSession {
   @@map("academic_sessions")
 }
 
-// ============================================
-// DOMAIN 4: STUDENT DOMAIN
-// ============================================
-
 model StudentProfile {
   id     String @id @default(cuid())
   userId String @unique
@@ -345,6 +328,7 @@ model StudentProfile {
   enrollments     StudentEnrollment[]
   verifications   StudentVerification[]
   dueAssignments  DueAssignment[]
+  files           File[]
 
   @@index([userId])
   @@index([institutionId])
@@ -439,10 +423,6 @@ model StudentVerification {
   @@map("student_verifications")
 }
 
-// ============================================
-// DOMAIN 5: ORGANIZATIONS
-// ============================================
-
 model Organization {
   id String @id @default(cuid())
 
@@ -493,8 +473,9 @@ model Organization {
   ledgerAccounts     LedgerAccount[]
   settlements        Settlement[]
   payments           Payment[]
-  admins             Admin[] // <-- ADD THIS
+  admins             Admin[]
   receipts           Receipt[]
+  files              File[]
 
   @@unique([institutionId, slug])
   @@index([institutionId])
@@ -533,10 +514,6 @@ model OrganizationMembership {
   @@index([status])
   @@map("organization_memberships")
 }
-
-// ============================================
-// DOMAIN 6: RBAC
-// ============================================
 
 model Role {
   id             String @id @default(cuid())
@@ -603,17 +580,15 @@ model MembershipRole {
   @@map("membership_roles")
 }
 
-// Admin Types - Different levels of admin access
 enum AdminType {
-  PLATFORM_ADMIN // Full access to everything
-  INSTITUTION_ADMIN // Access to a specific institution
-  FACULTY_ADMIN // Access to a specific faculty
-  DEPARTMENT_ADMIN // Access to a specific department
-  ORGANIZATION_ADMIN // Access to a specific organization
-  CLUB_ADMIN // Access to a specific club
+  PLATFORM_ADMIN
+  INSTITUTION_ADMIN
+  FACULTY_ADMIN
+  DEPARTMENT_ADMIN
+  ORGANIZATION_ADMIN
+  CLUB_ADMIN
 }
 
-// Permission Categories
 enum PermissionCategory {
   USER
   INSTITUTION
@@ -628,7 +603,6 @@ enum PermissionCategory {
   ANALYTICS
 }
 
-// Permission Actions
 enum PermissionAction {
   CREATE
   READ
@@ -644,7 +618,6 @@ enum PermissionAction {
   REVOKE
 }
 
-// Admin Model - Links users to admin roles
 model Admin {
   id             String    @id @default(cuid())
   userId         String
@@ -654,17 +627,14 @@ model Admin {
   departmentId   String?
   organizationId String?
 
-  // Audit
   assignedBy String?
   assignedAt DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  // Status
   status        AdminStatus @default(ACTIVE)
   revokedAt     DateTime?
   revokedReason String?
 
-  // Relations
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   institution  Institution?  @relation(fields: [institutionId], references: [id])
   faculty      Faculty?      @relation(fields: [facultyId], references: [id])
@@ -680,18 +650,16 @@ model Admin {
   @@map("admins")
 }
 
-// Admin Permissions - Granular permissions for each admin
 model AdminPermission {
   id                 String             @id @default(cuid())
   adminId            String
-  permissionKey      String // e.g., "users:create", "finance:read"
+  permissionKey      String
   permissionCategory PermissionCategory
   permissionAction   PermissionAction
-  resourceId         String? // Specific resource ID if permission is scoped
+  resourceId         String?
   grantedBy          String?
   grantedAt          DateTime           @default(now())
 
-  // Relations
   admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   @@unique([adminId, permissionKey, resourceId])
@@ -700,14 +668,13 @@ model AdminPermission {
   @@map("admin_permissions")
 }
 
-// System Roles - Predefined roles with permission sets
 model SystemRole {
   id          String             @id @default(cuid())
   name        String             @unique
   description String?
   category    SystemRoleCategory
   isDefault   Boolean            @default(false)
-  permissions String[] // Array of permission keys
+  permissions String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -715,14 +682,12 @@ model SystemRole {
   @@map("system_roles")
 }
 
-// Admin Status
 enum AdminStatus {
   ACTIVE
   INACTIVE
   REVOKED
 }
 
-// System Role Categories
 enum SystemRoleCategory {
   PLATFORM
   INSTITUTION
@@ -731,7 +696,7 @@ enum SystemRoleCategory {
 }
 
 // ============================================
-// DOMAIN 7: FINANCE & LEDGER (ALL AMOUNTS IN KOBO - 1 NGN = 100 KOBO)
+// FIXED FINANCE MODELS
 // ============================================
 
 model Wallet {
@@ -739,8 +704,8 @@ model Wallet {
   userId         String?
   organizationId String?
 
-  balance     Int          @default(0) // In KOBO
-  heldBalance Int          @default(0) // In KOBO
+  balance     Int          @default(0)
+  heldBalance Int          @default(0)
   currency    String       @default("NGN")
   status      WalletStatus @default(ACTIVE)
 
@@ -753,6 +718,9 @@ model Wallet {
   transactions Transaction[]
   withdrawals  Withdrawal[]
 
+  ledgerAccountId String?        @unique
+  ledgerAccount   LedgerAccount? @relation(fields: [ledgerAccountId], references: [id])
+
   @@unique([userId])
   @@unique([organizationId])
   @@map("wallets")
@@ -761,7 +729,7 @@ model Wallet {
 model WalletHold {
   id        String     @id @default(cuid())
   walletId  String
-  amount    Int // In KOBO
+  amount    Int
   reason    String?
   expiresAt DateTime?
   status    HoldStatus @default(ACTIVE)
@@ -777,23 +745,48 @@ model WalletHold {
 }
 
 model LedgerAccount {
-  id             String            @id @default(cuid())
+  id             String  @id @default(cuid())
   organizationId String?
-  name           String
-  code           String            @unique
-  type           LedgerAccountType
-  balance        Int               @default(0) // In KOBO
-  currency       String            @default("NGN")
-  isActive       Boolean           @default(true)
+  walletId       String? @unique
+
+  code        String  @unique
+  name        String
+  description String?
+
+  type     LedgerAccountType
+  category LedgerAccountCategory?
+
+  ownerType LedgerAccountOwnerType @default(SYSTEM)
+  ownerId   String?
+
+  balance        Int @default(0)
+  pendingBalance Int @default(0)
+
+  currency String  @default("NGN")
+  isActive Boolean @default(true)
+  isSystem Boolean @default(false)
+
+  parentId String?
+  parent   LedgerAccount?  @relation("LedgerAccountHierarchy", fields: [parentId], references: [id])
+  children LedgerAccount[] @relation("LedgerAccountHierarchy")
+
+  createdBy String?
+  metadata  Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  organization Organization? @relation(fields: [organizationId], references: [id])
-  entries      LedgerEntry[]
+  organization  Organization? @relation(fields: [organizationId], references: [id])
+  wallet        Wallet?       @relation
+  journalLines  JournalLine[]
+  ledgerEntries LedgerEntry[]
 
+  @@unique([ownerType, ownerId, code])
   @@index([organizationId])
   @@index([code])
+  @@index([type])
+  @@index([ownerType])
+  @@index([ownerId])
   @@map("ledger_accounts")
 }
 
@@ -802,10 +795,10 @@ model LedgerEntry {
   accountId     String
   transactionId String
 
-  amount        Int // In KOBO
+  amount        Int
   type          LedgerEntryType
-  balanceBefore Int // In KOBO
-  balanceAfter  Int // In KOBO
+  balanceBefore Int
+  balanceAfter  Int
   description   String?
 
   createdAt DateTime @default(now())
@@ -818,20 +811,80 @@ model LedgerEntry {
   @@map("ledger_entries")
 }
 
+model JournalEntry {
+  id String @id @default(cuid())
+
+  reference   String  @unique
+  description String?
+
+  transactionId String? @unique
+  paymentId     String? @unique
+  withdrawalId  String? @unique
+  refundId      String? @unique
+
+  entryDate DateTime           @default(now())
+  status    JournalEntryStatus @default(POSTED)
+
+  isBalanced Boolean   @default(false)
+  verifiedBy String?
+  verifiedAt DateTime?
+
+  createdBy String?
+  notes     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lines       JournalLine[]
+  transaction Transaction?  @relation
+  payment     Payment?      @relation
+  withdrawal  Withdrawal?   @relation
+  refund      Refund?       @relation
+
+  @@index([reference])
+  @@index([transactionId])
+  @@index([paymentId])
+  @@index([entryDate])
+  @@index([status])
+  @@map("journal_entries")
+}
+
+model JournalLine {
+  id              String @id @default(cuid())
+  journalEntryId  String
+  ledgerAccountId String
+
+  type   JournalLineType
+  amount Int
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  journalEntry  JournalEntry  @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  ledgerAccount LedgerAccount @relation(fields: [ledgerAccountId], references: [id])
+
+  @@index([journalEntryId])
+  @@index([ledgerAccountId])
+  @@map("journal_lines")
+}
+
 model Transaction {
   id       String @id @default(cuid())
   walletId String
 
   type      TransactionType
-  amount    Int // In KOBO
-  fee       Int             @default(0) // In KOBO
-  netAmount Int // In KOBO
+  amount    Int
+  fee       Int             @default(0)
+  netAmount Int
 
   status TransactionStatus @default(PENDING)
 
   reference   String  @unique
   description String?
   metadata    Json?
+
+  journalEntryId String? @unique
 
   completedAt   DateTime?
   failedAt      DateTime?
@@ -840,16 +893,18 @@ model Transaction {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  wallet     Wallet        @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  entries    LedgerEntry[]
-  payment    Payment?
-  settlement Settlement?
-  withdrawal Withdrawal?
-  refund     Refund?
+  wallet       Wallet        @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  entries      LedgerEntry[]
+  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
+  payment      Payment?
+  settlement   Settlement?
+  withdrawal   Withdrawal?
+  refund       Refund?
 
   @@index([walletId])
   @@index([reference])
   @@index([status])
+  @@index([journalEntryId])
   @@map("transactions")
 }
 
@@ -859,8 +914,8 @@ model Payment {
   organizationId String
   transactionId  String? @unique
 
-  amount        Int // In KOBO
-  serviceFee    Int               @default(0) // In KOBO
+  amount        Int
+  serviceFee    Int               @default(0)
   status        PaymentStatus     @default(PENDING)
   paymentMethod PaymentMethodType
 
@@ -868,13 +923,16 @@ model Payment {
   description String?
   metadata    Json?
 
+  journalEntryId String? @unique
+
   paidAt    DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  payer        User         @relation(fields: [payerId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
-  transaction  Transaction? @relation(fields: [transactionId], references: [id])
+  payer        User          @relation(fields: [payerId], references: [id])
+  organization Organization  @relation(fields: [organizationId], references: [id])
+  transaction  Transaction?  @relation(fields: [transactionId], references: [id])
+  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
   duePayment   DuePayment?
   refund       Refund?
   receipt      Receipt?
@@ -883,6 +941,7 @@ model Payment {
   @@index([organizationId])
   @@index([reference])
   @@index([status])
+  @@index([journalEntryId])
   @@map("payments")
 }
 
@@ -893,9 +952,9 @@ model Due {
   institutionId  String?
   name           String
   description    String?
-  amount         Int // In KOBO
+  amount         Int
   dueDate        DateTime
-  lateFee        Int       @default(0) // In KOBO
+  lateFee        Int       @default(0)
   isRequired     Boolean   @default(true)
   status         DueStatus @default(ACTIVE)
 
@@ -916,7 +975,7 @@ model DueAssignment {
   id        String    @id @default(cuid())
   dueId     String
   studentId String
-  amount    Int // In KOBO
+  amount    Int
   isPaid    Boolean   @default(false)
   paidAt    DateTime?
 
@@ -937,7 +996,7 @@ model DuePayment {
   id           String   @id @default(cuid())
   assignmentId String
   paymentId    String   @unique
-  amount       Int // In KOBO
+  amount       Int
   paidAt       DateTime @default(now())
 
   assignment DueAssignment @relation(fields: [assignmentId], references: [id])
@@ -951,7 +1010,7 @@ model Withdrawal {
   userId        String
   walletId      String
   transactionId String?          @unique
-  amount        Int // In KOBO
+  amount        Int
   status        WithdrawalStatus @default(PENDING)
   bankName      String?
   accountNumber String?
@@ -959,20 +1018,24 @@ model Withdrawal {
   reference     String           @unique
   metadata      Json?
 
+  journalEntryId String? @unique
+
   requestedAt   DateTime  @default(now())
   processedAt   DateTime?
   completedAt   DateTime?
   failedAt      DateTime?
   failureReason String?
 
-  user        User         @relation(fields: [userId], references: [id])
-  wallet      Wallet       @relation(fields: [walletId], references: [id])
-  transaction Transaction? @relation(fields: [transactionId], references: [id])
-  refund      Refund?
+  user         User          @relation(fields: [userId], references: [id])
+  wallet       Wallet        @relation(fields: [walletId], references: [id])
+  transaction  Transaction?  @relation(fields: [transactionId], references: [id])
+  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
+  refund       Refund?
 
   @@index([userId])
   @@index([walletId])
   @@index([status])
+  @@index([journalEntryId])
   @@map("withdrawals")
 }
 
@@ -980,20 +1043,24 @@ model Refund {
   id            String       @id @default(cuid())
   paymentId     String       @unique
   withdrawalId  String?      @unique
-  amount        Int // In KOBO
+  amount        Int
   reason        String?
   status        RefundStatus @default(PENDING)
   transactionId String?      @unique
-  transaction   Transaction? @relation(fields: [transactionId], references: [id])
+
+  journalEntryId String? @unique
 
   createdAt   DateTime  @default(now())
   processedAt DateTime?
 
-  payment    Payment     @relation(fields: [paymentId], references: [id])
-  withdrawal Withdrawal? @relation(fields: [withdrawalId], references: [id])
+  payment      Payment       @relation(fields: [paymentId], references: [id])
+  withdrawal   Withdrawal?   @relation(fields: [withdrawalId], references: [id])
+  transaction  Transaction?  @relation(fields: [transactionId], references: [id])
+  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
 
   @@index([paymentId])
   @@index([status])
+  @@index([journalEntryId])
   @@map("refunds")
 }
 
@@ -1001,7 +1068,7 @@ model Settlement {
   id             String           @id @default(cuid())
   organizationId String
   transactionId  String           @unique
-  amount         Int // In KOBO
+  amount         Int
   reference      String           @unique
   status         SettlementStatus @default(PENDING)
 
@@ -1019,8 +1086,8 @@ model SavingsGoal {
   userId        String
   title         String
   description   String?
-  targetAmount  Int // In KOBO
-  currentAmount Int           @default(0) // In KOBO
+  targetAmount  Int
+  currentAmount Int           @default(0)
   targetDate    DateTime?
   status        SavingsStatus @default(ACTIVE)
 
@@ -1038,7 +1105,7 @@ model SavingsGoal {
 model SavingsTransaction {
   id          String                 @id @default(cuid())
   goalId      String
-  amount      Int // In KOBO
+  amount      Int
   type        SavingsTransactionType
   description String?
 
@@ -1048,6 +1115,196 @@ model SavingsTransaction {
 
   @@index([goalId])
   @@map("savings_transactions")
+}
+
+model Receipt {
+  id String @id @default(cuid())
+
+  paymentId      String  @unique
+  userId         String
+  organizationId String?
+
+  receiptNumber String @unique
+  reference     String @unique
+
+  amount      Int
+  serviceFee  Int    @default(0)
+  totalAmount Int
+  currency    String @default("NGN")
+
+  payerName  String
+  payerEmail String
+  payerPhone String?
+
+  paymentMethod PaymentMethodType
+  paymentDate   DateTime
+  description   String?
+
+  organizationName String?
+  organizationSlug String?
+
+  metadata Json?
+  items    Json?
+
+  status ReceiptStatus @default(ISSUED)
+
+  downloadCount  Int       @default(0)
+  lastDownloaded DateTime?
+  viewedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payment      Payment       @relation(fields: [paymentId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  files        File[]
+
+  @@index([paymentId])
+  @@index([userId])
+  @@index([organizationId])
+  @@index([receiptNumber])
+  @@index([reference])
+  @@map("receipts")
+}
+
+enum WalletStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum HoldStatus {
+  ACTIVE
+  RELEASED
+  EXPIRED
+}
+
+enum LedgerAccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+enum LedgerAccountCategory {
+  CASH
+  BANK
+  RECEIVABLE
+  PAYABLE
+  REVENUE
+  EXPENSE
+  EQUITY
+  ESCROW
+  SETTLEMENT
+  PLATFORM_FEE
+  TAX
+}
+
+enum LedgerAccountOwnerType {
+  USER
+  ORGANIZATION
+  PLATFORM
+  SYSTEM
+}
+
+enum LedgerEntryType {
+  DEBIT
+  CREDIT
+}
+
+enum JournalEntryStatus {
+  DRAFT
+  POSTED
+  REVERSED
+  VOIDED
+}
+
+enum JournalLineType {
+  DEBIT
+  CREDIT
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+  TRANSFER
+  FEE
+  REFUND
+  REVERSAL
+}
+
+enum TransactionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentMethodType {
+  CARD
+  BANK_TRANSFER
+  USSD
+  QR_CODE
+  WALLET
+}
+
+enum DueStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum RefundStatus {
+  PENDING
+  PROCESSED
+  FAILED
+}
+
+enum SettlementStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum SavingsStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum SavingsTransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  INTEREST
+  PENALTY
+}
+
+enum ReceiptStatus {
+  ISSUED
+  VOIDED
+  CANCELLED
 }
 
 // ============================================
@@ -1181,10 +1438,6 @@ model PushQueue {
   @@index([status])
   @@map("push_queue")
 }
-
-// ============================================
-// DOMAIN 9: PLATFORM OPERATIONS
-// ============================================
 
 model FeatureFlag {
   id          String  @id @default(cuid())
@@ -1333,10 +1586,6 @@ model OperationalAuditLog {
   @@map("operational_audit_logs")
 }
 
-// ============================================
-// DOMAIN 10: AUDIT & ACTIVITY
-// ============================================
-
 model AuditLog {
   id        String   @id @default(cuid())
   userId    String?
@@ -1372,10 +1621,6 @@ model ActivityLog {
   @@index([activity])
   @@map("activity_logs")
 }
-
-// ============================================
-// DOMAIN 11: GOVERNANCE
-// ============================================
 
 model Election {
   id             String @id @default(cuid())
@@ -1513,10 +1758,6 @@ model Committee {
   @@map("committees")
 }
 
-// ============================================
-// DOMAIN 12: EVENTS
-// ============================================
-
 model Event {
   id             String  @id @default(cuid())
   organizationId String?
@@ -1544,12 +1785,12 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations with unique relation names
   organization  Organization?       @relation(fields: [organizationId], references: [id])
   creator       User                @relation("EventCreator", fields: [createdBy], references: [id])
   approver      User?               @relation("EventApprover", fields: [approvedBy], references: [id])
   registrations EventRegistration[]
   tickets       Ticket[]
+  files         File[]
 
   @@index([organizationId])
   @@index([createdBy])
@@ -1626,83 +1867,47 @@ model Attendance {
   @@map("attendances")
 }
 
-// ============================================
-// DOMAIN: RECEIPTS
-// ============================================
-
-model Receipt {
+model File {
   id String @id @default(cuid())
 
-  // Relations
-  paymentId      String  @unique // One receipt per payment
-  userId         String
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  publicId     String @unique
+
+  folder String @default("uploads")
+
+  userId         String?
   organizationId String?
 
-  // Receipt Details
-  receiptNumber String @unique
-  reference     String @unique
-
-  // Amounts
-  amount      Int // In Kobo
-  serviceFee  Int    @default(0) // In Kobo
-  totalAmount Int // In Kobo (amount + serviceFee)
-  currency    String @default("NGN")
-
-  // Payer Information
-  payerName  String
-  payerEmail String
-  payerPhone String?
-
-  // Payment Details
-  paymentMethod PaymentMethodType
-  paymentDate   DateTime
-  description   String?
-
-  // Organization Details
-  organizationName String?
-  organizationSlug String?
-
-  // Additional Data
+  purpose  String?
   metadata Json?
-  items    Json? // For items/services purchased
 
-  // Status
-  status ReceiptStatus @default(ISSUED)
-
-  // Download/View tracking
-  downloadCount  Int       @default(0)
-  lastDownloaded DateTime?
-  viewedAt       DateTime?
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  payment      Payment       @relation(fields: [paymentId], references: [id])
-  user         User          @relation(fields: [userId], references: [id])
+  user         User?         @relation(fields: [userId], references: [id])
   organization Organization? @relation(fields: [organizationId], references: [id])
 
-  @@index([paymentId])
+  receiptId String?
+  receipt   Receipt?        @relation(fields: [receiptId], references: [id])
+  studentId String?
+  student   StudentProfile? @relation(fields: [studentId], references: [id])
+  eventId   String?
+  event     Event?          @relation(fields: [eventId], references: [id])
+
   @@index([userId])
   @@index([organizationId])
-  @@index([receiptNumber])
-  @@index([reference])
-  @@map("receipts")
+  @@index([publicId])
+  @@index([folder])
+  @@index([purpose])
+  @@map("files")
 }
-
-// ============================================
-// ENUMS
-// ============================================
-
-enum ReceiptStatus {
-  ISSUED
-  VOIDED
-  CANCELLED
-}
-
-// ============================================
-// ENUMS
-// ============================================
 
 enum UserStatus {
   ACTIVE
@@ -1829,106 +2034,6 @@ enum MembershipStatus {
   SUSPENDED
   LEFT
   REMOVED
-}
-
-enum WalletStatus {
-  ACTIVE
-  SUSPENDED
-  CLOSED
-}
-
-enum HoldStatus {
-  ACTIVE
-  RELEASED
-  EXPIRED
-}
-
-enum TransactionType {
-  CREDIT
-  DEBIT
-  TRANSFER
-  FEE
-  REFUND
-  REVERSAL
-}
-
-enum TransactionStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  CANCELLED
-}
-
-enum LedgerAccountType {
-  ASSET
-  LIABILITY
-  EQUITY
-  REVENUE
-  EXPENSE
-}
-
-enum LedgerEntryType {
-  DEBIT
-  CREDIT
-}
-
-enum PaymentStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  REFUNDED
-  CANCELLED
-}
-
-enum PaymentMethodType {
-  CARD
-  BANK_TRANSFER
-  USSD
-  QR_CODE
-  WALLET
-}
-
-enum DueStatus {
-  ACTIVE
-  INACTIVE
-  COMPLETED
-  CANCELLED
-}
-
-enum WithdrawalStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  CANCELLED
-}
-
-enum RefundStatus {
-  PENDING
-  PROCESSED
-  FAILED
-}
-
-enum SettlementStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum SavingsStatus {
-  ACTIVE
-  COMPLETED
-  CANCELLED
-}
-
-enum SavingsTransactionType {
-  DEPOSIT
-  WITHDRAWAL
-  INTEREST
-  PENALTY
 }
 
 enum AnnouncementType {

@@ -1,58 +1,82 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+// src/app.module.ts
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  RequestMethod,
+} from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { RedisModule } from './redis/redis.module';
-import { AuthModule } from './auth/auth.module';
 import { EmailModule } from './email/email.module';
-import { OnboardingModule } from './onboarding/onboarding.module';
-import { FilesModule } from './files/files.module';
-import { UsersModule } from './users/users.module';
-import { InstitutionsModule } from './institutions/institutions.module';
-import { OrganizationsModule } from './organizations/organizations.module';
-import { StudentsModule } from './students/students.module';
-import { FinanceModule } from './finance/finance.module';
 import { EventsModule } from './events/events.module';
 import { GatewaysModule } from './gateways/gateways.module';
-import { CommunicationModule } from './communication/communication.module';
-import { GovernanceModule } from './governance/governance.module';
-import { ActivitiesModule } from './activities/activities.module';
-import { PlatformModule } from './platform/platform.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { RbacModule } from './rbac/rbac.module';
-import { AuditModule } from './audit/audit.module';
-import { HealthModule } from './health/health.module';
-import { SearchModule } from './search/search.module';
-import { AnalyticsModule } from './analytics/analytics.module';
+import { V1Module } from './v1/v1.module';
+import { CustomThrottlerGuard } from './common/guards/throttler.guard';
+import { SanitizeInterceptor } from './common/interceptors/sanitize.interceptor';
+import { XssGuard } from './common/guards/xss.guard';
+import { SecurityHeadersMiddleware } from './common/middleware/security-headers.middleware';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.development'],
+      envFilePath: ['.env', '.env.development', '.env.production'],
+      validationOptions: {
+        allowUnknownKeys: true,
+      },
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        throttlers: [
+          {
+            name: 'default',
+            ttl: config.get('THROTTLE_TTL', 60) * 1000,
+            limit: config.get('THROTTLE_LIMIT', 100),
+          },
+        ],
+      }),
     }),
     PrismaModule,
     RedisModule,
     EmailModule,
-    AuthModule,
-    OnboardingModule,
-    FilesModule,
-    UsersModule,
-    InstitutionsModule,
-    OrganizationsModule,
-    StudentsModule,
-    FinanceModule,
     EventsModule,
     GatewaysModule,
-    CommunicationModule,
-    GovernanceModule,
-    ActivitiesModule,
-    PlatformModule,
-    DashboardModule,
-    RbacModule,
-    AuditModule,
-    HealthModule,
-    SearchModule,
-    AnalyticsModule,
+    V1Module,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: XssGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SanitizeInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => new TimeoutInterceptor(30000),
+    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(SecurityHeadersMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
