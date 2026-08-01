@@ -20,6 +20,7 @@ import { XssGuard } from './common/guards/xss.guard';
 import { SecurityHeadersMiddleware } from './common/middleware/security-headers.middleware';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
+import { CacheModule } from './redis/cache.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
     }),
     PrismaModule,
     RedisModule,
+    CacheModule,
     EmailModule,
     EventsModule,
     GatewaysModule,
