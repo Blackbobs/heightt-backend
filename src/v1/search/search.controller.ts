@@ -1,5 +1,13 @@
 // src/v1/search/search.controller.ts
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  Request,
+  Post,
+  Delete,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -9,7 +17,12 @@ import {
 } from '@nestjs/swagger';
 import { SearchService } from './search.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
-// Import cache decorators
+import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
+import {
+  SearchQueryDto,
+  SearchResponseDto,
+  AutoCompleteDto,
+} from './dto/search.dto';
 import {
   Cache,
   Cacheable,
@@ -24,138 +37,109 @@ import {
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
-  @Get('users')
+  @Get()
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      const { q, page, limit } = request.query;
-      return `search:users:${q}:${page || 1}:${limit || 10}`;
+      const {
+        q,
+        entityType,
+        page,
+        limit,
+        institutionId,
+        organizationId,
+        dateFrom,
+        dateTo,
+        sortBy,
+        sortOrder,
+      } = request.query;
+      return `search:${q}:${entityType || 'all'}:${page || 1}:${limit || 10}:${institutionId || 'all'}:${organizationId || 'all'}:${dateFrom || 'all'}:${dateTo || 'all'}:${sortBy || 'relevance'}:${sortOrder || 'desc'}`;
     },
-    ttl: 300, // 5 minutes
-    tags: ['search', 'users'],
+    ttl: 300,
+    tags: ['search'],
   })
-  @ApiOperation({ summary: 'Search users' })
-  @ApiQuery({ name: 'q', required: true, description: 'Search query' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({ status: 200, description: 'Users found' })
-  async searchUsers(
-    @Query('q') query: string,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    return this.searchService.searchUsers(
-      query,
-      parseInt(page, 10),
-      parseInt(limit, 10),
+  @ApiOperation({ summary: 'Search across all entities' })
+  @ApiResponse({
+    status: 200,
+    description: 'Search results',
+    type: SearchResponseDto,
+  })
+  async search(@Query() dto: SearchQueryDto, @Request() req: any) {
+    // Save search history
+    await this.searchService.saveSearchHistory(
+      req.user.id,
+      dto.q,
+      dto.entityType,
     );
+    return this.searchService.search(dto);
   }
 
-  @Get('organizations')
+  @Get('autocomplete')
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      const { q, page, limit } = request.query;
-      return `search:organizations:${q}:${page || 1}:${limit || 10}`;
+      const { q, limit, institutionId } = request.query;
+      return `autocomplete:${q}:${limit || 5}:${institutionId || 'all'}`;
     },
-    ttl: 300, // 5 minutes
-    tags: ['search', 'organizations'],
+    ttl: 300,
+    tags: ['search'],
   })
-  @ApiOperation({ summary: 'Search organizations' })
-  @ApiQuery({ name: 'q', required: true, description: 'Search query' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({ status: 200, description: 'Organizations found' })
-  async searchOrganizations(
-    @Query('q') query: string,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    return this.searchService.searchOrganizations(
-      query,
-      parseInt(page, 10),
-      parseInt(limit, 10),
-    );
+  @ApiOperation({ summary: 'Get autocomplete suggestions' })
+  @ApiResponse({
+    status: 200,
+    description: 'Autocomplete suggestions',
+  })
+  async autocomplete(@Query() dto: AutoCompleteDto) {
+    return this.searchService.autocomplete(dto);
   }
 
-  @Get('students')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      const { q, page, limit } = request.query;
-      return `search:students:${q}:${page || 1}:${limit || 10}`;
-    },
-    ttl: 300, // 5 minutes
-    tags: ['search', 'students'],
+  @Get('suggestions')
+  @ApiOperation({ summary: 'Get search suggestions' })
+  @ApiResponse({
+    status: 200,
+    description: 'Search suggestions',
   })
-  @ApiOperation({ summary: 'Search students' })
-  @ApiQuery({ name: 'q', required: true, description: 'Search query' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({ status: 200, description: 'Students found' })
-  async searchStudents(
-    @Query('q') query: string,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    return this.searchService.searchStudents(
-      query,
-      parseInt(page, 10),
-      parseInt(limit, 10),
-    );
+  async getSuggestions(@Query('q') query: string) {
+    return this.searchService.getSuggestions(query);
   }
 
-  @Get('institutions')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      const { q, page, limit } = request.query;
-      return `search:institutions:${q}:${page || 1}:${limit || 10}`;
-    },
-    ttl: 300, // 5 minutes
-    tags: ['search', 'institutions'],
+  @Get('history')
+  @ApiOperation({ summary: 'Get search history' })
+  @ApiResponse({
+    status: 200,
+    description: 'Search history',
   })
-  @ApiOperation({ summary: 'Search institutions' })
-  @ApiQuery({ name: 'q', required: true, description: 'Search query' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({ status: 200, description: 'Institutions found' })
-  async searchInstitutions(
-    @Query('q') query: string,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    return this.searchService.searchInstitutions(
-      query,
-      parseInt(page, 10),
-      parseInt(limit, 10),
-    );
+  async getSearchHistory(@Request() req: any) {
+    return this.searchService.getSearchHistory(req.user.id);
   }
 
-  @Get('global')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      const { q, page, limit } = request.query;
-      return `search:global:${q}:${page || 1}:${limit || 10}`;
-    },
-    ttl: 300, // 5 minutes
-    tags: ['search', 'global'],
+  @Delete('history')
+  @ApiOperation({ summary: 'Clear search history' })
+  @ApiResponse({
+    status: 200,
+    description: 'Search history cleared',
   })
-  @ApiOperation({ summary: 'Global search across all entities' })
-  @ApiQuery({ name: 'q', required: true, description: 'Search query' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({ status: 200, description: 'Global search results' })
-  async globalSearch(
-    @Query('q') query: string,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    return this.searchService.globalSearch(
-      query,
-      parseInt(page, 10),
-      parseInt(limit, 10),
-    );
+  async clearSearchHistory(@Request() req: any) {
+    return this.searchService.clearSearchHistory(req.user.id);
+  }
+
+  @Post('cache/invalidate')
+  @UseGuards(AdminGuard)
+  @RequirePermission('search:manage')
+  @InvalidateCache(['search'])
+  @ApiOperation({
+    summary: 'Invalidate search cache (Admin only)',
+    description: 'Clear all search-related cache.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Search cache invalidated',
+  })
+  async invalidateSearchCache() {
+    await this.searchService.invalidateSearchCache();
+    return {
+      message: 'Search cache invalidated successfully',
+      invalidatedAt: new Date().toISOString(),
+    };
   }
 }

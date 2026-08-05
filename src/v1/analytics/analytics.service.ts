@@ -2,6 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
+import { AnalyticsQueryDto, AnalyticsPeriod } from './dto/analytics.dto';
 
 @Injectable()
 export class AnalyticsService {
@@ -12,20 +13,69 @@ export class AnalyticsService {
     private readonly cacheService: CacheService,
   ) {}
 
-  async getRevenueAnalytics(
-    institutionId?: string,
-    startDate?: string,
-    endDate?: string,
-  ) {
-    const cacheKey = `analytics:revenue:${institutionId || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
+  // ============================================
+  // DASHBOARD ANALYTICS
+  // ============================================
+
+  async getDashboardAnalytics(dto: AnalyticsQueryDto) {
+    const cacheKey = `analytics:dashboard:${dto.institutionId || 'all'}:${dto.organizationId || 'all'}:${dto.startDate || 'all'}:${dto.endDate || 'all'}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
       return cached;
     }
 
-    const where: any = {};
-    if (institutionId) {
-      where.organization = { institutionId };
+    const [revenue, students, organizations, recentActivities] =
+      await Promise.all([
+        this.getRevenueAnalytics(dto),
+        this.getStudentAnalytics(dto),
+        this.getOrganizationAnalytics(dto),
+        this.getRecentActivities(dto),
+      ]);
+
+    const dashboard = {
+      summary: {
+        totalUsers: await this.prisma.user.count(),
+        totalStudents: students.totalStudents,
+        totalOrganizations: organizations.totalOrganizations,
+        totalRevenue: revenue.totalRevenue,
+        totalRevenueFormatted: revenue.totalRevenueFormatted,
+        totalTransactions: revenue.totalTransactions,
+      },
+      revenue,
+      students,
+      organizations,
+      recentActivities,
+      updatedAt: new Date(),
+    };
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      dashboard,
+      ['analytics', 'dashboard'],
+      300,
+    );
+    return dashboard;
+  }
+
+  // ============================================
+  // REVENUE ANALYTICS
+  // ============================================
+
+  async getRevenueAnalytics(dto: AnalyticsQueryDto) {
+    const cacheKey = `analytics:revenue:${dto.institutionId || 'all'}:${dto.organizationId || 'all'}:${dto.startDate || 'all'}:${dto.endDate || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const { startDate, endDate, period = AnalyticsPeriod.MONTHLY } = dto;
+    const where: any = { status: 'COMPLETED' };
+
+    if (dto.institutionId) {
+      where.organization = { institutionId: dto.institutionId };
+    }
+    if (dto.organizationId) {
+      where.organizationId = dto.organizationId;
     }
     if (startDate) {
       where.paidAt = { ...where.paidAt, gte: new Date(startDate) };
@@ -34,53 +84,132 @@ export class AnalyticsService {
       where.paidAt = { ...where.paidAt, lte: new Date(endDate) };
     }
 
-    const payments = await this.prisma.payment.aggregate({
-      where: {
-        ...where,
-        status: 'COMPLETED',
-      },
-      _sum: { amount: true },
-      _count: { id: true },
+    // Total revenue and transactions
+    const [totalAgg, paymentMethods, topOrgs, topInstitutions] =
+      await Promise.all([
+        this.prisma.payment.aggregate({
+          where,
+          _sum: { amount: true },
+          _count: { id: true },
+        }),
+        this.prisma.payment.groupBy({
+          by: ['paymentMethod'],
+          where,
+          _sum: { amount: true },
+          _count: { id: true },
+        }),
+        this.prisma.payment.groupBy({
+          by: ['organizationId'],
+          where,
+          _sum: { amount: true },
+          orderBy: { _sum: { amount: 'desc' } },
+          take: 10,
+        }),
+        this.prisma.payment.groupBy({
+          by: ['organizationId'],
+          where: {
+            ...where,
+            organization: { institutionId: { not: null } },
+          },
+          _sum: { amount: true },
+          orderBy: { _sum: { amount: 'desc' } },
+          take: 10,
+        }),
+      ]);
+
+    // Revenue trend - using raw query
+    const revenueTrend = await this.getRevenueTrend(where, period);
+
+    // Get organization names for top performers
+    const orgIds = topOrgs.map((o) => o.organizationId);
+    const organizations = await this.prisma.organization.findMany({
+      where: { id: { in: orgIds } },
+      select: { id: true, name: true },
     });
+    const orgMap = new Map(organizations.map((o) => [o.id, o.name]));
 
-    const monthlyRevenue = await this.prisma.$queryRaw`
-      SELECT 
-        DATE_TRUNC('month', paid_at) as month,
-        SUM(amount) as total,
-        COUNT(*) as count
-      FROM payments
-      WHERE status = 'COMPLETED'
-        ${institutionId ? `AND organization_id IN (SELECT id FROM organizations WHERE institution_id = ${institutionId})` : ''}
-        ${startDate ? `AND paid_at >= ${new Date(startDate)}` : ''}
-        ${endDate ? `AND paid_at <= ${new Date(endDate)}` : ''}
-      GROUP BY DATE_TRUNC('month', paid_at)
-      ORDER BY month DESC
-      LIMIT 12
-    `;
+    // Get institution names
+    const instIds = topInstitutions.map((o) => o.organizationId);
+    const institutions = await this.prisma.institution.findMany({
+      where: { id: { in: instIds } },
+      select: { id: true, name: true },
+    });
+    const instMap = new Map(institutions.map((i) => [i.id, i.name]));
 
-    const result = {
-      totalRevenue: payments._sum.amount || 0,
-      totalTransactions: payments._count.id || 0,
-      monthlyRevenue,
+    const totalRevenue = totalAgg._sum.amount || 0;
+    const totalTransactions = totalAgg._count.id || 0;
+
+    const analytics = {
+      totalRevenue,
+      totalRevenueFormatted: `₦${(totalRevenue / 100).toFixed(2)}`,
+      totalTransactions,
+      averageTransactionValue:
+        totalTransactions > 0
+          ? Math.round(totalRevenue / totalTransactions)
+          : 0,
+      averageTransactionValueFormatted:
+        totalTransactions > 0
+          ? `₦${(totalRevenue / totalTransactions / 100).toFixed(2)}`
+          : '₦0.00',
+      revenueGrowth: await this.calculateRevenueGrowth(where),
+      revenueTrend: Array.isArray(revenueTrend)
+        ? revenueTrend.map((item: any) => ({
+            period: item.period,
+            amount: item.total || 0,
+            amountFormatted: `₦${((item.total || 0) / 100).toFixed(2)}`,
+          }))
+        : [],
+      revenueByPaymentMethod: paymentMethods.map((pm) => ({
+        method: pm.paymentMethod,
+        amount: pm._sum.amount || 0,
+        amountFormatted: `₦${((pm._sum.amount || 0) / 100).toFixed(2)}`,
+        percentage:
+          totalRevenue > 0
+            ? Math.round(((pm._sum.amount || 0) / totalRevenue) * 100)
+            : 0,
+      })),
+      topPerforming: {
+        organizations: topOrgs.map((o) => ({
+          id: o.organizationId,
+          name: orgMap.get(o.organizationId) || 'Unknown',
+          revenue: o._sum.amount || 0,
+          revenueFormatted: `₦${((o._sum.amount || 0) / 100).toFixed(2)}`,
+        })),
+        institutions: topInstitutions.map((o) => ({
+          id: o.organizationId,
+          name: instMap.get(o.organizationId) || 'Unknown',
+          revenue: o._sum.amount || 0,
+          revenueFormatted: `₦${((o._sum.amount || 0) / 100).toFixed(2)}`,
+        })),
+      },
     };
 
-    await this.cacheService.set(cacheKey, result, 1800); // 30 minutes
-    return result;
+    await this.cacheService.setWithTag(
+      cacheKey,
+      analytics,
+      ['analytics', 'revenue'],
+      1800,
+    );
+    return analytics;
   }
 
-  async getStudentAnalytics(institutionId?: string) {
-    const cacheKey = `analytics:students:${institutionId || 'all'}`;
+  // ============================================
+  // STUDENT ANALYTICS
+  // ============================================
+
+  async getStudentAnalytics(dto: AnalyticsQueryDto) {
+    const cacheKey = `analytics:students:${dto.institutionId || 'all'}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
       return cached;
     }
 
     const where: any = {};
-    if (institutionId) {
-      where.institutionId = institutionId;
+    if (dto.institutionId) {
+      where.institutionId = dto.institutionId;
     }
 
-    const [total, byStatus, byLevel, byDepartment, newThisMonth] =
+    const [total, byStatus, byLevel, byDepartment, newStudents] =
       await Promise.all([
         this.prisma.studentProfile.count({ where }),
         this.prisma.studentProfile.groupBy({
@@ -108,6 +237,7 @@ export class AnalyticsService {
         }),
       ]);
 
+    // Get names
     const levelIds = byLevel
       .map((item) => item.currentAcademicLevelId)
       .filter(Boolean);
@@ -126,37 +256,55 @@ export class AnalyticsService {
     });
     const deptMap = new Map(departments.map((d) => [d.id, d.name]));
 
-    const result = {
-      total,
-      newThisMonth,
-      byStatus: byStatus.map((item) => ({
-        status: item.academicStatus,
-        count: item._count.id,
-      })),
-      byLevel: byLevel.map((item) => ({
+    const activeStudents =
+      byStatus.find((s) => s.academicStatus === 'ACTIVE')?._count.id || 0;
+    const graduatedStudents =
+      byStatus.find((s) => s.academicStatus === 'GRADUATED')?._count.id || 0;
+
+    const analytics = {
+      totalStudents: total,
+      newStudents,
+      activeStudents,
+      graduationRate:
+        total > 0 ? Math.round((graduatedStudents / total) * 100) : 0,
+      enrollmentTrend: await this.getEnrollmentTrend(where),
+      studentsByLevel: byLevel.map((item) => ({
         level: levelMap.get(item.currentAcademicLevelId as string) || 'Unknown',
         count: item._count.id,
       })),
-      byDepartment: byDepartment.map((item) => ({
+      studentsByDepartment: byDepartment.map((item) => ({
         department: deptMap.get(item.departmentId as string) || 'Unknown',
+        count: item._count.id,
+      })),
+      studentsByStatus: byStatus.map((item) => ({
+        status: item.academicStatus,
         count: item._count.id,
       })),
     };
 
-    await this.cacheService.set(cacheKey, result, 3600); // 1 hour
-    return result;
+    await this.cacheService.setWithTag(
+      cacheKey,
+      analytics,
+      ['analytics', 'students'],
+      3600,
+    );
+    return analytics;
   }
 
-  async getOrganizationAnalytics(institutionId?: string) {
-    const cacheKey = `analytics:organizations:${institutionId || 'all'}`;
+  // ============================================
+  // ORGANIZATION ANALYTICS
+  // ============================================
+
+  async getOrganizationAnalytics(dto: AnalyticsQueryDto) {
+    const cacheKey = `analytics:organizations:${dto.institutionId || 'all'}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
       return cached;
     }
 
     const where: any = {};
-    if (institutionId) {
-      where.institutionId = institutionId;
+    if (dto.institutionId) {
+      where.institutionId = dto.institutionId;
     }
 
     const [total, byType, byStatus, activeThisMonth] = await Promise.all([
@@ -181,47 +329,63 @@ export class AnalyticsService {
       }),
     ]);
 
-    const result = {
-      total,
-      activeThisMonth,
-      byType: byType.map((item) => ({
+    const [totalMembers, activeMembers] = await Promise.all([
+      this.prisma.organizationMembership.count({
+        where: { organization: where },
+      }),
+      this.prisma.organizationMembership.count({
+        where: { organization: where, status: 'ACTIVE' },
+      }),
+    ]);
+
+    const analytics = {
+      totalOrganizations: total,
+      activeOrganizations:
+        byStatus.find((s) => s.status === 'ACTIVE')?._count.id || 0,
+      pendingActivation:
+        byStatus.find((s) => s.status === 'PENDING_ACTIVATION')?._count.id || 0,
+      organizationGrowth: await this.getOrganizationGrowth(where),
+      organizationsByType: byType.map((item) => ({
         type: item.type,
         count: item._count.id,
       })),
-      byStatus: byStatus.map((item) => ({
+      organizationsByStatus: byStatus.map((item) => ({
         status: item.status,
         count: item._count.id,
       })),
+      memberStats: {
+        totalMembers,
+        averageMembersPerOrganization:
+          total > 0 ? Math.round(totalMembers / total) : 0,
+      },
     };
 
-    await this.cacheService.set(cacheKey, result, 3600); // 1 hour
-    return result;
+    await this.cacheService.setWithTag(
+      cacheKey,
+      analytics,
+      ['analytics', 'organizations'],
+      3600,
+    );
+    return analytics;
   }
 
-  async getCollectionAnalytics(institutionId?: string) {
-    const cacheKey = `analytics:collections:${institutionId || 'all'}`;
+  // ============================================
+  // COLLECTION ANALYTICS
+  // ============================================
+
+  async getCollectionAnalytics(dto: AnalyticsQueryDto) {
+    const cacheKey = `analytics:collections:${dto.institutionId || 'all'}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
       return cached;
     }
 
     const where: any = {};
-    if (institutionId) {
-      where.organization = { institutionId };
+    if (dto.institutionId) {
+      where.organization = { institutionId: dto.institutionId };
     }
 
-    const overdueCount = await this.prisma.dueAssignment.count({
-      where: {
-        due: {
-          ...where,
-          status: 'ACTIVE',
-          dueDate: { lt: new Date() },
-        },
-        isPaid: false,
-      },
-    });
-
-    const [totalDueAmount, collectedAmount, dueCount, paidCount] =
+    const [totalDueAmount, collectedAmount, dueCount, paidCount, overdueCount] =
       await Promise.all([
         this.prisma.due.aggregate({
           where: { ...where, status: 'ACTIVE' },
@@ -247,12 +411,22 @@ export class AnalyticsService {
             isPaid: true,
           },
         }),
+        this.prisma.dueAssignment.count({
+          where: {
+            due: {
+              ...where,
+              status: 'ACTIVE',
+              dueDate: { lt: new Date() },
+            },
+            isPaid: false,
+          },
+        }),
       ]);
 
     const totalDueAmountValue = totalDueAmount._sum.amount || 0;
     const collectedAmountValue = collectedAmount._sum.amount || 0;
 
-    const result = {
+    const analytics = {
       totalDueAmount: totalDueAmountValue,
       collectedAmount: collectedAmountValue,
       collectionRate:
@@ -264,79 +438,273 @@ export class AnalyticsService {
       overdueCount,
     };
 
-    await this.cacheService.set(cacheKey, result, 1800); // 30 minutes
-    return result;
+    await this.cacheService.setWithTag(
+      cacheKey,
+      analytics,
+      ['analytics', 'collections'],
+      1800,
+    );
+    return analytics;
   }
 
-  async getGrowthAnalytics(institutionId?: string) {
-    const cacheKey = `analytics:growth:${institutionId || 'all'}`;
+  // ============================================
+  // GROWTH ANALYTICS
+  // ============================================
+
+  async getGrowthAnalytics(dto: AnalyticsQueryDto) {
+    const cacheKey = `analytics:growth:${dto.institutionId || 'all'}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
       return cached;
     }
 
     const where: any = {};
-    if (institutionId) {
-      where.institutionId = institutionId;
+    if (dto.institutionId) {
+      where.institutionId = dto.institutionId;
     }
 
+    // Student growth over last 6 months
     const studentGrowth: Array<{ month: string; year: number; total: number }> =
       [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
       date.setMonth(date.getMonth() - i);
-      const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
       const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
       const count = await this.prisma.studentProfile.count({
         where: {
           ...where,
           createdAt: { lte: monthEnd },
         },
       });
-
       studentGrowth.push({
-        month: monthStart.toLocaleString('default', { month: 'short' }),
-        year: monthStart.getFullYear(),
+        month: date.toLocaleString('default', { month: 'short' }),
+        year: date.getFullYear(),
         total: count,
       });
     }
 
+    // Organization growth over last 6 months
     const orgGrowth: Array<{ month: string; year: number; total: number }> = [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
       date.setMonth(date.getMonth() - i);
-      const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
       const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
       const count = await this.prisma.organization.count({
         where: {
           ...where,
           createdAt: { lte: monthEnd },
         },
       });
-
       orgGrowth.push({
-        month: monthStart.toLocaleString('default', { month: 'short' }),
-        year: monthStart.getFullYear(),
+        month: date.toLocaleString('default', { month: 'short' }),
+        year: date.getFullYear(),
         total: count,
       });
     }
 
-    const result = {
+    // Revenue growth over last 6 months
+    const revenueGrowth: Array<{ month: string; year: number; total: number }> =
+      [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+      const revenue = await this.prisma.payment.aggregate({
+        where: {
+          status: 'COMPLETED',
+          paidAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+          ...(dto.institutionId
+            ? { organization: { institutionId: dto.institutionId } }
+            : {}),
+        },
+        _sum: { amount: true },
+      });
+
+      revenueGrowth.push({
+        month: startDate.toLocaleString('default', { month: 'short' }),
+        year: startDate.getFullYear(),
+        total: revenue._sum.amount || 0,
+      });
+    }
+
+    const analytics = {
       studentGrowth,
       organizationGrowth: orgGrowth,
+      revenueGrowth: revenueGrowth.map((r) => ({
+        ...r,
+        totalFormatted: `₦${(r.total / 100).toFixed(2)}`,
+      })),
     };
 
-    await this.cacheService.set(cacheKey, result, 7200); // 2 hours
-    return result;
+    await this.cacheService.setWithTag(
+      cacheKey,
+      analytics,
+      ['analytics', 'growth'],
+      7200,
+    );
+    return analytics;
+  }
+
+  // ============================================
+  // HELPER METHODS
+  // ============================================
+
+  private async getRevenueTrend(where: any, period: AnalyticsPeriod) {
+    const conditions = ["status = 'COMPLETED'"];
+
+    if (where.organizationId) {
+      conditions.push(`organization_id = '${where.organizationId}'`);
+    }
+    if (where.paidAt?.gte) {
+      conditions.push(`paid_at >= '${where.paidAt.gte.toISOString()}'`);
+    }
+    if (where.paidAt?.lte) {
+      conditions.push(`paid_at <= '${where.paidAt.lte.toISOString()}'`);
+    }
+
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const query = `
+      SELECT 
+        DATE_TRUNC('month', paid_at) as period,
+        SUM(amount) as total
+      FROM payments
+      ${whereClause}
+      GROUP BY DATE_TRUNC('month', paid_at)
+      ORDER BY period ASC
+      LIMIT 12
+    `;
+
+    return await this.prisma.$queryRawUnsafe(query);
+  }
+
+  private async calculateRevenueGrowth(where: any): Promise<number> {
+    const currentPeriod = await this.prisma.payment.aggregate({
+      where: {
+        ...where,
+        paidAt: {
+          gte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1),
+          lte: new Date(),
+        },
+      },
+      _sum: { amount: true },
+    });
+
+    const previousPeriod = await this.prisma.payment.aggregate({
+      where: {
+        ...where,
+        paidAt: {
+          gte: new Date(new Date().getFullYear(), new Date().getMonth() - 2, 1),
+          lte: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 0),
+        },
+      },
+      _sum: { amount: true },
+    });
+
+    const current = currentPeriod._sum.amount || 0;
+    const previous = previousPeriod._sum.amount || 0;
+
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return Math.round(((current - previous) / previous) * 100);
+  }
+
+  private async getEnrollmentTrend(where: any) {
+    const results: Array<{ period: string; count: number }> = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+      const count = await this.prisma.studentProfile.count({
+        where: {
+          ...where,
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      results.push({
+        period: startDate.toLocaleString('default', { month: 'short' }),
+        count,
+      });
+    }
+    return results;
+  }
+
+  private async getOrganizationGrowth(where: any) {
+    const results: Array<{ period: string; count: number }> = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+      const count = await this.prisma.organization.count({
+        where: {
+          ...where,
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      results.push({
+        period: startDate.toLocaleString('default', { month: 'short' }),
+        count,
+      });
+    }
+    return results;
+  }
+
+  private async getRecentActivities(dto: AnalyticsQueryDto) {
+    const activities = await this.prisma.activityLog.findMany({
+      where: {
+        ...(dto.institutionId ? { institutionId: dto.institutionId } : {}),
+        createdAt: {
+          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true,
+            profile: true,
+          },
+        },
+      },
+    });
+
+    return activities.map((activity) => ({
+      id: activity.id,
+      type: (activity as any).action || (activity as any).activity || 'Unknown',
+      description:
+        typeof activity.details === 'string'
+          ? activity.details
+          : JSON.stringify(activity.details || 'No details'),
+      userId: activity.userId || 'system',
+      userName: activity.user?.username || 'System',
+      createdAt: activity.createdAt,
+    }));
   }
 
   // ============================================
   // CACHE INVALIDATION
   // ============================================
 
-  async invalidateAnalyticsCache(): Promise<void> {
+  async invalidateAnalyticsCache() {
     try {
       await this.cacheService.invalidateByTag('analytics');
       await this.cacheService.invalidateByTag('revenue');
@@ -344,16 +712,14 @@ export class AnalyticsService {
       await this.cacheService.invalidateByTag('organizations');
       await this.cacheService.invalidateByTag('collections');
       await this.cacheService.invalidateByTag('growth');
-      await this.cacheService.invalidateByTag('financial');
-      await this.cacheService.invalidateByTag('demographics');
-      await this.cacheService.invalidateByTag('trends');
-      
-      // Also clear pattern-based caches
+      await this.cacheService.invalidateByTag('dashboard');
       await this.cacheService.invalidatePattern('analytics:*');
-      
+
       this.logger.log('Analytics cache invalidated');
     } catch (error) {
-      this.logger.error(`Failed to invalidate analytics cache: ${error.message}`);
+      this.logger.error(
+        `Failed to invalidate analytics cache: ${error.message}`,
+      );
     }
   }
 }

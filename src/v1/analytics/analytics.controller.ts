@@ -1,4 +1,12 @@
-import { Controller, Get, Query, UseGuards, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  Post,
+  Request,
+  Logger,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -9,7 +17,7 @@ import {
 import { AnalyticsService } from './analytics.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
-// Import cache decorators
+import { AnalyticsQueryDto, AnalyticsPeriod } from './dto/analytics.dto';
 import {
   Cache,
   Cacheable,
@@ -26,38 +34,42 @@ export class AnalyticsController {
 
   constructor(private readonly analyticsService: AnalyticsService) {}
 
+  @Get('dashboard')
+  @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { institutionId, organizationId, startDate, endDate, period } =
+        request.query;
+      return `analytics:dashboard:${institutionId || 'all'}:${organizationId || 'all'}:${startDate || 'all'}:${endDate || 'all'}:${period || 'monthly'}`;
+    },
+    ttl: 300,
+    tags: ['analytics', 'dashboard'],
+  })
+  @ApiOperation({ summary: 'Get dashboard analytics' })
+  @ApiResponse({ status: 200, description: 'Dashboard analytics' })
+  async getDashboardAnalytics(@Query() dto: AnalyticsQueryDto) {
+    this.logger.log('Get dashboard analytics endpoint called');
+    return this.analyticsService.getDashboardAnalytics(dto);
+  }
+
   @Get('revenue')
   @RequirePermission('analytics:read')
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      const { institutionId, startDate, endDate } = request.query;
-      // Generate cache key based on all query parameters
-      return `analytics:revenue:${institutionId || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
+      const { institutionId, organizationId, startDate, endDate, period } =
+        request.query;
+      return `analytics:revenue:${institutionId || 'all'}:${organizationId || 'all'}:${startDate || 'all'}:${endDate || 'all'}:${period || 'monthly'}`;
     },
-    ttl: 1800, // 30 minutes
-    tags: ['analytics', 'revenue', 'financial'],
+    ttl: 1800,
+    tags: ['analytics', 'revenue'],
   })
   @ApiOperation({ summary: 'Get revenue analytics' })
-  @ApiQuery({ name: 'institutionId', required: false })
-  @ApiQuery({
-    name: 'startDate',
-    required: false,
-    description: 'Start date (ISO)',
-  })
-  @ApiQuery({ name: 'endDate', required: false, description: 'End date (ISO)' })
   @ApiResponse({ status: 200, description: 'Revenue analytics' })
-  async getRevenueAnalytics(
-    @Query('institutionId') institutionId?: string,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
-  ) {
+  async getRevenueAnalytics(@Query() dto: AnalyticsQueryDto) {
     this.logger.log('Get revenue analytics endpoint called');
-    return this.analyticsService.getRevenueAnalytics(
-      institutionId,
-      startDate,
-      endDate,
-    );
+    return this.analyticsService.getRevenueAnalytics(dto);
   }
 
   @Get('students')
@@ -68,15 +80,14 @@ export class AnalyticsController {
       const { institutionId } = request.query;
       return `analytics:students:${institutionId || 'all'}`;
     },
-    ttl: 3600, // 1 hour
-    tags: ['analytics', 'students', 'demographics'],
+    ttl: 3600,
+    tags: ['analytics', 'students'],
   })
   @ApiOperation({ summary: 'Get student analytics' })
-  @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Student analytics' })
-  async getStudentAnalytics(@Query('institutionId') institutionId?: string) {
+  async getStudentAnalytics(@Query() dto: AnalyticsQueryDto) {
     this.logger.log('Get student analytics endpoint called');
-    return this.analyticsService.getStudentAnalytics(institutionId);
+    return this.analyticsService.getStudentAnalytics(dto);
   }
 
   @Get('organizations')
@@ -87,17 +98,14 @@ export class AnalyticsController {
       const { institutionId } = request.query;
       return `analytics:organizations:${institutionId || 'all'}`;
     },
-    ttl: 3600, // 1 hour
+    ttl: 3600,
     tags: ['analytics', 'organizations'],
   })
   @ApiOperation({ summary: 'Get organization analytics' })
-  @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Organization analytics' })
-  async getOrganizationAnalytics(
-    @Query('institutionId') institutionId?: string,
-  ) {
+  async getOrganizationAnalytics(@Query() dto: AnalyticsQueryDto) {
     this.logger.log('Get organization analytics endpoint called');
-    return this.analyticsService.getOrganizationAnalytics(institutionId);
+    return this.analyticsService.getOrganizationAnalytics(dto);
   }
 
   @Get('collections')
@@ -108,15 +116,14 @@ export class AnalyticsController {
       const { institutionId } = request.query;
       return `analytics:collections:${institutionId || 'all'}`;
     },
-    ttl: 1800, // 30 minutes
-    tags: ['analytics', 'collections', 'financial'],
+    ttl: 1800,
+    tags: ['analytics', 'collections'],
   })
   @ApiOperation({ summary: 'Get collection analytics' })
-  @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Collection analytics' })
-  async getCollectionAnalytics(@Query('institutionId') institutionId?: string) {
+  async getCollectionAnalytics(@Query() dto: AnalyticsQueryDto) {
     this.logger.log('Get collection analytics endpoint called');
-    return this.analyticsService.getCollectionAnalytics(institutionId);
+    return this.analyticsService.getCollectionAnalytics(dto);
   }
 
   @Get('growth')
@@ -127,14 +134,41 @@ export class AnalyticsController {
       const { institutionId } = request.query;
       return `analytics:growth:${institutionId || 'all'}`;
     },
-    ttl: 7200, // 2 hours
-    tags: ['analytics', 'growth', 'trends'],
+    ttl: 7200,
+    tags: ['analytics', 'growth'],
   })
   @ApiOperation({ summary: 'Get growth analytics' })
-  @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Growth analytics' })
-  async getGrowthAnalytics(@Query('institutionId') institutionId?: string) {
+  async getGrowthAnalytics(@Query() dto: AnalyticsQueryDto) {
     this.logger.log('Get growth analytics endpoint called');
-    return this.analyticsService.getGrowthAnalytics(institutionId);
+    return this.analyticsService.getGrowthAnalytics(dto);
+  }
+
+  @Post('cache/invalidate')
+  @RequirePermission('analytics:manage')
+  @InvalidateCache([
+    'analytics',
+    'revenue',
+    'students',
+    'organizations',
+    'collections',
+    'growth',
+    'dashboard',
+  ])
+  @ApiOperation({
+    summary: 'Invalidate analytics cache (Admin only)',
+    description: 'Clear all analytics-related cache.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Analytics cache invalidated',
+  })
+  async invalidateAnalyticsCache() {
+    this.logger.log('Invalidate analytics cache endpoint called');
+    await this.analyticsService.invalidateAnalyticsCache();
+    return {
+      message: 'Analytics cache invalidated successfully',
+      invalidatedAt: new Date().toISOString(),
+    };
   }
 }
