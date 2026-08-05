@@ -1,9 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+// src/v1/communication/notification.service.ts
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { NotificationGateway } from '../../gateways/notification.gateway';
 import { EventService, SystemEvents } from '../../events/event.service';
 import { EmailService } from '../../email/email.service';
+import { CacheService } from '../../redis/cache.service';
 import { OnEvent } from '@nestjs/event-emitter';
+
+export interface NotificationPreferenceDto {
+  type: string;
+  email: boolean;
+  push: boolean;
+  inApp: boolean;
+}
 
 @Injectable()
 export class NotificationService {
@@ -14,7 +23,36 @@ export class NotificationService {
     private readonly gateway: NotificationGateway,
     private readonly eventService: EventService,
     private readonly emailService: EmailService,
+    private readonly cacheService: CacheService,
   ) {}
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateNotificationCache(userId?: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('notifications');
+      await this.cacheService.invalidateByTag('communication');
+
+      if (userId) {
+        await this.cacheService.delete(`notifications:user:${userId}`);
+        await this.cacheService.delete(`notifications:unread:${userId}`);
+        await this.cacheService.delete(`notifications:preferences:${userId}`);
+        await this.cacheService.invalidatePattern(
+          `notifications:user:${userId}:*`,
+        );
+      }
+
+      this.logger.debug(
+        `Notification cache invalidated${userId ? ` for user: ${userId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate notification cache: ${error.message}`,
+      );
+    }
+  }
 
   // ============================================
   // CREATE NOTIFICATION
@@ -44,15 +82,15 @@ export class NotificationService {
       },
     });
 
-    // Send real-time notification via WebSocket
-    await this.gateway.sendToUser(userId, notification);
+    await this.invalidateNotificationCache(userId);
 
-    // Send email if enabled
+    // Fix: Pass 3 arguments: userId, event, data
+    await this.gateway.sendToUser(userId, 'notification', notification);
+
     if (data.sendEmail !== false) {
       await this.sendEmailNotification(userId, notification);
     }
 
-    // Emit event
     this.eventService.emit(SystemEvents.NOTIFICATION_SENT, {
       userId,
       notification,
@@ -61,6 +99,10 @@ export class NotificationService {
     this.logger.log(`Notification sent to user ${userId}: ${data.title}`);
     return notification;
   }
+
+  // ============================================
+  // BULK NOTIFICATIONS
+  // ============================================
 
   async createBulkNotifications(
     userIds: string[],
@@ -89,10 +131,13 @@ export class NotificationService {
       ),
     );
 
-    // Send real-time notifications via WebSocket
-    await this.gateway.sendToUsers(userIds, notifications);
+    for (const userId of userIds) {
+      await this.invalidateNotificationCache(userId);
+    }
 
-    // Send emails if enabled
+    // Fix: Pass 3 arguments: userIds, event, data
+    await this.gateway.sendToUsers(userIds, 'notification', notifications);
+
     if (data.sendEmail !== false) {
       for (const notification of notifications) {
         await this.sendEmailNotification(notification.userId, notification);
@@ -122,11 +167,12 @@ export class NotificationService {
       where.type = filters.type;
     }
 
+    const skip = (page - 1) * limit;
     const [notifications, total] = await Promise.all([
       this.prisma.notification.findMany({
         where,
         orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
+        skip,
         take: limit,
       }),
       this.prisma.notification.count({ where }),
@@ -144,12 +190,21 @@ export class NotificationService {
   }
 
   async getUnreadCount(userId: string) {
-    return this.prisma.notification.count({
+    const cacheKey = `notifications:unread:${userId}`;
+    const cached = await this.cacheService.get<number>(cacheKey);
+    if (cached !== null) {
+      return cached;
+    }
+
+    const count = await this.prisma.notification.count({
       where: {
         userId,
         read: false,
       },
     });
+
+    await this.cacheService.set(cacheKey, count, 30);
+    return count;
   }
 
   async markAsRead(userId: string, notificationId: string) {
@@ -161,7 +216,7 @@ export class NotificationService {
     });
 
     if (!notification) {
-      throw new Error('Notification not found');
+      throw new NotFoundException('Notification not found');
     }
 
     const updated = await this.prisma.notification.update({
@@ -172,9 +227,11 @@ export class NotificationService {
       },
     });
 
-    // Update unread count via WebSocket
+    await this.invalidateNotificationCache(userId);
+
     const count = await this.getUnreadCount(userId);
-    await this.gateway.sendToUser(userId, { type: 'unread-count', count });
+    // Fix: Pass 3 arguments: userId, event, data
+    await this.gateway.sendToUser(userId, 'unread-count', { count });
 
     return updated;
   }
@@ -191,8 +248,10 @@ export class NotificationService {
       },
     });
 
-    // Update unread count via WebSocket
-    await this.gateway.sendToUser(userId, { type: 'unread-count', count: 0 });
+    await this.invalidateNotificationCache(userId);
+
+    // Fix: Pass 3 arguments: userId, event, data
+    await this.gateway.sendToUser(userId, 'unread-count', { count: 0 });
 
     return {
       message: `${result.count} notifications marked as read`,
@@ -205,13 +264,19 @@ export class NotificationService {
   // ============================================
 
   async getPreferences(userId: string) {
+    const cacheKey = `notifications:preferences:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const preferences = await this.prisma.notificationPreference.findMany({
       where: { userId },
     });
 
-    // Return default preferences if none exist
+    let result: NotificationPreferenceDto[];
     if (preferences.length === 0) {
-      return [
+      result = [
         { type: 'SYSTEM', email: true, push: true, inApp: true },
         { type: 'FINANCIAL', email: true, push: true, inApp: true },
         { type: 'ACADEMIC', email: true, push: true, inApp: true },
@@ -219,12 +284,19 @@ export class NotificationService {
         { type: 'REMINDER', email: true, push: true, inApp: true },
         { type: 'SECURITY', email: true, push: true, inApp: true },
       ];
+    } else {
+      result = preferences.map((p) => ({
+        type: p.type,
+        email: p.email,
+        push: p.push,
+        inApp: p.inApp,
+      }));
     }
 
-    return preferences;
+    await this.cacheService.set(cacheKey, result, 600);
+    return result;
   }
 
-  // In the updatePreferences method, fix the results array type
   async updatePreferences(
     userId: string,
     preferences: Array<{
@@ -259,6 +331,7 @@ export class NotificationService {
       results.push(updated);
     }
 
+    await this.invalidateNotificationCache(userId);
     return results;
   }
 
@@ -276,7 +349,6 @@ export class NotificationService {
       },
     });
 
-    // Skip if email notifications are disabled for this type
     if (preferences && !preferences.email) {
       return;
     }
@@ -357,7 +429,6 @@ export class NotificationService {
       sendEmail: true,
     });
 
-    // Notify organization admins
     const admins = await this.prisma.organizationMembership.findMany({
       where: {
         organizationId: organization.id,
@@ -383,7 +454,6 @@ export class NotificationService {
   async handleWithdrawalRequested(data: any) {
     const { withdrawal, organization } = data;
 
-    // Notify platform admins
     await this.createBulkNotifications(data.adminUserIds, {
       title: 'Withdrawal Request Pending ⏳',
       body: `${organization.name} has requested a withdrawal of ₦${(Number(withdrawal.amount) / 100).toFixed(2)}.`,
@@ -468,7 +538,6 @@ export class NotificationService {
   async handleAnnouncementPublished(data: any) {
     const { announcement, organization } = data;
 
-    // Notify all members of the organization
     const members = await this.prisma.organizationMembership.findMany({
       where: {
         organizationId: organization.id,

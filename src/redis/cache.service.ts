@@ -204,6 +204,17 @@ export class CacheService {
     }
   }
 
+  async deletePattern(pattern: string): Promise<void> {
+    try {
+      await this.invalidatePattern(pattern);
+      this.logger.debug(`Deleted cache keys matching pattern: ${pattern}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to delete pattern ${pattern}: ${error.message}`,
+      );
+    }
+  }
+
   // New: Check if key exists
   async exists(key: string): Promise<boolean> {
     return this.redisService.exists(key);

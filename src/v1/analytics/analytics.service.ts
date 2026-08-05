@@ -1,3 +1,4 @@
+// src/v1/analytics/analytics.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
@@ -8,7 +9,7 @@ export class AnalyticsService {
 
   constructor(
     private readonly prisma: PrismaService,
-    // private readonly cacheService: CacheService,
+    private readonly cacheService: CacheService,
   ) {}
 
   async getRevenueAnalytics(
@@ -16,6 +17,12 @@ export class AnalyticsService {
     startDate?: string,
     endDate?: string,
   ) {
+    const cacheKey = `analytics:revenue:${institutionId || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (institutionId) {
       where.organization = { institutionId };
@@ -51,14 +58,23 @@ export class AnalyticsService {
       LIMIT 12
     `;
 
-    return {
+    const result = {
       totalRevenue: payments._sum.amount || 0,
       totalTransactions: payments._count.id || 0,
       monthlyRevenue,
     };
+
+    await this.cacheService.set(cacheKey, result, 1800); // 30 minutes
+    return result;
   }
 
   async getStudentAnalytics(institutionId?: string) {
+    const cacheKey = `analytics:students:${institutionId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (institutionId) {
       where.institutionId = institutionId;
@@ -92,7 +108,6 @@ export class AnalyticsService {
         }),
       ]);
 
-    // Get level names
     const levelIds = byLevel
       .map((item) => item.currentAcademicLevelId)
       .filter(Boolean);
@@ -102,7 +117,6 @@ export class AnalyticsService {
     });
     const levelMap = new Map(levels.map((l) => [l.id, l.name]));
 
-    // Get department names
     const deptIds = byDepartment
       .map((item) => item.departmentId)
       .filter(Boolean);
@@ -112,7 +126,7 @@ export class AnalyticsService {
     });
     const deptMap = new Map(departments.map((d) => [d.id, d.name]));
 
-    return {
+    const result = {
       total,
       newThisMonth,
       byStatus: byStatus.map((item) => ({
@@ -128,9 +142,18 @@ export class AnalyticsService {
         count: item._count.id,
       })),
     };
+
+    await this.cacheService.set(cacheKey, result, 3600); // 1 hour
+    return result;
   }
 
   async getOrganizationAnalytics(institutionId?: string) {
+    const cacheKey = `analytics:organizations:${institutionId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (institutionId) {
       where.institutionId = institutionId;
@@ -158,7 +181,7 @@ export class AnalyticsService {
       }),
     ]);
 
-    return {
+    const result = {
       total,
       activeThisMonth,
       byType: byType.map((item) => ({
@@ -170,17 +193,23 @@ export class AnalyticsService {
         count: item._count.id,
       })),
     };
+
+    await this.cacheService.set(cacheKey, result, 3600); // 1 hour
+    return result;
   }
 
-  // Fix the getCollectionAnalytics method
-  // Fix the getCollectionAnalytics method
   async getCollectionAnalytics(institutionId?: string) {
+    const cacheKey = `analytics:collections:${institutionId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (institutionId) {
       where.organization = { institutionId };
     }
 
-    // Get overdue count - fix the duplicate due property
     const overdueCount = await this.prisma.dueAssignment.count({
       where: {
         due: {
@@ -223,7 +252,7 @@ export class AnalyticsService {
     const totalDueAmountValue = totalDueAmount._sum.amount || 0;
     const collectedAmountValue = collectedAmount._sum.amount || 0;
 
-    return {
+    const result = {
       totalDueAmount: totalDueAmountValue,
       collectedAmount: collectedAmountValue,
       collectionRate:
@@ -234,14 +263,23 @@ export class AnalyticsService {
       paidCount,
       overdueCount,
     };
+
+    await this.cacheService.set(cacheKey, result, 1800); // 30 minutes
+    return result;
   }
+
   async getGrowthAnalytics(institutionId?: string) {
+    const cacheKey = `analytics:growth:${institutionId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (institutionId) {
       where.institutionId = institutionId;
     }
 
-    // Student growth over last 6 months
     const studentGrowth: Array<{ month: string; year: number; total: number }> =
       [];
     for (let i = 6; i >= 0; i--) {
@@ -264,7 +302,6 @@ export class AnalyticsService {
       });
     }
 
-    // Organization growth over last 6 months
     const orgGrowth: Array<{ month: string; year: number; total: number }> = [];
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
@@ -286,9 +323,37 @@ export class AnalyticsService {
       });
     }
 
-    return {
+    const result = {
       studentGrowth,
       organizationGrowth: orgGrowth,
     };
+
+    await this.cacheService.set(cacheKey, result, 7200); // 2 hours
+    return result;
+  }
+
+  // ============================================
+  // CACHE INVALIDATION
+  // ============================================
+
+  async invalidateAnalyticsCache(): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('analytics');
+      await this.cacheService.invalidateByTag('revenue');
+      await this.cacheService.invalidateByTag('students');
+      await this.cacheService.invalidateByTag('organizations');
+      await this.cacheService.invalidateByTag('collections');
+      await this.cacheService.invalidateByTag('growth');
+      await this.cacheService.invalidateByTag('financial');
+      await this.cacheService.invalidateByTag('demographics');
+      await this.cacheService.invalidateByTag('trends');
+      
+      // Also clear pattern-based caches
+      await this.cacheService.invalidatePattern('analytics:*');
+      
+      this.logger.log('Analytics cache invalidated');
+    } catch (error) {
+      this.logger.error(`Failed to invalidate analytics cache: ${error.message}`);
+    }
   }
 }

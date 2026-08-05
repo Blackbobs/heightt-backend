@@ -1,3 +1,4 @@
+// src/v1/students/students.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -25,6 +26,56 @@ export class StudentsService {
     private readonly cacheService: CacheService,
     private readonly permissionService: PermissionService,
   ) {}
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateStudentsCache(studentId?: string): Promise<void> {
+    try {
+      // Invalidate all student tags
+      await this.cacheService.invalidateByTag('students');
+      await this.cacheService.invalidateByTag('dashboard');
+      await this.cacheService.invalidateByTag('admin');
+      await this.cacheService.invalidateByTag('academics');
+      await this.cacheService.invalidateByTag('promotions');
+      await this.cacheService.invalidateByTag('verifications');
+      await this.cacheService.invalidateByTag('user');
+
+      if (studentId) {
+        // Invalidate specific student caches
+        await this.cacheService.delete(`student:${studentId}`);
+        await this.cacheService.delete(`student:academic-records:${studentId}`);
+        await this.cacheService.delete(`student:promotions:${studentId}`);
+        await this.cacheService.delete(`student:verifications:${studentId}`);
+        await this.cacheService.invalidatePattern(`student:${studentId}:*`);
+
+        // Get student to invalidate user cache
+        const student = await this.prisma.studentProfile.findUnique({
+          where: { id: studentId },
+          select: { userId: true },
+        });
+        if (student) {
+          await this.cacheService.delete(`student:user:${student.userId}`);
+          await this.cacheService.delete(`student:dashboard:${student.userId}`);
+          await this.cacheService.invalidateUserCache(student.userId);
+        }
+      }
+
+      // Invalidate all patterns
+      await this.cacheService.invalidatePattern('student:*');
+      await this.cacheService.invalidatePattern('students:*');
+      await this.cacheService.invalidatePattern('student:dashboard:*');
+
+      this.logger.log(
+        `Students cache invalidated${studentId ? ` for student: ${studentId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate students cache: ${error.message}`,
+      );
+    }
+  }
 
   // ============================================
   // STUDENT CRUD
@@ -130,6 +181,9 @@ export class StudentsService {
         currentAcademicLevel: true,
       },
     });
+
+    // Invalidate cache
+    await this.invalidateStudentsCache();
 
     await this.prisma.activityLog.create({
       data: {
@@ -304,11 +358,18 @@ export class StudentsService {
       throw new NotFoundException('Student not found');
     }
 
-    await this.cacheService.set(cacheKey, student, 300);
+    await this.cacheService.setWithTag(cacheKey, student, ['students'], 300);
+
     return student;
   }
 
   async getStudentByUserId(userId: string) {
+    const cacheKey = `student:user:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const student = await this.prisma.studentProfile.findUnique({
       where: { userId },
       include: {
@@ -346,6 +407,13 @@ export class StudentsService {
     if (!student) {
       throw new NotFoundException('Student profile not found');
     }
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      student,
+      ['students', 'user'],
+      120,
+    );
 
     return student;
   }
@@ -412,7 +480,8 @@ export class StudentsService {
       },
     });
 
-    await this.cacheService.delete(`student:${id}`);
+    // Invalidate cache
+    await this.invalidateStudentsCache(id);
 
     await this.prisma.activityLog.create({
       data: {
@@ -510,7 +579,8 @@ export class StudentsService {
       });
     }
 
-    await this.cacheService.delete(`student:${studentId}`);
+    // Invalidate cache
+    await this.invalidateStudentsCache(studentId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -531,6 +601,12 @@ export class StudentsService {
   }
 
   async getAcademicRecords(studentId: string) {
+    const cacheKey = `student:academic-records:${studentId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const student = await this.prisma.studentProfile.findUnique({
       where: { id: studentId },
     });
@@ -538,7 +614,7 @@ export class StudentsService {
       throw new NotFoundException('Student not found');
     }
 
-    return this.prisma.studentAcademicRecord.findMany({
+    const records = await this.prisma.studentAcademicRecord.findMany({
       where: { studentId },
       include: {
         session: true,
@@ -547,6 +623,15 @@ export class StudentsService {
       },
       orderBy: { session: { startDate: 'desc' } },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      records,
+      ['students', 'academics'],
+      300,
+    );
+
+    return records;
   }
 
   // ============================================
@@ -617,7 +702,8 @@ export class StudentsService {
       return promo;
     });
 
-    await this.cacheService.delete(`student:${studentId}`);
+    // Invalidate cache
+    await this.invalidateStudentsCache(studentId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -637,6 +723,12 @@ export class StudentsService {
   }
 
   async getPromotionHistory(studentId: string) {
+    const cacheKey = `student:promotions:${studentId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const student = await this.prisma.studentProfile.findUnique({
       where: { id: studentId },
     });
@@ -644,7 +736,7 @@ export class StudentsService {
       throw new NotFoundException('Student not found');
     }
 
-    return this.prisma.studentPromotion.findMany({
+    const promotions = await this.prisma.studentPromotion.findMany({
       where: { studentId },
       include: {
         fromLevel: true,
@@ -653,6 +745,15 @@ export class StudentsService {
       },
       orderBy: { promotionDate: 'desc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      promotions,
+      ['students', 'promotions'],
+      300,
+    );
+
+    return promotions;
   }
 
   // ============================================
@@ -693,6 +794,9 @@ export class StudentsService {
         requestedAt: new Date(),
       },
     });
+
+    // Invalidate cache
+    await this.invalidateStudentsCache(studentId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -748,7 +852,8 @@ export class StudentsService {
       return ver;
     });
 
-    await this.cacheService.delete(`student:${verification.studentId}`);
+    // Invalidate cache
+    await this.invalidateStudentsCache(verification.studentId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -768,6 +873,12 @@ export class StudentsService {
   }
 
   async getStudentVerifications(studentId: string) {
+    const cacheKey = `student:verifications:${studentId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const student = await this.prisma.studentProfile.findUnique({
       where: { id: studentId },
     });
@@ -775,10 +886,19 @@ export class StudentsService {
       throw new NotFoundException('Student not found');
     }
 
-    return this.prisma.studentVerification.findMany({
+    const verifications = await this.prisma.studentVerification.findMany({
       where: { studentId },
       orderBy: { requestedAt: 'desc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      verifications,
+      ['students', 'verifications'],
+      300,
+    );
+
+    return verifications;
   }
 
   // ============================================
@@ -786,6 +906,12 @@ export class StudentsService {
   // ============================================
 
   async getStudentDashboard(userId: string) {
+    const cacheKey = `student:dashboard:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const student = await this.prisma.studentProfile.findUnique({
       where: { userId },
       include: {
@@ -806,12 +932,6 @@ export class StudentsService {
 
     if (!student) {
       throw new NotFoundException('Student profile not found');
-    }
-
-    const cacheKey = `student:dashboard:${userId}`;
-    const cached = await this.cacheService.get(cacheKey);
-    if (cached) {
-      return cached;
     }
 
     const studentId = student.id;
@@ -963,11 +1083,16 @@ export class StudentsService {
         startDate: e.startDate,
         endDate: e.endDate,
         location: e.location,
-        organization: e.organization?.name || 'Unknown', // <-- FIXED: Added null check with fallback
+        organization: e.organization?.name || 'Unknown',
       })),
     };
 
-    await this.cacheService.set(cacheKey, dashboardData, 300);
+    await this.cacheService.setWithTag(
+      cacheKey,
+      dashboardData,
+      ['students', 'dashboard'],
+      120,
+    );
 
     return dashboardData;
   }
@@ -977,6 +1102,12 @@ export class StudentsService {
   // ============================================
 
   async getAdminDashboard(institutionId?: string) {
+    const cacheKey = `students:admin-dashboard:${institutionId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (institutionId) {
       where.institutionId = institutionId;
@@ -1091,7 +1222,7 @@ export class StudentsService {
       instMap[inst.id] = inst.name;
     }
 
-    return {
+    const dashboardData = {
       statistics: {
         total: totalStudents,
         byStatus: byStatus.map((item) => ({
@@ -1132,5 +1263,220 @@ export class StudentsService {
         documentUrl: v.documentUrl,
       })),
     };
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      dashboardData,
+      ['students', 'admin', 'dashboard'],
+      300,
+    );
+
+    return dashboardData;
+  }
+
+  // ============================================
+  // BULK OPERATIONS
+  // ============================================
+
+  async bulkPromoteStudents(
+    userId: string,
+    promotions: Array<{
+      studentId: string;
+      fromLevelId: string;
+      toLevelId: string;
+      sessionId: string;
+      notes?: string;
+    }>,
+  ) {
+    this.logger.log(`Bulk promoting ${promotions.length} students`);
+
+    const results: any[] = [];
+
+    for (const promo of promotions) {
+      try {
+        const result = await this.promoteStudent(promo.studentId, userId, {
+          fromLevelId: promo.fromLevelId,
+          toLevelId: promo.toLevelId,
+          sessionId: promo.sessionId,
+          notes: promo.notes,
+        });
+        results.push({ success: true, studentId: promo.studentId, result });
+      } catch (error) {
+        results.push({
+          success: false,
+          studentId: promo.studentId,
+          error: error.message,
+        });
+      }
+    }
+
+    // Invalidate cache
+    await this.invalidateStudentsCache();
+
+    this.logger.log(`Bulk promotion completed`);
+    return results;
+  }
+
+  async bulkCreateStudents(userId: string, students: CreateStudentDto[]) {
+    this.logger.log(`Bulk creating ${students.length} students`);
+
+    const results: any[] = [];
+
+    for (const student of students) {
+      try {
+        const result = await this.createStudent(userId, student);
+        results.push({ success: true, userId: student.userId, result });
+      } catch (error) {
+        results.push({
+          success: false,
+          userId: student.userId,
+          error: error.message,
+        });
+      }
+    }
+
+    // Invalidate cache
+    await this.invalidateStudentsCache();
+
+    this.logger.log(`Bulk student creation completed`);
+    return results;
+  }
+
+  async exportStudents(filters?: {
+    institutionId?: string;
+    departmentId?: string;
+    levelId?: string;
+    status?: string;
+  }) {
+    const where: any = {};
+
+    if (filters?.institutionId) {
+      where.institutionId = filters.institutionId;
+    }
+    if (filters?.departmentId) {
+      where.departmentId = filters.departmentId;
+    }
+    if (filters?.levelId) {
+      where.currentAcademicLevelId = filters.levelId;
+    }
+    if (filters?.status) {
+      where.academicStatus = filters.status;
+    }
+
+    const students = await this.prisma.studentProfile.findMany({
+      where,
+      include: {
+        user: {
+          select: {
+            email: true,
+            username: true,
+            profile: true,
+          },
+        },
+        institution: true,
+        faculty: true,
+        department: true,
+        currentAcademicLevel: true,
+        academicRecords: {
+          select: {
+            gpa: true,
+            cgpa: true,
+            session: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          orderBy: { session: { startDate: 'desc' } },
+          take: 1,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return students.map((s) => ({
+      name: s.user?.profile?.firstName
+        ? `${s.user.profile.firstName} ${s.user.profile.lastName || ''}`
+        : s.user?.username || 'Unknown',
+      email: s.user?.email,
+      username: s.user?.username,
+      matricNumber: s.matricNumber,
+      institution: s.institution?.name,
+      faculty: s.faculty?.name,
+      department: s.department?.name,
+      level: s.currentAcademicLevel?.name,
+      status: s.academicStatus,
+      gpa: s.academicRecords[0]?.gpa,
+      cgpa: s.academicRecords[0]?.cgpa,
+      createdAt: s.createdAt,
+    }));
+  }
+
+  // ============================================
+  // STATISTICS
+  // ============================================
+
+  async getStudentStats(institutionId?: string) {
+    const cacheKey = `students:stats:${institutionId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const where: any = {};
+    if (institutionId) {
+      where.institutionId = institutionId;
+    }
+
+    const [
+      total,
+      active,
+      graduated,
+      withdrawn,
+      onProbation,
+      verified,
+      pendingVerification,
+    ] = await Promise.all([
+      this.prisma.studentProfile.count({ where }),
+      this.prisma.studentProfile.count({
+        where: { ...where, academicStatus: 'ACTIVE' },
+      }),
+      this.prisma.studentProfile.count({
+        where: { ...where, academicStatus: 'GRADUATED' },
+      }),
+      this.prisma.studentProfile.count({
+        where: { ...where, academicStatus: 'WITHDRAWN' },
+      }),
+      this.prisma.studentProfile.count({
+        where: { ...where, academicStatus: 'PROBATION' },
+      }),
+      this.prisma.studentProfile.count({
+        where: { ...where, verificationStatus: 'VERIFIED' },
+      }),
+      this.prisma.studentProfile.count({
+        where: { ...where, verificationStatus: 'PENDING' },
+      }),
+    ]);
+
+    const stats = {
+      total,
+      active,
+      graduated,
+      withdrawn,
+      onProbation,
+      verified,
+      pendingVerification,
+      completionRate: total > 0 ? Math.round((graduated / total) * 100) : 0,
+      verificationRate: total > 0 ? Math.round((verified / total) * 100) : 0,
+    };
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      stats,
+      ['students', 'stats'],
+      600,
+    );
+
+    return stats;
   }
 }

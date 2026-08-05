@@ -1,3 +1,4 @@
+// src/v1/onboarding/onboarding.controller.ts
 import {
   Controller,
   Post,
@@ -21,6 +22,13 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('onboarding')
 @Controller('onboarding')
@@ -30,6 +38,7 @@ export class OnboardingController {
   constructor(private readonly onboardingService: OnboardingService) {}
 
   @Patch('personal-info')
+  @InvalidateCache(['onboarding', 'user'])
   @ApiOperation({
     summary: 'Update personal information',
     description: "Updates the user's personal information during onboarding.",
@@ -45,6 +54,7 @@ export class OnboardingController {
   }
 
   @Patch('institution')
+  @InvalidateCache(['onboarding', 'user'])
   @ApiOperation({
     summary: 'Update institution information',
     description:
@@ -63,6 +73,14 @@ export class OnboardingController {
   }
 
   @Get('status')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `onboarding:status:${request.user.id}`;
+    },
+    ttl: 60, // 1 minute
+    tags: ['onboarding', 'user'],
+  })
   @ApiOperation({
     summary: 'Get onboarding status',
     description: 'Returns the current onboarding progress for the user.',

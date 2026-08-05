@@ -1,3 +1,4 @@
+// src/v1/onboarding/onboarding.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -17,6 +18,32 @@ export class OnboardingService {
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
   ) {}
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateOnboardingCache(userId: string): Promise<void> {
+    try {
+      // Invalidate onboarding tags
+      await this.cacheService.invalidateByTag('onboarding');
+      await this.cacheService.invalidateByTag('user');
+      // Delete specific user onboarding cache
+      await this.cacheService.delete(`onboarding:status:${userId}`);
+      // Also invalidate user profile cache
+      await this.cacheService.invalidateUserCache(userId);
+
+      this.logger.debug(`Onboarding cache invalidated for user: ${userId}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate onboarding cache: ${error.message}`,
+      );
+    }
+  }
+
+  // ============================================
+  // UPDATE PERSONAL INFO
+  // ============================================
 
   async updatePersonalInfo(userId: string, dto: OnboardingPersonalInfoDto) {
     this.logger.log(`Updating personal info for user: ${userId}`);
@@ -85,16 +112,17 @@ export class OnboardingService {
       data: {
         userId,
         activity: 'ONBOARDING_PERSONAL_INFO',
-        details: {
+        details: JSON.stringify({
           step: 'PERSONAL_INFO',
           completed: true,
           hasPhone: !!dto.phone,
           hasDateOfBirth: !!dto.dateOfBirth,
-        },
+        }),
       },
     });
 
-    await this.cacheService.invalidateUserCache(userId);
+    // Invalidate cache
+    await this.invalidateOnboardingCache(userId);
 
     this.logger.log(`User ${userId} updated personal info successfully`);
 
@@ -104,6 +132,10 @@ export class OnboardingService {
       profile: updatedProfile,
     };
   }
+
+  // ============================================
+  // UPDATE INSTITUTION INFO
+  // ============================================
 
   async updateInstitutionInfo(userId: string, dto: OnboardingInstitutionDto) {
     this.logger.log(`Updating institution info for user: ${userId}`);
@@ -224,7 +256,7 @@ export class OnboardingService {
       data: {
         userId,
         activity: 'ONBOARDING_COMPLETED',
-        details: {
+        details: JSON.stringify({
           step: 'INSTITUTION',
           completed: true,
           institutionId: dto.institutionId,
@@ -232,11 +264,12 @@ export class OnboardingService {
           departmentId: dto.departmentId,
           levelId: dto.levelId,
           hasMatricNumber: !!dto.matricNumber,
-        },
+        }),
       },
     });
 
-    await this.cacheService.invalidateUserCache(userId);
+    // Invalidate cache
+    await this.invalidateOnboardingCache(userId);
 
     this.logger.log(`User ${userId} completed onboarding successfully`);
 
@@ -249,7 +282,19 @@ export class OnboardingService {
     };
   }
 
+  // ============================================
+  // GET ONBOARDING STATUS (with caching)
+  // ============================================
+
   async getOnboardingStatus(userId: string) {
+    // Check cache first
+    const cacheKey = `onboarding:status:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      this.logger.debug(`Onboarding status found in cache for user: ${userId}`);
+      return cached;
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -276,7 +321,7 @@ export class OnboardingService {
       user.studentProfile?.currentAcademicLevelId
     );
 
-    return {
+    const status = {
       onboardingStep: user.profile.onboardingStep,
       onboardingCompleted: user.profile.onboardingCompleted,
       progress: {
@@ -294,7 +339,21 @@ export class OnboardingService {
       hasStudentProfile: !!user.studentProfile,
       completedAt: user.profile.onboardingCompletedAt,
     };
+
+    // Cache for 1 minute
+    await this.cacheService.setWithTag(
+      cacheKey,
+      status,
+      ['onboarding', 'user'],
+      60,
+    );
+
+    return status;
   }
+
+  // ============================================
+  // HELPER METHODS
+  // ============================================
 
   private getMissingPersonalFields(profile: any): string[] {
     const missing: string[] = [];

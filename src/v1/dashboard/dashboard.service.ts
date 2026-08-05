@@ -1,3 +1,4 @@
+// src/v1/dashboard/dashboard.service.ts
 import { Injectable, ForbiddenException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
@@ -10,6 +11,10 @@ export class DashboardService {
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
   ) {}
+
+  // ============================================
+  // STUDENT DASHBOARD
+  // ============================================
 
   async getStudentDashboard(userId: string) {
     const cacheKey = `dashboard:student:${userId}`;
@@ -181,9 +186,20 @@ export class DashboardService {
       },
     };
 
-    await this.cacheService.set(cacheKey, dashboard, 300);
+    // Cache with tags for invalidation
+    await this.cacheService.setWithTag(
+      cacheKey,
+      dashboard,
+      ['dashboard', 'student', `user:${userId}`],
+      300,
+    );
+
     return dashboard;
   }
+
+  // ============================================
+  // ADMIN DASHBOARD
+  // ============================================
 
   async getAdminDashboard(userId: string) {
     const cacheKey = `dashboard:admin:${userId}`;
@@ -325,9 +341,19 @@ export class DashboardService {
       })),
     };
 
-    await this.cacheService.set(cacheKey, dashboard, 300);
+    await this.cacheService.setWithTag(
+      cacheKey,
+      dashboard,
+      ['dashboard', 'admin', `user:${userId}`],
+      300,
+    );
+
     return dashboard;
   }
+
+  // ============================================
+  // PLATFORM ADMIN DASHBOARD
+  // ============================================
 
   async getPlatformAdminDashboard(userId: string) {
     const cacheKey = `dashboard:platform:${userId}`;
@@ -409,9 +435,59 @@ export class DashboardService {
       },
     };
 
-    await this.cacheService.set(cacheKey, dashboard, 300);
+    await this.cacheService.setWithTag(
+      cacheKey,
+      dashboard,
+      ['dashboard', 'platform', `user:${userId}`],
+      300,
+    );
+
     return dashboard;
   }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateDashboardCache(userId?: string, dashboardType?: string): Promise<void> {
+    try {
+      // Invalidate all dashboard tags
+      await this.cacheService.invalidateByTag('dashboard');
+      
+      // Invalidate specific dashboard types
+      if (dashboardType === 'student' || !dashboardType) {
+        await this.cacheService.invalidateByTag('student');
+      }
+      if (dashboardType === 'admin' || !dashboardType) {
+        await this.cacheService.invalidateByTag('admin');
+      }
+      if (dashboardType === 'platform' || !dashboardType) {
+        await this.cacheService.invalidateByTag('platform');
+      }
+      
+      // Invalidate specific user dashboard
+      if (userId) {
+        await this.cacheService.invalidateByTag(`user:${userId}`);
+        await this.cacheService.delete(`dashboard:student:${userId}`);
+        await this.cacheService.delete(`dashboard:admin:${userId}`);
+        await this.cacheService.delete(`dashboard:platform:${userId}`);
+        await this.cacheService.invalidatePattern(`dashboard:*:${userId}`);
+      }
+      
+      // Invalidate all dashboard patterns if no specific target
+      if (!userId && !dashboardType) {
+        await this.cacheService.invalidatePattern('dashboard:*');
+      }
+      
+      this.logger.log(`Dashboard cache invalidated${userId ? ` for user: ${userId}` : ''}${dashboardType ? ` for type: ${dashboardType}` : ''}`);
+    } catch (error) {
+      this.logger.error(`Failed to invalidate dashboard cache: ${error.message}`);
+    }
+  }
+
+  // ============================================
+  // HELPER METHODS
+  // ============================================
 
   private async getUserIdsInScope(admin: any): Promise<string[]> {
     // Get all user IDs within admin's scope

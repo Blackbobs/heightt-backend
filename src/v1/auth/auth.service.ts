@@ -1,3 +1,4 @@
+// src/v1/auth/auth.service.ts
 import {
   Injectable,
   ConflictException,
@@ -94,7 +95,6 @@ export class AuthService {
           verificationStatus: 'UNVERIFIED',
         },
       });
-      //  297f2193d05e346a15bc14a2564a927848eb0b4a0b0af0394024744065a36f14
 
       // Create email verification token
       const verificationToken = randomBytes(32).toString('hex');
@@ -122,6 +122,9 @@ export class AuthService {
 
     // Send verification email
     await this.emailService.sendVerificationEmail(user.email, user.username);
+
+    // Invalidate user cache
+    await this.cacheService.invalidateUserCache(user.id);
 
     this.logger.log(`User registered successfully: ${user.id}`);
 
@@ -246,14 +249,23 @@ export class AuthService {
 
     this.logger.log(`User logged in successfully: ${user.id}`);
 
-    // Cache user profile
-    await this.cacheService.cacheUserProfile(user.id, {
+    // Cache user profile with tags for invalidation
+    const userData = {
       id: user.id,
       email: user.email,
       username: user.username,
       profile: user.profile,
       hasCompletedOnboarding: user.profile?.onboardingCompleted || false,
-    });
+    };
+    
+    await this.cacheService.cacheUserProfile(user.id, userData);
+    // Also cache with tags for bulk invalidation
+    await this.cacheService.setWithTag(
+      `user:auth:${user.id}`,
+      { sessionId: session.id, loggedInAt: new Date().toISOString() },
+      ['auth', `user:${user.id}`],
+      3600, // 1 hour
+    );
 
     return {
       user: {
@@ -341,6 +353,14 @@ export class AuthService {
     this.cookieService.setAccessTokenCookie(response, newAccessToken);
     this.cookieService.setRefreshTokenCookie(response, newRefreshToken);
 
+    // Update session cache
+    await this.cacheService.setWithTag(
+      `user:auth:${session.userId}`,
+      { sessionId: session.id, refreshedAt: new Date().toISOString() },
+      ['auth', `user:${session.userId}`],
+      3600,
+    );
+
     this.logger.log(`Token refreshed for user: ${session.userId}`);
 
     return { message: 'Tokens refreshed successfully' };
@@ -382,8 +402,10 @@ export class AuthService {
           },
         });
 
-        // Invalidate cache
+        // Invalidate auth cache
         await this.cacheService.invalidateUserCache(payload.sub);
+        await this.cacheService.invalidateByTag(`user:${payload.sub}`);
+        await this.cacheService.invalidateByTag('auth');
       }
     }
 
@@ -427,8 +449,10 @@ export class AuthService {
         },
       });
 
-      // Invalidate cache
+      // Invalidate all auth cache
       await this.cacheService.invalidateUserCache(payload.sub);
+      await this.cacheService.invalidateByTag(`user:${payload.sub}`);
+      await this.cacheService.invalidateByTag('auth');
     }
 
     // Clear cookies
@@ -498,6 +522,9 @@ export class AuthService {
       verification.user.email,
       verification.user.username,
     );
+
+    // Invalidate user cache
+    await this.cacheService.invalidateUserCache(verification.userId);
 
     this.logger.log(
       `Email verified successfully for user: ${verification.userId}`,
@@ -581,13 +608,25 @@ export class AuthService {
       onboardingStep: user.profile?.onboardingStep || 'PERSONAL_INFO',
     };
 
-    // Cache for 5 minutes
+    // Cache for 5 minutes with tags
     await this.cacheService.cacheUserProfile(userId, userData);
+    await this.cacheService.setWithTag(
+      `user:profile:${userId}`,
+      userData,
+      ['users', `user:${userId}`],
+      300,
+    );
 
     return userData;
   }
 
   async getSessions(userId: string) {
+    const cacheKey = `user:sessions:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const sessions = await this.prisma.session.findMany({
       where: {
         userId,
@@ -608,6 +647,9 @@ export class AuthService {
         expiresAt: true,
       },
     });
+
+    // Cache for 1 minute (sessions change frequently)
+    await this.cacheService.set(cacheKey, sessions, 60);
 
     return sessions;
   }
@@ -643,39 +685,56 @@ export class AuthService {
       },
     });
 
+    // Invalidate session cache
+    await this.cacheService.delete(`user:sessions:${userId}`);
+    await this.cacheService.invalidateByTag(`user:${userId}`);
+
     return { message: 'Session revoked successfully' };
   }
 
   async isAdmin(userId: string): Promise<boolean> {
+    // Cache admin status
+    const cacheKey = `user:admin:${userId}`;
+    const cached = await this.cacheService.get<boolean>(cacheKey);
+    if (cached !== null) {
+      return cached;
+    }
+
     const admin = await this.prisma.admin.findFirst({
       where: {
         userId,
         status: 'ACTIVE',
       },
     });
-    return !!admin;
+    
+    const isAdmin = !!admin;
+    await this.cacheService.set(cacheKey, isAdmin, 300); // 5 minutes
+
+    return isAdmin;
   }
 
-  /**
-   * Get user's admin type
-   */
   async getAdminType(userId: string): Promise<string | null> {
+    const cacheKey = `user:adminType:${userId}`;
+    const cached = await this.cacheService.get<string>(cacheKey);
+    if (cached !== null) {
+      return cached;
+    }
+
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admin = await this.prisma.admin.findFirst({
         where: {
           userId,
           status: 'ACTIVE',
         },
       });
-      return admin?.adminType || null;
+      const adminType = admin?.adminType || null;
+      await this.cacheService.set(cacheKey, adminType, 300);
+      return adminType;
     } catch {
       return null;
     }
   }
 
-  /**
-   * Check if user has specific admin permission
-   */
   async hasPermission(
     userId: string,
     permission: string,
@@ -688,9 +747,6 @@ export class AuthService {
     );
   }
 
-  /**
-   * Get user's admin scope (institution, faculty, department, organization)
-   */
   async getAdminScope(userId: string): Promise<{
     adminType?: string;
     institutionId?: string;
@@ -698,8 +754,14 @@ export class AuthService {
     departmentId?: string;
     organizationId?: string;
   } | null> {
+    const cacheKey = `user:adminScope:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admin = await this.prisma.admin.findFirst({
         where: {
           userId,
           status: 'ACTIVE',
@@ -710,26 +772,29 @@ export class AuthService {
         return null;
       }
 
-      return {
+      const scope = {
         adminType: admin.adminType,
         institutionId: admin.institutionId || undefined,
         facultyId: admin.facultyId || undefined,
         departmentId: admin.departmentId || undefined,
         organizationId: admin.organizationId || undefined,
       };
+
+      await this.cacheService.set(cacheKey, scope, 300);
+      return scope;
     } catch {
       return null;
     }
   }
 
-  /**
-   * Check if user can access a specific resource
-   * Used for resource-level authorization
-   */
   async canAccessResource(
     userId: string,
     resourceType:
-      'institution' | 'faculty' | 'department' | 'organization' | 'student',
+      | 'institution'
+      | 'faculty'
+      | 'department'
+      | 'organization'
+      | 'student',
     resourceId: string,
   ): Promise<boolean> {
     const admin = await this.prisma.admin.findFirst({
@@ -743,12 +808,10 @@ export class AuthService {
       return false;
     }
 
-    // Platform admins can access everything
     if (admin.adminType === 'PLATFORM_ADMIN') {
       return true;
     }
 
-    // Check based on admin type and resource type
     switch (resourceType) {
       case 'institution':
         return admin.institutionId === resourceId;
@@ -763,7 +826,6 @@ export class AuthService {
       case 'organization':
         return admin.organizationId === resourceId;
       case 'student':
-        // Check if student belongs to admin's scope
         const student = await this.prisma.studentProfile.findUnique({
           where: { id: resourceId },
           select: { institutionId: true, facultyId: true, departmentId: true },
@@ -794,16 +856,10 @@ export class AuthService {
     }
   }
 
-  /**
-   * Get user's permissions
-   */
   async getUserPermissions(userId: string): Promise<string[]> {
     return this.permissionService.getUserPermissions(userId);
   }
 
-  /**
-   * Check if user has any of the given permissions
-   */
   async hasAnyPermission(
     userId: string,
     permissions: string[],
@@ -811,13 +867,37 @@ export class AuthService {
     return this.permissionService.hasAnyPermission(userId, permissions);
   }
 
-  /**
-   * Check multiple permissions at once
-   */
   async checkPermissions(
     userId: string,
     permissions: string[],
   ): Promise<{ [key: string]: boolean }> {
     return this.permissionService.checkPermissions(userId, permissions);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateAuthCache(userId?: string): Promise<void> {
+    try {
+      if (userId) {
+        await this.cacheService.invalidateUserCache(userId);
+        await this.cacheService.invalidateByTag(`user:${userId}`);
+        await this.cacheService.delete(`user:sessions:${userId}`);
+        await this.cacheService.delete(`user:admin:${userId}`);
+        await this.cacheService.delete(`user:adminType:${userId}`);
+        await this.cacheService.delete(`user:adminScope:${userId}`);
+        await this.cacheService.delete(`user:auth:${userId}`);
+        await this.cacheService.delete(`user:profile:${userId}`);
+        await this.cacheService.delete(`auth:user:${userId}`);
+      }
+      
+      await this.cacheService.invalidateByTag('auth');
+      await this.cacheService.invalidateByTag('users');
+      
+      this.logger.log(`Auth cache invalidated${userId ? ` for user: ${userId}` : ''}`);
+    } catch (error) {
+      this.logger.error(`Failed to invalidate auth cache: ${error.message}`);
+    }
   }
 }

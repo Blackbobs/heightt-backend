@@ -1,3 +1,4 @@
+// src/v1/students/students.controller.ts
 import {
   Controller,
   Get,
@@ -22,6 +23,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { StudentsService } from './students.service';
+import { PromotionService } from './promotion.service'; // Add this import
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
 import {
@@ -32,6 +34,14 @@ import {
   StudentResponseDto,
   StudentListResponseDto,
 } from './dto';
+import { BulkPromoteDto } from './dto/promotion.dto';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('students')
 @Controller('students')
@@ -40,11 +50,19 @@ import {
 export class StudentsController {
   private readonly logger = new Logger(StudentsController.name);
 
-  constructor(private readonly studentsService: StudentsService) {}
+  constructor(
+    private readonly studentsService: StudentsService,
+    private readonly promotionService: PromotionService, // Add this
+  ) {}
+
+  // ============================================
+  // STUDENT CRUD ENDPOINTS
+  // ============================================
 
   @Post()
   @UseGuards(AdminGuard)
   @RequirePermission('student:create')
+  @InvalidateCache(['students', 'dashboard', 'admin'])
   @ApiOperation({ summary: 'Create a new student (Admin only)' })
   @ApiBody({ type: CreateStudentDto })
   @ApiResponse({
@@ -60,6 +78,25 @@ export class StudentsController {
   @Get()
   @UseGuards(AdminGuard)
   @RequirePermission('student:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const {
+        page,
+        limit,
+        institutionId,
+        facultyId,
+        departmentId,
+        levelId,
+        status,
+        verificationStatus,
+        search,
+      } = request.query;
+      return `students:${page || 1}:${limit || 10}:${institutionId || 'all'}:${facultyId || 'all'}:${departmentId || 'all'}:${levelId || 'all'}:${status || 'all'}:${verificationStatus || 'all'}:${search || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['students'],
+  })
   @ApiOperation({ summary: 'Get all students (Admin only)' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
@@ -131,6 +168,14 @@ export class StudentsController {
   }
 
   @Get('me')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `student:user:${request.user.id}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['students', 'user'],
+  })
   @ApiOperation({ summary: 'Get current student profile' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -143,6 +188,14 @@ export class StudentsController {
   }
 
   @Get('dashboard')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `student:dashboard:${request.user.id}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['students', 'dashboard'],
+  })
   @ApiOperation({ summary: 'Get student dashboard' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -156,6 +209,14 @@ export class StudentsController {
   @Get('admin-dashboard')
   @UseGuards(AdminGuard)
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `students:admin-dashboard:${request.query.institutionId || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['students', 'admin', 'dashboard'],
+  })
   @ApiOperation({ summary: 'Get admin student dashboard (Admin only)' })
   @ApiQuery({
     name: 'institutionId',
@@ -174,6 +235,14 @@ export class StudentsController {
   @Get(':id')
   @UseGuards(AdminGuard)
   @RequirePermission('student:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `student:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['students'],
+  })
   @ApiOperation({ summary: 'Get student by ID (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiResponse({
@@ -189,6 +258,7 @@ export class StudentsController {
   @Patch(':id')
   @UseGuards(AdminGuard)
   @RequirePermission('student:update', 'id')
+  @InvalidateCache(['students', 'dashboard'])
   @ApiOperation({ summary: 'Update student (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiBody({ type: UpdateStudentDto })
@@ -206,9 +276,14 @@ export class StudentsController {
     return this.studentsService.updateStudent(id, req.user.id, dto);
   }
 
+  // ============================================
+  // ACADEMIC RECORDS
+  // ============================================
+
   @Post(':id/academic-records')
   @UseGuards(AdminGuard)
   @RequirePermission('academic:manage', 'id')
+  @InvalidateCache(['students', 'academics'])
   @ApiOperation({ summary: 'Add academic record (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiBody({ type: AddAcademicRecordDto })
@@ -228,6 +303,14 @@ export class StudentsController {
   @Get(':id/academic-records')
   @UseGuards(AdminGuard)
   @RequirePermission('academic:read', 'id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `student:academic-records:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['students', 'academics'],
+  })
   @ApiOperation({ summary: 'Get student academic records (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiResponse({
@@ -239,9 +322,14 @@ export class StudentsController {
     return this.studentsService.getAcademicRecords(id);
   }
 
+  // ============================================
+  // STUDENT PROMOTION
+  // ============================================
+
   @Post(':id/promote')
   @UseGuards(AdminGuard)
   @RequirePermission('student:promote', 'id')
+  @InvalidateCache(['students', 'academics', 'promotions'])
   @ApiOperation({ summary: 'Promote student (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiBody({ type: PromoteStudentDto })
@@ -255,12 +343,20 @@ export class StudentsController {
     @Body() dto: PromoteStudentDto,
   ) {
     this.logger.log(`Promote student endpoint called for student: ${id}`);
-    return this.studentsService.promoteStudent(id, req.user.id, dto);
+    return this.promotionService.promoteStudent(id, req.user.id, dto);
   }
 
   @Get(':id/promotions')
   @UseGuards(AdminGuard)
   @RequirePermission('student:read', 'id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `student:promotions:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['students', 'promotions'],
+  })
   @ApiOperation({ summary: 'Get student promotion history (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiResponse({
@@ -269,11 +365,93 @@ export class StudentsController {
   })
   async getPromotionHistory(@Param('id') id: string) {
     this.logger.log(`Get promotion history endpoint called for student: ${id}`);
-    return this.studentsService.getPromotionHistory(id);
+    return this.promotionService.getPromotionHistory(id, 1, 10);
   }
+
+  // ============================================
+  // BULK PROMOTION
+  // ============================================
+
+  @Post('promotions/bulk')
+  @UseGuards(AdminGuard)
+  @RequirePermission('student:promote')
+  @InvalidateCache(['students', 'promotions'])
+  @ApiOperation({ summary: 'Bulk promote students (Admin only)' })
+  @ApiBody({ type: BulkPromoteDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Students promoted',
+  })
+  async bulkPromoteStudents(@Request() req: any, @Body() dto: BulkPromoteDto) {
+    this.logger.log('Bulk promote students endpoint called');
+    return this.promotionService.bulkPromoteStudents(req.user.id, dto);
+  }
+
+  @Get('promotions/eligible')
+  @UseGuards(AdminGuard)
+  @RequirePermission('student:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { fromLevelId, departmentId, page, limit } = request.query;
+      return `students:eligible:${fromLevelId}:${departmentId || 'all'}:${page || 1}:${limit || 10}`;
+    },
+    ttl: 300,
+    tags: ['students', 'promotions'],
+  })
+  @ApiOperation({ summary: 'Get eligible students for promotion (Admin only)' })
+  @ApiQuery({ name: 'fromLevelId', required: true })
+  @ApiQuery({ name: 'departmentId', required: false })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Eligible students retrieved',
+  })
+  async getEligibleStudents(
+    @Query('fromLevelId') fromLevelId: string,
+    @Query('departmentId') departmentId?: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    this.logger.log('Get eligible students endpoint called');
+    return this.promotionService.getEligibleStudents(
+      fromLevelId,
+      departmentId,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+    );
+  }
+
+  @Get('promotions/stats')
+  @UseGuards(AdminGuard)
+  @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `promotions:stats:${request.query.institutionId || 'all'}`;
+    },
+    ttl: 600,
+    tags: ['students', 'promotions', 'stats'],
+  })
+  @ApiOperation({ summary: 'Get promotion statistics (Admin only)' })
+  @ApiQuery({ name: 'institutionId', required: false })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Promotion statistics retrieved',
+  })
+  async getPromotionStats(@Query('institutionId') institutionId?: string) {
+    this.logger.log('Get promotion stats endpoint called');
+    return this.promotionService.getPromotionStats(institutionId);
+  }
+
+  // ============================================
+  // STUDENT VERIFICATION
+  // ============================================
 
   @Post(':id/verification/request')
   @RequirePermission('student:update', 'id')
+  @InvalidateCache(['students', 'verifications'])
   @ApiOperation({ summary: 'Request verification' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiBody({
@@ -304,6 +482,7 @@ export class StudentsController {
   @Post('verification/:verificationId/verify')
   @UseGuards(AdminGuard)
   @RequirePermission('student:verify')
+  @InvalidateCache(['students', 'verifications'])
   @ApiOperation({ summary: 'Verify student (Admin only)' })
   @ApiParam({ name: 'verificationId', description: 'Verification ID' })
   @ApiBody({
@@ -337,6 +516,14 @@ export class StudentsController {
   @Get(':id/verifications')
   @UseGuards(AdminGuard)
   @RequirePermission('student:read', 'id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `student:verifications:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['students', 'verifications'],
+  })
   @ApiOperation({ summary: 'Get student verifications (Admin only)' })
   @ApiParam({ name: 'id', description: 'Student ID' })
   @ApiResponse({
@@ -346,5 +533,62 @@ export class StudentsController {
   async getVerifications(@Param('id') id: string) {
     this.logger.log(`Get verifications endpoint called for student: ${id}`);
     return this.studentsService.getStudentVerifications(id);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION ENDPOINT (Admin only)
+  // ============================================
+
+  @Post('cache/invalidate')
+  @UseGuards(AdminGuard)
+  @RequirePermission('student:manage')
+  @InvalidateCache([
+    'students',
+    'dashboard',
+    'admin',
+    'academics',
+    'promotions',
+    'verifications',
+  ])
+  @ApiOperation({
+    summary: 'Invalidate students cache (Admin only)',
+    description: 'Clear all students-related cache.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        studentId: {
+          type: 'string',
+          description: 'Specific student to invalidate (optional)',
+        },
+        reason: {
+          type: 'string',
+          description: 'Reason for invalidating cache',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Students cache invalidated',
+  })
+  async invalidateStudentsCache(
+    @Body() body: { studentId?: string; reason?: string },
+    @Request() req: any,
+  ) {
+    this.logger.log(
+      `Invalidate students cache endpoint called. Reason: ${body.reason || 'Not specified'}`,
+    );
+
+    await this.studentsService.invalidateStudentsCache(body.studentId);
+
+    return {
+      message: 'Students cache invalidated successfully',
+      reason: body.reason || 'Not specified',
+      invalidatedBy: req.user.id,
+      invalidatedAt: new Date().toISOString(),
+      studentId: body.studentId || 'all students',
+    };
   }
 }

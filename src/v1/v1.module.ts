@@ -16,6 +16,7 @@ import { SearchModule } from './search/search.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
+import { OnboardingModule } from './onboarding/onboarding.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { HealthModule } from './health/health.module';
     AnalyticsModule,
     FilesModule,
     HealthModule,
+    OnboardingModule,
   ],
   exports: [
     AuthModule,
@@ -55,6 +57,7 @@ import { HealthModule } from './health/health.module';
     AnalyticsModule,
     FilesModule,
     HealthModule,
+    OnboardingModule,
   ],
 })
 export class V1Module {}

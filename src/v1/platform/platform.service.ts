@@ -344,4 +344,110 @@ export class PlatformService {
     this.logger.log(`Platform setting updated: ${key}`);
     return updated;
   }
+
+  async getFeatureFlagTargets(featureId: string) {
+    return this.prisma.featureFlagTarget.findMany({
+      where: { featureId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true,
+          },
+        },
+        organization: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        role: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
+  async addFeatureFlagTarget(
+    featureId: string,
+    targetType: string,
+    targetId: string,
+  ) {
+    const flag = await this.prisma.featureFlag.findUnique({
+      where: { id: featureId },
+    });
+
+    if (!flag) {
+      throw new NotFoundException('Feature flag not found');
+    }
+
+    const data: any = { featureId, targetType };
+    switch (targetType) {
+      case 'USER':
+        data.userId = targetId;
+        break;
+      case 'ORGANIZATION':
+        data.organizationId = targetId;
+        break;
+      case 'ROLE':
+        data.roleId = targetId;
+        break;
+      default:
+        throw new Error('Invalid target type');
+    }
+
+    const target = await this.prisma.featureFlagTarget.create({
+      data,
+    });
+
+    await this.cacheService.delete('features:all');
+
+    return target;
+  }
+
+  async removeFeatureFlagTarget(targetId: string) {
+    const target = await this.prisma.featureFlagTarget.delete({
+      where: { id: targetId },
+    });
+
+    await this.cacheService.delete('features:all');
+
+    return target;
+  }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidatePlatformCache(): Promise<void> {
+    try {
+      // Invalidate all platform tags
+      await this.cacheService.invalidateByTag('platform');
+      await this.cacheService.invalidateByTag('features');
+      await this.cacheService.invalidateByTag('maintenance');
+      await this.cacheService.invalidateByTag('kill-switches');
+      await this.cacheService.invalidateByTag('settings');
+
+      // Invalidate specific cache keys
+      await this.cacheService.delete('features:all');
+      await this.cacheService.delete('maintenance:status');
+      await this.cacheService.delete('kill-switches:all');
+
+      // Invalidate all setting patterns
+      await this.cacheService.invalidatePattern('feature:*');
+      await this.cacheService.invalidatePattern('settings:*');
+      await this.cacheService.invalidatePattern('setting:*');
+      await this.cacheService.invalidatePattern('settings:*:*');
+
+      this.logger.log('Platform cache invalidated');
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate platform cache: ${error.message}`,
+      );
+    }
+  }
 }

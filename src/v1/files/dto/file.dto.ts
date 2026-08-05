@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+// src/v1/files/dto/file.dto.ts
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsString,
   IsOptional,
@@ -6,133 +7,142 @@ import {
   IsNumber,
   IsEnum,
   IsUrl,
+  Min,
+  IsArray,
 } from 'class-validator';
 
+export enum FilePurpose {
+  AVATAR = 'avatar',
+  RECEIPT = 'receipt',
+  DOCUMENT = 'document',
+  EVENT_BANNER = 'event_banner',
+  PROFILE = 'profile',
+  VERIFICATION = 'verification',
+  STUDENT_DOCUMENT = 'student_document',
+  PROMOTION_DOCUMENT = 'promotion_document',
+}
+
 export class UploadFileDto {
-  @ApiProperty({
-    example: 'avatars',
-    description: 'Folder to upload to',
-    required: false,
-  })
-  @IsOptional()
+  @ApiProperty({ description: 'File URL from Cloudinary' })
+  @IsUrl()
+  url: string;
+
+  @ApiProperty({ description: 'Generated filename' })
   @IsString()
-  folder?: string;
+  filename: string;
 
-  @ApiProperty({
-    example: 'user_123',
-    description: 'User ID (for ownership)',
-    required: false,
-  })
+  @ApiProperty({ description: 'Original filename' })
+  @IsString()
+  originalName: string;
+
+  @ApiProperty({ description: 'MIME type' })
+  @IsString()
+  mimeType: string;
+
+  @ApiProperty({ description: 'File size in bytes' })
+  @IsNumber()
+  @Min(1)
+  size: number;
+
+  @ApiProperty({ description: 'Folder path' })
+  @IsString()
+  folder: string;
+
+  @ApiProperty({ description: 'Cloudinary public ID' })
+  @IsString()
+  publicId: string;
+
+  @ApiPropertyOptional({ enum: FilePurpose })
   @IsOptional()
-  @IsUUID()
-  userId?: string;
+  @IsEnum(FilePurpose)
+  purpose?: FilePurpose;
 
-  @ApiProperty({
-    example: 'org_123',
-    description: 'Organization ID (for ownership)',
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   organizationId?: string;
 
-  @ApiProperty({
-    enum: [
-      'avatar',
-      'receipt',
-      'document',
-      'event_banner',
-      'profile',
-      'verification',
-    ],
-    description: 'Purpose of the file',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  purpose?: string;
-
-  @ApiProperty({
-    example: 'receipt_123',
-    description: 'Receipt ID (if receipt attachment)',
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   receiptId?: string;
 
-  @ApiProperty({
-    example: 'student_123',
-    description: 'Student ID (if student document)',
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   studentId?: string;
 
-  @ApiProperty({
-    example: 'event_123',
-    description: 'Event ID (if event banner)',
-    required: false,
-  })
+  @ApiPropertyOptional()
   @IsOptional()
   @IsUUID()
   eventId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  metadata?: any;
 }
 
 export class FileResponseDto {
-  @ApiProperty({ example: 'file_123' })
+  @ApiProperty()
   id: string;
 
-  @ApiProperty({ example: 'https://cloudinary.com/avatar.jpg' })
-  url: string;
-
-  @ApiProperty({ example: 'avatar.jpg' })
+  @ApiProperty()
   filename: string;
 
-  @ApiProperty({ example: 'avatar_original.jpg' })
+  @ApiProperty()
   originalName: string;
 
-  @ApiProperty({ example: 'image/jpeg' })
+  @ApiProperty()
   mimeType: string;
 
-  @ApiProperty({ example: 102400 })
+  @ApiProperty()
   size: number;
 
-  @ApiProperty({ example: 'avatars' })
+  @ApiProperty()
+  url: string;
+
+  @ApiProperty()
+  publicId: string;
+
+  @ApiProperty()
   folder: string;
 
-  @ApiProperty({ example: 'avatar' })
+  @ApiPropertyOptional()
   purpose?: string;
 
-  @ApiProperty({ example: 'user_123' })
-  userId?: string;
-
-  @ApiProperty({ example: 'org_123' })
-  organizationId?: string;
-
-  @ApiProperty({ example: 'receipt_123' })
-  receiptId?: string;
-
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty()
   createdAt: Date;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty()
   updatedAt: Date;
+
+  @ApiPropertyOptional()
+  userId?: string;
+
+  @ApiPropertyOptional()
+  organizationId?: string;
+
+  @ApiPropertyOptional()
+  receiptId?: string;
+
+  @ApiPropertyOptional()
+  studentId?: string;
+
+  @ApiPropertyOptional()
+  eventId?: string;
+
+  @ApiPropertyOptional()
+  isDeleted?: boolean;
+
+  @ApiPropertyOptional()
+  metadata?: any;
 }
 
 export class FileListResponseDto {
   @ApiProperty({ type: [FileResponseDto] })
   data: FileResponseDto[];
 
-  @ApiProperty({
-    example: {
-      page: 1,
-      limit: 10,
-      total: 100,
-      totalPages: 10,
-    },
-  })
+  @ApiProperty()
   meta: {
     page: number;
     limit: number;
@@ -142,28 +152,37 @@ export class FileListResponseDto {
 }
 
 export class GetUploadUrlDto {
-  @ApiProperty({
-    example: 'avatars',
-    description: 'Folder to upload to',
-    required: false,
-  })
+  @ApiPropertyOptional({ example: 'uploads/avatars' })
   @IsOptional()
   @IsString()
   folder?: string;
 
-  @ApiProperty({
-    enum: [
-      'avatar',
-      'receipt',
-      'document',
-      'event_banner',
-      'profile',
-      'verification',
-    ],
-    description: 'Purpose of the file',
-    required: false,
-  })
+  @ApiPropertyOptional({ enum: FilePurpose })
   @IsOptional()
-  @IsString()
-  purpose?: string;
+  @IsEnum(FilePurpose)
+  purpose?: FilePurpose;
+}
+
+export class DeleteFilesDto {
+  @ApiProperty({ type: [String], description: 'Array of file IDs to delete' })
+  @IsArray()
+  @IsUUID('4', { each: true })
+  fileIds: string[];
+}
+
+export class FileStatsResponseDto {
+  @ApiProperty()
+  totalFiles: number;
+
+  @ApiProperty()
+  totalSize: number;
+
+  @ApiProperty()
+  totalSizeFormatted: string;
+
+  @ApiProperty()
+  byPurpose: Record<string, number>;
+
+  @ApiProperty()
+  recentUploads: number;
 }

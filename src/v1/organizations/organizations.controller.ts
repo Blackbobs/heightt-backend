@@ -1,3 +1,4 @@
+// src/v1/organizations/organizations.controller.ts
 import {
   Controller,
   Get,
@@ -39,6 +40,13 @@ import {
   OrganizationResponseDto,
   OrganizationListResponseDto,
 } from './dto';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('organizations')
 @Controller('organizations')
@@ -59,6 +67,7 @@ export class OrganizationsController {
   @Post()
   @UseGuards(AdminGuard)
   @RequirePermission('organization:create')
+  @InvalidateCache(['organizations', 'stats'])
   @ApiOperation({ summary: 'Create a new organization (Admin only)' })
   @ApiBody({ type: CreateOrganizationDto })
   @ApiResponse({
@@ -83,6 +92,24 @@ export class OrganizationsController {
   }
 
   @Get()
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const {
+        page,
+        limit,
+        institutionId,
+        status,
+        type,
+        scope,
+        search,
+        parentId,
+      } = request.query;
+      return `organizations:${page || 1}:${limit || 10}:${institutionId || 'all'}:${status || 'all'}:${type || 'all'}:${scope || 'all'}:${search || 'all'}:${parentId || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['organizations'],
+  })
   @ApiOperation({ summary: 'Get all organizations (Public)' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
@@ -165,6 +192,14 @@ export class OrganizationsController {
   }
 
   @Get(':id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `organization:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['organizations'],
+  })
   @ApiOperation({ summary: 'Get organization by ID (Public)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiResponse({
@@ -182,6 +217,16 @@ export class OrganizationsController {
   }
 
   @Get('slug/:slug')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { slug } = request.params;
+      const { institutionId } = request.query;
+      return `organization:slug:${slug}:${institutionId}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['organizations'],
+  })
   @ApiOperation({ summary: 'Get organization by slug (Public)' })
   @ApiParam({ name: 'slug', description: 'Organization slug' })
   @ApiQuery({
@@ -209,6 +254,7 @@ export class OrganizationsController {
   @Patch(':id')
   @UseGuards(AdminGuard)
   @RequirePermission('organization:update', 'id')
+  @InvalidateCache(['organizations', 'stats'])
   @ApiOperation({ summary: 'Update organization (Admin only)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiBody({ type: UpdateOrganizationDto })
@@ -235,6 +281,7 @@ export class OrganizationsController {
   @RequireAdminType('PLATFORM_ADMIN')
   @RequirePermission('organization:delete')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['organizations', 'stats'])
   @ApiOperation({ summary: 'Delete organization (Platform Admin only)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Organization deleted' })
@@ -258,6 +305,7 @@ export class OrganizationsController {
   @Post(':id/activate')
   @UseGuards(AdminGuard)
   @RequirePermission('organization:activate', 'id')
+  @InvalidateCache(['organizations', 'stats'])
   @ApiOperation({ summary: 'Activate organization (Admin only)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiResponse({
@@ -281,6 +329,7 @@ export class OrganizationsController {
   @Post(':id/archive')
   @UseGuards(AdminGuard)
   @RequirePermission('organization:update', 'id')
+  @InvalidateCache(['organizations', 'stats'])
   @ApiOperation({ summary: 'Archive organization (Admin only)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiResponse({
@@ -304,6 +353,7 @@ export class OrganizationsController {
   @Post(':id/members')
   @UseGuards(AdminGuard)
   @RequirePermission('organization:manage_members', 'id')
+  @InvalidateCache(['organizations', 'members'])
   @ApiOperation({ summary: 'Add member to organization (Admin only)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiBody({ type: AddMemberDto })
@@ -329,6 +379,16 @@ export class OrganizationsController {
   }
 
   @Get(':id/members')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { id } = request.params;
+      const { page, limit, status, membershipType, search } = request.query;
+      return `organization:${id}:members:${page || 1}:${limit || 10}:${status || 'all'}:${membershipType || 'all'}:${search || 'all'}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['organizations', 'members'],
+  })
   @ApiOperation({ summary: 'Get organization members (Public)' })
   @ApiParam({ name: 'id', description: 'Organization ID' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
@@ -372,6 +432,7 @@ export class OrganizationsController {
   @Patch('members/:membershipId')
   @UseGuards(AdminGuard)
   @RequirePermission('organization:manage_members')
+  @InvalidateCache(['organizations', 'members'])
   @ApiOperation({ summary: 'Update member (Admin only)' })
   @ApiParam({ name: 'membershipId', description: 'Membership ID' })
   @ApiBody({ type: UpdateMemberDto })
@@ -392,7 +453,6 @@ export class OrganizationsController {
     @Request() req: any,
     @Body() dto: UpdateMemberDto,
   ) {
-    // Get organization ID from membership
     const membership = await this.prisma.organizationMembership.findUnique({
       where: { id: membershipId },
       select: { organizationId: true },
@@ -413,6 +473,7 @@ export class OrganizationsController {
   @UseGuards(AdminGuard)
   @RequirePermission('organization:manage_members')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['organizations', 'members'])
   @ApiOperation({ summary: 'Remove member from organization (Admin only)' })
   @ApiParam({ name: 'membershipId', description: 'Membership ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Member removed' })
@@ -450,6 +511,14 @@ export class OrganizationsController {
   @Get('stats')
   @UseGuards(AdminGuard)
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `organizations:stats:${request.query.institutionId || 'all'}`;
+    },
+    ttl: 900, // 15 minutes
+    tags: ['organizations', 'stats'],
+  })
   @ApiOperation({ summary: 'Get organization statistics (Admin only)' })
   @ApiQuery({
     name: 'institutionId',
@@ -467,5 +536,57 @@ export class OrganizationsController {
   async getStats(@Query('institutionId') institutionId?: string) {
     this.logger.log('Get organization statistics endpoint called');
     return this.organizationsService.getOrganizationStats(institutionId);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION ENDPOINT (Admin only)
+  // ============================================
+
+  @Post('cache/invalidate')
+  @UseGuards(AdminGuard)
+  @RequirePermission('organization:manage')
+  @InvalidateCache(['organizations', 'members', 'stats'])
+  @ApiOperation({
+    summary: 'Invalidate organizations cache (Admin only)',
+    description: 'Clear all organizations-related cache.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        organizationId: {
+          type: 'string',
+          description: 'Specific organization to invalidate (optional)',
+        },
+        reason: {
+          type: 'string',
+          description: 'Reason for invalidating cache',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Organizations cache invalidated',
+  })
+  async invalidateOrganizationsCache(
+    @Body() body: { organizationId?: string; reason?: string },
+    @Request() req: any,
+  ) {
+    this.logger.log(
+      `Invalidate organizations cache endpoint called. Reason: ${body.reason || 'Not specified'}`,
+    );
+
+    await this.organizationsService.invalidateOrganizationsCache(
+      body.organizationId,
+    );
+
+    return {
+      message: 'Organizations cache invalidated successfully',
+      reason: body.reason || 'Not specified',
+      invalidatedBy: req.user.id,
+      invalidatedAt: new Date().toISOString(),
+      organizationId: body.organizationId || 'all organizations',
+    };
   }
 }

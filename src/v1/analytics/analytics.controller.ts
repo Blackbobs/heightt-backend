@@ -9,6 +9,13 @@ import {
 import { AnalyticsService } from './analytics.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('analytics')
 @Controller('analytics')
@@ -21,6 +28,16 @@ export class AnalyticsController {
 
   @Get('revenue')
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { institutionId, startDate, endDate } = request.query;
+      // Generate cache key based on all query parameters
+      return `analytics:revenue:${institutionId || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
+    },
+    ttl: 1800, // 30 minutes
+    tags: ['analytics', 'revenue', 'financial'],
+  })
   @ApiOperation({ summary: 'Get revenue analytics' })
   @ApiQuery({ name: 'institutionId', required: false })
   @ApiQuery({
@@ -35,6 +52,7 @@ export class AnalyticsController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
+    this.logger.log('Get revenue analytics endpoint called');
     return this.analyticsService.getRevenueAnalytics(
       institutionId,
       startDate,
@@ -44,39 +62,79 @@ export class AnalyticsController {
 
   @Get('students')
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { institutionId } = request.query;
+      return `analytics:students:${institutionId || 'all'}`;
+    },
+    ttl: 3600, // 1 hour
+    tags: ['analytics', 'students', 'demographics'],
+  })
   @ApiOperation({ summary: 'Get student analytics' })
   @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Student analytics' })
   async getStudentAnalytics(@Query('institutionId') institutionId?: string) {
+    this.logger.log('Get student analytics endpoint called');
     return this.analyticsService.getStudentAnalytics(institutionId);
   }
 
   @Get('organizations')
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { institutionId } = request.query;
+      return `analytics:organizations:${institutionId || 'all'}`;
+    },
+    ttl: 3600, // 1 hour
+    tags: ['analytics', 'organizations'],
+  })
   @ApiOperation({ summary: 'Get organization analytics' })
   @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Organization analytics' })
   async getOrganizationAnalytics(
     @Query('institutionId') institutionId?: string,
   ) {
+    this.logger.log('Get organization analytics endpoint called');
     return this.analyticsService.getOrganizationAnalytics(institutionId);
   }
 
   @Get('collections')
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { institutionId } = request.query;
+      return `analytics:collections:${institutionId || 'all'}`;
+    },
+    ttl: 1800, // 30 minutes
+    tags: ['analytics', 'collections', 'financial'],
+  })
   @ApiOperation({ summary: 'Get collection analytics' })
   @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Collection analytics' })
   async getCollectionAnalytics(@Query('institutionId') institutionId?: string) {
+    this.logger.log('Get collection analytics endpoint called');
     return this.analyticsService.getCollectionAnalytics(institutionId);
   }
 
   @Get('growth')
   @RequirePermission('analytics:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { institutionId } = request.query;
+      return `analytics:growth:${institutionId || 'all'}`;
+    },
+    ttl: 7200, // 2 hours
+    tags: ['analytics', 'growth', 'trends'],
+  })
   @ApiOperation({ summary: 'Get growth analytics' })
   @ApiQuery({ name: 'institutionId', required: false })
   @ApiResponse({ status: 200, description: 'Growth analytics' })
   async getGrowthAnalytics(@Query('institutionId') institutionId?: string) {
+    this.logger.log('Get growth analytics endpoint called');
     return this.analyticsService.getGrowthAnalytics(institutionId);
   }
 }

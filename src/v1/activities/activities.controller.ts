@@ -29,6 +29,13 @@ import {
 } from './dto';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('activities')
 @Controller('activities')
@@ -42,6 +49,7 @@ export class ActivitiesController {
   // ============================================
 
   @Get('public')
+  @Cacheable(300, ['activities', 'public']) // Cache for 5 minutes with tags
   @ApiOperation({
     summary: 'Get all public activities',
     description:
@@ -95,6 +103,7 @@ export class ActivitiesController {
 
   @Post()
   @UseGuards(JwtGuard)
+  @InvalidateCache(['activities', 'public']) // Invalidate cache when creating new activity
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Create activity',
@@ -118,6 +127,7 @@ export class ActivitiesController {
 
   @Get()
   @UseGuards(JwtGuard)
+  @Cacheable(300, ['activities']) // Cache for 5 minutes
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Get all activities (authenticated)',
@@ -181,6 +191,12 @@ export class ActivitiesController {
   }
 
   @Get(':id')
+  @CacheKey((context) => {
+    const request = context.switchToHttp().getRequest();
+    const id = request.params.id;
+    return `activity:${id}`;
+  })
+  @Cache({ ttl: 600, tags: ['activities', 'activity-detail'] }) // 10 minutes
   @ApiOperation({
     summary: 'Get activity by ID',
     description:
@@ -202,6 +218,7 @@ export class ActivitiesController {
 
   @Patch(':id')
   @UseGuards(JwtGuard)
+  @InvalidateCache(['activities', 'public', 'activity-detail'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Update activity',
@@ -229,6 +246,7 @@ export class ActivitiesController {
 
   @Post(':id/publish')
   @UseGuards(JwtGuard)
+  @InvalidateCache(['activities', 'public', 'activity-detail'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Publish activity',
@@ -251,6 +269,7 @@ export class ActivitiesController {
 
   @Delete(':id')
   @UseGuards(JwtGuard)
+  @InvalidateCache(['activities', 'public', 'activity-detail'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Delete activity',
@@ -276,6 +295,7 @@ export class ActivitiesController {
 
   @Post(':id/register')
   @UseGuards(JwtGuard)
+  @InvalidateCache(['activities', 'registrations'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Register for activity',
@@ -308,6 +328,7 @@ export class ActivitiesController {
   @Post('registrations/:id/confirm')
   @UseGuards(AdminGuard)
   @RequirePermission('event:manage')
+  @InvalidateCache(['registrations'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Confirm registration (Admin only)',
@@ -325,6 +346,7 @@ export class ActivitiesController {
 
   @Post('registrations/:id/cancel')
   @UseGuards(JwtGuard)
+  @InvalidateCache(['registrations'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Cancel registration',
@@ -348,6 +370,7 @@ export class ActivitiesController {
   @Post('registrations/:id/check-in')
   @UseGuards(AdminGuard)
   @RequirePermission('event:manage')
+  @InvalidateCache(['attendance', 'activity-stats'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Check-in attendee (Admin only)',
@@ -366,6 +389,7 @@ export class ActivitiesController {
   @Post('attendance/:id/check-out')
   @UseGuards(AdminGuard)
   @RequirePermission('event:manage')
+  @InvalidateCache(['attendance', 'activity-stats'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Check-out attendee (Admin only)',
@@ -388,6 +412,7 @@ export class ActivitiesController {
   @Get(':id/stats')
   @UseGuards(AdminGuard)
   @RequirePermission('event:read')
+  @Cacheable(120, ['activity-stats']) // Cache for 2 minutes
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Get activity statistics (Admin only)',
@@ -407,6 +432,7 @@ export class ActivitiesController {
   @Get('organizations/:organizationId/dashboard')
   @UseGuards(AdminGuard)
   @RequirePermission('event:read')
+  @Cacheable(180, ['organization-dashboard', 'activities'])
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Get organization activity dashboard (Admin only)',

@@ -1,3 +1,4 @@
+// src/v1/audit/audit.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
@@ -10,6 +11,10 @@ export class AuditService {
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
   ) {}
+
+  // ============================================
+  // GET AUDIT LOGS
+  // ============================================
 
   async getAuditLogs(
     page: number = 1,
@@ -97,7 +102,6 @@ export class AuditService {
     page: number = 1,
     limit: number = 10,
   ) {
-    // Get all users in the organization
     const members = await this.prisma.organizationMembership.findMany({
       where: { organizationId },
       select: { userId: true },
@@ -144,7 +148,6 @@ export class AuditService {
       }),
     ]);
 
-    // Get user details for top users
     const userIds = byUser.map((u) => u.userId).filter(Boolean);
     const users = await this.prisma.user.findMany({
       where: { id: { in: userIds as string[] } },
@@ -174,5 +177,83 @@ export class AuditService {
         count: u._count.id,
       })),
     };
+  }
+
+  // ============================================
+  // CACHE INVALIDATION
+  // ============================================
+
+  async logAuditEvent(data: {
+    userId: string;
+    action: string;
+    entity?: string;
+    entityId?: string;
+    details?: any;
+    ipAddress?: string;
+    userAgent?: string;
+  }) {
+    this.logger.log(`Logging audit event: ${data.action}`);
+
+    const auditLog = await this.prisma.auditLog.create({
+      data: {
+        userId: data.userId,
+        action: data.action,
+        entity: data.entity,
+        entityId: data.entityId,
+        metadata: data.details,
+        ipAddress: data.ipAddress,
+        userAgent: data.userAgent,
+        createdAt: new Date(),
+      },
+    });
+
+    // Invalidate audit cache in the background
+    setImmediate(async () => {
+      try {
+        await this.cacheService.invalidateByTag('audit');
+        await this.cacheService.invalidateByTag('audit-logs');
+        this.logger.debug('Audit cache invalidated after new log entry');
+      } catch (error) {
+        this.logger.warn(`Failed to invalidate audit cache: ${error.message}`);
+      }
+    });
+
+    return auditLog;
+  }
+
+  async invalidateAuditCache(tags?: string[]): Promise<void> {
+    try {
+      const tagsToInvalidate = tags || ['audit', 'audit-logs', 'audit-user', 'audit-entity', 'audit-organization', 'audit-summary'];
+      
+      for (const tag of tagsToInvalidate) {
+        await this.cacheService.invalidateByTag(tag);
+      }
+      
+      this.logger.log(`Audit cache invalidated for tags: ${tagsToInvalidate.join(', ')}`);
+    } catch (error) {
+      this.logger.error(`Failed to invalidate audit cache: ${error.message}`);
+    }
+  }
+
+  async invalidateAuditCacheForUser(userId: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('audit-user');
+      await this.cacheService.invalidateByTag('audit');
+      await this.cacheService.deletePattern(`audit:user:${userId}:*`);
+      this.logger.debug(`Invalidated audit cache for user: ${userId}`);
+    } catch (error) {
+      this.logger.error(`Failed to invalidate audit cache for user: ${error.message}`);
+    }
+  }
+
+  async invalidateAuditCacheForEntity(entity: string, entityId: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('audit-entity');
+      await this.cacheService.invalidateByTag('audit');
+      await this.cacheService.delete(`audit:entity:${entity}:${entityId}`);
+      this.logger.debug(`Invalidated audit cache for entity: ${entity}:${entityId}`);
+    } catch (error) {
+      this.logger.error(`Failed to invalidate audit cache for entity: ${error.message}`);
+    }
   }
 }

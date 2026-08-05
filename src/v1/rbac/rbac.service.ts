@@ -1,3 +1,4 @@
+// src/v1/rbac/rbac.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -25,6 +26,35 @@ export class RbacService {
   ) {}
 
   // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateRbacCache(): Promise<void> {
+    try {
+      // Invalidate all RBAC tags
+      await this.cacheService.invalidateByTag('rbac');
+      await this.cacheService.invalidateByTag('permissions');
+      await this.cacheService.invalidateByTag('roles');
+      await this.cacheService.invalidateByTag('admins');
+      await this.cacheService.invalidateByTag('user');
+
+      // Invalidate specific cache keys
+      await this.cacheService.delete('permissions:all');
+      await this.cacheService.delete('admins:all');
+
+      // Invalidate all patterns
+      await this.cacheService.invalidatePattern('permission:*');
+      await this.cacheService.invalidatePattern('roles:organization:*');
+      await this.cacheService.invalidatePattern('role:*');
+      await this.cacheService.invalidatePattern('user:permissions:*');
+
+      this.logger.log('RBAC cache invalidated');
+    } catch (error) {
+      this.logger.error(`Failed to invalidate RBAC cache: ${error.message}`);
+    }
+  }
+
+  // ============================================
   // PERMISSIONS
   // ============================================
 
@@ -39,11 +69,23 @@ export class RbacService {
       orderBy: { category: 'asc' },
     });
 
-    await this.cacheService.set(cacheKey, permissions, 600);
+    await this.cacheService.setWithTag(
+      cacheKey,
+      permissions,
+      ['rbac', 'permissions'],
+      600,
+    );
+
     return permissions;
   }
 
   async getPermissionByKey(key: string) {
+    const cacheKey = `permission:${key}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const permission = await this.prisma.permission.findUnique({
       where: { key },
     });
@@ -51,6 +93,13 @@ export class RbacService {
     if (!permission) {
       throw new NotFoundException('Permission not found');
     }
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      permission,
+      ['rbac', 'permissions'],
+      600,
+    );
 
     return permission;
   }
@@ -138,7 +187,8 @@ export class RbacService {
       return newRole;
     });
 
-    await this.cacheService.delete(`roles:organization:${dto.organizationId}`);
+    // Invalidate cache
+    await this.invalidateRbacCache();
 
     this.logger.log(`Role created: ${role.id}`);
     return role;
@@ -163,11 +213,18 @@ export class RbacService {
       orderBy: { createdAt: 'desc' },
     });
 
-    await this.cacheService.set(cacheKey, roles, 300);
+    await this.cacheService.setWithTag(cacheKey, roles, ['rbac', 'roles'], 300);
+
     return roles;
   }
 
   async getRoleById(roleId: string) {
+    const cacheKey = `role:${roleId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const role = await this.prisma.role.findUnique({
       where: { id: roleId },
       include: {
@@ -183,6 +240,8 @@ export class RbacService {
     if (!role) {
       throw new NotFoundException('Role not found');
     }
+
+    await this.cacheService.setWithTag(cacheKey, role, ['rbac', 'roles'], 300);
 
     return role;
   }
@@ -264,7 +323,8 @@ export class RbacService {
       return updatedRole;
     });
 
-    await this.cacheService.delete(`roles:organization:${role.organizationId}`);
+    // Invalidate cache
+    await this.invalidateRbacCache();
 
     this.logger.log(`Role updated: ${roleId}`);
     return updated;
@@ -314,7 +374,8 @@ export class RbacService {
       where: { id: roleId },
     });
 
-    await this.cacheService.delete(`roles:organization:${role.organizationId}`);
+    // Invalidate cache
+    await this.invalidateRbacCache();
 
     this.logger.log(`Role deleted: ${roleId}`);
     return deleted;
@@ -403,6 +464,10 @@ export class RbacService {
       },
     });
 
+    // Invalidate cache
+    await this.invalidateRbacCache();
+    await this.cacheService.delete(`user:permissions:${dto.userId}`);
+
     this.logger.log(`Role assigned to user: ${dto.userId}`);
     return assignment;
   }
@@ -452,6 +517,9 @@ export class RbacService {
     const deleted = await this.prisma.membershipRole.delete({
       where: { id: membershipRoleId },
     });
+
+    // Invalidate cache
+    await this.invalidateRbacCache();
 
     this.logger.log(`Role removed from user`);
     return deleted;
@@ -536,6 +604,9 @@ export class RbacService {
       },
     });
 
+    // Invalidate cache
+    await this.invalidateRbacCache();
+
     this.logger.log(`Admin role assigned to user: ${dto.userId}`);
     return admin;
   }
@@ -575,12 +646,21 @@ export class RbacService {
       },
     });
 
+    // Invalidate cache
+    await this.invalidateRbacCache();
+
     this.logger.log(`Admin role revoked`);
     return revoked;
   }
 
   async getAdmins() {
-    return this.prisma.admin.findMany({
+    const cacheKey = 'admins:all';
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const admins = await this.prisma.admin.findMany({
       include: {
         user: {
           select: {
@@ -598,9 +678,24 @@ export class RbacService {
       },
       orderBy: { assignedAt: 'desc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      admins,
+      ['rbac', 'admins'],
+      300,
+    );
+
+    return admins;
   }
 
   async getUserPermissions(userId: string) {
+    const cacheKey = `user:permissions:${userId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const permissions = await this.prisma.$queryRaw`
       SELECT DISTINCT p.key, p.name, p.description, p.category
       FROM permissions p
@@ -619,6 +714,280 @@ export class RbacService {
       AND a.status = 'ACTIVE'
     `;
 
+    await this.cacheService.setWithTag(
+      cacheKey,
+      permissions,
+      ['rbac', 'permissions', 'user'],
+      120,
+    );
+
     return permissions;
+  }
+
+  // ============================================
+  // ADDITIONAL HELPER METHODS
+  // ============================================
+
+  /**
+   * Check if a user has a specific permission
+   */
+  async hasPermission(userId: string, permissionKey: string): Promise<boolean> {
+    const permissions = await this.getUserPermissions(userId);
+    return permissions.some((p: any) => p.key === permissionKey);
+  }
+
+  /**
+   * Check if a user has any of the given permissions
+   */
+  async hasAnyPermission(
+    userId: string,
+    permissionKeys: string[],
+  ): Promise<boolean> {
+    const permissions = await this.getUserPermissions(userId);
+    return permissions.some((p: any) => permissionKeys.includes(p.key));
+  }
+
+  /**
+   * Check if a user has all of the given permissions
+   */
+  async hasAllPermissions(
+    userId: string,
+    permissionKeys: string[],
+  ): Promise<boolean> {
+    const permissions = await this.getUserPermissions(userId);
+    const userPermissionKeys = permissions.map((p: any) => p.key);
+    return permissionKeys.every((key) => userPermissionKeys.includes(key));
+  }
+
+  /**
+   * Get users with a specific permission
+   */
+  async getUsersWithPermission(permissionKey: string) {
+    const users = await this.prisma.$queryRaw`
+      SELECT DISTINCT u.id, u.email, u.username
+      FROM users u
+      JOIN organization_memberships om ON om.user_id = u.id
+      JOIN membership_roles mr ON mr.membership_id = om.id
+      JOIN roles r ON r.id = mr.role_id
+      JOIN role_permissions rp ON rp.role_id = r.id
+      JOIN permissions p ON p.id = rp.permission_id
+      WHERE p.key = ${permissionKey}
+      AND om.status = 'ACTIVE'
+      UNION
+      SELECT DISTINCT u.id, u.email, u.username
+      FROM users u
+      JOIN admins a ON a.user_id = u.id
+      JOIN admin_permissions ap ON ap.admin_id = a.id
+      WHERE ap.permission_key = ${permissionKey}
+      AND a.status = 'ACTIVE'
+    `;
+
+    return users;
+  }
+
+  /**
+   * Get all system roles
+   */
+  async getSystemRoles() {
+    return this.prisma.role.findMany({
+      where: { isSystem: true },
+      include: {
+        permissions: {
+          include: {
+            permission: true,
+          },
+        },
+      },
+    });
+  }
+
+  /**
+   * Get all roles with their permissions
+   */
+  async getRolesWithPermissions(organizationId?: string) {
+    const where: any = {};
+    if (organizationId) {
+      where.organizationId = organizationId;
+    }
+
+    return this.prisma.role.findMany({
+      where,
+      include: {
+        permissions: {
+          include: {
+            permission: true,
+          },
+        },
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Get user's admin status
+   */
+  async getUserAdminStatus(userId: string) {
+    const admin = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      include: {
+        institution: true,
+        faculty: true,
+        department: true,
+        organization: true,
+        permissions: true,
+      },
+    });
+
+    return admin;
+  }
+
+  /**
+   * Get user's roles across all organizations
+   */
+  async getUserRoles(userId: string) {
+    const memberships = await this.prisma.organizationMembership.findMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      include: {
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        roles: {
+          include: {
+            role: {
+              include: {
+                permissions: {
+                  include: {
+                    permission: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return memberships;
+  }
+
+  /**
+   * Clone a role with its permissions
+   */
+  async cloneRole(roleId: string, newName: string, organizationId?: string) {
+    this.logger.log(`Cloning role: ${roleId}`);
+
+    const role = await this.prisma.role.findUnique({
+      where: { id: roleId },
+      include: {
+        permissions: {
+          include: {
+            permission: true,
+          },
+        },
+      },
+    });
+
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+
+    const targetOrgId = organizationId || role.organizationId;
+
+    // Check if role already exists in target organization
+    const existing = await this.prisma.role.findFirst({
+      where: {
+        organizationId: targetOrgId,
+        name: newName,
+      },
+    });
+
+    if (existing) {
+      throw new ConflictException('Role with this name already exists');
+    }
+
+    const newRole = await this.prisma.$transaction(async (tx) => {
+      const clonedRole = await tx.role.create({
+        data: {
+          organizationId: targetOrgId,
+          name: newName,
+          description: `Cloned from ${role.name}`,
+          isSystem: false,
+        },
+      });
+
+      // Clone permissions
+      for (const rp of role.permissions) {
+        await tx.rolePermission.create({
+          data: {
+            roleId: clonedRole.id,
+            permissionId: rp.permissionId,
+          },
+        });
+      }
+
+      return clonedRole;
+    });
+
+    // Invalidate cache
+    await this.invalidateRbacCache();
+
+    this.logger.log(`Role cloned: ${newRole.id}`);
+    return newRole;
+  }
+
+  /**
+   * Bulk assign roles to users
+   */
+  async bulkAssignRoles(
+    assignerId: string,
+    assignments: Array<{
+      userId: string;
+      roleId: string;
+      organizationId: string;
+    }>,
+  ) {
+    this.logger.log(`Bulk assigning roles to ${assignments.length} users`);
+
+    const results: any[] = [];
+
+    for (const assignment of assignments) {
+      try {
+        const result = await this.assignRoleToUser(assignerId, {
+          userId: assignment.userId,
+          roleId: assignment.roleId,
+          organizationId: assignment.organizationId,
+        });
+        results.push({ success: true, userId: assignment.userId, result });
+      } catch (error) {
+        results.push({
+          success: false,
+          userId: assignment.userId,
+          error: error.message,
+        });
+      }
+    }
+
+    // Invalidate cache
+    await this.invalidateRbacCache();
+
+    this.logger.log(`Bulk role assignment completed`);
+    return results;
   }
 }

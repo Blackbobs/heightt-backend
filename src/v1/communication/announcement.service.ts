@@ -1,3 +1,4 @@
+// src/v1/communication/announcement.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -74,6 +75,9 @@ export class AnnouncementService {
         isPublished: false,
       },
     });
+
+    // Invalidate announcement cache
+    await this.invalidateAnnouncementCache();
 
     this.eventService.emit(SystemEvents.ANNOUNCEMENT_CREATED, {
       announcement,
@@ -156,6 +160,13 @@ export class AnnouncementService {
   }
 
   async getAnnouncementById(id: string, userId?: string) {
+    // Try cache first
+    const cacheKey = `announcement:${id}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const announcement = await this.prisma.announcement.findUnique({
       where: { id },
       include: {
@@ -186,9 +197,11 @@ export class AnnouncementService {
       throw new NotFoundException('Announcement not found');
     }
 
+    // Cache for 10 minutes
+    await this.cacheService.set(cacheKey, announcement, 600);
+
     // Check if expired
     if (announcement.expiresAt && announcement.expiresAt < new Date()) {
-      // Still return but mark as expired
       return { ...announcement, isExpired: true };
     }
 
@@ -258,6 +271,9 @@ export class AnnouncementService {
       },
     });
 
+    // Invalidate announcement cache
+    await this.invalidateAnnouncementCache(id);
+
     this.logger.log(`Announcement updated: ${id}`);
     return updated;
   }
@@ -309,6 +325,9 @@ export class AnnouncementService {
       },
     });
 
+    // Invalidate announcement cache
+    await this.invalidateAnnouncementCache(id);
+
     // Send notifications via event
     this.eventService.emit(SystemEvents.ANNOUNCEMENT_PUBLISHED, {
       announcement: published,
@@ -349,6 +368,9 @@ export class AnnouncementService {
       },
     });
 
+    // Invalidate announcement cache
+    await this.invalidateAnnouncementCache(announcementId);
+
     // Emit event for analytics
     this.eventService.emit(SystemEvents.ANNOUNCEMENT_READ, {
       announcementId,
@@ -356,9 +378,7 @@ export class AnnouncementService {
       readAt: read.readAt,
     });
 
-    this.logger.log(
-      `Announcement ${announcementId} marked as read by ${userId}`,
-    );
+    this.logger.log(`Announcement ${announcementId} marked as read by ${userId}`);
     return read;
   }
 
@@ -407,6 +427,9 @@ export class AnnouncementService {
       where: { id },
     });
 
+    // Invalidate announcement cache
+    await this.invalidateAnnouncementCache(id);
+
     this.logger.log(`Announcement deleted: ${id}`);
     return deleted;
   }
@@ -416,6 +439,12 @@ export class AnnouncementService {
   // ============================================
 
   async getAnnouncementStats(organizationId?: string) {
+    const cacheKey = `announcement:stats:${organizationId || 'all'}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const where: any = {};
     if (organizationId) {
       where.organizationId = organizationId;
@@ -436,13 +465,40 @@ export class AnnouncementService {
       }),
     ]);
 
-    return {
+    const stats = {
       total,
       published,
       drafts,
       totalReads: reads,
-      engagementRate:
-        published > 0 ? Math.round((reads / (published * 10)) * 100) : 0,
+      engagementRate: published > 0 ? Math.round((reads / (published * 10)) * 100) : 0,
     };
+
+    // Cache for 5 minutes
+    await this.cacheService.set(cacheKey, stats, 300);
+    return stats;
+  }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateAnnouncementCache(announcementId?: string): Promise<void> {
+    try {
+      // Invalidate tags
+      await this.cacheService.invalidateByTag('announcements');
+      await this.cacheService.invalidateByTag('communication');
+      
+      // Delete specific announcement if ID provided
+      if (announcementId) {
+        await this.cacheService.delete(`announcement:${announcementId}`);
+      }
+      
+      // Invalidate stats cache
+      await this.cacheService.invalidatePattern('announcement:stats:*');
+      
+      this.logger.debug(`Announcement cache invalidated${announcementId ? ` for: ${announcementId}` : ''}`);
+    } catch (error) {
+      this.logger.error(`Failed to invalidate announcement cache: ${error.message}`);
+    }
   }
 }

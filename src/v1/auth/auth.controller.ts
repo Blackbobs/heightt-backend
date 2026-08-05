@@ -1,3 +1,4 @@
+// src/v1/auth/auth.controller.ts
 import {
   Controller,
   Post,
@@ -31,6 +32,8 @@ import { RegisterDto, LoginDto } from './dto';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
 import type { Response } from 'express';
+// Import cache decorators
+import { Cache, Cacheable, CacheKey, InvalidateCache } from '../../common/decorators/cache.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -42,6 +45,7 @@ export class AuthController {
   @Post('register')
   @Version('1')
   @HttpCode(HttpStatus.CREATED)
+  @InvalidateCache(['auth', 'users']) // Invalidate auth caches on registration
   @ApiOperation({
     summary: 'Register a new user',
     description:
@@ -62,6 +66,7 @@ export class AuthController {
   @Post('login')
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth']) // Invalidate auth caches on login
   @ApiOperation({
     summary: 'Login user',
     description:
@@ -86,6 +91,7 @@ export class AuthController {
   @Post('refresh')
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth']) // Invalidate auth caches on refresh
   @ApiOperation({
     summary: 'Refresh access token',
     description:
@@ -105,6 +111,7 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users']) // Invalidate auth caches on logout
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Logout user',
@@ -122,6 +129,7 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users']) // Invalidate auth caches on logout all
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Logout from all devices',
@@ -141,6 +149,7 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtGuard)
   @Version('1')
+  @Cacheable(300, ['users']) // Cache for 5 minutes with 'users' tag
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Get current user',
@@ -159,6 +168,12 @@ export class AuthController {
   @Get('sessions')
   @UseGuards(JwtGuard)
   @Version('1')
+  @CacheKey((context) => {
+    const request = context.switchToHttp().getRequest();
+    const userId = request.user.id;
+    return `user:sessions:${userId}`;
+  })
+  @Cache({ ttl: 60, tags: ['auth', 'sessions'] }) // 1 minute
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Get active sessions',
@@ -175,6 +190,7 @@ export class AuthController {
   @UseGuards(JwtGuard)
   @Version('1')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @InvalidateCache(['auth', 'sessions']) // Invalidate session caches
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: 'Revoke a session',
@@ -191,6 +207,7 @@ export class AuthController {
   @Post('verify-email')
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users']) // Invalidate caches on email verification
   @ApiOperation({
     summary: 'Verify email address',
     description:
@@ -218,6 +235,7 @@ export class AuthController {
   @Post('resend-verification')
   @Version('1')
   @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users']) // Invalidate caches on resend
   @ApiOperation({
     summary: 'Resend verification email',
     description: 'Resends the email verification link to the user.',
@@ -240,5 +258,46 @@ export class AuthController {
   async resendVerification(@Body() body: { email: string }) {
     this.logger.log(`Resend verification email called for: ${body.email}`);
     return this.authService.resendVerificationEmail(body.email);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION ENDPOINT (Admin only)
+  // ============================================
+
+  @Post('cache/invalidate')
+  @UseGuards(JwtGuard)
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Invalidate auth cache (Admin only)',
+    description: 'Clear all authentication-related cache.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string', description: 'Specific user to invalidate (optional)' },
+        reason: { type: 'string', description: 'Reason for invalidating cache' },
+      },
+    },
+  })
+  @ApiOkResponse({ description: 'Auth cache invalidated' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  async invalidateAuthCache(
+    @Body() body: { userId?: string; reason?: string },
+    @Request() req: any,
+  ) {
+    this.logger.log(`Invalidate auth cache endpoint called. Reason: ${body.reason || 'Not specified'}`);
+    
+    await this.authService.invalidateAuthCache(body.userId);
+    
+    return {
+      message: 'Auth cache invalidated successfully',
+      reason: body.reason || 'Not specified',
+      invalidatedBy: req.user.id,
+      invalidatedAt: new Date().toISOString(),
+      userId: body.userId || 'all users',
+    };
   }
 }

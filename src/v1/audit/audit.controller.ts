@@ -19,6 +19,8 @@ import {
 import { AuditService } from './audit.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
+// Import cache decorators
+import { Cache, Cacheable, CacheKey, InvalidateCache } from '../../common/decorators/cache.decorator';
 
 @ApiTags('audit')
 @Controller('audit')
@@ -31,6 +33,16 @@ export class AuditController {
 
   @Get()
   @RequirePermission('audit:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { page, limit, userId, action, entity, entityId, startDate, endDate } = request.query;
+      // Generate cache key based on all filter parameters
+      return `audit:logs:${page || 1}:${limit || 10}:${userId || 'all'}:${action || 'all'}:${entity || 'all'}:${entityId || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
+    },
+    ttl: 60, // 1 minute - audit logs should be relatively fresh
+    tags: ['audit', 'audit-logs'],
+  })
   @ApiOperation({ summary: 'Get audit logs' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
@@ -84,6 +96,16 @@ export class AuditController {
 
   @Get('users/:userId')
   @RequirePermission('audit:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const userId = request.params.userId;
+      const { page, limit } = request.query;
+      return `audit:user:${userId}:${page || 1}:${limit || 10}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['audit', 'audit-user'],
+  })
   @ApiOperation({ summary: 'Get user audit logs' })
   @ApiParam({ name: 'userId', description: 'User ID' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
@@ -97,6 +119,7 @@ export class AuditController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
   ) {
+    this.logger.log(`Get user audit logs endpoint called for user: ${userId}`);
     return this.auditService.getUserAuditLogs(
       userId,
       parseInt(page, 10),
@@ -106,6 +129,16 @@ export class AuditController {
 
   @Get('entities/:entity/:entityId')
   @RequirePermission('audit:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { entity, entityId } = request.params;
+      const { page, limit } = request.query;
+      return `audit:entity:${entity}:${entityId}:${page || 1}:${limit || 10}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['audit', 'audit-entity'],
+  })
   @ApiOperation({ summary: 'Get entity audit logs' })
   @ApiParam({ name: 'entity', description: 'Entity type' })
   @ApiParam({ name: 'entityId', description: 'Entity ID' })
@@ -121,6 +154,7 @@ export class AuditController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
   ) {
+    this.logger.log(`Get entity audit logs endpoint called for ${entity}:${entityId}`);
     return this.auditService.getEntityAuditLogs(
       entity,
       entityId,
@@ -131,6 +165,16 @@ export class AuditController {
 
   @Get('organizations/:organizationId')
   @RequirePermission('audit:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const organizationId = request.params.organizationId;
+      const { page, limit } = request.query;
+      return `audit:organization:${organizationId}:${page || 1}:${limit || 10}`;
+    },
+    ttl: 180, // 3 minutes
+    tags: ['audit', 'audit-organization'],
+  })
   @ApiOperation({ summary: 'Get organization audit logs' })
   @ApiParam({ name: 'organizationId', description: 'Organization ID' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
@@ -144,6 +188,7 @@ export class AuditController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
   ) {
+    this.logger.log(`Get organization audit logs endpoint called for: ${organizationId}`);
     return this.auditService.getOrganizationAuditLogs(
       organizationId,
       parseInt(page, 10),
@@ -153,6 +198,15 @@ export class AuditController {
 
   @Get('summary')
   @RequirePermission('audit:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { startDate, endDate } = request.query;
+      return `audit:summary:${startDate || 'all'}:${endDate || 'all'}`;
+    },
+    ttl: 300, // 5 minutes - summary data can be cached longer
+    tags: ['audit', 'audit-summary'],
+  })
   @ApiOperation({ summary: 'Get audit summary' })
   @ApiQuery({
     name: 'startDate',
@@ -168,6 +222,7 @@ export class AuditController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
+    this.logger.log('Get audit summary endpoint called');
     return this.auditService.getAuditSummary(startDate, endDate);
   }
 }

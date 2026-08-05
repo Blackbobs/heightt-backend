@@ -1,3 +1,4 @@
+// src/v1/finance/finance.controller.ts
 import {
   Controller,
   Get,
@@ -50,6 +51,13 @@ import {
   ReceiptResponseDto,
   ReceiptListResponseDto,
 } from './dto';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('finance')
 @Controller('finance')
@@ -72,6 +80,7 @@ export class FinanceController {
   @Post('wallet')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:create')
+  @InvalidateCache(['finance', 'wallet'])
   @ApiOperation({ summary: 'Create wallet (Admin only)' })
   @ApiBody({ type: CreateWalletDto })
   @ApiResponse({
@@ -84,6 +93,14 @@ export class FinanceController {
   }
 
   @Get('wallet/me')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `wallet:user:${request.user.id}`;
+    },
+    ttl: 60, // 1 minute
+    tags: ['finance', 'wallet'],
+  })
   @ApiOperation({ summary: 'Get my wallet' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -97,6 +114,14 @@ export class FinanceController {
   @Get('wallet/user/:userId')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `wallet:user:admin:${request.params.userId}`;
+    },
+    ttl: 60, // 1 minute
+    tags: ['finance', 'wallet', 'admin'],
+  })
   @ApiOperation({ summary: 'Get wallet by user ID (Admin only)' })
   @ApiParam({ name: 'userId', description: 'User ID' })
   @ApiResponse({
@@ -111,6 +136,14 @@ export class FinanceController {
   @Get('wallet/organization/:organizationId')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `wallet:organization:${request.params.organizationId}`;
+    },
+    ttl: 60, // 1 minute
+    tags: ['finance', 'wallet', 'organization'],
+  })
   @ApiOperation({ summary: 'Get wallet by organization ID (Admin only)' })
   @ApiParam({ name: 'organizationId', description: 'Organization ID' })
   @ApiResponse({
@@ -131,6 +164,16 @@ export class FinanceController {
   // ============================================
 
   @Get('transactions')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const userId = request.user.id;
+      const { page, limit, type, status, startDate, endDate } = request.query;
+      return `transactions:user:${userId}:${page || 1}:${limit || 10}:${type || 'all'}:${status || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
+    },
+    ttl: 30, // 30 seconds - transactions change frequently
+    tags: ['finance', 'transactions'],
+  })
   @ApiOperation({ summary: 'Get transaction history' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
@@ -173,12 +216,13 @@ export class FinanceController {
   }
 
   // ============================================
-  // WALLET OPERATIONS (ADMIN)
+  // WALLET OPERATIONS (ADMIN) - NO CACHE (Write operations)
   // ============================================
 
   @Post('wallet/credit')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:credit')
+  @InvalidateCache(['finance', 'wallet', 'transactions'])
   @ApiOperation({ summary: 'Credit wallet (Admin only)' })
   @ApiBody({ type: CreditWalletDto })
   @ApiResponse({
@@ -193,6 +237,7 @@ export class FinanceController {
   @Post('wallet/debit')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:debit')
+  @InvalidateCache(['finance', 'wallet', 'transactions'])
   @ApiOperation({ summary: 'Debit wallet (Admin only)' })
   @ApiBody({ type: DebitWalletDto })
   @ApiResponse({
@@ -211,6 +256,7 @@ export class FinanceController {
   @Post('dues')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:due:create')
+  @InvalidateCache(['finance', 'dues'])
   @ApiOperation({ summary: 'Create due (Admin only)' })
   @ApiBody({ type: CreateDueDto })
   @ApiResponse({
@@ -225,6 +271,7 @@ export class FinanceController {
   @Post('dues/:id/assign')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:due:assign')
+  @InvalidateCache(['finance', 'dues', 'student'])
   @ApiOperation({ summary: 'Assign due to students (Admin only)' })
   @ApiParam({ name: 'id', description: 'Due ID' })
   @ApiBody({ type: AssignDueDto })
@@ -242,6 +289,15 @@ export class FinanceController {
   }
 
   @Get('dues')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { organizationId, page, limit } = request.query;
+      return `dues:${organizationId || 'all'}:${page || 1}:${limit || 10}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'dues'],
+  })
   @ApiOperation({ summary: 'Get dues' })
   @ApiQuery({
     name: 'organizationId',
@@ -268,6 +324,14 @@ export class FinanceController {
   }
 
   @Get('dues/student')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `dues:student:${request.user.id}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['finance', 'dues', 'student'],
+  })
   @ApiOperation({ summary: 'Get my dues' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -285,10 +349,11 @@ export class FinanceController {
   }
 
   // ============================================
-  // PAYMENT ENDPOINTS
+  // PAYMENT ENDPOINTS - NO CACHE (Write operations)
   // ============================================
 
   @Post('payments')
+  @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
   @ApiOperation({ summary: 'Make payment' })
   @ApiBody({ type: CreatePaymentDto })
   @ApiResponse({
@@ -301,6 +366,7 @@ export class FinanceController {
   }
 
   @Post('payments/manual')
+  @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
   @ApiOperation({ summary: 'Make a manual payment (non-due payment)' })
   @ApiBody({ type: CreateManualPaymentDto })
   @ApiResponse({
@@ -316,10 +382,11 @@ export class FinanceController {
   }
 
   // ============================================
-  // ORGANIZATION WITHDRAWAL ENDPOINTS
+  // ORGANIZATION WITHDRAWAL ENDPOINTS - NO CACHE (Write operations)
   // ============================================
 
   @Post('withdrawals/organization')
+  @InvalidateCache(['finance', 'wallet', 'transactions'])
   @ApiOperation({ summary: 'Request organization withdrawal (Admin only)' })
   @ApiBody({ type: WithdrawalRequestDto })
   @ApiResponse({
@@ -338,6 +405,7 @@ export class FinanceController {
   @UseGuards(AdminGuard)
   @RequireAdminType('PLATFORM_ADMIN')
   @RequirePermission('finance:withdrawal:process')
+  @InvalidateCache(['finance', 'wallet', 'transactions'])
   @ApiOperation({
     summary: 'Approve organization withdrawal (Platform Admin only)',
   })
@@ -358,6 +426,7 @@ export class FinanceController {
   @UseGuards(AdminGuard)
   @RequireAdminType('PLATFORM_ADMIN')
   @RequirePermission('finance:withdrawal:process')
+  @InvalidateCache(['finance', 'wallet', 'transactions'])
   @ApiOperation({
     summary: 'Reject organization withdrawal (Platform Admin only)',
   })
@@ -392,6 +461,7 @@ export class FinanceController {
   // ============================================
 
   @Post('savings')
+  @InvalidateCache(['finance', 'savings'])
   @ApiOperation({ summary: 'Create savings goal' })
   @ApiBody({ type: CreateSavingsGoalDto })
   @ApiResponse({
@@ -407,6 +477,7 @@ export class FinanceController {
   }
 
   @Post('savings/deposit')
+  @InvalidateCache(['finance', 'savings', 'wallet', 'transactions'])
   @ApiOperation({ summary: 'Deposit to savings goal' })
   @ApiBody({ type: SavingsDepositDto })
   @ApiResponse({
@@ -419,6 +490,14 @@ export class FinanceController {
   }
 
   @Get('savings')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `savings:user:${request.user.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'savings'],
+  })
   @ApiOperation({ summary: 'Get savings goals' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -434,6 +513,14 @@ export class FinanceController {
   // ============================================
 
   @Get('organizations/:organizationId/overview')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `organization:overview:${request.params.organizationId}:user:${request.user.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'organization', 'overview'],
+  })
   @ApiOperation({
     summary: 'Get financial overview for an organization',
     description:
@@ -463,6 +550,14 @@ export class FinanceController {
   }
 
   @Get('organizations/:organizationId/dashboard')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `organization:dashboard:${request.params.organizationId}:user:${request.user.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'organization', 'dashboard'],
+  })
   @ApiOperation({
     summary: 'Get comprehensive finance dashboard for an organization',
     description:
@@ -496,6 +591,7 @@ export class FinanceController {
   // ============================================
 
   @Post('receipts')
+  @InvalidateCache(['finance', 'receipts'])
   @ApiOperation({
     summary: 'Generate receipt',
     description: 'Generate a receipt for a payment.',
@@ -512,6 +608,16 @@ export class FinanceController {
   }
 
   @Get('receipts')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const userId = request.user.id;
+      const { page, limit, startDate, endDate, organizationId } = request.query;
+      return `receipts:user:${userId}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}:${organizationId || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'receipts'],
+  })
   @ApiOperation({
     summary: 'Get user receipts',
     description: 'Get all receipts for the authenticated user.',
@@ -556,6 +662,14 @@ export class FinanceController {
   }
 
   @Get('receipts/:id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `receipt:${request.params.id}`;
+    },
+    ttl: 3600, // 1 hour
+    tags: ['finance', 'receipts'],
+  })
   @ApiOperation({
     summary: 'Get receipt by ID',
     description: 'Get a specific receipt by ID.',
@@ -572,6 +686,7 @@ export class FinanceController {
   }
 
   @Post('receipts/:id/download')
+  @InvalidateCache(['finance', 'receipts'])
   @ApiOperation({
     summary: 'Track receipt download',
     description: 'Track when a receipt is downloaded.',
@@ -587,6 +702,7 @@ export class FinanceController {
   }
 
   @Post('receipts/:id/view')
+  @InvalidateCache(['finance', 'receipts'])
   @ApiOperation({
     summary: 'Track receipt view',
     description: 'Track when a receipt is viewed.',
@@ -604,6 +720,7 @@ export class FinanceController {
   @Post('receipts/:id/void')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:manage')
+  @InvalidateCache(['finance', 'receipts'])
   @ApiOperation({
     summary: 'Void receipt (Admin only)',
     description: 'Void a receipt. Only platform admins can do this.',
@@ -633,6 +750,17 @@ export class FinanceController {
   @Get('organizations/:organizationId/receipts')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const organizationId = request.params.organizationId;
+      const userId = request.user.id;
+      const { page, limit } = request.query;
+      return `receipts:organization:${organizationId}:user:${userId}:${page || 1}:${limit || 10}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'receipts', 'organization'],
+  })
   @ApiOperation({
     summary: 'Get organization receipts (Admin only)',
     description: 'Get all receipts for a specific organization.',
@@ -669,6 +797,15 @@ export class FinanceController {
   @Get('ledger/accounts')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { type, ownerType, ownerId, isActive } = request.query;
+      return `ledger:accounts:${type || 'all'}:${ownerType || 'all'}:${ownerId || 'all'}:${isActive || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'ledger'],
+  })
   @ApiOperation({ summary: 'Get ledger accounts (Admin only)' })
   @ApiQuery({
     name: 'type',
@@ -706,6 +843,14 @@ export class FinanceController {
   @Get('ledger/accounts/:id')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `ledger:account:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'ledger'],
+  })
   @ApiOperation({ summary: 'Get ledger account by ID (Admin only)' })
   @ApiParam({ name: 'id', description: 'Ledger account ID' })
   @ApiResponse({ status: 200, description: 'Ledger account retrieved' })
@@ -717,6 +862,14 @@ export class FinanceController {
   @Get('ledger/accounts/:id/balance')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `ledger:account:balance:${request.params.id}`;
+    },
+    ttl: 60, // 1 minute - balances change frequently
+    tags: ['finance', 'ledger'],
+  })
   @ApiOperation({ summary: 'Get ledger account balance (Admin only)' })
   @ApiParam({ name: 'id', description: 'Ledger account ID' })
   @ApiResponse({ status: 200, description: 'Ledger account balance retrieved' })
@@ -728,6 +881,16 @@ export class FinanceController {
   @Get('ledger/journals')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { status, startDate, endDate, transactionId, paymentId } =
+        request.query;
+      return `ledger:journals:${status || 'all'}:${startDate || 'all'}:${endDate || 'all'}:${transactionId || 'all'}:${paymentId || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'ledger', 'journal'],
+  })
   @ApiOperation({ summary: 'Get journal entries (Admin only)' })
   @ApiQuery({
     name: 'status',
@@ -771,6 +934,14 @@ export class FinanceController {
   @Get('ledger/journals/:id')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `ledger:journal:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['finance', 'ledger', 'journal'],
+  })
   @ApiOperation({ summary: 'Get journal entry by ID (Admin only)' })
   @ApiParam({ name: 'id', description: 'Journal entry ID' })
   @ApiResponse({ status: 200, description: 'Journal entry retrieved' })
@@ -782,6 +953,7 @@ export class FinanceController {
   @Post('ledger/journals/:id/reverse')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:manage')
+  @InvalidateCache(['finance', 'ledger', 'journal'])
   @ApiOperation({ summary: 'Reverse journal entry (Admin only)' })
   @ApiParam({ name: 'id', description: 'Journal entry ID' })
   @ApiBody({
@@ -800,6 +972,7 @@ export class FinanceController {
   @Post('ledger/reconcile')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:manage')
+  @InvalidateCache(['finance', 'ledger'])
   @ApiOperation({ summary: 'Reconcile ledger accounts (Admin only)' })
   @ApiBody({
     schema: {
@@ -822,6 +995,10 @@ export class FinanceController {
       new Date(body.endDate),
     );
   }
+
+  // ============================================
+  // CHARGES CALCULATION - NO CACHE (Dynamic)
+  // ============================================
 
   @Get('charges/calculate')
   @ApiOperation({ summary: 'Calculate charges for a payment amount' })
@@ -885,6 +1062,14 @@ export class FinanceController {
   @Get('reports/overview')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:reports')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `reports:overview:${request.query.institutionId || 'all'}`;
+    },
+    ttl: 900, // 15 minutes
+    tags: ['finance', 'reports'],
+  })
   @ApiOperation({ summary: 'Get financial overview (Admin only)' })
   @ApiQuery({
     name: 'institutionId',
@@ -898,5 +1083,64 @@ export class FinanceController {
   async getFinancialOverview(@Query('institutionId') institutionId?: string) {
     this.logger.log('Get financial overview endpoint called');
     return this.financeService.getFinancialOverview(institutionId);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION ENDPOINT (Admin only)
+  // ============================================
+
+  @Post('cache/invalidate')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:manage')
+  @InvalidateCache([
+    'finance',
+    'wallet',
+    'transactions',
+    'dues',
+    'savings',
+    'receipts',
+    'ledger',
+    'reports',
+  ])
+  @ApiOperation({
+    summary: 'Invalidate finance cache (Admin only)',
+    description: 'Clear all finance-related cache.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: {
+          type: 'string',
+          description: 'Specific user to invalidate (optional)',
+        },
+        reason: {
+          type: 'string',
+          description: 'Reason for invalidating cache',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Finance cache invalidated',
+  })
+  async invalidateFinanceCache(
+    @Body() body: { userId?: string; reason?: string },
+    @Request() req: any,
+  ) {
+    this.logger.log(
+      `Invalidate finance cache endpoint called. Reason: ${body.reason || 'Not specified'}`,
+    );
+
+    await this.financeService.invalidateFinanceCache(body.userId);
+
+    return {
+      message: 'Finance cache invalidated successfully',
+      reason: body.reason || 'Not specified',
+      invalidatedBy: req.user.id,
+      invalidatedAt: new Date().toISOString(),
+      userId: body.userId || 'all users',
+    };
   }
 }

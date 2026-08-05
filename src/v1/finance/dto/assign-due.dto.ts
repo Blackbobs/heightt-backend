@@ -1,32 +1,26 @@
+// src/v1/finance/dto/assign-due.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID, IsArray, IsOptional } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class AssignDueDto {
-  @ApiProperty({
-    example: ['stud_123', 'stud_456'],
-    description: 'Student IDs',
-    required: false,
-  })
-  @IsOptional()
+  @ApiProperty({ required: false, type: [String] })
   @IsArray()
-  @IsUUID(undefined, { each: true })
+  @IsOptional()
   studentIds?: string[];
 
-  @ApiProperty({
-    example: 'dept_123',
-    description: 'Department ID (assign all students in department)',
-    required: false,
-  })
+  @ApiProperty({ required: false })
+  @IsString()
   @IsOptional()
-  @IsUUID()
   departmentId?: string;
 
-  @ApiProperty({
-    example: 'lvl_123',
-    description: 'Level ID (assign all students in level)',
-    required: false,
-  })
+  @ApiProperty({ required: false })
+  @IsString()
   @IsOptional()
-  @IsUUID()
   levelId?: string;
+
+  // Add organizationId field
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  organizationId?: string;
 }

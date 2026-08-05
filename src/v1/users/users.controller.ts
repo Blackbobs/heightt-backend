@@ -1,7 +1,9 @@
+// src/v1/users/users.controller.ts
 import {
   Controller,
   Get,
   Patch,
+  Post,
   Delete,
   Body,
   Param,
@@ -30,6 +32,13 @@ import {
   UpdateUserDto,
   UpdateUserStatusDto,
 } from './dto';
+// Import cache decorators
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -42,6 +51,23 @@ export class UsersController {
 
   @Get()
   @UseGuards(AdminGuard)
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const {
+        page,
+        limit,
+        email,
+        username,
+        status,
+        createdAfter,
+        createdBefore,
+      } = request.query;
+      return `users:${page || 1}:${limit || 10}:${email || 'all'}:${username || 'all'}:${status || 'all'}:${createdAfter || 'all'}:${createdBefore || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['users'],
+  })
   @ApiOperation({
     summary: 'Get all users (Admin only)',
     description:
@@ -110,6 +136,14 @@ export class UsersController {
   }
 
   @Get('me')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `user:profile:${request.user.id}`;
+    },
+    ttl: 120, // 2 minutes
+    tags: ['users', 'user'],
+  })
   @ApiOperation({
     summary: 'Get current user profile',
     description: "Returns the authenticated user's full profile information.",
@@ -132,6 +166,11 @@ export class UsersController {
 
   @Get('stats')
   @UseGuards(AdminGuard)
+  @Cache({
+    key: () => 'users:stats',
+    ttl: 600, // 10 minutes
+    tags: ['users', 'stats'],
+  })
   @ApiOperation({
     summary: 'Get user statistics (Admin only)',
     description:
@@ -151,6 +190,14 @@ export class UsersController {
   }
 
   @Get('sessions')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `user:sessions:${request.user.id}`;
+    },
+    ttl: 60, // 1 minute
+    tags: ['users', 'sessions'],
+  })
   @ApiOperation({
     summary: 'Get user sessions',
     description: 'Returns all active sessions for the authenticated user.',
@@ -165,6 +212,7 @@ export class UsersController {
   }
 
   @Delete('sessions')
+  @InvalidateCache(['users', 'sessions'])
   @ApiOperation({
     summary: 'Revoke all sessions',
     description: 'Revokes all active sessions for the authenticated user.',
@@ -182,6 +230,7 @@ export class UsersController {
   }
 
   @Patch('profile')
+  @InvalidateCache(['users', 'user'])
   @ApiOperation({
     summary: 'Update user profile',
     description: "Updates the authenticated user's profile information.",
@@ -207,6 +256,14 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(AdminGuard)
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `user:profile:${request.params.id}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['users'],
+  })
   @ApiOperation({
     summary: 'Get user by ID (Admin only)',
     description: 'Returns user details by ID with full profile.',
@@ -232,6 +289,14 @@ export class UsersController {
 
   @Get('email/:email')
   @UseGuards(AdminGuard)
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `user:email:${request.params.email}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['users'],
+  })
   @ApiOperation({
     summary: 'Get user by email (Admin only)',
     description: 'Returns user details by email.',
@@ -257,6 +322,7 @@ export class UsersController {
 
   @Patch(':id/status')
   @UseGuards(AdminGuard)
+  @InvalidateCache(['users', 'user', 'stats'])
   @ApiOperation({
     summary: 'Update user status (Admin only)',
     description:
@@ -288,6 +354,7 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(AdminGuard)
+  @InvalidateCache(['users', 'user', 'stats'])
   @ApiOperation({
     summary: 'Delete user (Admin only)',
     description: 'Soft deletes a user (sets status to DELETED).',
@@ -313,6 +380,7 @@ export class UsersController {
 
   @Delete(':id/sessions')
   @UseGuards(AdminGuard)
+  @InvalidateCache(['users', 'sessions'])
   @ApiOperation({
     summary: 'Revoke all sessions for a user (Admin only)',
     description: 'Revokes all active sessions for a specific user.',
@@ -330,5 +398,54 @@ export class UsersController {
   async revokeUserSessions(@Param('id') id: string) {
     this.logger.log(`Revoke user sessions endpoint called: ${id}`);
     return this.usersService.revokeAllSessions(id);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION ENDPOINT (Admin only)
+  // ============================================
+
+  @Post('cache/invalidate')
+  @UseGuards(AdminGuard)
+  @ApiOperation({
+    summary: 'Invalidate users cache (Admin only)',
+    description: 'Clear all users-related cache.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: {
+          type: 'string',
+          description: 'Specific user to invalidate (optional)',
+        },
+        reason: {
+          type: 'string',
+          description: 'Reason for invalidating cache',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Users cache invalidated',
+  })
+  @InvalidateCache(['users', 'user', 'stats', 'sessions'])
+  async invalidateUsersCache(
+    @Body() body: { userId?: string; reason?: string },
+    @Request() req: any,
+  ) {
+    this.logger.log(
+      `Invalidate users cache endpoint called. Reason: ${body.reason || 'Not specified'}`,
+    );
+
+    await this.usersService.invalidateUsersCache(body.userId);
+
+    return {
+      message: 'Users cache invalidated successfully',
+      reason: body.reason || 'Not specified',
+      invalidatedBy: req.user.id,
+      invalidatedAt: new Date().toISOString(),
+      userId: body.userId || 'all users',
+    };
   }
 }

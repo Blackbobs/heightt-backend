@@ -1,3 +1,4 @@
+// src/v1/search/search.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
@@ -10,6 +11,33 @@ export class SearchService {
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
   ) {}
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateSearchCache(): Promise<void> {
+    try {
+      // Invalidate all search tags
+      await this.cacheService.invalidateByTag('search');
+      await this.cacheService.invalidateByTag('users');
+      await this.cacheService.invalidateByTag('organizations');
+      await this.cacheService.invalidateByTag('students');
+      await this.cacheService.invalidateByTag('institutions');
+      await this.cacheService.invalidateByTag('global');
+
+      // Invalidate all search patterns
+      await this.cacheService.invalidatePattern('search:*');
+
+      this.logger.log('Search cache invalidated');
+    } catch (error) {
+      this.logger.error(`Failed to invalidate search cache: ${error.message}`);
+    }
+  }
+
+  // ============================================
+  // SEARCH USERS
+  // ============================================
 
   async searchUsers(query: string, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
@@ -78,6 +106,10 @@ export class SearchService {
     };
   }
 
+  // ============================================
+  // SEARCH ORGANIZATIONS
+  // ============================================
+
   async searchOrganizations(
     query: string,
     page: number = 1,
@@ -140,6 +172,10 @@ export class SearchService {
       },
     };
   }
+
+  // ============================================
+  // SEARCH STUDENTS
+  // ============================================
 
   async searchStudents(query: string, page: number = 1, limit: number = 10) {
     const skip = (page - 1) * limit;
@@ -241,6 +277,10 @@ export class SearchService {
     };
   }
 
+  // ============================================
+  // SEARCH INSTITUTIONS
+  // ============================================
+
   async searchInstitutions(
     query: string,
     page: number = 1,
@@ -310,6 +350,10 @@ export class SearchService {
     };
   }
 
+  // ============================================
+  // GLOBAL SEARCH
+  // ============================================
+
   async globalSearch(query: string, page: number = 1, limit: number = 10) {
     const [users, organizations, students, institutions] = await Promise.all([
       this.searchUsers(query, page, limit),
@@ -334,5 +378,215 @@ export class SearchService {
         },
       },
     };
+  }
+
+  // ============================================
+  // ADDITIONAL SEARCH METHODS
+  // ============================================
+
+  /**
+   * Advanced search with filters
+   */
+  async advancedSearch(
+    query: string,
+    filters: {
+      entityTypes?: string[];
+      status?: string;
+      dateFrom?: string;
+      dateTo?: string;
+      institutionId?: string;
+      organizationId?: string;
+    },
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const results: any = {};
+
+    if (!filters.entityTypes || filters.entityTypes.includes('users')) {
+      results.users = await this.searchUsers(query, page, limit);
+    }
+
+    if (!filters.entityTypes || filters.entityTypes.includes('organizations')) {
+      results.organizations = await this.searchOrganizations(
+        query,
+        page,
+        limit,
+      );
+    }
+
+    if (!filters.entityTypes || filters.entityTypes.includes('students')) {
+      results.students = await this.searchStudents(query, page, limit);
+    }
+
+    if (!filters.entityTypes || filters.entityTypes.includes('institutions')) {
+      results.institutions = await this.searchInstitutions(query, page, limit);
+    }
+
+    return results;
+  }
+
+  /**
+   * Search with autocomplete (for type-ahead)
+   */
+  async autocomplete(query: string, limit: number = 10) {
+    const [users, organizations, institutions] = await Promise.all([
+      this.prisma.user.findMany({
+        where: {
+          OR: [
+            { username: { contains: query, mode: 'insensitive' } },
+            {
+              profile: { firstName: { contains: query, mode: 'insensitive' } },
+            },
+            { profile: { lastName: { contains: query, mode: 'insensitive' } } },
+          ],
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          profile: {
+            select: {
+              firstName: true,
+              lastName: true,
+              avatar: true,
+            },
+          },
+        },
+        take: limit,
+      }),
+      this.prisma.organization.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: 'insensitive' } },
+            { slug: { contains: query, mode: 'insensitive' } },
+          ],
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+        take: limit,
+      }),
+      this.prisma.institution.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: 'insensitive' } },
+            { code: { contains: query, mode: 'insensitive' } },
+          ],
+        },
+        select: {
+          id: true,
+          name: true,
+          code: true,
+        },
+        take: limit,
+      }),
+    ]);
+
+    return {
+      users: users.map((u) => ({
+        id: u.id,
+        label: u.profile?.firstName
+          ? `${u.profile.firstName} ${u.profile.lastName || ''}`
+          : u.username,
+        type: 'user',
+        avatar: u.profile?.avatar,
+      })),
+      organizations: organizations.map((o) => ({
+        id: o.id,
+        label: o.name,
+        type: 'organization',
+      })),
+      institutions: institutions.map((i) => ({
+        id: i.id,
+        label: i.name,
+        type: 'institution',
+        code: i.code,
+      })),
+    };
+  }
+
+  /**
+   * Search by filters (e.g., department, level, etc.)
+   */
+  async searchByFilters(
+    filters: {
+      departmentId?: string;
+      levelId?: string;
+      institutionId?: string;
+      facultyId?: string;
+      organizationId?: string;
+      status?: string;
+    },
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    const where: any = {};
+
+    if (filters.departmentId) {
+      where.departmentId = filters.departmentId;
+    }
+    if (filters.levelId) {
+      where.currentAcademicLevelId = filters.levelId;
+    }
+    if (filters.institutionId) {
+      where.institutionId = filters.institutionId;
+    }
+    if (filters.facultyId) {
+      where.facultyId = filters.facultyId;
+    }
+    if (filters.status) {
+      where.academicStatus = filters.status;
+    }
+
+    const skip = (page - 1) * limit;
+    const [students, total] = await Promise.all([
+      this.prisma.studentProfile.findMany({
+        where,
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              username: true,
+              profile: true,
+            },
+          },
+          institution: true,
+          faculty: true,
+          department: true,
+          currentAcademicLevel: true,
+        },
+        skip,
+        take: limit,
+      }),
+      this.prisma.studentProfile.count({ where }),
+    ]);
+
+    return {
+      data: students,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  /**
+   * Get search suggestions based on popular searches
+   */
+  async getSearchSuggestions(query: string): Promise<string[]> {
+    // This could be based on recent searches or popular terms
+    const suggestions = [
+      `${query} department`,
+      `${query} faculty`,
+      `${query} students`,
+      `${query} organization`,
+    ];
+
+    return suggestions;
   }
 }

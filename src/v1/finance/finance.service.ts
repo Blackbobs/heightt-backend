@@ -1,3 +1,4 @@
+// src/v1/finance/finance.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -12,6 +13,7 @@ import { PermissionService } from '../auth/permission.service';
 import { EmailService } from '../../email/email.service';
 import { LedgerService } from './ledger.service';
 import { ReceiptService } from './receipt.service';
+import { EventService, SystemEvents } from '../../events/event.service';
 import {
   CreateWalletDto,
   CreditWalletDto,
@@ -40,6 +42,7 @@ export class FinanceService {
     private readonly emailService: EmailService,
     private readonly ledgerService: LedgerService,
     private readonly receiptService: ReceiptService,
+    private readonly eventService: EventService,
   ) {}
 
   // ============================================
@@ -86,7 +89,6 @@ export class FinanceService {
       },
     });
 
-    // Create corresponding ledger account
     const ledgerAccount =
       await this.ledgerService.getOrCreateWalletLedgerAccount(
         wallet.id,
@@ -94,7 +96,6 @@ export class FinanceService {
         dto.organizationId,
       );
 
-    // Update wallet with ledger account reference
     await this.prisma.wallet.update({
       where: { id: wallet.id },
       data: { ledgerAccountId: ledgerAccount.id },
@@ -111,6 +112,14 @@ export class FinanceService {
           organizationId: dto.organizationId,
         }),
       },
+    });
+
+    this.eventService.emit(SystemEvents.WALLET_CREATED, {
+      walletId: wallet.id,
+      userId: dto.userId || userId,
+      organizationId: dto.organizationId,
+      currency: dto.currency || 'NGN',
+      timestamp: new Date().toISOString(),
     });
 
     this.logger.log(
@@ -211,7 +220,6 @@ export class FinanceService {
         },
       });
 
-      // Create ledger entry
       await tx.ledgerEntry.create({
         data: {
           accountId: wallet.ledgerAccountId!,
@@ -224,13 +232,11 @@ export class FinanceService {
         },
       });
 
-      // Update wallet balance
       const updatedWallet = await tx.wallet.update({
         where: { id: wallet.id },
         data: { balance: balanceAfter },
       });
 
-      // Update ledger account balance
       await tx.ledgerAccount.update({
         where: { id: wallet.ledgerAccountId! },
         data: { balance: balanceAfter },
@@ -247,6 +253,16 @@ export class FinanceService {
             reference: transaction.reference,
           }),
         },
+      });
+
+      this.eventService.emitWalletCredited({
+        walletId: wallet.id,
+        userId: dto.userId,
+        amount: dto.amount,
+        balance: balanceAfter,
+        previousBalance: balanceBefore,
+        reference: transaction.reference,
+        description: dto.description || 'Wallet credit',
       });
 
       await this.cacheService.delete(`wallet:user:${dto.userId}`);
@@ -302,7 +318,6 @@ export class FinanceService {
         },
       });
 
-      // Create ledger entry
       await tx.ledgerEntry.create({
         data: {
           accountId: wallet.ledgerAccountId!,
@@ -315,13 +330,11 @@ export class FinanceService {
         },
       });
 
-      // Update wallet balance
       const updatedWallet = await tx.wallet.update({
         where: { id: wallet.id },
         data: { balance: balanceAfter },
       });
 
-      // Update ledger account balance
       await tx.ledgerAccount.update({
         where: { id: wallet.ledgerAccountId! },
         data: { balance: balanceAfter },
@@ -338,6 +351,16 @@ export class FinanceService {
             reference: transaction.reference,
           }),
         },
+      });
+
+      this.eventService.emitWalletDebited({
+        walletId: wallet.id,
+        userId: dto.userId,
+        amount: dto.amount,
+        balance: balanceAfter,
+        previousBalance: balanceBefore,
+        reference: transaction.reference,
+        description: dto.description || 'Wallet debit',
       });
 
       await this.cacheService.delete(`wallet:user:${dto.userId}`);
@@ -540,6 +563,25 @@ export class FinanceService {
       },
     });
 
+    // Get the organization ID from the due with null check
+    const dueWithOrg = await this.prisma.due.findUnique({
+      where: { id: dueId },
+      select: { organizationId: true },
+    });
+
+    // Emit dues assigned event - only if dueWithOrg exists
+    if (dueWithOrg) {
+      for (const assignment of createdAssignments) {
+        this.eventService.emitDuesAssigned({
+          dueId: dueId,
+          organizationId: dueWithOrg.organizationId,
+          studentId: assignment.studentId,
+          amount: due.amount,
+          dueDate: due.dueDate,
+        });
+      }
+    }
+
     this.logger.log(`Due assigned to ${createdAssignments.length} students`);
     return {
       message: `Due assigned to ${createdAssignments.length} students`,
@@ -648,7 +690,6 @@ export class FinanceService {
     }
 
     return this.prisma.$transaction(async (tx) => {
-      // Get user wallet
       const wallet = await tx.wallet.findUnique({
         where: { userId },
         include: { ledgerAccount: true },
@@ -662,22 +703,19 @@ export class FinanceService {
         throw new BadRequestException('Wallet is not active');
       }
 
-      // Calculate charges (charges are added on top)
       const charges = this.ledgerService.calculatePaymentCharges(dto.amount);
-      const totalAmount = charges.totalAmount; // Student pays amount + charges
+      const totalAmount = charges.totalAmount;
 
       this.logger.log(
         `Charges breakdown: Amount: ${dto.amount}, Platform Fee: ${charges.platformFee}, Paystack Fee: ${charges.paystackFee}, VAT: ${charges.vat}, Total Charges: ${charges.totalCharges}, Total Student Pays: ${totalAmount}`,
       );
 
-      // Check if student has enough balance for total amount
       if (wallet.balance < totalAmount) {
         throw new BadRequestException(
           `Insufficient balance. Need: ₦${(totalAmount / this.KOBO_PER_NAIRA).toFixed(2)}, Available: ₦${(wallet.balance / this.KOBO_PER_NAIRA).toFixed(2)}`,
         );
       }
 
-      // Get or create all system accounts
       const escrowAccount = await this.ledgerService.getOrCreateEscrowAccount();
       const platformFeeAccount =
         await this.ledgerService.getOrCreatePlatformFeeAccount();
@@ -688,7 +726,6 @@ export class FinanceService {
       const paystackSettlementAccount =
         await this.ledgerService.getOrCreatePaystackSettlementAccount();
 
-      // Check if due assignment exists
       let dueAssignment: any = null;
       let due: any = null;
 
@@ -713,7 +750,6 @@ export class FinanceService {
         }
       }
 
-      // Step 1: Debit student wallet (total amount including charges)
       const walletBalanceBefore = wallet.balance;
       const walletBalanceAfter = walletBalanceBefore - totalAmount;
 
@@ -727,14 +763,13 @@ export class FinanceService {
         data: { balance: walletBalanceAfter },
       });
 
-      // Create transaction record
       const transaction = await tx.transaction.create({
         data: {
           walletId: wallet.id,
           type: 'DEBIT',
           amount: totalAmount,
           fee: charges.totalCharges,
-          netAmount: dto.amount, // Organization gets full amount
+          netAmount: dto.amount,
           status: 'COMPLETED',
           reference: `PAY_${randomBytes(16).toString('hex').toUpperCase()}`,
           description: dto.description || 'Payment',
@@ -748,14 +783,13 @@ export class FinanceService {
         },
       });
 
-      // Create payment record
       const payment = await tx.payment.create({
         data: {
           payerId: userId,
           organizationId: dto.organizationId,
           transactionId: transaction.id,
-          amount: dto.amount, // Organization receives full amount
-          serviceFee: charges.totalCharges, // Student pays service fee
+          amount: dto.amount,
+          serviceFee: charges.totalCharges,
           status: 'COMPLETED',
           paymentMethod: dto.paymentMethod as any,
           reference: transaction.reference,
@@ -771,16 +805,13 @@ export class FinanceService {
         },
       });
 
-      // Step 2: Create Escrow Journal Entry (Hold funds)
       const escrowLines = [
-        // Debit student wallet (total amount including charges)
         {
           accountId: wallet.ledgerAccountId!,
           type: 'DEBIT' as const,
           amount: totalAmount,
           description: `Payment from user ${userId} (including charges)`,
         },
-        // Credit escrow account
         {
           accountId: escrowAccount.id,
           type: 'CREDIT' as const,
@@ -797,17 +828,13 @@ export class FinanceService {
         createdBy: userId,
       });
 
-      // Step 3: Create Settlement Journal Entry (Release from escrow)
-      // Organization gets full amount, charges are allocated from the total
       const settlementLines = [
-        // Debit escrow (release funds)
         {
           accountId: escrowAccount.id,
           type: 'DEBIT' as const,
           amount: totalAmount,
           description: `Release funds from escrow for payment ${payment.id}`,
         },
-        // Credit organization wallet (FULL AMOUNT - ₦5,000)
         {
           accountId: (
             await this.getOrganizationWalletLedgerAccount(
@@ -819,28 +846,24 @@ export class FinanceService {
           amount: dto.amount,
           description: `Payment settlement to organization (full amount)`,
         },
-        // Credit platform fee account
         {
           accountId: platformFeeAccount.id,
           type: 'CREDIT' as const,
           amount: charges.platformFee,
           description: `Platform service fee (${charges.platformFee} Kobo)`,
         },
-        // Credit VAT payable account
         {
           accountId: vatPayableAccount.id,
           type: 'CREDIT' as const,
           amount: charges.vat,
           description: `VAT on platform fee (${charges.vat} Kobo)`,
         },
-        // Debit Paystack fee (expense)
         {
           accountId: paystackFeeAccount.id,
           type: 'DEBIT' as const,
           amount: charges.paystackFee,
           description: `Paystack transaction fee (${charges.paystackFee} Kobo)`,
         },
-        // Credit Paystack settlement account
         {
           accountId: paystackSettlementAccount.id,
           type: 'CREDIT' as const,
@@ -857,13 +880,11 @@ export class FinanceService {
         createdBy: userId,
       });
 
-      // Link payment to escrow journal
       await tx.payment.update({
         where: { id: payment.id },
         data: { journalEntryId: escrowJournal.id },
       });
 
-      // Update organization wallet balance (FULL AMOUNT)
       const orgWallet = await tx.wallet.findUnique({
         where: { organizationId: dto.organizationId },
         include: { ledgerAccount: true },
@@ -878,22 +899,20 @@ export class FinanceService {
           await tx.ledgerAccount.update({
             where: { id: orgWallet.ledgerAccountId! },
             data: {
-              balance: orgLedgerAccount.balance + dto.amount, // Full amount
+              balance: orgLedgerAccount.balance + dto.amount,
             },
           });
 
           await tx.wallet.update({
             where: { id: orgWallet.id },
             data: {
-              balance: orgWallet.balance + dto.amount, // Full amount
+              balance: orgWallet.balance + dto.amount,
             },
           });
         }
       }
 
-      // Handle due assignment if exists
       if (dueAssignment) {
-        // Note: Only the due amount (not charges) is applied to the due
         await this.handleDuePayment(
           tx,
           dueAssignment.id,
@@ -902,10 +921,8 @@ export class FinanceService {
         );
       }
 
-      // Generate receipt
       await this.receiptService.generateReceiptFromPayment(payment.id, userId);
 
-      // Log activity
       await tx.activityLog.create({
         data: {
           userId,
@@ -923,7 +940,47 @@ export class FinanceService {
         },
       });
 
-      // Clear cache
+      // EMIT WEBSOCKET EVENTS
+      this.eventService.emitPaymentReceived({
+        paymentId: payment.id,
+        userId: userId,
+        organizationId: dto.organizationId,
+        amount: dto.amount,
+        reference: transaction.reference,
+        metadata: {
+          charges,
+          paymentMethod: dto.paymentMethod,
+        },
+      });
+
+      this.eventService.emitWalletDebited({
+        walletId: wallet.id,
+        userId: userId,
+        amount: totalAmount,
+        balance: walletBalanceAfter,
+        previousBalance: walletBalanceBefore,
+        reference: transaction.reference,
+        description: dto.description || 'Payment',
+      });
+
+      if (dueAssignment) {
+        this.eventService.emitDuesPaid({
+          dueId: dueAssignment.dueId,
+          studentId: dueAssignment.studentId,
+          amount: dto.amount,
+          paymentId: payment.id,
+          paidAt: new Date(),
+        });
+      }
+
+      this.eventService.emitWalletBalanceUpdated({
+        walletId: wallet.id,
+        userId: userId,
+        balance: walletBalanceAfter,
+        previousBalance: walletBalanceBefore,
+        currency: 'NGN',
+      });
+
       await this.cacheService.delete(`wallet:user:${userId}`);
       await this.cacheService.delete(
         `wallet:organization:${dto.organizationId}`,
@@ -1043,7 +1100,6 @@ export class FinanceService {
         throw new BadRequestException('Insufficient balance');
       }
 
-      // Get organization wallet
       const orgWallet = await tx.wallet.findUnique({
         where: { organizationId: dto.organizationId },
         include: { ledgerAccount: true },
@@ -1059,7 +1115,6 @@ export class FinanceService {
       const reference =
         dto.reference || `PAY_${randomBytes(16).toString('hex').toUpperCase()}`;
 
-      // Create transaction
       const transaction = await tx.transaction.create({
         data: {
           walletId: wallet.id,
@@ -1074,7 +1129,6 @@ export class FinanceService {
         },
       });
 
-      // Ledger entry for user wallet
       await tx.ledgerEntry.create({
         data: {
           accountId: wallet.ledgerAccountId!,
@@ -1087,7 +1141,6 @@ export class FinanceService {
         },
       });
 
-      // Update user wallet
       await tx.wallet.update({
         where: { id: wallet.id },
         data: { balance: walletBalanceAfter },
@@ -1098,7 +1151,6 @@ export class FinanceService {
         data: { balance: walletBalanceAfter },
       });
 
-      // Credit organization wallet
       const serviceFee = 0;
       const netAmount = dto.amount - serviceFee;
       const orgWalletBalanceBefore = orgWallet.balance;
@@ -1126,7 +1178,6 @@ export class FinanceService {
         data: { balance: orgWalletBalanceAfter },
       });
 
-      // Create payment
       const payment = await tx.payment.create({
         data: {
           payerId: userId,
@@ -1147,7 +1198,6 @@ export class FinanceService {
         },
       });
 
-      // Create journal entry
       const journalLines = [
         {
           accountId: wallet.ledgerAccountId!,
@@ -1192,7 +1242,6 @@ export class FinanceService {
         data: { journalEntryId: journalEntry.id },
       });
 
-      // Handle due assignment if exists
       if (dto.dueAssignmentId) {
         const dueAssignment = await tx.dueAssignment.findUnique({
           where: { id: dto.dueAssignmentId },
@@ -1230,7 +1279,6 @@ export class FinanceService {
         }
       }
 
-      // Generate receipt
       await this.receiptService.generateReceiptFromPayment(payment.id, userId);
 
       await tx.activityLog.create({
@@ -1246,6 +1294,28 @@ export class FinanceService {
             journalEntryId: journalEntry.id,
           }),
         },
+      });
+
+      this.eventService.emitPaymentReceived({
+        paymentId: payment.id,
+        userId: userId,
+        organizationId: dto.organizationId,
+        amount: dto.amount,
+        reference: reference,
+        metadata: {
+          category: dto.category || 'OTHER',
+          manualPayment: true,
+        },
+      });
+
+      this.eventService.emitWalletDebited({
+        walletId: wallet.id,
+        userId: userId,
+        amount: dto.amount,
+        balance: walletBalanceAfter,
+        previousBalance: walletBalanceBefore,
+        reference: reference,
+        description: dto.description || 'Manual payment',
       });
 
       await this.cacheService.delete(`wallet:user:${userId}`);
@@ -1333,7 +1403,6 @@ export class FinanceService {
         },
       });
 
-      // Ledger entry for organization wallet
       await tx.ledgerEntry.create({
         data: {
           accountId: wallet.ledgerAccountId!,
@@ -1403,6 +1472,15 @@ export class FinanceService {
         `wallet:organization:${dto.organizationId}`,
       );
 
+      this.eventService.emitWithdrawalRequested({
+        withdrawalId: withdrawal.id,
+        userId: userId,
+        organizationId: dto.organizationId,
+        amount: dto.amount,
+        reference: transaction.reference,
+        bankName: dto.bankName,
+      });
+
       await this.notifyPlatformAdmins('WITHDRAWAL_REQUEST', {
         organizationId: dto.organizationId,
         organizationName: organization.name,
@@ -1462,19 +1540,18 @@ export class FinanceService {
         },
       });
 
-      // Create journal entry for approved withdrawal
       const wallet = withdrawal.wallet;
       const journalEntry = await this.ledgerService.createJournalEntry({
         lines: [
           {
             accountId: wallet.ledgerAccountId!,
-            type: 'CREDIT' as const, // Reversing the debit
+            type: 'CREDIT' as const,
             amount: withdrawal.amount,
             description: `Reversal of withdrawal hold - approved`,
           },
           {
             accountId: wallet.ledgerAccountId!,
-            type: 'DEBIT' as const, // Final debit for completed withdrawal
+            type: 'DEBIT' as const,
             amount: withdrawal.amount,
             description: `Withdrawal completed - ${withdrawal.bankName}`,
           },
@@ -1518,6 +1595,14 @@ export class FinanceService {
             journalEntryId: journalEntry.id,
           }),
         },
+      });
+
+      this.eventService.emitWithdrawalApproved({
+        withdrawalId: withdrawal.id,
+        userId: withdrawal.userId,
+        amount: withdrawal.amount,
+        reference: withdrawal.reference,
+        processedAt: new Date(),
       });
 
       await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_APPROVED', {
@@ -1577,22 +1662,20 @@ export class FinanceService {
         },
       });
 
-      // Refund the amount back to wallet
       const wallet = withdrawal.wallet;
       const refundBalance = wallet.balance + withdrawal.amount;
 
-      // Create journal entry for rejection
       const journalEntry = await this.ledgerService.createJournalEntry({
         lines: [
           {
             accountId: wallet.ledgerAccountId!,
-            type: 'CREDIT' as const, // Refund the amount
+            type: 'CREDIT' as const,
             amount: withdrawal.amount,
             description: `Refund for rejected withdrawal #${withdrawalId}`,
           },
           {
             accountId: wallet.ledgerAccountId!,
-            type: 'DEBIT' as const, // Reverse the hold
+            type: 'DEBIT' as const,
             amount: withdrawal.amount,
             description: `Reversal of withdrawal hold - rejected`,
           },
@@ -1649,6 +1732,14 @@ export class FinanceService {
         },
       });
 
+      this.eventService.emitWithdrawalRejected({
+        withdrawalId: withdrawal.id,
+        userId: withdrawal.userId,
+        amount: withdrawal.amount,
+        reference: withdrawal.reference,
+        reason: reason || 'Withdrawal rejected by admin',
+      });
+
       await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_REJECTED', {
         withdrawalId,
         amount: withdrawal.amount,
@@ -1691,6 +1782,14 @@ export class FinanceService {
           targetAmount: goal.targetAmount,
         }),
       },
+    });
+
+    this.eventService.emit(SystemEvents.SAVINGS_GOAL_CREATED, {
+      goalId: goal.id,
+      userId: userId,
+      title: goal.title,
+      targetAmount: goal.targetAmount,
+      createdAt: goal.createdAt,
     });
 
     this.logger.log(
@@ -1737,7 +1836,6 @@ export class FinanceService {
       const walletBalanceBefore = wallet.balance;
       const walletBalanceAfter = walletBalanceBefore - dto.amount;
 
-      // Create savings transaction
       await tx.savingsTransaction.create({
         data: {
           goalId: dto.goalId,
@@ -1747,7 +1845,6 @@ export class FinanceService {
         },
       });
 
-      // Update savings goal
       const goalBalanceBefore = goal.currentAmount;
       const goalBalanceAfter = goalBalanceBefore + dto.amount;
 
@@ -1758,7 +1855,6 @@ export class FinanceService {
         },
       });
 
-      // Create transaction
       const transaction = await tx.transaction.create({
         data: {
           walletId: wallet.id,
@@ -1773,7 +1869,6 @@ export class FinanceService {
         },
       });
 
-      // Create ledger entry
       await tx.ledgerEntry.create({
         data: {
           accountId: wallet.ledgerAccountId!,
@@ -1786,13 +1881,11 @@ export class FinanceService {
         },
       });
 
-      // Update wallet
       await tx.wallet.update({
         where: { id: wallet.id },
         data: { balance: walletBalanceAfter },
       });
 
-      // Update ledger account
       await tx.ledgerAccount.update({
         where: { id: wallet.ledgerAccountId! },
         data: { balance: walletBalanceAfter },
@@ -1808,6 +1901,25 @@ export class FinanceService {
             currentAmount: goalBalanceAfter,
           }),
         },
+      });
+
+      this.eventService.emit(SystemEvents.SAVINGS_DEPOSIT, {
+        goalId: dto.goalId,
+        userId: userId,
+        amount: dto.amount,
+        currentAmount: goalBalanceAfter,
+        previousAmount: goalBalanceBefore,
+        reference: transaction.reference,
+      });
+
+      this.eventService.emitWalletDebited({
+        walletId: wallet.id,
+        userId: userId,
+        amount: dto.amount,
+        balance: walletBalanceAfter,
+        previousBalance: walletBalanceBefore,
+        reference: transaction.reference,
+        description: `Savings deposit: ${goal.title}`,
       });
 
       await this.cacheService.delete(`wallet:user:${userId}`);
@@ -1952,7 +2064,6 @@ export class FinanceService {
       `Getting financial overview for organization: ${organizationId}`,
     );
 
-    // Check if user has access to this organization
     const membership = await this.prisma.organizationMembership.findFirst({
       where: {
         userId,
@@ -1986,7 +2097,6 @@ export class FinanceService {
 
     const wallet = organization.wallet;
 
-    // Get wallet transactions (last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -2006,7 +2116,6 @@ export class FinanceService {
       },
     });
 
-    // Get dues overview
     const [totalDues, paidDues, pendingDues, overdueDues] = await Promise.all([
       this.prisma.due.count({
         where: {
@@ -2038,7 +2147,6 @@ export class FinanceService {
       }),
     ]);
 
-    // Get recent payments
     const recentPayments = await this.prisma.payment.findMany({
       where: {
         organizationId,
@@ -2063,7 +2171,6 @@ export class FinanceService {
       },
     });
 
-    // Get total revenue (all time)
     const totalRevenue = await this.prisma.payment.aggregate({
       where: {
         organizationId,
@@ -2072,7 +2179,6 @@ export class FinanceService {
       _sum: { amount: true },
     });
 
-    // Get revenue by period (last 30 days)
     const revenueLast30Days = await this.prisma.payment.aggregate({
       where: {
         organizationId,
@@ -2082,7 +2188,6 @@ export class FinanceService {
       _sum: { amount: true },
     });
 
-    // Get upcoming dues (next 30 days)
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
@@ -2096,7 +2201,6 @@ export class FinanceService {
       take: 10,
     });
 
-    // Get pending count for each due
     const upcomingDuesWithPending = await Promise.all(
       upcomingDues.map(async (due) => {
         const pendingCount = await this.prisma.dueAssignment.count({
@@ -2112,7 +2216,6 @@ export class FinanceService {
       }),
     );
 
-    // Get member count
     const memberCount = await this.prisma.organizationMembership.count({
       where: {
         organizationId,
@@ -2120,7 +2223,6 @@ export class FinanceService {
       },
     });
 
-    // Get student member count
     const studentMemberCount = await this.prisma.organizationMembership.count({
       where: {
         organizationId,
@@ -2129,7 +2231,6 @@ export class FinanceService {
       },
     });
 
-    // Get active dues assignments count
     const activeDuesAssignments = await this.prisma.dueAssignment.count({
       where: {
         due: { organizationId, status: 'ACTIVE' },
@@ -2137,7 +2238,6 @@ export class FinanceService {
       },
     });
 
-    // Calculate total due amount
     const totalDueAmount = await this.prisma.due.aggregate({
       where: {
         organizationId,
@@ -2146,7 +2246,6 @@ export class FinanceService {
       _sum: { amount: true },
     });
 
-    // Calculate total collected amount
     const totalCollected = await this.prisma.duePayment.aggregate({
       where: {
         assignment: {
@@ -2156,7 +2255,6 @@ export class FinanceService {
       _sum: { amount: true },
     });
 
-    // Get monthly revenue breakdown (last 6 months)
     const monthlyRevenue = await this.getMonthlyRevenue(organizationId);
 
     const totalDueAmountValue = totalDueAmount._sum.amount || 0;
@@ -2289,7 +2387,6 @@ export class FinanceService {
       `Getting finance dashboard for organization: ${organizationId}`,
     );
 
-    // Check if user has access
     const membership = await this.prisma.organizationMembership.findFirst({
       where: {
         userId,
@@ -2320,7 +2417,6 @@ export class FinanceService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Get all transactions (paginated)
     const transactions = await this.prisma.transaction.findMany({
       where: {
         walletId: organization.wallet?.id,
@@ -2336,7 +2432,6 @@ export class FinanceService {
       },
     });
 
-    // Get all payments (paginated)
     const payments = await this.prisma.payment.findMany({
       where: {
         organizationId,
@@ -2360,7 +2455,6 @@ export class FinanceService {
       take: 20,
     });
 
-    // Get due assignments with payment status
     const dueAssignments = await this.prisma.dueAssignment.findMany({
       where: {
         due: { organizationId },
@@ -2397,7 +2491,6 @@ export class FinanceService {
       take: 20,
     });
 
-    // Get top contributors
     const topContributors = await this.prisma.payment.groupBy({
       by: ['payerId'],
       where: {
@@ -2409,7 +2502,6 @@ export class FinanceService {
       take: 10,
     });
 
-    // Get contributor details
     const contributorDetails = await Promise.all(
       topContributors.map(async (contrib) => {
         const user = await this.prisma.user.findUnique({
@@ -2430,7 +2522,6 @@ export class FinanceService {
       }),
     );
 
-    // Get overdue dues
     const overdueDues = await this.prisma.dueAssignment.findMany({
       where: {
         due: {
@@ -2459,7 +2550,6 @@ export class FinanceService {
       orderBy: { due: { dueDate: 'asc' } },
     });
 
-    // Get dues due soon (next 7 days)
     const sevenDaysFromNow = new Date();
     sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
@@ -2579,6 +2669,41 @@ export class FinanceService {
         ),
       })),
     };
+  }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateFinanceCache(userId?: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('finance');
+      await this.cacheService.invalidateByTag('wallet');
+      await this.cacheService.invalidateByTag('transactions');
+      await this.cacheService.invalidateByTag('dues');
+      await this.cacheService.invalidateByTag('savings');
+      await this.cacheService.invalidateByTag('receipts');
+      await this.cacheService.invalidateByTag('ledger');
+      await this.cacheService.invalidateByTag('reports');
+
+      if (userId) {
+        await this.cacheService.invalidateByTag(`user:${userId}`);
+        await this.cacheService.delete(`wallet:user:${userId}`);
+        await this.cacheService.delete(`transactions:user:${userId}`);
+        await this.cacheService.delete(`savings:user:${userId}`);
+        await this.cacheService.delete(`receipts:user:${userId}`);
+        await this.cacheService.invalidatePattern(`wallet:user:${userId}:*`);
+        await this.cacheService.invalidatePattern(
+          `transactions:user:${userId}:*`,
+        );
+      }
+
+      this.logger.log(
+        `Finance cache invalidated${userId ? ` for user: ${userId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to invalidate finance cache: ${error.message}`);
+    }
   }
 
   // ============================================

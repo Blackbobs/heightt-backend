@@ -1,3 +1,4 @@
+// src/v1/institutions/institutions.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -18,6 +19,18 @@ import {
   CreateAcademicSessionDto,
 } from './dto';
 
+// Define the return type for bulk operations
+interface BulkCreateResult {
+  id: string;
+  name: string;
+  numericLevel: number;
+  order: number;
+  departmentId: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 @Injectable()
 export class InstitutionsService {
   private readonly logger = new Logger(InstitutionsService.name);
@@ -28,13 +41,57 @@ export class InstitutionsService {
   ) {}
 
   // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateInstitutionsCache(institutionId?: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('institutions');
+      await this.cacheService.invalidateByTag('faculties');
+      await this.cacheService.invalidateByTag('departments');
+      await this.cacheService.invalidateByTag('academic-levels');
+      await this.cacheService.invalidateByTag('sessions');
+
+      if (institutionId) {
+        await this.cacheService.delete(`institution:${institutionId}`);
+        await this.cacheService.invalidatePattern(
+          `faculties:institution:${institutionId}`,
+        );
+        await this.cacheService.invalidatePattern(
+          `sessions:institution:${institutionId}`,
+        );
+        await this.cacheService.invalidatePattern(
+          `institutions:*:${institutionId}:*`,
+        );
+      }
+
+      await this.cacheService.invalidatePattern('institution:*');
+      await this.cacheService.invalidatePattern('faculty:*');
+      await this.cacheService.invalidatePattern('department:*');
+      await this.cacheService.invalidatePattern('academic-level:*');
+      await this.cacheService.invalidatePattern('session:*');
+      await this.cacheService.invalidatePattern('faculties:*');
+      await this.cacheService.invalidatePattern('departments:*');
+      await this.cacheService.invalidatePattern('academic-levels:*');
+      await this.cacheService.invalidatePattern('sessions:*');
+
+      this.logger.log(
+        `Institutions cache invalidated${institutionId ? ` for institution: ${institutionId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate institutions cache: ${error.message}`,
+      );
+    }
+  }
+
+  // ============================================
   // INSTITUTION CRUD
   // ============================================
 
   async createInstitution(userId: string, dto: CreateInstitutionDto) {
     this.logger.log(`Creating institution: ${dto.name}`);
 
-    // Check if code already exists
     const existingCode = await this.prisma.institution.findUnique({
       where: { code: dto.code },
     });
@@ -60,16 +117,17 @@ export class InstitutionsService {
       },
     });
 
-    // Log activity
+    await this.invalidateInstitutionsCache();
+
     await this.prisma.activityLog.create({
       data: {
         userId,
         activity: 'INSTITUTION_CREATED',
-        details: {
+        details: JSON.stringify({
           institutionId: institution.id,
           name: institution.name,
           code: institution.code,
-        },
+        }),
       },
     });
 
@@ -130,7 +188,6 @@ export class InstitutionsService {
   }
 
   async getInstitutionById(id: string, includeRelations: boolean = true) {
-    // Check cache
     const cacheKey = `institution:${id}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
@@ -164,8 +221,12 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    // Cache for 5 minutes
-    await this.cacheService.set(cacheKey, institution, 300);
+    await this.cacheService.setWithTag(
+      cacheKey,
+      institution,
+      ['institutions'],
+      600,
+    );
 
     return institution;
   }
@@ -184,7 +245,6 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    // If code is being updated, check uniqueness
     if (dto.code && dto.code !== institution.code) {
       const existingCode = await this.prisma.institution.findUnique({
         where: { code: dto.code },
@@ -202,8 +262,7 @@ export class InstitutionsService {
       },
     });
 
-    // Invalidate cache
-    await this.cacheService.delete(`institution:${id}`);
+    await this.invalidateInstitutionsCache(id);
 
     await this.prisma.activityLog.create({
       data: {
@@ -235,7 +294,6 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    // Check if institution has related data
     if (
       institution.faculties.length > 0 ||
       institution.sessions.length > 0 ||
@@ -250,7 +308,7 @@ export class InstitutionsService {
       where: { id },
     });
 
-    await this.cacheService.delete(`institution:${id}`);
+    await this.invalidateInstitutionsCache(id);
 
     await this.prisma.activityLog.create({
       data: {
@@ -275,7 +333,6 @@ export class InstitutionsService {
   async createFaculty(userId: string, dto: CreateFacultyDto) {
     this.logger.log(`Creating faculty: ${dto.name}`);
 
-    // Verify institution exists
     const institution = await this.prisma.institution.findUnique({
       where: { id: dto.institutionId },
     });
@@ -283,7 +340,6 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    // Check if faculty code already exists in institution
     const existing = await this.prisma.faculty.findFirst({
       where: {
         institutionId: dto.institutionId,
@@ -306,7 +362,7 @@ export class InstitutionsService {
       },
     });
 
-    await this.cacheService.delete(`institution:${dto.institutionId}`);
+    await this.invalidateInstitutionsCache(dto.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -326,6 +382,12 @@ export class InstitutionsService {
   }
 
   async getFacultiesByInstitution(institutionId: string) {
+    const cacheKey = `faculties:institution:${institutionId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const institution = await this.prisma.institution.findUnique({
       where: { id: institutionId },
     });
@@ -333,7 +395,7 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    return this.prisma.faculty.findMany({
+    const faculties = await this.prisma.faculty.findMany({
       where: { institutionId },
       include: {
         departments: {
@@ -344,9 +406,24 @@ export class InstitutionsService {
       },
       orderBy: { name: 'asc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      faculties,
+      ['institutions', 'faculties'],
+      600,
+    );
+
+    return faculties;
   }
 
   async getFacultyById(id: string) {
+    const cacheKey = `faculty:${id}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const faculty = await this.prisma.faculty.findUnique({
       where: { id },
       include: {
@@ -361,6 +438,14 @@ export class InstitutionsService {
     if (!faculty) {
       throw new NotFoundException('Faculty not found');
     }
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      faculty,
+      ['institutions', 'faculties'],
+      600,
+    );
+
     return faculty;
   }
 
@@ -382,7 +467,7 @@ export class InstitutionsService {
       },
     });
 
-    await this.cacheService.delete(`institution:${faculty.institutionId}`);
+    await this.invalidateInstitutionsCache(faculty.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -422,7 +507,7 @@ export class InstitutionsService {
       where: { id },
     });
 
-    await this.cacheService.delete(`institution:${faculty.institutionId}`);
+    await this.invalidateInstitutionsCache(faculty.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -447,7 +532,6 @@ export class InstitutionsService {
   async createDepartment(userId: string, dto: CreateDepartmentDto) {
     this.logger.log(`Creating department: ${dto.name}`);
 
-    // Verify faculty exists
     const faculty = await this.prisma.faculty.findUnique({
       where: { id: dto.facultyId },
     });
@@ -455,7 +539,6 @@ export class InstitutionsService {
       throw new NotFoundException('Faculty not found');
     }
 
-    // Check if department code already exists in faculty
     const existing = await this.prisma.department.findFirst({
       where: {
         facultyId: dto.facultyId,
@@ -479,7 +562,7 @@ export class InstitutionsService {
       },
     });
 
-    await this.cacheService.delete(`institution:${faculty.institutionId}`);
+    await this.invalidateInstitutionsCache(faculty.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -499,6 +582,12 @@ export class InstitutionsService {
   }
 
   async getDepartmentsByFaculty(facultyId: string) {
+    const cacheKey = `departments:faculty:${facultyId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const faculty = await this.prisma.faculty.findUnique({
       where: { id: facultyId },
     });
@@ -506,16 +595,31 @@ export class InstitutionsService {
       throw new NotFoundException('Faculty not found');
     }
 
-    return this.prisma.department.findMany({
+    const departments = await this.prisma.department.findMany({
       where: { facultyId },
       include: {
         academicLevels: true,
       },
       orderBy: { name: 'asc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      departments,
+      ['institutions', 'departments'],
+      600,
+    );
+
+    return departments;
   }
 
   async getDepartmentById(id: string) {
+    const cacheKey = `department:${id}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const department = await this.prisma.department.findUnique({
       where: { id },
       include: {
@@ -530,6 +634,14 @@ export class InstitutionsService {
     if (!department) {
       throw new NotFoundException('Department not found');
     }
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      department,
+      ['institutions', 'departments'],
+      600,
+    );
+
     return department;
   }
 
@@ -554,9 +666,7 @@ export class InstitutionsService {
       },
     });
 
-    await this.cacheService.delete(
-      `institution:${department.faculty.institutionId}`,
-    );
+    await this.invalidateInstitutionsCache(department.faculty.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -597,9 +707,7 @@ export class InstitutionsService {
       where: { id },
     });
 
-    await this.cacheService.delete(
-      `institution:${department.faculty.institutionId}`,
-    );
+    await this.invalidateInstitutionsCache(department.faculty.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -624,7 +732,6 @@ export class InstitutionsService {
   async createAcademicLevel(userId: string, dto: CreateAcademicLevelDto) {
     this.logger.log(`Creating academic level: ${dto.name}`);
 
-    // Verify department exists
     const department = await this.prisma.department.findUnique({
       where: { id: dto.departmentId },
     });
@@ -632,7 +739,6 @@ export class InstitutionsService {
       throw new NotFoundException('Department not found');
     }
 
-    // Check if level already exists in department
     const existing = await this.prisma.academicLevel.findFirst({
       where: {
         departmentId: dto.departmentId,
@@ -655,6 +761,8 @@ export class InstitutionsService {
       },
     });
 
+    await this.invalidateInstitutionsCache();
+
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -673,6 +781,12 @@ export class InstitutionsService {
   }
 
   async getAcademicLevelsByDepartment(departmentId: string) {
+    const cacheKey = `academic-levels:department:${departmentId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const department = await this.prisma.department.findUnique({
       where: { id: departmentId },
     });
@@ -680,13 +794,28 @@ export class InstitutionsService {
       throw new NotFoundException('Department not found');
     }
 
-    return this.prisma.academicLevel.findMany({
+    const levels = await this.prisma.academicLevel.findMany({
       where: { departmentId },
       orderBy: { order: 'asc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      levels,
+      ['institutions', 'academic-levels'],
+      600,
+    );
+
+    return levels;
   }
 
   async getAcademicLevelById(id: string) {
+    const cacheKey = `academic-level:${id}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const level = await this.prisma.academicLevel.findUnique({
       where: { id },
       include: {
@@ -704,6 +833,14 @@ export class InstitutionsService {
     if (!level) {
       throw new NotFoundException('Academic level not found');
     }
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      level,
+      ['institutions', 'academic-levels'],
+      600,
+    );
+
     return level;
   }
 
@@ -731,6 +868,8 @@ export class InstitutionsService {
       where: { id },
     });
 
+    await this.invalidateInstitutionsCache();
+
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -754,7 +893,6 @@ export class InstitutionsService {
   async createAcademicSession(userId: string, dto: CreateAcademicSessionDto) {
     this.logger.log(`Creating academic session: ${dto.name}`);
 
-    // Verify institution exists
     const institution = await this.prisma.institution.findUnique({
       where: { id: dto.institutionId },
     });
@@ -762,7 +900,6 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    // Check if session already exists
     const existing = await this.prisma.academicSession.findFirst({
       where: {
         institutionId: dto.institutionId,
@@ -775,7 +912,6 @@ export class InstitutionsService {
       );
     }
 
-    // If this is the current session, unset others
     if (dto.isCurrent) {
       await this.prisma.academicSession.updateMany({
         where: {
@@ -798,7 +934,7 @@ export class InstitutionsService {
       },
     });
 
-    await this.cacheService.delete(`institution:${dto.institutionId}`);
+    await this.invalidateInstitutionsCache(dto.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -817,6 +953,12 @@ export class InstitutionsService {
   }
 
   async getSessionsByInstitution(institutionId: string) {
+    const cacheKey = `sessions:institution:${institutionId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const institution = await this.prisma.institution.findUnique({
       where: { id: institutionId },
     });
@@ -824,13 +966,28 @@ export class InstitutionsService {
       throw new NotFoundException('Institution not found');
     }
 
-    return this.prisma.academicSession.findMany({
+    const sessions = await this.prisma.academicSession.findMany({
       where: { institutionId },
       orderBy: { startDate: 'desc' },
     });
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      sessions,
+      ['institutions', 'sessions'],
+      600,
+    );
+
+    return sessions;
   }
 
   async getAcademicSessionById(id: string) {
+    const cacheKey = `session:${id}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
     const session = await this.prisma.academicSession.findUnique({
       where: { id },
       include: {
@@ -840,6 +997,14 @@ export class InstitutionsService {
     if (!session) {
       throw new NotFoundException('Academic session not found');
     }
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      session,
+      ['institutions', 'sessions'],
+      600,
+    );
+
     return session;
   }
 
@@ -857,7 +1022,6 @@ export class InstitutionsService {
       throw new NotFoundException('Academic session not found');
     }
 
-    // If this is the current session, unset others
     if (dto.isCurrent) {
       await this.prisma.academicSession.updateMany({
         where: {
@@ -879,7 +1043,7 @@ export class InstitutionsService {
       data,
     });
 
-    await this.cacheService.delete(`institution:${session.institutionId}`);
+    await this.invalidateInstitutionsCache(session.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -925,7 +1089,7 @@ export class InstitutionsService {
       where: { id },
     });
 
-    await this.cacheService.delete(`institution:${session.institutionId}`);
+    await this.invalidateInstitutionsCache(session.institutionId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -941,5 +1105,135 @@ export class InstitutionsService {
 
     this.logger.log(`Academic session deleted: ${id}`);
     return deleted;
+  }
+
+  // ============================================
+  // INSTITUTION STATISTICS
+  // ============================================
+
+  async getInstitutionStats(institutionId: string) {
+    const cacheKey = `institution:stats:${institutionId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const institution = await this.prisma.institution.findUnique({
+      where: { id: institutionId },
+    });
+    if (!institution) {
+      throw new NotFoundException('Institution not found');
+    }
+
+    const [
+      totalFaculties,
+      totalDepartments,
+      totalAcademicLevels,
+      totalStudents,
+      totalOrganizations,
+      activeOrganizations,
+    ] = await Promise.all([
+      this.prisma.faculty.count({ where: { institutionId } }),
+      this.prisma.department.count({
+        where: { faculty: { institutionId } },
+      }),
+      this.prisma.academicLevel.count({
+        where: { department: { faculty: { institutionId } } },
+      }),
+      this.prisma.studentProfile.count({ where: { institutionId } }),
+      this.prisma.organization.count({ where: { institutionId } }),
+      this.prisma.organization.count({
+        where: { institutionId, status: 'ACTIVE' },
+      }),
+    ]);
+
+    const stats = {
+      institutionId,
+      institutionName: institution.name,
+      totalFaculties,
+      totalDepartments,
+      totalAcademicLevels,
+      totalStudents,
+      totalOrganizations,
+      activeOrganizations,
+      inactiveOrganizations: totalOrganizations - activeOrganizations,
+    };
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      stats,
+      ['institutions', 'stats'],
+      900,
+    );
+
+    return stats;
+  }
+
+  // ============================================
+  // BULK OPERATIONS (FIXED)
+  // ============================================
+
+  async bulkCreateAcademicLevels(
+    userId: string,
+    departmentId: string,
+    levels: CreateAcademicLevelDto[],
+  ): Promise<BulkCreateResult[]> {
+    this.logger.log(
+      `Bulk creating academic levels for department: ${departmentId}`,
+    );
+
+    const department = await this.prisma.department.findUnique({
+      where: { id: departmentId },
+    });
+    if (!department) {
+      throw new NotFoundException('Department not found');
+    }
+
+    const createdLevels: BulkCreateResult[] = [];
+    for (const level of levels) {
+      const existing = await this.prisma.academicLevel.findFirst({
+        where: {
+          departmentId,
+          name: level.name,
+        },
+      });
+      if (!existing) {
+        const created = await this.prisma.academicLevel.create({
+          data: {
+            name: level.name,
+            numericLevel: level.numericLevel,
+            order: level.order,
+            departmentId,
+            status: 'ACTIVE',
+          },
+        });
+        createdLevels.push({
+          id: created.id,
+          name: created.name,
+          numericLevel: created.numericLevel,
+          order: created.order,
+          departmentId: created.departmentId,
+          status: created.status,
+          createdAt: created.createdAt,
+          updatedAt: created.updatedAt,
+        });
+      }
+    }
+
+    await this.invalidateInstitutionsCache();
+
+    await this.prisma.activityLog.create({
+      data: {
+        userId,
+        activity: 'ACADEMIC_LEVELS_BULK_CREATED',
+        details: JSON.stringify({
+          departmentId,
+          count: createdLevels.length,
+        }),
+      },
+    });
+
+    this.logger.log(`Bulk created ${createdLevels.length} academic levels`);
+    return createdLevels;
   }
 }

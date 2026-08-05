@@ -1,3 +1,4 @@
+// src/v1/communication/communication.controller.ts
 import {
   Controller,
   Get,
@@ -26,6 +27,8 @@ import { AnnouncementService } from './announcement.service';
 import { NotificationService } from './notification.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
+// Import cache decorators
+import { Cache, Cacheable, CacheKey, InvalidateCache } from '../../common/decorators/cache.decorator';
 
 @ApiTags('communication')
 @Controller('communication')
@@ -46,6 +49,7 @@ export class CommunicationController {
   @Post('announcements')
   @UseGuards(AdminGuard)
   @RequirePermission('communication:create')
+  @InvalidateCache(['announcements', 'communication'])
   @ApiOperation({ summary: 'Create announcement' })
   @ApiBody({
     schema: {
@@ -55,14 +59,7 @@ export class CommunicationController {
         title: { type: 'string' },
         content: { type: 'string' },
         type: {
-          enum: [
-            'GENERAL',
-            'IMPORTANT',
-            'URGENT',
-            'FINANCIAL',
-            'ACADEMIC',
-            'EVENT',
-          ],
+          enum: ['GENERAL', 'IMPORTANT', 'URGENT', 'FINANCIAL', 'ACADEMIC', 'EVENT'],
         },
         priority: { enum: ['LOW', 'NORMAL', 'HIGH', 'URGENT'] },
         expiresAt: { type: 'string', format: 'date-time' },
@@ -80,6 +77,15 @@ export class CommunicationController {
   }
 
   @Get('announcements')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { organizationId, page, limit, isPublished, type, priority } = request.query;
+      return `announcements:${organizationId || 'all'}:${page || 1}:${limit || 10}:${isPublished || 'all'}:${type || 'all'}:${priority || 'all'}`;
+    },
+    ttl: 300, // 5 minutes
+    tags: ['announcements', 'communication'],
+  })
   @ApiOperation({ summary: 'Get announcements' })
   @ApiQuery({ name: 'organizationId', required: false })
   @ApiQuery({ name: 'page', required: false, example: 1 })
@@ -113,12 +119,7 @@ export class CommunicationController {
       parseInt(page, 10),
       parseInt(limit, 10),
       {
-        isPublished:
-          isPublished === 'true'
-            ? true
-            : isPublished === 'false'
-              ? false
-              : undefined,
+        isPublished: isPublished === 'true' ? true : isPublished === 'false' ? false : undefined,
         type,
         priority,
       },
@@ -126,6 +127,14 @@ export class CommunicationController {
   }
 
   @Get('announcements/:id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `announcement:${request.params.id}`;
+    },
+    ttl: 600, // 10 minutes
+    tags: ['announcements', 'communication'],
+  })
   @ApiOperation({ summary: 'Get announcement by ID' })
   @ApiParam({ name: 'id', description: 'Announcement ID' })
   @ApiResponse({
@@ -140,6 +149,7 @@ export class CommunicationController {
   @Patch('announcements/:id')
   @UseGuards(AdminGuard)
   @RequirePermission('communication:create')
+  @InvalidateCache(['announcements', 'communication'])
   @ApiOperation({ summary: 'Update announcement' })
   @ApiParam({ name: 'id', description: 'Announcement ID' })
   @ApiBody({
@@ -149,14 +159,7 @@ export class CommunicationController {
         title: { type: 'string' },
         content: { type: 'string' },
         type: {
-          enum: [
-            'GENERAL',
-            'IMPORTANT',
-            'URGENT',
-            'FINANCIAL',
-            'ACADEMIC',
-            'EVENT',
-          ],
+          enum: ['GENERAL', 'IMPORTANT', 'URGENT', 'FINANCIAL', 'ACADEMIC', 'EVENT'],
         },
         priority: { enum: ['LOW', 'NORMAL', 'HIGH', 'URGENT'] },
         expiresAt: { type: 'string', format: 'date-time' },
@@ -179,6 +182,7 @@ export class CommunicationController {
   @Post('announcements/:id/publish')
   @UseGuards(AdminGuard)
   @RequirePermission('communication:manage')
+  @InvalidateCache(['announcements', 'communication'])
   @ApiOperation({ summary: 'Publish announcement' })
   @ApiParam({ name: 'id', description: 'Announcement ID' })
   @ApiResponse({
@@ -191,6 +195,7 @@ export class CommunicationController {
   }
 
   @Post('announcements/:id/read')
+  @InvalidateCache(['announcements', 'communication'])
   @ApiOperation({ summary: 'Mark announcement as read' })
   @ApiParam({ name: 'id', description: 'Announcement ID' })
   @ApiResponse({
@@ -205,6 +210,7 @@ export class CommunicationController {
   @Delete('announcements/:id')
   @UseGuards(AdminGuard)
   @RequirePermission('communication:delete')
+  @InvalidateCache(['announcements', 'communication'])
   @ApiOperation({ summary: 'Delete announcement' })
   @ApiParam({ name: 'id', description: 'Announcement ID' })
   @ApiResponse({
@@ -221,6 +227,16 @@ export class CommunicationController {
   // ============================================
 
   @Get('notifications')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const userId = request.user.id;
+      const { page, limit, read, type } = request.query;
+      return `notifications:user:${userId}:${page || 1}:${limit || 20}:${read || 'all'}:${type || 'all'}`;
+    },
+    ttl: 60, // 1 minute - notifications change frequently
+    tags: ['notifications', 'communication'],
+  })
   @ApiOperation({ summary: 'Get user notifications' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 20 })
@@ -250,6 +266,14 @@ export class CommunicationController {
   }
 
   @Get('notifications/unread-count')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `notifications:unread:${request.user.id}`;
+    },
+    ttl: 30, // 30 seconds - unread count changes frequently
+    tags: ['notifications', 'communication'],
+  })
   @ApiOperation({ summary: 'Get unread notification count' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -263,6 +287,7 @@ export class CommunicationController {
   }
 
   @Patch('notifications/:id/read')
+  @InvalidateCache(['notifications', 'communication'])
   @ApiOperation({ summary: 'Mark notification as read' })
   @ApiParam({ name: 'id', description: 'Notification ID' })
   @ApiResponse({
@@ -275,6 +300,7 @@ export class CommunicationController {
   }
 
   @Patch('notifications/read-all')
+  @InvalidateCache(['notifications', 'communication'])
   @ApiOperation({ summary: 'Mark all notifications as read' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -290,6 +316,14 @@ export class CommunicationController {
   // ============================================
 
   @Get('notifications/preferences')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `notifications:preferences:${request.user.id}`;
+    },
+    ttl: 600, // 10 minutes - preferences change rarely
+    tags: ['notifications', 'communication', 'preferences'],
+  })
   @ApiOperation({ summary: 'Get notification preferences' })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -301,6 +335,7 @@ export class CommunicationController {
   }
 
   @Patch('notifications/preferences')
+  @InvalidateCache(['notifications', 'communication', 'preferences'])
   @ApiOperation({ summary: 'Update notification preferences' })
   @ApiBody({
     schema: {
@@ -309,14 +344,7 @@ export class CommunicationController {
         type: 'object',
         properties: {
           type: {
-            enum: [
-              'SYSTEM',
-              'FINANCIAL',
-              'ACADEMIC',
-              'EVENT',
-              'REMINDER',
-              'SECURITY',
-            ],
+            enum: ['SYSTEM', 'FINANCIAL', 'ACADEMIC', 'EVENT', 'REMINDER', 'SECURITY'],
           },
           email: { type: 'boolean' },
           push: { type: 'boolean' },
@@ -332,5 +360,48 @@ export class CommunicationController {
   async updatePreferences(@Request() req: any, @Body() body: any[]) {
     this.logger.log('Update preferences endpoint called');
     return this.notificationService.updatePreferences(req.user.id, body);
+  }
+
+  // ============================================
+  // CACHE INVALIDATION ENDPOINT (Admin only)
+  // ============================================
+
+  @Post('cache/invalidate')
+  @UseGuards(AdminGuard)
+  @RequirePermission('communication:manage')
+  @InvalidateCache(['announcements', 'notifications', 'communication', 'preferences'])
+  @ApiOperation({
+    summary: 'Invalidate communication cache (Admin only)',
+    description: 'Clear all communication-related cache.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        reason: { type: 'string', description: 'Reason for invalidating cache' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Communication cache invalidated',
+  })
+  async invalidateCommunicationCache(
+    @Body() body: { reason?: string },
+    @Request() req: any,
+  ) {
+    this.logger.log(`Invalidate communication cache endpoint called. Reason: ${body.reason || 'Not specified'}`);
+    
+    // Also invalidate via service methods
+    await this.announcementService.invalidateAnnouncementCache();
+    await this.notificationService.invalidateNotificationCache(req.user.id);
+    
+    return {
+      message: 'Communication cache invalidated successfully',
+      reason: body.reason || 'Not specified',
+      invalidatedBy: req.user.id,
+      invalidatedAt: new Date().toISOString(),
+      tagsInvalidated: ['announcements', 'notifications', 'communication', 'preferences'],
+    };
   }
 }

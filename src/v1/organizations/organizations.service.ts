@@ -976,4 +976,49 @@ export class OrganizationsService {
       children: totalChildren,
     };
   }
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateOrganizationsCache(organizationId?: string): Promise<void> {
+    try {
+      // Invalidate all organization tags
+      await this.cacheService.invalidateByTag('organizations');
+      await this.cacheService.invalidateByTag('members');
+      await this.cacheService.invalidateByTag('stats');
+
+      if (organizationId) {
+        // Invalidate specific organization caches
+        await this.cacheService.delete(`organization:${organizationId}`);
+        await this.cacheService.invalidatePattern(
+          `organization:${organizationId}:members:*`,
+        );
+        await this.cacheService.invalidatePattern(
+          `organizations:*:${organizationId}:*`,
+        );
+
+        // Get organization to invalidate institution cache
+        const org = await this.prisma.organization.findUnique({
+          where: { id: organizationId },
+          select: { institutionId: true },
+        });
+        if (org) {
+          await this.cacheService.delete(`institution:${org.institutionId}`);
+        }
+      }
+
+      // Also invalidate all patterns
+      await this.cacheService.invalidatePattern('organization:*');
+      await this.cacheService.invalidatePattern('organizations:*');
+      await this.cacheService.invalidatePattern('organization:slug:*');
+
+      this.logger.log(
+        `Organizations cache invalidated${organizationId ? ` for organization: ${organizationId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate organizations cache: ${error.message}`,
+      );
+    }
+  }
 }

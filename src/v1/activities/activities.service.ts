@@ -1,3 +1,4 @@
+// src/v1/activities/activities.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -27,7 +28,7 @@ export class ActivitiesService {
   ) {}
 
   // ============================================
-  // ACTIVITY MANAGEMENT
+  // ACTIVITY MANAGEMENT WITH CACHE INVALIDATION
   // ============================================
 
   async createActivity(userId: string, dto: CreateActivityDto) {
@@ -85,6 +86,9 @@ export class ActivitiesService {
         status: (dto.status || 'PUBLISHED') as any,
       },
     });
+
+    // Invalidate activity caches
+    await this.invalidateActivityCaches(activity.id, dto.organizationId);
 
     if (dto.organizationId) {
       const members = await this.prisma.organizationMembership.findMany({
@@ -441,7 +445,8 @@ export class ActivitiesService {
       },
     });
 
-    await this.cacheService.delete(`activity:${id}`);
+    // Invalidate activity caches
+    await this.invalidateActivityCaches(id, activity.organizationId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -520,7 +525,8 @@ export class ActivitiesService {
       },
     });
 
-    await this.cacheService.delete(`activity:${id}`);
+    // Invalidate activity caches
+    await this.invalidateActivityCaches(id, activity.organizationId);
 
     if (activity.organizationId) {
       const members = await this.prisma.organizationMembership.findMany({
@@ -586,7 +592,8 @@ export class ActivitiesService {
       where: { id },
     });
 
-    await this.cacheService.delete(`activity:${id}`);
+    // Invalidate activity caches
+    await this.invalidateActivityCaches(id, activity.organizationId);
 
     await this.prisma.activityLog.create({
       data: {
@@ -601,6 +608,32 @@ export class ActivitiesService {
 
     this.logger.log(`Activity deleted: ${id}`);
     return deleted;
+  }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  private async invalidateActivityCaches(activityId: string, organizationId?: string | null) {
+    try {
+      // Delete specific activity cache
+      await this.cacheService.delete(`activity:${activityId}`);
+      
+      // Invalidate activity tags
+      await this.cacheService.invalidateByTag('activities');
+      await this.cacheService.invalidateByTag('public');
+      await this.cacheService.invalidateByTag('activity-detail');
+      
+      // If organization-specific, invalidate organization dashboard
+      if (organizationId) {
+        await this.cacheService.invalidateByTag(`organization-dashboard`);
+        await this.cacheService.invalidateByTag(`organization:${organizationId}`);
+      }
+      
+      this.logger.debug(`Invalidated activity caches for: ${activityId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to invalidate activity caches: ${error.message}`);
+    }
   }
 
   // ============================================
@@ -714,6 +747,9 @@ export class ActivitiesService {
       return { registration, ticketPurchase, tickets };
     });
 
+    // Invalidate registration and activity caches
+    await this.invalidateRegistrationCaches(activityId);
+
     if (activity.isFree) {
       await this.notificationService.createNotification(userId, {
         title: '🎉 Activity Registration Confirmed!',
@@ -794,6 +830,9 @@ export class ActivitiesService {
       },
     });
 
+    // Invalidate registration caches
+    await this.invalidateRegistrationCaches(registration.eventId);
+
     await this.notificationService.createNotification(registration.userId, {
       title: '✅ Registration Confirmed!',
       body: `Your registration for ${registration.event.title} has been confirmed.`,
@@ -860,8 +899,22 @@ export class ActivitiesService {
       },
     });
 
+    // Invalidate registration caches
+    await this.invalidateRegistrationCaches(registration.eventId);
+
     this.logger.log(`Registration ${registrationId} cancelled`);
     return cancelled;
+  }
+
+  private async invalidateRegistrationCaches(activityId: string) {
+    try {
+      await this.cacheService.invalidateByTag('registrations');
+      await this.cacheService.invalidateByTag('activities');
+      await this.cacheService.delete(`activity:${activityId}`);
+      this.logger.debug(`Invalidated registration caches for activity: ${activityId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to invalidate registration caches: ${error.message}`);
+    }
   }
 
   // ============================================
@@ -930,6 +983,9 @@ export class ActivitiesService {
       },
     });
 
+    // Invalidate attendance and stats caches
+    await this.invalidateAttendanceCaches(registration.eventId);
+
     this.logger.log(`Attendee ${registrationId} checked in`);
     return attendee;
   }
@@ -983,8 +1039,23 @@ export class ActivitiesService {
       },
     });
 
+    // Invalidate attendance and stats caches
+    await this.invalidateAttendanceCaches(attendance.registration.eventId);
+
     this.logger.log(`Attendee ${attendanceId} checked out`);
     return checkedOut;
+  }
+
+  private async invalidateAttendanceCaches(activityId: string) {
+    try {
+      await this.cacheService.invalidateByTag('attendance');
+      await this.cacheService.invalidateByTag('activity-stats');
+      await this.cacheService.invalidateByTag('activities');
+      await this.cacheService.delete(`activity:${activityId}`);
+      this.logger.debug(`Invalidated attendance caches for activity: ${activityId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to invalidate attendance caches: ${error.message}`);
+    }
   }
 
   // ============================================

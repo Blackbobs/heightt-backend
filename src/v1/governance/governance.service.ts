@@ -62,7 +62,9 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to create elections');
+      throw new ForbiddenException(
+        'You do not have permission to create elections',
+      );
     }
 
     const election = await this.prisma.$transaction(async (tx) => {
@@ -251,12 +253,16 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to update this election');
+      throw new ForbiddenException(
+        'You do not have permission to update this election',
+      );
     }
 
     // Don't allow updates if election is active or completed
     if (election.status === 'ACTIVE' || election.status === 'COMPLETED') {
-      throw new BadRequestException('Cannot update an active or completed election');
+      throw new BadRequestException(
+        'Cannot update an active or completed election',
+      );
     }
 
     const updated = await this.prisma.election.update({
@@ -318,7 +324,9 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to start this election');
+      throw new ForbiddenException(
+        'You do not have permission to start this election',
+      );
     }
 
     if (election.status === 'ACTIVE') {
@@ -394,7 +402,9 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to end this election');
+      throw new ForbiddenException(
+        'You do not have permission to end this election',
+      );
     }
 
     if (election.status === 'COMPLETED') {
@@ -452,7 +462,9 @@ export class GovernanceService {
 
     // Check if election is in nomination phase
     if (election.status !== 'DRAFT' && election.status !== 'NOMINATION') {
-      throw new BadRequestException('Nominations are not open for this election');
+      throw new BadRequestException(
+        'Nominations are not open for this election',
+      );
     }
 
     // Check if candidate is already nominated for this position
@@ -464,7 +476,9 @@ export class GovernanceService {
     });
 
     if (existing) {
-      throw new ConflictException('Candidate already nominated for this position');
+      throw new ConflictException(
+        'Candidate already nominated for this position',
+      );
     }
 
     // Check if maximum candidates reached
@@ -473,7 +487,9 @@ export class GovernanceService {
     });
 
     if (candidateCount >= position.maxCandidates) {
-      throw new BadRequestException('Maximum number of candidates reached for this position');
+      throw new BadRequestException(
+        'Maximum number of candidates reached for this position',
+      );
     }
 
     // Check if user is a member of the organization
@@ -486,7 +502,9 @@ export class GovernanceService {
     });
 
     if (!membership) {
-      throw new ForbiddenException('Candidate must be a member of the organization');
+      throw new ForbiddenException(
+        'Candidate must be a member of the organization',
+      );
     }
 
     const candidate = await this.prisma.candidate.create({
@@ -564,7 +582,9 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to approve candidates');
+      throw new ForbiddenException(
+        'You do not have permission to approve candidates',
+      );
     }
 
     const updated = await this.prisma.candidate.update({
@@ -632,7 +652,9 @@ export class GovernanceService {
     });
 
     if (!membership) {
-      throw new ForbiddenException('You must be a member of the organization to vote');
+      throw new ForbiddenException(
+        'You must be a member of the organization to vote',
+      );
     }
 
     // Check if user already voted in this election
@@ -653,15 +675,23 @@ export class GovernanceService {
 
       for (const vote of dto.votes) {
         // Validate position exists in this election
-        const position = election.positions.find((p) => p.id === vote.positionId);
+        const position = election.positions.find(
+          (p) => p.id === vote.positionId,
+        );
         if (!position) {
-          throw new BadRequestException(`Position ${vote.positionId} not found in this election`);
+          throw new BadRequestException(
+            `Position ${vote.positionId} not found in this election`,
+          );
         }
 
         // Validate candidate exists for this position
-        const candidate = position.candidates.find((c) => c.id === vote.candidateId);
+        const candidate = position.candidates.find(
+          (c) => c.id === vote.candidateId,
+        );
         if (!candidate) {
-          throw new BadRequestException(`Candidate ${vote.candidateId} not found for position ${position.id}`);
+          throw new BadRequestException(
+            `Candidate ${vote.candidateId} not found for position ${position.id}`,
+          );
         }
 
         // Check if user has already voted for this position
@@ -676,7 +706,9 @@ export class GovernanceService {
         });
 
         if (existingPositionVote) {
-          throw new ConflictException(`You have already voted for position ${position.title}`);
+          throw new ConflictException(
+            `You have already voted for position ${position.title}`,
+          );
         }
 
         // Check max votes for this position
@@ -691,7 +723,9 @@ export class GovernanceService {
         });
 
         if (votesForPosition >= position.maxVotes) {
-          throw new BadRequestException(`You have reached the maximum votes for position ${position.title}`);
+          throw new BadRequestException(
+            `You have reached the maximum votes for position ${position.title}`,
+          );
         }
 
         // Create the vote
@@ -779,7 +813,8 @@ export class GovernanceService {
           userId: candidate.userId,
           username: candidate.user?.username || 'Unknown',
           votes: candidate.votes.length,
-          percentage: totalVotes > 0 ? (candidate.votes.length / totalVotes) * 100 : 0,
+          percentage:
+            totalVotes > 0 ? (candidate.votes.length / totalVotes) * 100 : 0,
           manifesto: candidate.manifesto,
           status: candidate.status,
         })),
@@ -833,7 +868,9 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to create committees');
+      throw new ForbiddenException(
+        'You do not have permission to create committees',
+      );
     }
 
     const committee = await this.prisma.committee.create({
@@ -936,7 +973,9 @@ export class GovernanceService {
     });
 
     if (!membership && !isPlatformAdmin) {
-      throw new ForbiddenException('You do not have permission to create executive terms');
+      throw new ForbiddenException(
+        'You do not have permission to create executive terms',
+      );
     }
 
     const term = await this.prisma.$transaction(async (tx) => {
@@ -1036,6 +1075,57 @@ export class GovernanceService {
   }
 
   // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateGovernanceCache(organizationId?: string): Promise<void> {
+    try {
+      // Invalidate all governance tags
+      await this.cacheService.invalidateByTag('governance');
+      await this.cacheService.invalidateByTag('elections');
+      await this.cacheService.invalidateByTag('committees');
+      await this.cacheService.invalidateByTag('executive');
+      await this.cacheService.invalidateByTag('stats');
+      await this.cacheService.invalidateByTag('results');
+      await this.cacheService.invalidateByTag('candidates');
+      await this.cacheService.invalidateByTag('votes');
+
+      if (organizationId) {
+        // Invalidate organization-specific governance caches
+        await this.cacheService.invalidateByTag(
+          `organization:${organizationId}`,
+        );
+        await this.cacheService.invalidatePattern(
+          `elections:${organizationId}:*`,
+        );
+        await this.cacheService.invalidatePattern(
+          `committees:${organizationId}:*`,
+        );
+        await this.cacheService.invalidatePattern(
+          `executive:terms:${organizationId}:*`,
+        );
+        await this.cacheService.invalidatePattern(
+          `governance:stats:${organizationId}:*`,
+        );
+      }
+
+      // Also invalidate all election and committee patterns
+      await this.cacheService.invalidatePattern('election:*');
+      await this.cacheService.invalidatePattern('elections:*');
+      await this.cacheService.invalidatePattern('committees:*');
+      await this.cacheService.invalidatePattern('executive:*');
+
+      this.logger.log(
+        `Governance cache invalidated${organizationId ? ` for organization: ${organizationId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate governance cache: ${error.message}`,
+      );
+    }
+  }
+
+  // ============================================
   // ELECTION STATS
   // ============================================
 
@@ -1045,35 +1135,31 @@ export class GovernanceService {
       where.organizationId = organizationId;
     }
 
-    const [
-      total,
-      active,
-      completed,
-      upcoming,
-      totalVotes,
-      totalCandidates,
-    ] = await Promise.all([
-      this.prisma.election.count({ where }),
-      this.prisma.election.count({ where: { ...where, status: 'ACTIVE' } }),
-      this.prisma.election.count({ where: { ...where, status: 'COMPLETED' } }),
-      this.prisma.election.count({ 
-        where: { 
-          ...where, 
-          status: 'DRAFT',
-          startDate: { gt: new Date() },
-        },
-      }),
-      this.prisma.vote.count({
-        where: {
-          election: where,
-        },
-      }),
-      this.prisma.candidate.count({
-        where: {
-          election: where,
-        },
-      }),
-    ]);
+    const [total, active, completed, upcoming, totalVotes, totalCandidates] =
+      await Promise.all([
+        this.prisma.election.count({ where }),
+        this.prisma.election.count({ where: { ...where, status: 'ACTIVE' } }),
+        this.prisma.election.count({
+          where: { ...where, status: 'COMPLETED' },
+        }),
+        this.prisma.election.count({
+          where: {
+            ...where,
+            status: 'DRAFT',
+            startDate: { gt: new Date() },
+          },
+        }),
+        this.prisma.vote.count({
+          where: {
+            election: where,
+          },
+        }),
+        this.prisma.candidate.count({
+          where: {
+            election: where,
+          },
+        }),
+      ]);
 
     return {
       total,
@@ -1082,7 +1168,8 @@ export class GovernanceService {
       upcoming,
       totalVotes,
       totalCandidates,
-      voterTurnout: total > 0 ? Math.round((totalVotes / (total * 10)) * 100) : 0,
+      voterTurnout:
+        total > 0 ? Math.round((totalVotes / (total * 10)) * 100) : 0,
     };
   }
 }
