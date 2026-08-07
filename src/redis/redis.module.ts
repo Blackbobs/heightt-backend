@@ -5,6 +5,7 @@ import { RedisService } from './redis.service';
 import { RateLimitService } from './rate-limit.service';
 import { OtpService } from './otp.service';
 import { CacheService } from './cache.service';
+import { IdempotencyService } from './idempotency.service';
 
 @Global()
 @Module({
@@ -30,9 +31,16 @@ import { CacheService } from './cache.service';
     },
     RedisService,
     RateLimitService,
+    IdempotencyService,
     OtpService,
     CacheService,
   ],
-  exports: [RedisService, RateLimitService, OtpService, CacheService],
+  exports: [
+    RedisService,
+    RateLimitService,
+    IdempotencyService,
+    OtpService,
+    CacheService,
+  ],
 })
 export class RedisModule {}

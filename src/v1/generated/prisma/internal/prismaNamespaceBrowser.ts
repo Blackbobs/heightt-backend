@@ -121,6 +121,7 @@ export const ModelName = {
   TicketPurchase: 'TicketPurchase',
   EventRegistration: 'EventRegistration',
   Attendance: 'Attendance',
+  PendingPayment: 'PendingPayment',
   File: 'File'
 } as const
 
@@ -672,6 +673,9 @@ export const PaymentScalarFieldEnum = {
   reference: 'reference',
   description: 'description',
   metadata: 'metadata',
+  bachsChargeId: 'bachsChargeId',
+  bachsCheckoutId: 'bachsCheckoutId',
+  bachsCustomerId: 'bachsCustomerId',
   journalEntryId: 'journalEntryId',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
@@ -1258,6 +1262,29 @@ export const AttendanceScalarFieldEnum = {
 } as const
 
 export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+export const PendingPaymentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  organizationId: 'organizationId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  description: 'description',
+  dueAssignmentId: 'dueAssignmentId',
+  category: 'category',
+  reference: 'reference',
+  status: 'status',
+  bachsCheckoutId: 'bachsCheckoutId',
+  bachsCustomerId: 'bachsCustomerId',
+  bachsChargeId: 'bachsChargeId',
+  completedAt: 'completedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PendingPaymentScalarFieldEnum = (typeof PendingPaymentScalarFieldEnum)[keyof typeof PendingPaymentScalarFieldEnum]
 
 
 export const FileScalarFieldEnum = {

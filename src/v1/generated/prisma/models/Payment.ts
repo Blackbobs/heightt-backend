@@ -47,6 +47,9 @@ export type PaymentMinAggregateOutputType = {
   paymentMethod: $Enums.PaymentMethodType | null
   reference: string | null
   description: string | null
+  bachsChargeId: string | null
+  bachsCheckoutId: string | null
+  bachsCustomerId: string | null
   journalEntryId: string | null
   paidAt: Date | null
   createdAt: Date | null
@@ -64,6 +67,9 @@ export type PaymentMaxAggregateOutputType = {
   paymentMethod: $Enums.PaymentMethodType | null
   reference: string | null
   description: string | null
+  bachsChargeId: string | null
+  bachsCheckoutId: string | null
+  bachsCustomerId: string | null
   journalEntryId: string | null
   paidAt: Date | null
   createdAt: Date | null
@@ -82,6 +88,9 @@ export type PaymentCountAggregateOutputType = {
   reference: number
   description: number
   metadata: number
+  bachsChargeId: number
+  bachsCheckoutId: number
+  bachsCustomerId: number
   journalEntryId: number
   paidAt: number
   createdAt: number
@@ -111,6 +120,9 @@ export type PaymentMinAggregateInputType = {
   paymentMethod?: true
   reference?: true
   description?: true
+  bachsChargeId?: true
+  bachsCheckoutId?: true
+  bachsCustomerId?: true
   journalEntryId?: true
   paidAt?: true
   createdAt?: true
@@ -128,6 +140,9 @@ export type PaymentMaxAggregateInputType = {
   paymentMethod?: true
   reference?: true
   description?: true
+  bachsChargeId?: true
+  bachsCheckoutId?: true
+  bachsCustomerId?: true
   journalEntryId?: true
   paidAt?: true
   createdAt?: true
@@ -146,6 +161,9 @@ export type PaymentCountAggregateInputType = {
   reference?: true
   description?: true
   metadata?: true
+  bachsChargeId?: true
+  bachsCheckoutId?: true
+  bachsCustomerId?: true
   journalEntryId?: true
   paidAt?: true
   createdAt?: true
@@ -251,6 +269,9 @@ export type PaymentGroupByOutputType = {
   reference: string
   description: string | null
   metadata: runtime.JsonValue | null
+  bachsChargeId: string | null
+  bachsCheckoutId: string | null
+  bachsCustomerId: string | null
   journalEntryId: string | null
   paidAt: Date | null
   createdAt: Date
@@ -292,6 +313,9 @@ export type PaymentWhereInput = {
   reference?: Prisma.StringFilter<"Payment"> | string
   description?: Prisma.StringNullableFilter<"Payment"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Payment">
+  bachsChargeId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  bachsCheckoutId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  bachsCustomerId?: Prisma.StringNullableFilter<"Payment"> | string | null
   journalEntryId?: Prisma.StringNullableFilter<"Payment"> | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -317,6 +341,9 @@ export type PaymentOrderByWithRelationInput = {
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  bachsChargeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  bachsCheckoutId?: Prisma.SortOrderInput | Prisma.SortOrder
+  bachsCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -334,6 +361,7 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   transactionId?: string
   reference?: string
+  bachsChargeId?: string
   journalEntryId?: string
   AND?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   OR?: Prisma.PaymentWhereInput[]
@@ -346,6 +374,8 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   paymentMethod?: Prisma.EnumPaymentMethodTypeFilter<"Payment"> | $Enums.PaymentMethodType
   description?: Prisma.StringNullableFilter<"Payment"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Payment">
+  bachsCheckoutId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  bachsCustomerId?: Prisma.StringNullableFilter<"Payment"> | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -356,7 +386,7 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   duePayment?: Prisma.XOR<Prisma.DuePaymentNullableScalarRelationFilter, Prisma.DuePaymentWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
-}, "id" | "transactionId" | "reference" | "journalEntryId">
+}, "id" | "transactionId" | "reference" | "bachsChargeId" | "journalEntryId">
 
 export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -370,6 +400,9 @@ export type PaymentOrderByWithAggregationInput = {
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  bachsChargeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  bachsCheckoutId?: Prisma.SortOrderInput | Prisma.SortOrder
+  bachsCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -396,6 +429,9 @@ export type PaymentScalarWhereWithAggregatesInput = {
   reference?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"Payment">
+  bachsChargeId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  bachsCheckoutId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  bachsCustomerId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   journalEntryId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
@@ -411,6 +447,9 @@ export type PaymentCreateInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -435,6 +474,9 @@ export type PaymentUncheckedCreateInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -453,6 +495,9 @@ export type PaymentUpdateInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -477,6 +522,9 @@ export type PaymentUncheckedUpdateInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -498,6 +546,9 @@ export type PaymentCreateManyInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -513,6 +564,9 @@ export type PaymentUpdateManyMutationInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -530,6 +584,9 @@ export type PaymentUncheckedUpdateManyInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -563,6 +620,9 @@ export type PaymentCountOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
+  bachsChargeId?: Prisma.SortOrder
+  bachsCheckoutId?: Prisma.SortOrder
+  bachsCustomerId?: Prisma.SortOrder
   journalEntryId?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -585,6 +645,9 @@ export type PaymentMaxOrderByAggregateInput = {
   paymentMethod?: Prisma.SortOrder
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  bachsChargeId?: Prisma.SortOrder
+  bachsCheckoutId?: Prisma.SortOrder
+  bachsCustomerId?: Prisma.SortOrder
   journalEntryId?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -602,6 +665,9 @@ export type PaymentMinOrderByAggregateInput = {
   paymentMethod?: Prisma.SortOrder
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  bachsChargeId?: Prisma.SortOrder
+  bachsCheckoutId?: Prisma.SortOrder
+  bachsCustomerId?: Prisma.SortOrder
   journalEntryId?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -825,6 +891,9 @@ export type PaymentCreateWithoutPayerInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -847,6 +916,9 @@ export type PaymentUncheckedCreateWithoutPayerInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -897,6 +969,9 @@ export type PaymentScalarWhereInput = {
   reference?: Prisma.StringFilter<"Payment"> | string
   description?: Prisma.StringNullableFilter<"Payment"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Payment">
+  bachsChargeId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  bachsCheckoutId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  bachsCustomerId?: Prisma.StringNullableFilter<"Payment"> | string | null
   journalEntryId?: Prisma.StringNullableFilter<"Payment"> | string | null
   paidAt?: Prisma.DateTimeNullableFilter<"Payment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
@@ -912,6 +987,9 @@ export type PaymentCreateWithoutOrganizationInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -934,6 +1012,9 @@ export type PaymentUncheckedCreateWithoutOrganizationInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -978,6 +1059,9 @@ export type PaymentCreateWithoutJournalEntryInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1001,6 +1085,9 @@ export type PaymentUncheckedCreateWithoutJournalEntryInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1034,6 +1121,9 @@ export type PaymentUpdateWithoutJournalEntryInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1057,6 +1147,9 @@ export type PaymentUncheckedUpdateWithoutJournalEntryInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1074,6 +1167,9 @@ export type PaymentCreateWithoutTransactionInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1096,6 +1192,9 @@ export type PaymentUncheckedCreateWithoutTransactionInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -1130,6 +1229,9 @@ export type PaymentUpdateWithoutTransactionInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1152,6 +1254,9 @@ export type PaymentUncheckedUpdateWithoutTransactionInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1170,6 +1275,9 @@ export type PaymentCreateWithoutDuePaymentInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1193,6 +1301,9 @@ export type PaymentUncheckedCreateWithoutDuePaymentInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -1226,6 +1337,9 @@ export type PaymentUpdateWithoutDuePaymentInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1249,6 +1363,9 @@ export type PaymentUncheckedUpdateWithoutDuePaymentInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1266,6 +1383,9 @@ export type PaymentCreateWithoutRefundInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1289,6 +1409,9 @@ export type PaymentUncheckedCreateWithoutRefundInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -1322,6 +1445,9 @@ export type PaymentUpdateWithoutRefundInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1345,6 +1471,9 @@ export type PaymentUncheckedUpdateWithoutRefundInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1362,6 +1491,9 @@ export type PaymentCreateWithoutReceiptInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1385,6 +1517,9 @@ export type PaymentUncheckedCreateWithoutReceiptInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -1418,6 +1553,9 @@ export type PaymentUpdateWithoutReceiptInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1441,6 +1579,9 @@ export type PaymentUncheckedUpdateWithoutReceiptInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1460,6 +1601,9 @@ export type PaymentCreateManyPayerInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -1475,6 +1619,9 @@ export type PaymentUpdateWithoutPayerInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1497,6 +1644,9 @@ export type PaymentUncheckedUpdateWithoutPayerInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1517,6 +1667,9 @@ export type PaymentUncheckedUpdateManyWithoutPayerInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1534,6 +1687,9 @@ export type PaymentCreateManyOrganizationInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
   journalEntryId?: string | null
   paidAt?: Date | string | null
   createdAt?: Date | string
@@ -1549,6 +1705,9 @@ export type PaymentUpdateWithoutOrganizationInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1571,6 +1730,9 @@ export type PaymentUncheckedUpdateWithoutOrganizationInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1591,6 +1753,9 @@ export type PaymentUncheckedUpdateManyWithoutOrganizationInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1611,6 +1776,9 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   reference?: boolean
   description?: boolean
   metadata?: boolean
+  bachsChargeId?: boolean
+  bachsCheckoutId?: boolean
+  bachsCustomerId?: boolean
   journalEntryId?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -1636,6 +1804,9 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   reference?: boolean
   description?: boolean
   metadata?: boolean
+  bachsChargeId?: boolean
+  bachsCheckoutId?: boolean
+  bachsCustomerId?: boolean
   journalEntryId?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -1658,6 +1829,9 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   reference?: boolean
   description?: boolean
   metadata?: boolean
+  bachsChargeId?: boolean
+  bachsCheckoutId?: boolean
+  bachsCustomerId?: boolean
   journalEntryId?: boolean
   paidAt?: boolean
   createdAt?: boolean
@@ -1680,13 +1854,16 @@ export type PaymentSelectScalar = {
   reference?: boolean
   description?: boolean
   metadata?: boolean
+  bachsChargeId?: boolean
+  bachsCheckoutId?: boolean
+  bachsCustomerId?: boolean
   journalEntryId?: boolean
   paidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payerId" | "organizationId" | "transactionId" | "amount" | "serviceFee" | "status" | "paymentMethod" | "reference" | "description" | "metadata" | "journalEntryId" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payerId" | "organizationId" | "transactionId" | "amount" | "serviceFee" | "status" | "paymentMethod" | "reference" | "description" | "metadata" | "bachsChargeId" | "bachsCheckoutId" | "bachsCustomerId" | "journalEntryId" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
@@ -1732,6 +1909,9 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     reference: string
     description: string | null
     metadata: runtime.JsonValue | null
+    bachsChargeId: string | null
+    bachsCheckoutId: string | null
+    bachsCustomerId: string | null
     journalEntryId: string | null
     paidAt: Date | null
     createdAt: Date
@@ -2177,6 +2357,9 @@ export interface PaymentFieldRefs {
   readonly reference: Prisma.FieldRef<"Payment", 'String'>
   readonly description: Prisma.FieldRef<"Payment", 'String'>
   readonly metadata: Prisma.FieldRef<"Payment", 'Json'>
+  readonly bachsChargeId: Prisma.FieldRef<"Payment", 'String'>
+  readonly bachsCheckoutId: Prisma.FieldRef<"Payment", 'String'>
+  readonly bachsCustomerId: Prisma.FieldRef<"Payment", 'String'>
   readonly journalEntryId: Prisma.FieldRef<"Payment", 'String'>
   readonly paidAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>

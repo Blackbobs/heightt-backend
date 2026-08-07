@@ -1,4 +1,3 @@
-// src/events/event.types.ts
 export enum SystemEvents {
   // Auth Events
   USER_REGISTERED = 'user.registered',
@@ -13,6 +12,7 @@ export enum SystemEvents {
   PAYMENT_FAILED = 'payment.failed',
   PAYMENT_REFUNDED = 'payment.refunded',
   PAYMENT_COMPLETED = 'payment.completed',
+  PAYMENT_COMPLETED_VIA_BACHS = 'payment.completed.via.bachs',
 
   // Wallet Events
   WALLET_CREATED = 'wallet.created',

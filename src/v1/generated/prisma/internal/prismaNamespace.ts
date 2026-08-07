@@ -467,6 +467,7 @@ export const ModelName = {
   TicketPurchase: 'TicketPurchase',
   EventRegistration: 'EventRegistration',
   Attendance: 'Attendance',
+  PendingPayment: 'PendingPayment',
   File: 'File'
 } as const
 
@@ -483,7 +484,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "file"
+    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -5667,6 +5668,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PendingPayment: {
+      payload: Prisma.$PendingPaymentPayload<ExtArgs>
+      fields: Prisma.PendingPaymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PendingPaymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PendingPaymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>
+        }
+        findFirst: {
+          args: Prisma.PendingPaymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PendingPaymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>
+        }
+        findMany: {
+          args: Prisma.PendingPaymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>[]
+        }
+        create: {
+          args: Prisma.PendingPaymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>
+        }
+        createMany: {
+          args: Prisma.PendingPaymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PendingPaymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>[]
+        }
+        delete: {
+          args: Prisma.PendingPaymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>
+        }
+        update: {
+          args: Prisma.PendingPaymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.PendingPaymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PendingPaymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PendingPaymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.PendingPaymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PendingPaymentPayload>
+        }
+        aggregate: {
+          args: Prisma.PendingPaymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePendingPayment>
+        }
+        groupBy: {
+          args: Prisma.PendingPaymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PendingPaymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PendingPaymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PendingPaymentCountAggregateOutputType> | number
+        }
+      }
+    }
     File: {
       payload: Prisma.$FilePayload<ExtArgs>
       fields: Prisma.FileFieldRefs
@@ -6312,6 +6387,9 @@ export const PaymentScalarFieldEnum = {
   reference: 'reference',
   description: 'description',
   metadata: 'metadata',
+  bachsChargeId: 'bachsChargeId',
+  bachsCheckoutId: 'bachsCheckoutId',
+  bachsCustomerId: 'bachsCustomerId',
   journalEntryId: 'journalEntryId',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
@@ -6898,6 +6976,29 @@ export const AttendanceScalarFieldEnum = {
 } as const
 
 export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+export const PendingPaymentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  organizationId: 'organizationId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  description: 'description',
+  dueAssignmentId: 'dueAssignmentId',
+  category: 'category',
+  reference: 'reference',
+  status: 'status',
+  bachsCheckoutId: 'bachsCheckoutId',
+  bachsCustomerId: 'bachsCustomerId',
+  bachsChargeId: 'bachsChargeId',
+  completedAt: 'completedAt',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PendingPaymentScalarFieldEnum = (typeof PendingPaymentScalarFieldEnum)[keyof typeof PendingPaymentScalarFieldEnum]
 
 
 export const FileScalarFieldEnum = {
@@ -7846,6 +7947,20 @@ export type EnumRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
 export type ListEnumRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'PendingPaymentStatus'
+ */
+export type EnumPendingPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PendingPaymentStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PendingPaymentStatus[]'
+ */
+export type ListEnumPendingPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PendingPaymentStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -8067,6 +8182,7 @@ export type GlobalOmitConfig = {
   ticketPurchase?: Prisma.TicketPurchaseOmit
   eventRegistration?: Prisma.EventRegistrationOmit
   attendance?: Prisma.AttendanceOmit
+  pendingPayment?: Prisma.PendingPaymentOmit
   file?: Prisma.FileOmit
 }
 

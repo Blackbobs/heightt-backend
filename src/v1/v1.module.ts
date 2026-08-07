@@ -17,6 +17,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
+import { BachsModule } from './bachs/bachs.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { OnboardingModule } from './onboarding/onboarding.module';
     FilesModule,
     HealthModule,
     OnboardingModule,
+    BachsModule,
   ],
   exports: [
     AuthModule,
@@ -58,6 +60,7 @@ import { OnboardingModule } from './onboarding/onboarding.module';
     FilesModule,
     HealthModule,
     OnboardingModule,
+    BachsModule,
   ],
 })
 export class V1Module {}

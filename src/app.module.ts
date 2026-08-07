@@ -21,6 +21,7 @@ import { SecurityHeadersMiddleware } from './common/middleware/security-headers.
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CacheModule } from './redis/cache.module';
+import { BachsModule } from './v1/bachs/bachs.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { CacheModule } from './redis/cache.module';
     CacheModule,
     EmailModule,
     EventsModule,
+    BachsModule,
     GatewaysModule,
     V1Module,
   ],

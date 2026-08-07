@@ -1,4 +1,3 @@
-// src/events/event.service.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SystemEvents } from './event.types';
@@ -12,14 +11,41 @@ export class EventService {
 
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
+  /**
+   * Emit an event
+   */
   emit(event: SystemEvents, data: any): void {
     this.logger.debug(`Emitting event: ${event}`);
     this.eventEmitter.emit(event, data);
   }
 
+  /**
+   * Emit an async event
+   */
   emitAsync(event: SystemEvents, data: any): Promise<any> {
     this.logger.debug(`Emitting async event: ${event}`);
     return this.eventEmitter.emitAsync(event, data);
+  }
+
+  /**
+   * Listen to an event
+   */
+  on(event: SystemEvents, callback: (payload: any) => void): void {
+    this.eventEmitter.on(event, callback);
+  }
+
+  /**
+   * Listen to an event once
+   */
+  once(event: SystemEvents, callback: (payload: any) => void): void {
+    this.eventEmitter.once(event, callback);
+  }
+
+  /**
+   * Remove a listener
+   */
+  off(event: SystemEvents, callback: (payload: any) => void): void {
+    this.eventEmitter.off(event, callback);
   }
 
   // ============================================

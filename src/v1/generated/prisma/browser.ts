@@ -368,6 +368,11 @@ export type EventRegistration = Prisma.EventRegistrationModel
  */
 export type Attendance = Prisma.AttendanceModel
 /**
+ * Model PendingPayment
+ * 
+ */
+export type PendingPayment = Prisma.PendingPaymentModel
+/**
  * Model File
  * 
  */

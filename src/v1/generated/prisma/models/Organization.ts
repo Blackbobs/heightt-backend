@@ -326,6 +326,7 @@ export type OrganizationWhereInput = {
   admins?: Prisma.AdminListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   files?: Prisma.FileListRelationFilter
+  pendingPayments?: Prisma.PendingPaymentListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -373,6 +374,7 @@ export type OrganizationOrderByWithRelationInput = {
   admins?: Prisma.AdminOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
   files?: Prisma.FileOrderByRelationAggregateInput
+  pendingPayments?: Prisma.PendingPaymentOrderByRelationAggregateInput
 }
 
 export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -424,6 +426,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   admins?: Prisma.AdminListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   files?: Prisma.FileListRelationFilter
+  pendingPayments?: Prisma.PendingPaymentListRelationFilter
 }, "id" | "slug" | "institutionId_slug">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -517,6 +520,7 @@ export type OrganizationCreateInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -558,6 +562,7 @@ export type OrganizationUncheckedCreateInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -599,6 +604,7 @@ export type OrganizationUpdateInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -640,6 +646,7 @@ export type OrganizationUncheckedUpdateInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -1315,6 +1322,20 @@ export type OrganizationUpdateOneWithoutEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutEventsInput, Prisma.OrganizationUpdateWithoutEventsInput>, Prisma.OrganizationUncheckedUpdateWithoutEventsInput>
 }
 
+export type OrganizationCreateNestedOneWithoutPendingPaymentsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPendingPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutPendingPaymentsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPendingPaymentsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutPendingPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPendingPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutPendingPaymentsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPendingPaymentsInput
+  upsert?: Prisma.OrganizationUpsertWithoutPendingPaymentsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPendingPaymentsInput, Prisma.OrganizationUpdateWithoutPendingPaymentsInput>, Prisma.OrganizationUncheckedUpdateWithoutPendingPaymentsInput>
+}
+
 export type OrganizationCreateNestedOneWithoutFilesInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutFilesInput, Prisma.OrganizationUncheckedCreateWithoutFilesInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutFilesInput
@@ -1369,6 +1390,7 @@ export type OrganizationCreateWithoutCreatorInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCreatorInput = {
@@ -1409,6 +1431,7 @@ export type OrganizationUncheckedCreateWithoutCreatorInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCreatorInput = {
@@ -1501,6 +1524,7 @@ export type OrganizationCreateWithoutInstitutionInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutInstitutionInput = {
@@ -1541,6 +1565,7 @@ export type OrganizationUncheckedCreateWithoutInstitutionInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutInstitutionInput = {
@@ -1607,6 +1632,7 @@ export type OrganizationCreateWithoutFacultyInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFacultyInput = {
@@ -1647,6 +1673,7 @@ export type OrganizationUncheckedCreateWithoutFacultyInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFacultyInput = {
@@ -1713,6 +1740,7 @@ export type OrganizationCreateWithoutDepartmentInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDepartmentInput = {
@@ -1753,6 +1781,7 @@ export type OrganizationUncheckedCreateWithoutDepartmentInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDepartmentInput = {
@@ -1819,6 +1848,7 @@ export type OrganizationCreateWithoutAcademicLevelInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAcademicLevelInput = {
@@ -1859,6 +1889,7 @@ export type OrganizationUncheckedCreateWithoutAcademicLevelInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAcademicLevelInput = {
@@ -1925,6 +1956,7 @@ export type OrganizationCreateWithoutStudentEnrollmentsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutStudentEnrollmentsInput = {
@@ -1965,6 +1997,7 @@ export type OrganizationUncheckedCreateWithoutStudentEnrollmentsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutStudentEnrollmentsInput = {
@@ -2021,6 +2054,7 @@ export type OrganizationUpdateWithoutStudentEnrollmentsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
@@ -2061,6 +2095,7 @@ export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutChildrenInput = {
@@ -2101,6 +2136,7 @@ export type OrganizationCreateWithoutChildrenInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutChildrenInput = {
@@ -2141,6 +2177,7 @@ export type OrganizationUncheckedCreateWithoutChildrenInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutChildrenInput = {
@@ -2186,6 +2223,7 @@ export type OrganizationCreateWithoutParentInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutParentInput = {
@@ -2226,6 +2264,7 @@ export type OrganizationUncheckedCreateWithoutParentInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutParentInput = {
@@ -2287,6 +2326,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutChildrenInput = {
@@ -2327,6 +2367,7 @@ export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUpsertWithWhereUniqueWithoutParentInput = {
@@ -2383,6 +2424,7 @@ export type OrganizationCreateWithoutMembershipsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutMembershipsInput = {
@@ -2423,6 +2465,7 @@ export type OrganizationUncheckedCreateWithoutMembershipsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutMembershipsInput = {
@@ -2479,6 +2522,7 @@ export type OrganizationUpdateWithoutMembershipsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
@@ -2519,6 +2563,7 @@ export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutRolesInput = {
@@ -2559,6 +2604,7 @@ export type OrganizationCreateWithoutRolesInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutRolesInput = {
@@ -2599,6 +2645,7 @@ export type OrganizationUncheckedCreateWithoutRolesInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutRolesInput = {
@@ -2655,6 +2702,7 @@ export type OrganizationUpdateWithoutRolesInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutRolesInput = {
@@ -2695,6 +2743,7 @@ export type OrganizationUncheckedUpdateWithoutRolesInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAdminsInput = {
@@ -2735,6 +2784,7 @@ export type OrganizationCreateWithoutAdminsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAdminsInput = {
@@ -2775,6 +2825,7 @@ export type OrganizationUncheckedCreateWithoutAdminsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAdminsInput = {
@@ -2831,6 +2882,7 @@ export type OrganizationUpdateWithoutAdminsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAdminsInput = {
@@ -2871,6 +2923,7 @@ export type OrganizationUncheckedUpdateWithoutAdminsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutWalletInput = {
@@ -2911,6 +2964,7 @@ export type OrganizationCreateWithoutWalletInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutWalletInput = {
@@ -2951,6 +3005,7 @@ export type OrganizationUncheckedCreateWithoutWalletInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutWalletInput = {
@@ -3007,6 +3062,7 @@ export type OrganizationUpdateWithoutWalletInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutWalletInput = {
@@ -3047,6 +3103,7 @@ export type OrganizationUncheckedUpdateWithoutWalletInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutLedgerAccountsInput = {
@@ -3087,6 +3144,7 @@ export type OrganizationCreateWithoutLedgerAccountsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutLedgerAccountsInput = {
@@ -3127,6 +3185,7 @@ export type OrganizationUncheckedCreateWithoutLedgerAccountsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutLedgerAccountsInput = {
@@ -3183,6 +3242,7 @@ export type OrganizationUpdateWithoutLedgerAccountsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
@@ -3223,6 +3283,7 @@ export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPaymentsInput = {
@@ -3263,6 +3324,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPaymentsInput = {
@@ -3303,6 +3365,7 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPaymentsInput = {
@@ -3359,6 +3422,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
@@ -3399,6 +3463,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutDuesInput = {
@@ -3439,6 +3504,7 @@ export type OrganizationCreateWithoutDuesInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDuesInput = {
@@ -3479,6 +3545,7 @@ export type OrganizationUncheckedCreateWithoutDuesInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDuesInput = {
@@ -3535,6 +3602,7 @@ export type OrganizationUpdateWithoutDuesInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDuesInput = {
@@ -3575,6 +3643,7 @@ export type OrganizationUncheckedUpdateWithoutDuesInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutSettlementsInput = {
@@ -3615,6 +3684,7 @@ export type OrganizationCreateWithoutSettlementsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutSettlementsInput = {
@@ -3655,6 +3725,7 @@ export type OrganizationUncheckedCreateWithoutSettlementsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutSettlementsInput = {
@@ -3711,6 +3782,7 @@ export type OrganizationUpdateWithoutSettlementsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
@@ -3751,6 +3823,7 @@ export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutReceiptsInput = {
@@ -3791,6 +3864,7 @@ export type OrganizationCreateWithoutReceiptsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutReceiptsInput = {
@@ -3831,6 +3905,7 @@ export type OrganizationUncheckedCreateWithoutReceiptsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutReceiptsInput = {
@@ -3887,6 +3962,7 @@ export type OrganizationUpdateWithoutReceiptsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
@@ -3927,6 +4003,7 @@ export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutAnnouncementsInput = {
@@ -3967,6 +4044,7 @@ export type OrganizationCreateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutAnnouncementsInput = {
@@ -4007,6 +4085,7 @@ export type OrganizationUncheckedCreateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutAnnouncementsInput = {
@@ -4063,6 +4142,7 @@ export type OrganizationUpdateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
@@ -4103,6 +4183,7 @@ export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
@@ -4143,6 +4224,7 @@ export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFeatureFlagTargetsInput = {
@@ -4183,6 +4265,7 @@ export type OrganizationUncheckedCreateWithoutFeatureFlagTargetsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFeatureFlagTargetsInput = {
@@ -4239,6 +4322,7 @@ export type OrganizationUpdateWithoutFeatureFlagTargetsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
@@ -4279,6 +4363,7 @@ export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutElectionsInput = {
@@ -4319,6 +4404,7 @@ export type OrganizationCreateWithoutElectionsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutElectionsInput = {
@@ -4359,6 +4445,7 @@ export type OrganizationUncheckedCreateWithoutElectionsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutElectionsInput = {
@@ -4415,6 +4502,7 @@ export type OrganizationUpdateWithoutElectionsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutElectionsInput = {
@@ -4455,6 +4543,7 @@ export type OrganizationUncheckedUpdateWithoutElectionsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutExecutiveTermsInput = {
@@ -4495,6 +4584,7 @@ export type OrganizationCreateWithoutExecutiveTermsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutExecutiveTermsInput = {
@@ -4535,6 +4625,7 @@ export type OrganizationUncheckedCreateWithoutExecutiveTermsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutExecutiveTermsInput = {
@@ -4591,6 +4682,7 @@ export type OrganizationUpdateWithoutExecutiveTermsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
@@ -4631,6 +4723,7 @@ export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutCommitteesInput = {
@@ -4671,6 +4764,7 @@ export type OrganizationCreateWithoutCommitteesInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutCommitteesInput = {
@@ -4711,6 +4805,7 @@ export type OrganizationUncheckedCreateWithoutCommitteesInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutCommitteesInput = {
@@ -4767,6 +4862,7 @@ export type OrganizationUpdateWithoutCommitteesInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
@@ -4807,6 +4903,7 @@ export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutEventsInput = {
@@ -4847,6 +4944,7 @@ export type OrganizationCreateWithoutEventsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutEventsInput = {
@@ -4887,6 +4985,7 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutEventsInput = {
@@ -4943,6 +5042,7 @@ export type OrganizationUpdateWithoutEventsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutEventsInput = {
@@ -4971,6 +5071,187 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   roles?: Prisma.RoleUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutOrganizationNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutOrganizationNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutOrganizationNestedInput
+  elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
+  committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+  settlements?: Prisma.SettlementUncheckedUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutPendingPaymentsInput = {
+  id?: string
+  name: string
+  slug: string
+  description?: string | null
+  type: $Enums.OrganizationType
+  scope: $Enums.OrganizationScope
+  status?: $Enums.OrganizationStatus
+  updatedBy?: string | null
+  activatedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
+  academicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutOrganizationsInput
+  parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
+  children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
+  memberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleCreateNestedManyWithoutOrganizationInput
+  dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutOrganizationInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutOrganizationInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutOrganizationInput
+  elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
+  executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
+  committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutOrganizationInput
+  settlements?: Prisma.SettlementCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
+  files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutPendingPaymentsInput = {
+  id?: string
+  institutionId: string
+  facultyId?: string | null
+  departmentId?: string | null
+  academicLevelId?: string | null
+  parentOrganizationId?: string | null
+  name: string
+  slug: string
+  description?: string | null
+  type: $Enums.OrganizationType
+  scope: $Enums.OrganizationScope
+  status?: $Enums.OrganizationStatus
+  createdBy?: string | null
+  updatedBy?: string | null
+  activatedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.OrganizationUncheckedCreateNestedManyWithoutParentInput
+  memberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutOrganizationInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutOrganizationInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutOrganizationInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutOrganizationInput
+  elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
+  executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
+  committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutOrganizationInput
+  settlements?: Prisma.SettlementUncheckedCreateNestedManyWithoutOrganizationInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutPendingPaymentsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutPendingPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutPendingPaymentsInput>
+}
+
+export type OrganizationUpsertWithoutPendingPaymentsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutPendingPaymentsInput, Prisma.OrganizationUncheckedUpdateWithoutPendingPaymentsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutPendingPaymentsInput, Prisma.OrganizationUncheckedCreateWithoutPendingPaymentsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutPendingPaymentsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutPendingPaymentsInput, Prisma.OrganizationUncheckedUpdateWithoutPendingPaymentsInput>
+}
+
+export type OrganizationUpdateWithoutPendingPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
+  academicLevel?: Prisma.AcademicLevelUpdateOneWithoutOrganizationsNestedInput
+  parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
+  memberships?: Prisma.OrganizationMembershipUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutOrganizationNestedInput
+  dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutOrganizationNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutOrganizationNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutOrganizationNestedInput
+  elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
+  executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
+  committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutOrganizationNestedInput
+  settlements?: Prisma.SettlementUpdateManyWithoutOrganizationNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
+  files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutPendingPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.OrganizationUncheckedUpdateManyWithoutParentNestedInput
+  memberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutOrganizationNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -5023,6 +5304,7 @@ export type OrganizationCreateWithoutFilesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutFilesInput = {
@@ -5063,6 +5345,7 @@ export type OrganizationUncheckedCreateWithoutFilesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutFilesInput = {
@@ -5119,6 +5402,7 @@ export type OrganizationUpdateWithoutFilesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFilesInput = {
@@ -5159,6 +5443,7 @@ export type OrganizationUncheckedUpdateWithoutFilesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyCreatorInput = {
@@ -5221,6 +5506,7 @@ export type OrganizationUpdateWithoutCreatorInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutCreatorInput = {
@@ -5261,6 +5547,7 @@ export type OrganizationUncheckedUpdateWithoutCreatorInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutCreatorInput = {
@@ -5345,6 +5632,7 @@ export type OrganizationUpdateWithoutInstitutionInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutInstitutionInput = {
@@ -5385,6 +5673,7 @@ export type OrganizationUncheckedUpdateWithoutInstitutionInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutInstitutionInput = {
@@ -5469,6 +5758,7 @@ export type OrganizationUpdateWithoutFacultyInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutFacultyInput = {
@@ -5509,6 +5799,7 @@ export type OrganizationUncheckedUpdateWithoutFacultyInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutFacultyInput = {
@@ -5593,6 +5884,7 @@ export type OrganizationUpdateWithoutDepartmentInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
@@ -5633,6 +5925,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutDepartmentInput = {
@@ -5717,6 +6010,7 @@ export type OrganizationUpdateWithoutAcademicLevelInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
@@ -5757,6 +6051,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutAcademicLevelInput = {
@@ -5841,6 +6136,7 @@ export type OrganizationUpdateWithoutParentInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutParentInput = {
@@ -5881,6 +6177,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutParentInput = {
@@ -5928,6 +6225,7 @@ export type OrganizationCountOutputType = {
   admins: number
   receipts: number
   files: number
+  pendingPayments: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5948,6 +6246,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   admins?: boolean | OrganizationCountOutputTypeCountAdminsArgs
   receipts?: boolean | OrganizationCountOutputTypeCountReceiptsArgs
   files?: boolean | OrganizationCountOutputTypeCountFilesArgs
+  pendingPayments?: boolean | OrganizationCountOutputTypeCountPendingPaymentsArgs
 }
 
 /**
@@ -6079,6 +6378,13 @@ export type OrganizationCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.FileWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountPendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PendingPaymentWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -6125,6 +6431,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   admins?: boolean | Prisma.Organization$adminsArgs<ExtArgs>
   receipts?: boolean | Prisma.Organization$receiptsArgs<ExtArgs>
   files?: boolean | Prisma.Organization$filesArgs<ExtArgs>
+  pendingPayments?: boolean | Prisma.Organization$pendingPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -6235,6 +6542,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   admins?: boolean | Prisma.Organization$adminsArgs<ExtArgs>
   receipts?: boolean | Prisma.Organization$receiptsArgs<ExtArgs>
   files?: boolean | Prisma.Organization$filesArgs<ExtArgs>
+  pendingPayments?: boolean | Prisma.Organization$pendingPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6281,6 +6589,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     admins: Prisma.$AdminPayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
     files: Prisma.$FilePayload<ExtArgs>[]
+    pendingPayments: Prisma.$PendingPaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -6721,6 +7030,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   admins<T extends Prisma.Organization$adminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.Organization$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.Organization$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pendingPayments<T extends Prisma.Organization$pendingPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$pendingPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PendingPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7690,6 +8000,30 @@ export type Organization$filesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.FileScalarFieldEnum | Prisma.FileScalarFieldEnum[]
+}
+
+/**
+ * Organization.pendingPayments
+ */
+export type Organization$pendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PendingPayment
+   */
+  select?: Prisma.PendingPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PendingPayment
+   */
+  omit?: Prisma.PendingPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PendingPaymentInclude<ExtArgs> | null
+  where?: Prisma.PendingPaymentWhereInput
+  orderBy?: Prisma.PendingPaymentOrderByWithRelationInput | Prisma.PendingPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PendingPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PendingPaymentScalarFieldEnum | Prisma.PendingPaymentScalarFieldEnum[]
 }
 
 /**

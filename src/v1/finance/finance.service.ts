@@ -1,4 +1,5 @@
 // src/v1/finance/finance.service.ts
+
 import {
   Injectable,
   NotFoundException,
@@ -6,14 +7,18 @@ import {
   ConflictException,
   ForbiddenException,
   Logger,
+  OnModuleInit,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
+import { IdempotencyService } from '../../redis/idempotency.service';
 import { PermissionService } from '../auth/permission.service';
 import { EmailService } from '../../email/email.service';
 import { LedgerService } from './ledger.service';
 import { ReceiptService } from './receipt.service';
 import { EventService, SystemEvents } from '../../events/event.service';
+import { BachsClient } from '../bachs/bachs.client';
+import { ConfigService } from '@nestjs/config';
 import {
   CreateWalletDto,
   CreditWalletDto,
@@ -31,19 +36,58 @@ import { randomBytes } from 'crypto';
 @Injectable()
 export class FinanceService {
   private readonly logger = new Logger(FinanceService.name);
-
-  // 1 NGN = 100 Kobo
   private readonly KOBO_PER_NAIRA = 100;
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
+    private readonly idempotencyService: IdempotencyService,
     private readonly permissionService: PermissionService,
     private readonly emailService: EmailService,
     private readonly ledgerService: LedgerService,
     private readonly receiptService: ReceiptService,
     private readonly eventService: EventService,
+    private readonly bachsClient: BachsClient,
+    private readonly configService: ConfigService,
   ) {}
+
+  async onModuleInit() {
+    // Listen for the PAYMENT_COMPLETED_VIA_BACHS event
+    this.eventService.on(
+      SystemEvents.PAYMENT_COMPLETED_VIA_BACHS,
+      async (payload) => {
+        await this.handlePaymentCompletedViaBachs(payload);
+      },
+    );
+    this.logger.log('FinanceService initialized, listening for payment events');
+  }
+
+  // Handle the payment completed event and generate receipt
+  async handlePaymentCompletedViaBachs(payload: {
+    paymentId: string;
+    userId: string;
+    chargeId: string;
+    checkoutId: string;
+  }) {
+    this.logger.log(
+      `Received PAYMENT_COMPLETED_VIA_BACHS event for payment ${payload.paymentId}`,
+    );
+
+    try {
+      // Generate the receipt
+      await this.receiptService.generateReceiptFromPayment(
+        payload.paymentId,
+        payload.userId,
+      );
+
+      this.logger.log(`Receipt generated for payment ${payload.paymentId}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to generate receipt for payment ${payload.paymentId}: ${error.message}`,
+      );
+      // You might want to log this to a dead letter queue or retry later
+    }
+  }
 
   // ============================================
   // WALLET MANAGEMENT
@@ -563,13 +607,11 @@ export class FinanceService {
       },
     });
 
-    // Get the organization ID from the due with null check
     const dueWithOrg = await this.prisma.due.findUnique({
       where: { id: dueId },
       select: { organizationId: true },
     });
 
-    // Emit dues assigned event - only if dueWithOrg exists
     if (dueWithOrg) {
       for (const assignment of createdAssignments) {
         this.eventService.emitDuesAssigned({
@@ -674,14 +716,161 @@ export class FinanceService {
   }
 
   // ============================================
-  // PAYMENT PROCESSING (WITH CHARGES ADDED ON TOP)
+  // PAYMENT PROCESSING WITH BACHS (External)
   // ============================================
 
-  async processPayment(userId: string, dto: CreatePaymentDto) {
+  async processPayment(
+    userId: string,
+    dto: CreatePaymentDto,
+    idempotencyKey?: string,
+  ) {
     this.logger.log(
-      `Processing payment for user: ${userId} - Amount: ${dto.amount} Kobo`,
+      `Processing payment via Bachs for user: ${userId} - Amount: ${dto.amount} Kobo`,
     );
 
+    if (dto.amount <= 0) {
+      throw new BadRequestException('Amount must be greater than 0');
+    }
+
+    const organization = await this.prisma.organization.findUnique({
+      where: { id: dto.organizationId },
+    });
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    if (dto.dueAssignmentId) {
+      const dueAssignment = await this.prisma.dueAssignment.findUnique({
+        where: { id: dto.dueAssignmentId },
+        include: { due: true },
+      });
+
+      if (!dueAssignment) {
+        throw new NotFoundException('Due assignment not found');
+      }
+
+      if (dueAssignment.isPaid) {
+        throw new BadRequestException('This due has already been paid');
+      }
+    }
+
+    return this.idempotencyService.processWithIdempotency(
+      idempotencyKey,
+      userId,
+      async () => {
+        const user = await this.prisma.user.findUnique({
+          where: { id: userId },
+          include: { profile: true },
+        });
+
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+
+        const pendingPayment = await this.prisma.pendingPayment.create({
+          data: {
+            userId,
+            organizationId: dto.organizationId,
+            amount: dto.amount,
+            paymentMethod: dto.paymentMethod,
+            description: dto.description || 'Payment',
+            dueAssignmentId: dto.dueAssignmentId,
+            reference: idempotencyKey || `pay_${Date.now()}`,
+            status: 'PENDING',
+            metadata: {
+              idempotencyKey,
+            },
+          },
+        });
+
+        const appUrl =
+          this.configService.get<string>('APP_URL') || 'http://localhost:3000';
+        const bachsAmount = this.bachsClient.toBachsAmount(dto.amount);
+
+        const customerName = user.profile
+          ? `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim()
+          : user.username || 'Customer';
+
+        const bachsCustomer = await this.bachsClient.getOrCreateCustomer(
+          user.email,
+          customerName || 'Customer',
+          user.profile?.phone || undefined,
+        );
+
+        const checkoutPayload = {
+          customer: {
+            customer_id: bachsCustomer.id,
+          },
+          pricing: {
+            currency: 'NGN',
+            amount: bachsAmount,
+            price_type: 'fixed' as const,
+          },
+          reference: `checkout_${pendingPayment.id.substring(0, 8)}`,
+          metadata: {
+            pendingPaymentId: pendingPayment.id,
+            userId,
+            organizationId: dto.organizationId,
+            idempotencyKey,
+          },
+          success_url: dto.successUrl || `${appUrl}/api/v1/payments/success`,
+          cancel_url: dto.cancelUrl || `${appUrl}/api/v1/payments/cancel`,
+          expires_in_minutes: 60,
+        };
+
+        const checkoutSession =
+          await this.bachsClient.createCheckoutSession(checkoutPayload);
+
+        await this.prisma.pendingPayment.update({
+          where: { id: pendingPayment.id },
+          data: {
+            bachsCheckoutId: checkoutSession.checkout_id,
+            bachsCustomerId: bachsCustomer.id,
+          },
+        });
+
+        this.logger.log(
+          `Created checkout session ${checkoutSession.checkout_id} for pending payment ${pendingPayment.id}`,
+        );
+
+        return {
+          checkoutId: checkoutSession.checkout_id,
+          checkoutUrl: checkoutSession.checkout_url,
+          pendingPaymentId: pendingPayment.id,
+          message: 'Please complete the payment on the hosted checkout page',
+        };
+      },
+    );
+  }
+
+  // ============================================
+  // INTERNAL PAYMENT PROCESSING (Wallet to Organization)
+  // ============================================
+
+  async processInternalPayment(
+    userId: string,
+    dto: CreatePaymentDto,
+    idempotencyKey?: string,
+  ) {
+    this.logger.log(
+      `Processing internal payment for user: ${userId} - Amount: ${dto.amount} Kobo`,
+    );
+
+    return this.idempotencyService.processWithIdempotency(
+      idempotencyKey,
+      userId,
+      async () => {
+        return this.executeInternalPayment(userId, dto);
+      },
+    );
+  }
+
+  private async executeInternalPayment(
+    userId: string,
+    dto: CreatePaymentDto,
+    idempotencyKey?: string,
+  ) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -779,6 +968,7 @@ export class FinanceService {
             paymentMethod: dto.paymentMethod,
             organizationId: dto.organizationId,
             dueAmount: dto.amount,
+            idempotencyKey: idempotencyKey,
           },
         },
       });
@@ -801,6 +991,7 @@ export class FinanceService {
             platformFee: charges.platformFee,
             vat: charges.vat,
             totalPaid: totalAmount,
+            idempotencyKey: idempotencyKey,
           },
         },
       });
@@ -936,11 +1127,11 @@ export class FinanceService {
             organizationId: dto.organizationId,
             escrowJournalId: escrowJournal.id,
             settlementJournalId: settlementJournal.id,
+            idempotencyKey: idempotencyKey,
           }),
         },
       });
 
-      // EMIT WEBSOCKET EVENTS
       this.eventService.emitPaymentReceived({
         paymentId: payment.id,
         userId: userId,
@@ -950,6 +1141,7 @@ export class FinanceService {
         metadata: {
           charges,
           paymentMethod: dto.paymentMethod,
+          idempotencyKey: idempotencyKey,
         },
       });
 
@@ -998,6 +1190,7 @@ export class FinanceService {
         charges,
         totalPaid: totalAmount,
         balance: walletBalanceAfter,
+        idempotencyKey: idempotencyKey,
       };
     });
   }
@@ -1066,14 +1259,32 @@ export class FinanceService {
   }
 
   // ============================================
-  // MANUAL PAYMENTS (Non-Due Payments)
+  // MANUAL PAYMENTS (Admin only - can use Bachs or Internal)
   // ============================================
 
-  async processManualPayment(userId: string, dto: CreateManualPaymentDto) {
+  async processManualPayment(
+    userId: string,
+    dto: CreateManualPaymentDto,
+    idempotencyKey?: string,
+  ) {
     this.logger.log(
       `Processing manual payment for user: ${userId} - Amount: ${dto.amount} Kobo`,
     );
 
+    return this.idempotencyService.processWithIdempotency(
+      idempotencyKey,
+      userId,
+      async () => {
+        return this.executeManualPayment(userId, dto, idempotencyKey);
+      },
+    );
+  }
+
+  private async executeManualPayment(
+    userId: string,
+    dto: CreateManualPaymentDto,
+    idempotencyKey?: string,
+  ) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { studentProfile: true },
@@ -1126,6 +1337,9 @@ export class FinanceService {
           reference,
           description: dto.description,
           completedAt: new Date(),
+          metadata: {
+            idempotencyKey: idempotencyKey,
+          },
         },
       });
 
@@ -1194,6 +1408,7 @@ export class FinanceService {
             category: dto.category || 'OTHER',
             categoryId: dto.categoryId,
             manualPayment: true,
+            idempotencyKey: idempotencyKey,
           },
         },
       });
@@ -1292,6 +1507,7 @@ export class FinanceService {
             organizationId: dto.organizationId,
             category: dto.category || 'OTHER',
             journalEntryId: journalEntry.id,
+            idempotencyKey: idempotencyKey,
           }),
         },
       });
@@ -1305,6 +1521,7 @@ export class FinanceService {
         metadata: {
           category: dto.category || 'OTHER',
           manualPayment: true,
+          idempotencyKey: idempotencyKey,
         },
       });
 
@@ -1323,13 +1540,103 @@ export class FinanceService {
       this.logger.log(
         `Manual payment processed: ${payment.id} - ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)})`,
       );
+
       return {
         payment,
         transaction,
         journalEntry,
         balance: walletBalanceAfter,
+        idempotencyKey: idempotencyKey,
       };
     });
+  }
+
+  // ============================================
+  // PENDING PAYMENT STATUS
+  // ============================================
+
+  async getPendingPaymentStatus(pendingPaymentId: string, userId: string) {
+    const pendingPayment = await this.prisma.pendingPayment.findUnique({
+      where: { id: pendingPaymentId },
+    });
+
+    if (!pendingPayment) {
+      throw new NotFoundException('Pending payment not found');
+    }
+
+    if (pendingPayment.userId !== userId) {
+      throw new ForbiddenException('You do not have access to this payment');
+    }
+
+    // If still pending, check with Bachs for updated status
+    if (pendingPayment.status === 'PENDING' && pendingPayment.bachsCheckoutId) {
+      try {
+        const checkout = await this.bachsClient.getCheckoutSession(
+          pendingPayment.bachsCheckoutId,
+        );
+        if (checkout.status === 'COMPLETED') {
+          // Checkout is completed but webhook may not have processed yet
+          this.logger.warn(
+            `Checkout ${pendingPayment.bachsCheckoutId} is completed but pending payment ${pendingPaymentId} is still pending`,
+          );
+        } else if (
+          checkout.status === 'EXPIRED' ||
+          checkout.status === 'CANCELLED'
+        ) {
+          await this.prisma.pendingPayment.update({
+            where: { id: pendingPaymentId },
+            data: {
+              status: checkout.status === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED',
+            },
+          });
+          pendingPayment.status =
+            checkout.status === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED';
+        }
+      } catch (error) {
+        this.logger.error(`Failed to check checkout status: ${error.message}`);
+      }
+    }
+
+    return {
+      id: pendingPayment.id,
+      status: pendingPayment.status,
+      amount: pendingPayment.amount,
+      reference: pendingPayment.reference,
+      checkoutId: pendingPayment.bachsCheckoutId,
+      completedAt: pendingPayment.completedAt,
+      createdAt: pendingPayment.createdAt,
+    };
+  }
+
+  async cancelPendingPayment(pendingPaymentId: string, userId: string) {
+    const pendingPayment = await this.prisma.pendingPayment.findUnique({
+      where: { id: pendingPaymentId },
+    });
+
+    if (!pendingPayment) {
+      throw new NotFoundException('Pending payment not found');
+    }
+
+    if (pendingPayment.userId !== userId) {
+      throw new ForbiddenException('You do not have access to this payment');
+    }
+
+    if (pendingPayment.status !== 'PENDING') {
+      throw new BadRequestException('Payment is not pending');
+    }
+
+    await this.prisma.pendingPayment.update({
+      where: { id: pendingPaymentId },
+      data: {
+        status: 'CANCELLED',
+        metadata: {
+          ...((pendingPayment.metadata as any) || {}),
+          cancelledAt: new Date().toISOString(),
+        },
+      },
+    });
+
+    return { message: 'Payment cancelled successfully' };
   }
 
   // ============================================

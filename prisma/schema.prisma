@@ -51,10 +51,11 @@ model User {
   organizationMemberships OrganizationMembership[]
   admins                  Admin[]
 
-  createdEvents  Event[]   @relation("EventCreator")
-  approvedEvents Event[]   @relation("EventApprover")
-  receipts       Receipt[]
-  files          File[]
+  createdEvents   Event[]          @relation("EventCreator")
+  approvedEvents  Event[]          @relation("EventApprover")
+  receipts        Receipt[]
+  files           File[]
+  pendingPayments PendingPayment[]
 
   @@index([email])
   @@index([username])
@@ -476,6 +477,7 @@ model Organization {
   admins             Admin[]
   receipts           Receipt[]
   files              File[]
+  pendingPayments    PendingPayment[]
 
   @@unique([institutionId, slug])
   @@index([institutionId])
@@ -923,6 +925,10 @@ model Payment {
   description String?
   metadata    Json?
 
+  bachsChargeId   String? @unique
+  bachsCheckoutId String?
+  bachsCustomerId String?
+
   journalEntryId String? @unique
 
   paidAt    DateTime?
@@ -982,9 +988,10 @@ model DueAssignment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  due         Due            @relation(fields: [dueId], references: [id], onDelete: Cascade)
-  student     StudentProfile @relation(fields: [studentId], references: [id])
-  duePayments DuePayment[]
+  due             Due              @relation(fields: [dueId], references: [id], onDelete: Cascade)
+  student         StudentProfile   @relation(fields: [studentId], references: [id])
+  duePayments     DuePayment[]
+  pendingPayments PendingPayment[]
 
   @@unique([dueId, studentId])
   @@index([studentId])
@@ -1865,6 +1872,46 @@ model Attendance {
   registration EventRegistration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
 
   @@map("attendances")
+}
+
+// Add this model for pending payments
+model PendingPayment {
+  id              String               @id @default(cuid())
+  userId          String
+  organizationId  String
+  amount          Int // In Kobo
+  paymentMethod   String
+  description     String?
+  dueAssignmentId String?
+  category        String               @default("OTHER")
+  reference       String               @unique
+  status          PendingPaymentStatus @default(PENDING)
+  bachsCheckoutId String?              @unique
+  bachsCustomerId String?
+  bachsChargeId   String?
+  completedAt     DateTime?
+  metadata        Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id])
+  organization  Organization   @relation(fields: [organizationId], references: [id])
+  dueAssignment DueAssignment? @relation(fields: [dueAssignmentId], references: [id])
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([status])
+  @@index([bachsCheckoutId])
+  @@map("pending_payments")
+}
+
+enum PendingPaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  EXPIRED
 }
 
 model File {

@@ -271,6 +271,17 @@ export const ReceiptStatus = {
 export type ReceiptStatus = (typeof ReceiptStatus)[keyof typeof ReceiptStatus]
 
 
+export const PendingPaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type PendingPaymentStatus = (typeof PendingPaymentStatus)[keyof typeof PendingPaymentStatus]
+
+
 export const UserStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',

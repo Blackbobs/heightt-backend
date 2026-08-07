@@ -4,7 +4,6 @@ export * from './debit-wallet.dto';
 export * from './create-due.dto';
 export * from './assign-due.dto';
 export * from './create-payment.dto';
-export * from './create-manual-payment.dto';
 export * from './withdrawal-request.dto';
 export * from './create-savings-goal.dto';
 export * from './savings-deposit.dto';

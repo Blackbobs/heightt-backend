@@ -243,6 +243,7 @@ export type DueAssignmentWhereInput = {
   due?: Prisma.XOR<Prisma.DueScalarRelationFilter, Prisma.DueWhereInput>
   student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
   duePayments?: Prisma.DuePaymentListRelationFilter
+  pendingPayments?: Prisma.PendingPaymentListRelationFilter
 }
 
 export type DueAssignmentOrderByWithRelationInput = {
@@ -257,6 +258,7 @@ export type DueAssignmentOrderByWithRelationInput = {
   due?: Prisma.DueOrderByWithRelationInput
   student?: Prisma.StudentProfileOrderByWithRelationInput
   duePayments?: Prisma.DuePaymentOrderByRelationAggregateInput
+  pendingPayments?: Prisma.PendingPaymentOrderByRelationAggregateInput
 }
 
 export type DueAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -275,6 +277,7 @@ export type DueAssignmentWhereUniqueInput = Prisma.AtLeast<{
   due?: Prisma.XOR<Prisma.DueScalarRelationFilter, Prisma.DueWhereInput>
   student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
   duePayments?: Prisma.DuePaymentListRelationFilter
+  pendingPayments?: Prisma.PendingPaymentListRelationFilter
 }, "id" | "dueId_studentId">
 
 export type DueAssignmentOrderByWithAggregationInput = {
@@ -317,6 +320,7 @@ export type DueAssignmentCreateInput = {
   due: Prisma.DueCreateNestedOneWithoutAssignmentsInput
   student: Prisma.StudentProfileCreateNestedOneWithoutDueAssignmentsInput
   duePayments?: Prisma.DuePaymentCreateNestedManyWithoutAssignmentInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentUncheckedCreateInput = {
@@ -329,6 +333,7 @@ export type DueAssignmentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   duePayments?: Prisma.DuePaymentUncheckedCreateNestedManyWithoutAssignmentInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentUpdateInput = {
@@ -341,6 +346,7 @@ export type DueAssignmentUpdateInput = {
   due?: Prisma.DueUpdateOneRequiredWithoutAssignmentsNestedInput
   student?: Prisma.StudentProfileUpdateOneRequiredWithoutDueAssignmentsNestedInput
   duePayments?: Prisma.DuePaymentUpdateManyWithoutAssignmentNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentUncheckedUpdateInput = {
@@ -353,6 +359,7 @@ export type DueAssignmentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   duePayments?: Prisma.DuePaymentUncheckedUpdateManyWithoutAssignmentNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentCreateManyInput = {
@@ -445,6 +452,11 @@ export type DueAssignmentSumOrderByAggregateInput = {
 export type DueAssignmentScalarRelationFilter = {
   is?: Prisma.DueAssignmentWhereInput
   isNot?: Prisma.DueAssignmentWhereInput
+}
+
+export type DueAssignmentNullableScalarRelationFilter = {
+  is?: Prisma.DueAssignmentWhereInput | null
+  isNot?: Prisma.DueAssignmentWhereInput | null
 }
 
 export type DueAssignmentCreateNestedManyWithoutStudentInput = {
@@ -545,6 +557,22 @@ export type DueAssignmentUpdateOneRequiredWithoutDuePaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DueAssignmentUpdateToOneWithWhereWithoutDuePaymentsInput, Prisma.DueAssignmentUpdateWithoutDuePaymentsInput>, Prisma.DueAssignmentUncheckedUpdateWithoutDuePaymentsInput>
 }
 
+export type DueAssignmentCreateNestedOneWithoutPendingPaymentsInput = {
+  create?: Prisma.XOR<Prisma.DueAssignmentCreateWithoutPendingPaymentsInput, Prisma.DueAssignmentUncheckedCreateWithoutPendingPaymentsInput>
+  connectOrCreate?: Prisma.DueAssignmentCreateOrConnectWithoutPendingPaymentsInput
+  connect?: Prisma.DueAssignmentWhereUniqueInput
+}
+
+export type DueAssignmentUpdateOneWithoutPendingPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.DueAssignmentCreateWithoutPendingPaymentsInput, Prisma.DueAssignmentUncheckedCreateWithoutPendingPaymentsInput>
+  connectOrCreate?: Prisma.DueAssignmentCreateOrConnectWithoutPendingPaymentsInput
+  upsert?: Prisma.DueAssignmentUpsertWithoutPendingPaymentsInput
+  disconnect?: Prisma.DueAssignmentWhereInput | boolean
+  delete?: Prisma.DueAssignmentWhereInput | boolean
+  connect?: Prisma.DueAssignmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DueAssignmentUpdateToOneWithWhereWithoutPendingPaymentsInput, Prisma.DueAssignmentUpdateWithoutPendingPaymentsInput>, Prisma.DueAssignmentUncheckedUpdateWithoutPendingPaymentsInput>
+}
+
 export type DueAssignmentCreateWithoutStudentInput = {
   id?: string
   amount: number
@@ -554,6 +582,7 @@ export type DueAssignmentCreateWithoutStudentInput = {
   updatedAt?: Date | string
   due: Prisma.DueCreateNestedOneWithoutAssignmentsInput
   duePayments?: Prisma.DuePaymentCreateNestedManyWithoutAssignmentInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentUncheckedCreateWithoutStudentInput = {
@@ -565,6 +594,7 @@ export type DueAssignmentUncheckedCreateWithoutStudentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   duePayments?: Prisma.DuePaymentUncheckedCreateNestedManyWithoutAssignmentInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentCreateOrConnectWithoutStudentInput = {
@@ -616,6 +646,7 @@ export type DueAssignmentCreateWithoutDueInput = {
   updatedAt?: Date | string
   student: Prisma.StudentProfileCreateNestedOneWithoutDueAssignmentsInput
   duePayments?: Prisma.DuePaymentCreateNestedManyWithoutAssignmentInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentUncheckedCreateWithoutDueInput = {
@@ -627,6 +658,7 @@ export type DueAssignmentUncheckedCreateWithoutDueInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   duePayments?: Prisma.DuePaymentUncheckedCreateNestedManyWithoutAssignmentInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentCreateOrConnectWithoutDueInput = {
@@ -664,6 +696,7 @@ export type DueAssignmentCreateWithoutDuePaymentsInput = {
   updatedAt?: Date | string
   due: Prisma.DueCreateNestedOneWithoutAssignmentsInput
   student: Prisma.StudentProfileCreateNestedOneWithoutDueAssignmentsInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentUncheckedCreateWithoutDuePaymentsInput = {
@@ -675,6 +708,7 @@ export type DueAssignmentUncheckedCreateWithoutDuePaymentsInput = {
   paidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutDueAssignmentInput
 }
 
 export type DueAssignmentCreateOrConnectWithoutDuePaymentsInput = {
@@ -702,6 +736,7 @@ export type DueAssignmentUpdateWithoutDuePaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   due?: Prisma.DueUpdateOneRequiredWithoutAssignmentsNestedInput
   student?: Prisma.StudentProfileUpdateOneRequiredWithoutDueAssignmentsNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentUncheckedUpdateWithoutDuePaymentsInput = {
@@ -713,6 +748,71 @@ export type DueAssignmentUncheckedUpdateWithoutDuePaymentsInput = {
   paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutDueAssignmentNestedInput
+}
+
+export type DueAssignmentCreateWithoutPendingPaymentsInput = {
+  id?: string
+  amount: number
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  due: Prisma.DueCreateNestedOneWithoutAssignmentsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutDueAssignmentsInput
+  duePayments?: Prisma.DuePaymentCreateNestedManyWithoutAssignmentInput
+}
+
+export type DueAssignmentUncheckedCreateWithoutPendingPaymentsInput = {
+  id?: string
+  dueId: string
+  studentId: string
+  amount: number
+  isPaid?: boolean
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  duePayments?: Prisma.DuePaymentUncheckedCreateNestedManyWithoutAssignmentInput
+}
+
+export type DueAssignmentCreateOrConnectWithoutPendingPaymentsInput = {
+  where: Prisma.DueAssignmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DueAssignmentCreateWithoutPendingPaymentsInput, Prisma.DueAssignmentUncheckedCreateWithoutPendingPaymentsInput>
+}
+
+export type DueAssignmentUpsertWithoutPendingPaymentsInput = {
+  update: Prisma.XOR<Prisma.DueAssignmentUpdateWithoutPendingPaymentsInput, Prisma.DueAssignmentUncheckedUpdateWithoutPendingPaymentsInput>
+  create: Prisma.XOR<Prisma.DueAssignmentCreateWithoutPendingPaymentsInput, Prisma.DueAssignmentUncheckedCreateWithoutPendingPaymentsInput>
+  where?: Prisma.DueAssignmentWhereInput
+}
+
+export type DueAssignmentUpdateToOneWithWhereWithoutPendingPaymentsInput = {
+  where?: Prisma.DueAssignmentWhereInput
+  data: Prisma.XOR<Prisma.DueAssignmentUpdateWithoutPendingPaymentsInput, Prisma.DueAssignmentUncheckedUpdateWithoutPendingPaymentsInput>
+}
+
+export type DueAssignmentUpdateWithoutPendingPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  due?: Prisma.DueUpdateOneRequiredWithoutAssignmentsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutDueAssignmentsNestedInput
+  duePayments?: Prisma.DuePaymentUpdateManyWithoutAssignmentNestedInput
+}
+
+export type DueAssignmentUncheckedUpdateWithoutPendingPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  dueId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  duePayments?: Prisma.DuePaymentUncheckedUpdateManyWithoutAssignmentNestedInput
 }
 
 export type DueAssignmentCreateManyStudentInput = {
@@ -734,6 +834,7 @@ export type DueAssignmentUpdateWithoutStudentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   due?: Prisma.DueUpdateOneRequiredWithoutAssignmentsNestedInput
   duePayments?: Prisma.DuePaymentUpdateManyWithoutAssignmentNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentUncheckedUpdateWithoutStudentInput = {
@@ -745,6 +846,7 @@ export type DueAssignmentUncheckedUpdateWithoutStudentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   duePayments?: Prisma.DuePaymentUncheckedUpdateManyWithoutAssignmentNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentUncheckedUpdateManyWithoutStudentInput = {
@@ -776,6 +878,7 @@ export type DueAssignmentUpdateWithoutDueInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentProfileUpdateOneRequiredWithoutDueAssignmentsNestedInput
   duePayments?: Prisma.DuePaymentUpdateManyWithoutAssignmentNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentUncheckedUpdateWithoutDueInput = {
@@ -787,6 +890,7 @@ export type DueAssignmentUncheckedUpdateWithoutDueInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   duePayments?: Prisma.DuePaymentUncheckedUpdateManyWithoutAssignmentNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutDueAssignmentNestedInput
 }
 
 export type DueAssignmentUncheckedUpdateManyWithoutDueInput = {
@@ -806,10 +910,12 @@ export type DueAssignmentUncheckedUpdateManyWithoutDueInput = {
 
 export type DueAssignmentCountOutputType = {
   duePayments: number
+  pendingPayments: number
 }
 
 export type DueAssignmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   duePayments?: boolean | DueAssignmentCountOutputTypeCountDuePaymentsArgs
+  pendingPayments?: boolean | DueAssignmentCountOutputTypeCountPendingPaymentsArgs
 }
 
 /**
@@ -829,6 +935,13 @@ export type DueAssignmentCountOutputTypeCountDuePaymentsArgs<ExtArgs extends run
   where?: Prisma.DuePaymentWhereInput
 }
 
+/**
+ * DueAssignmentCountOutputType without action
+ */
+export type DueAssignmentCountOutputTypeCountPendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PendingPaymentWhereInput
+}
+
 
 export type DueAssignmentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -842,6 +955,7 @@ export type DueAssignmentSelect<ExtArgs extends runtime.Types.Extensions.Interna
   due?: boolean | Prisma.DueDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   duePayments?: boolean | Prisma.DueAssignment$duePaymentsArgs<ExtArgs>
+  pendingPayments?: boolean | Prisma.DueAssignment$pendingPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.DueAssignmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dueAssignment"]>
 
@@ -887,6 +1001,7 @@ export type DueAssignmentInclude<ExtArgs extends runtime.Types.Extensions.Intern
   due?: boolean | Prisma.DueDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   duePayments?: boolean | Prisma.DueAssignment$duePaymentsArgs<ExtArgs>
+  pendingPayments?: boolean | Prisma.DueAssignment$pendingPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.DueAssignmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DueAssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -904,6 +1019,7 @@ export type $DueAssignmentPayload<ExtArgs extends runtime.Types.Extensions.Inter
     due: Prisma.$DuePayload<ExtArgs>
     student: Prisma.$StudentProfilePayload<ExtArgs>
     duePayments: Prisma.$DuePaymentPayload<ExtArgs>[]
+    pendingPayments: Prisma.$PendingPaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1311,6 +1427,7 @@ export interface Prisma__DueAssignmentClient<T, Null = never, ExtArgs extends ru
   due<T extends Prisma.DueDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DueDefaultArgs<ExtArgs>>): Prisma.Prisma__DueClient<runtime.Types.Result.GetResult<Prisma.$DuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   student<T extends Prisma.StudentProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   duePayments<T extends Prisma.DueAssignment$duePaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DueAssignment$duePaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DuePaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pendingPayments<T extends Prisma.DueAssignment$pendingPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DueAssignment$pendingPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PendingPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1770,6 +1887,30 @@ export type DueAssignment$duePaymentsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.DuePaymentScalarFieldEnum | Prisma.DuePaymentScalarFieldEnum[]
+}
+
+/**
+ * DueAssignment.pendingPayments
+ */
+export type DueAssignment$pendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PendingPayment
+   */
+  select?: Prisma.PendingPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PendingPayment
+   */
+  omit?: Prisma.PendingPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PendingPaymentInclude<ExtArgs> | null
+  where?: Prisma.PendingPaymentWhereInput
+  orderBy?: Prisma.PendingPaymentOrderByWithRelationInput | Prisma.PendingPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PendingPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PendingPaymentScalarFieldEnum | Prisma.PendingPaymentScalarFieldEnum[]
 }
 
 /**

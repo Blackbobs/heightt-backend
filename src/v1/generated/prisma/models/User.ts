@@ -260,6 +260,7 @@ export type UserWhereInput = {
   approvedEvents?: Prisma.EventListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   files?: Prisma.FileListRelationFilter
+  pendingPayments?: Prisma.PendingPaymentListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -304,6 +305,7 @@ export type UserOrderByWithRelationInput = {
   approvedEvents?: Prisma.EventOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
   files?: Prisma.FileOrderByRelationAggregateInput
+  pendingPayments?: Prisma.PendingPaymentOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -351,6 +353,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   approvedEvents?: Prisma.EventListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   files?: Prisma.FileListRelationFilter
+  pendingPayments?: Prisma.PendingPaymentListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -429,6 +432,7 @@ export type UserCreateInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -473,6 +477,7 @@ export type UserUncheckedCreateInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -517,6 +522,7 @@ export type UserUpdateInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -561,6 +567,7 @@ export type UserUncheckedUpdateInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1103,6 +1110,20 @@ export type UserUpdateOneRequiredWithoutEventRegistrationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEventRegistrationsInput, Prisma.UserUpdateWithoutEventRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutEventRegistrationsInput>
 }
 
+export type UserCreateNestedOneWithoutPendingPaymentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPendingPaymentsInput, Prisma.UserUncheckedCreateWithoutPendingPaymentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPendingPaymentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPendingPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPendingPaymentsInput, Prisma.UserUncheckedCreateWithoutPendingPaymentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPendingPaymentsInput
+  upsert?: Prisma.UserUpsertWithoutPendingPaymentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPendingPaymentsInput, Prisma.UserUpdateWithoutPendingPaymentsInput>, Prisma.UserUncheckedUpdateWithoutPendingPaymentsInput>
+}
+
 export type UserCreateNestedOneWithoutFilesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutFilesInput, Prisma.UserUncheckedCreateWithoutFilesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutFilesInput
@@ -1160,6 +1181,7 @@ export type UserCreateWithoutSessionsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1203,6 +1225,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1262,6 +1285,7 @@ export type UserUpdateWithoutSessionsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1305,6 +1329,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
@@ -1348,6 +1373,7 @@ export type UserCreateWithoutPasswordResetsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
@@ -1391,6 +1417,7 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -1450,6 +1477,7 @@ export type UserUpdateWithoutPasswordResetsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
@@ -1493,6 +1521,7 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmailVerificationsInput = {
@@ -1536,6 +1565,7 @@ export type UserCreateWithoutEmailVerificationsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmailVerificationsInput = {
@@ -1579,6 +1609,7 @@ export type UserUncheckedCreateWithoutEmailVerificationsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmailVerificationsInput = {
@@ -1638,6 +1669,7 @@ export type UserUpdateWithoutEmailVerificationsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
@@ -1681,6 +1713,7 @@ export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProfileInput = {
@@ -1724,6 +1757,7 @@ export type UserCreateWithoutProfileInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -1767,6 +1801,7 @@ export type UserUncheckedCreateWithoutProfileInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -1826,6 +1861,7 @@ export type UserUpdateWithoutProfileInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -1869,6 +1905,7 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStudentProfileInput = {
@@ -1912,6 +1949,7 @@ export type UserCreateWithoutStudentProfileInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -1955,6 +1993,7 @@ export type UserUncheckedCreateWithoutStudentProfileInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -2014,6 +2053,7 @@ export type UserUpdateWithoutStudentProfileInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -2057,6 +2097,7 @@ export type UserUncheckedUpdateWithoutStudentProfileInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedOrganizationsInput = {
@@ -2100,6 +2141,7 @@ export type UserCreateWithoutCreatedOrganizationsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedOrganizationsInput = {
@@ -2143,6 +2185,7 @@ export type UserUncheckedCreateWithoutCreatedOrganizationsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedOrganizationsInput = {
@@ -2202,6 +2245,7 @@ export type UserUpdateWithoutCreatedOrganizationsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedOrganizationsInput = {
@@ -2245,6 +2289,7 @@ export type UserUncheckedUpdateWithoutCreatedOrganizationsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizationMembershipsInput = {
@@ -2288,6 +2333,7 @@ export type UserCreateWithoutOrganizationMembershipsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationMembershipsInput = {
@@ -2331,6 +2377,7 @@ export type UserUncheckedCreateWithoutOrganizationMembershipsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationMembershipsInput = {
@@ -2390,6 +2437,7 @@ export type UserUpdateWithoutOrganizationMembershipsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationMembershipsInput = {
@@ -2433,6 +2481,7 @@ export type UserUncheckedUpdateWithoutOrganizationMembershipsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAdminsInput = {
@@ -2476,6 +2525,7 @@ export type UserCreateWithoutAdminsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdminsInput = {
@@ -2519,6 +2569,7 @@ export type UserUncheckedCreateWithoutAdminsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdminsInput = {
@@ -2578,6 +2629,7 @@ export type UserUpdateWithoutAdminsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminsInput = {
@@ -2621,6 +2673,7 @@ export type UserUncheckedUpdateWithoutAdminsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWalletInput = {
@@ -2664,6 +2717,7 @@ export type UserCreateWithoutWalletInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWalletInput = {
@@ -2707,6 +2761,7 @@ export type UserUncheckedCreateWithoutWalletInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWalletInput = {
@@ -2766,6 +2821,7 @@ export type UserUpdateWithoutWalletInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWalletInput = {
@@ -2809,6 +2865,7 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -2852,6 +2909,7 @@ export type UserCreateWithoutPaymentsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -2895,6 +2953,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -2954,6 +3013,7 @@ export type UserUpdateWithoutPaymentsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -2997,6 +3057,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWithdrawalsInput = {
@@ -3040,6 +3101,7 @@ export type UserCreateWithoutWithdrawalsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWithdrawalsInput = {
@@ -3083,6 +3145,7 @@ export type UserUncheckedCreateWithoutWithdrawalsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWithdrawalsInput = {
@@ -3142,6 +3205,7 @@ export type UserUpdateWithoutWithdrawalsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWithdrawalsInput = {
@@ -3185,6 +3249,7 @@ export type UserUncheckedUpdateWithoutWithdrawalsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavingsGoalsInput = {
@@ -3228,6 +3293,7 @@ export type UserCreateWithoutSavingsGoalsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavingsGoalsInput = {
@@ -3271,6 +3337,7 @@ export type UserUncheckedCreateWithoutSavingsGoalsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavingsGoalsInput = {
@@ -3330,6 +3397,7 @@ export type UserUpdateWithoutSavingsGoalsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavingsGoalsInput = {
@@ -3373,6 +3441,7 @@ export type UserUncheckedUpdateWithoutSavingsGoalsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReceiptsInput = {
@@ -3416,6 +3485,7 @@ export type UserCreateWithoutReceiptsInput = {
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceiptsInput = {
@@ -3459,6 +3529,7 @@ export type UserUncheckedCreateWithoutReceiptsInput = {
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceiptsInput = {
@@ -3518,6 +3589,7 @@ export type UserUpdateWithoutReceiptsInput = {
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceiptsInput = {
@@ -3561,6 +3633,7 @@ export type UserUncheckedUpdateWithoutReceiptsInput = {
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAnnouncementAuthorInput = {
@@ -3604,6 +3677,7 @@ export type UserCreateWithoutAnnouncementAuthorInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementAuthorInput = {
@@ -3647,6 +3721,7 @@ export type UserUncheckedCreateWithoutAnnouncementAuthorInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementAuthorInput = {
@@ -3706,6 +3781,7 @@ export type UserUpdateWithoutAnnouncementAuthorInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementAuthorInput = {
@@ -3749,6 +3825,7 @@ export type UserUncheckedUpdateWithoutAnnouncementAuthorInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAnnouncementReadsInput = {
@@ -3792,6 +3869,7 @@ export type UserCreateWithoutAnnouncementReadsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementReadsInput = {
@@ -3835,6 +3913,7 @@ export type UserUncheckedCreateWithoutAnnouncementReadsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementReadsInput = {
@@ -3894,6 +3973,7 @@ export type UserUpdateWithoutAnnouncementReadsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementReadsInput = {
@@ -3937,6 +4017,7 @@ export type UserUncheckedUpdateWithoutAnnouncementReadsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -3980,6 +4061,7 @@ export type UserCreateWithoutNotificationsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -4023,6 +4105,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -4082,6 +4165,7 @@ export type UserUpdateWithoutNotificationsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -4125,6 +4209,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
@@ -4168,6 +4253,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
@@ -4211,6 +4297,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -4270,6 +4357,7 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
@@ -4313,6 +4401,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushQueuesInput = {
@@ -4356,6 +4445,7 @@ export type UserCreateWithoutPushQueuesInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushQueuesInput = {
@@ -4399,6 +4489,7 @@ export type UserUncheckedCreateWithoutPushQueuesInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushQueuesInput = {
@@ -4458,6 +4549,7 @@ export type UserUpdateWithoutPushQueuesInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushQueuesInput = {
@@ -4501,6 +4593,7 @@ export type UserUncheckedUpdateWithoutPushQueuesInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeatureFlagTargetsInput = {
@@ -4544,6 +4637,7 @@ export type UserCreateWithoutFeatureFlagTargetsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeatureFlagTargetsInput = {
@@ -4587,6 +4681,7 @@ export type UserUncheckedCreateWithoutFeatureFlagTargetsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeatureFlagTargetsInput = {
@@ -4646,6 +4741,7 @@ export type UserUpdateWithoutFeatureFlagTargetsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeatureFlagTargetsInput = {
@@ -4689,6 +4785,7 @@ export type UserUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOperationalAuditLogsInput = {
@@ -4732,6 +4829,7 @@ export type UserCreateWithoutOperationalAuditLogsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOperationalAuditLogsInput = {
@@ -4775,6 +4873,7 @@ export type UserUncheckedCreateWithoutOperationalAuditLogsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOperationalAuditLogsInput = {
@@ -4834,6 +4933,7 @@ export type UserUpdateWithoutOperationalAuditLogsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOperationalAuditLogsInput = {
@@ -4877,6 +4977,7 @@ export type UserUncheckedUpdateWithoutOperationalAuditLogsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -4920,6 +5021,7 @@ export type UserCreateWithoutAuditLogsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -4963,6 +5065,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -5022,6 +5125,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -5065,6 +5169,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActivityLogsInput = {
@@ -5108,6 +5213,7 @@ export type UserCreateWithoutActivityLogsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActivityLogsInput = {
@@ -5151,6 +5257,7 @@ export type UserUncheckedCreateWithoutActivityLogsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActivityLogsInput = {
@@ -5210,6 +5317,7 @@ export type UserUpdateWithoutActivityLogsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivityLogsInput = {
@@ -5253,6 +5361,7 @@ export type UserUncheckedUpdateWithoutActivityLogsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCandidatesInput = {
@@ -5296,6 +5405,7 @@ export type UserCreateWithoutCandidatesInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCandidatesInput = {
@@ -5339,6 +5449,7 @@ export type UserUncheckedCreateWithoutCandidatesInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCandidatesInput = {
@@ -5398,6 +5509,7 @@ export type UserUpdateWithoutCandidatesInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCandidatesInput = {
@@ -5441,6 +5553,7 @@ export type UserUncheckedUpdateWithoutCandidatesInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVotesInput = {
@@ -5484,6 +5597,7 @@ export type UserCreateWithoutVotesInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVotesInput = {
@@ -5527,6 +5641,7 @@ export type UserUncheckedCreateWithoutVotesInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVotesInput = {
@@ -5586,6 +5701,7 @@ export type UserUpdateWithoutVotesInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVotesInput = {
@@ -5629,6 +5745,7 @@ export type UserUncheckedUpdateWithoutVotesInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExecutiveMembersInput = {
@@ -5672,6 +5789,7 @@ export type UserCreateWithoutExecutiveMembersInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExecutiveMembersInput = {
@@ -5715,6 +5833,7 @@ export type UserUncheckedCreateWithoutExecutiveMembersInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExecutiveMembersInput = {
@@ -5774,6 +5893,7 @@ export type UserUpdateWithoutExecutiveMembersInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExecutiveMembersInput = {
@@ -5817,6 +5937,7 @@ export type UserUncheckedUpdateWithoutExecutiveMembersInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedEventsInput = {
@@ -5860,6 +5981,7 @@ export type UserCreateWithoutCreatedEventsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedEventsInput = {
@@ -5903,6 +6025,7 @@ export type UserUncheckedCreateWithoutCreatedEventsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedEventsInput = {
@@ -5951,6 +6074,7 @@ export type UserCreateWithoutApprovedEventsInput = {
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedEventsInput = {
@@ -5994,6 +6118,7 @@ export type UserUncheckedCreateWithoutApprovedEventsInput = {
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedEventsInput = {
@@ -6053,6 +6178,7 @@ export type UserUpdateWithoutCreatedEventsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedEventsInput = {
@@ -6096,6 +6222,7 @@ export type UserUncheckedUpdateWithoutCreatedEventsInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedEventsInput = {
@@ -6150,6 +6277,7 @@ export type UserUpdateWithoutApprovedEventsInput = {
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedEventsInput = {
@@ -6193,6 +6321,7 @@ export type UserUncheckedUpdateWithoutApprovedEventsInput = {
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTicketPurchasesInput = {
@@ -6236,6 +6365,7 @@ export type UserCreateWithoutTicketPurchasesInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTicketPurchasesInput = {
@@ -6279,6 +6409,7 @@ export type UserUncheckedCreateWithoutTicketPurchasesInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTicketPurchasesInput = {
@@ -6338,6 +6469,7 @@ export type UserUpdateWithoutTicketPurchasesInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketPurchasesInput = {
@@ -6381,6 +6513,7 @@ export type UserUncheckedUpdateWithoutTicketPurchasesInput = {
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventRegistrationsInput = {
@@ -6424,6 +6557,7 @@ export type UserCreateWithoutEventRegistrationsInput = {
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventRegistrationsInput = {
@@ -6467,6 +6601,7 @@ export type UserUncheckedCreateWithoutEventRegistrationsInput = {
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventRegistrationsInput = {
@@ -6526,6 +6661,7 @@ export type UserUpdateWithoutEventRegistrationsInput = {
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
@@ -6551,6 +6687,199 @@ export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
   createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPendingPaymentsInput = {
+  id?: string
+  email: string
+  username: string
+  passwordHash: string
+  emailVerified?: boolean
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPendingPaymentsInput = {
+  id?: string
+  email: string
+  username: string
+  passwordHash: string
+  emailVerified?: boolean
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPendingPaymentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPendingPaymentsInput, Prisma.UserUncheckedCreateWithoutPendingPaymentsInput>
+}
+
+export type UserUpsertWithoutPendingPaymentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPendingPaymentsInput, Prisma.UserUncheckedUpdateWithoutPendingPaymentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPendingPaymentsInput, Prisma.UserUncheckedCreateWithoutPendingPaymentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPendingPaymentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPendingPaymentsInput, Prisma.UserUncheckedUpdateWithoutPendingPaymentsInput>
+}
+
+export type UserUpdateWithoutPendingPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPendingPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
   candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
   ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
@@ -6612,6 +6941,7 @@ export type UserCreateWithoutFilesInput = {
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFilesInput = {
@@ -6655,6 +6985,7 @@ export type UserUncheckedCreateWithoutFilesInput = {
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFilesInput = {
@@ -6714,6 +7045,7 @@ export type UserUpdateWithoutFilesInput = {
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFilesInput = {
@@ -6757,6 +7089,7 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -6792,6 +7125,7 @@ export type UserCountOutputType = {
   approvedEvents: number
   receipts: number
   files: number
+  pendingPayments: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -6822,6 +7156,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   approvedEvents?: boolean | UserCountOutputTypeCountApprovedEventsArgs
   receipts?: boolean | UserCountOutputTypeCountReceiptsArgs
   files?: boolean | UserCountOutputTypeCountFilesArgs
+  pendingPayments?: boolean | UserCountOutputTypeCountPendingPaymentsArgs
 }
 
 /**
@@ -7023,6 +7358,13 @@ export type UserCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.FileWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PendingPaymentWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -7066,6 +7408,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   approvedEvents?: boolean | Prisma.User$approvedEventsArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
   files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  pendingPayments?: boolean | Prisma.User$pendingPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -7143,6 +7486,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   approvedEvents?: boolean | Prisma.User$approvedEventsArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
   files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  pendingPayments?: boolean | Prisma.User$pendingPaymentsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -7181,6 +7525,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     approvedEvents: Prisma.$EventPayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
     files: Prisma.$FilePayload<ExtArgs>[]
+    pendingPayments: Prisma.$PendingPaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -7618,6 +7963,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   approvedEvents<T extends Prisma.User$approvedEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.User$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.User$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pendingPayments<T extends Prisma.User$pendingPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pendingPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PendingPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8753,6 +9099,30 @@ export type User$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.FileScalarFieldEnum | Prisma.FileScalarFieldEnum[]
+}
+
+/**
+ * User.pendingPayments
+ */
+export type User$pendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PendingPayment
+   */
+  select?: Prisma.PendingPaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PendingPayment
+   */
+  omit?: Prisma.PendingPaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PendingPaymentInclude<ExtArgs> | null
+  where?: Prisma.PendingPaymentWhereInput
+  orderBy?: Prisma.PendingPaymentOrderByWithRelationInput | Prisma.PendingPaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PendingPaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PendingPaymentScalarFieldEnum | Prisma.PendingPaymentScalarFieldEnum[]
 }
 
 /**

@@ -1,4 +1,5 @@
 // src/v1/finance/finance.controller.ts
+
 import {
   Controller,
   Get,
@@ -16,6 +17,8 @@ import {
   Logger,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
+  Headers,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -25,6 +28,7 @@ import {
   ApiQuery,
   ApiParam,
   ApiBody,
+  ApiHeader,
 } from '@nestjs/swagger';
 import { FinanceService } from './finance.service';
 import { LedgerService } from './ledger.service';
@@ -51,13 +55,14 @@ import {
   ReceiptResponseDto,
   ReceiptListResponseDto,
 } from './dto';
-// Import cache decorators
 import {
   Cache,
   Cacheable,
   CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
+import { IdempotencyService } from '../../redis/idempotency.service';
+import { IdempotencyKey } from '../../common/decorators/idempotency.decorator';
 
 @ApiTags('finance')
 @Controller('finance')
@@ -71,6 +76,7 @@ export class FinanceController {
     private readonly receiptService: ReceiptService,
     private readonly ledgerService: LedgerService,
     private readonly prisma: PrismaService,
+    private readonly idempotencyService: IdempotencyService,
   ) {}
 
   // ============================================
@@ -98,7 +104,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `wallet:user:${request.user.id}`;
     },
-    ttl: 60, // 1 minute
+    ttl: 60,
     tags: ['finance', 'wallet'],
   })
   @ApiOperation({ summary: 'Get my wallet' })
@@ -119,7 +125,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `wallet:user:admin:${request.params.userId}`;
     },
-    ttl: 60, // 1 minute
+    ttl: 60,
     tags: ['finance', 'wallet', 'admin'],
   })
   @ApiOperation({ summary: 'Get wallet by user ID (Admin only)' })
@@ -141,7 +147,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `wallet:organization:${request.params.organizationId}`;
     },
-    ttl: 60, // 1 minute
+    ttl: 60,
     tags: ['finance', 'wallet', 'organization'],
   })
   @ApiOperation({ summary: 'Get wallet by organization ID (Admin only)' })
@@ -171,7 +177,7 @@ export class FinanceController {
       const { page, limit, type, status, startDate, endDate } = request.query;
       return `transactions:user:${userId}:${page || 1}:${limit || 10}:${type || 'all'}:${status || 'all'}:${startDate || 'all'}:${endDate || 'all'}`;
     },
-    ttl: 30, // 30 seconds - transactions change frequently
+    ttl: 30,
     tags: ['finance', 'transactions'],
   })
   @ApiOperation({ summary: 'Get transaction history' })
@@ -216,7 +222,7 @@ export class FinanceController {
   }
 
   // ============================================
-  // WALLET OPERATIONS (ADMIN) - NO CACHE (Write operations)
+  // WALLET OPERATIONS (ADMIN)
   // ============================================
 
   @Post('wallet/credit')
@@ -295,7 +301,7 @@ export class FinanceController {
       const { organizationId, page, limit } = request.query;
       return `dues:${organizationId || 'all'}:${page || 1}:${limit || 10}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'dues'],
   })
   @ApiOperation({ summary: 'Get dues' })
@@ -329,7 +335,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `dues:student:${request.user.id}`;
     },
-    ttl: 120, // 2 minutes
+    ttl: 120,
     tags: ['finance', 'dues', 'student'],
   })
   @ApiOperation({ summary: 'Get my dues' })
@@ -349,25 +355,88 @@ export class FinanceController {
   }
 
   // ============================================
-  // PAYMENT ENDPOINTS - NO CACHE (Write operations)
+  // PAYMENT ENDPOINTS (External - Bachs)
   // ============================================
 
   @Post('payments')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
-  @ApiOperation({ summary: 'Make payment' })
+  @ApiOperation({
+    summary: 'Make payment via Bachs',
+    description:
+      'Initiates a payment using Bachs checkout. Idempotency key should be passed in the header.',
+  })
+  @ApiHeader({
+    name: 'Idempotency-Key',
+    description: 'Unique key to prevent duplicate payment processing',
+    required: false,
+    example: 'payment_1234567890_abc',
+  })
   @ApiBody({ type: CreatePaymentDto })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Payment processed',
+    description: 'Payment initiated - returns checkout URL',
   })
-  async makePayment(@Request() req: any, @Body() dto: CreatePaymentDto) {
+  async makePayment(
+    @Request() req: any,
+    @Body() dto: CreatePaymentDto,
+    @IdempotencyKey() idempotencyKey?: string,
+  ) {
     this.logger.log('Make payment endpoint called');
-    return this.financeService.processPayment(req.user.id, dto);
+    return this.financeService.processPayment(req.user.id, dto, idempotencyKey);
   }
+
+  // ============================================
+  // INTERNAL PAYMENT ENDPOINTS
+  // ============================================
+
+  @Post('payments/internal')
+  @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
+  @ApiOperation({
+    summary: 'Make internal payment (wallet to organization)',
+    description:
+      'Processes a payment using internal wallet funds. Idempotency key should be passed in the header.',
+  })
+  @ApiHeader({
+    name: 'Idempotency-Key',
+    description: 'Unique key to prevent duplicate payment processing',
+    required: false,
+    example: 'internal_1234567890_abc',
+  })
+  @ApiBody({ type: CreatePaymentDto })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Internal payment processed',
+  })
+  async makeInternalPayment(
+    @Request() req: any,
+    @Body() dto: CreatePaymentDto,
+    @IdempotencyKey() idempotencyKey?: string,
+  ) {
+    this.logger.log('Make internal payment endpoint called');
+    return this.financeService.processInternalPayment(
+      req.user.id,
+      dto,
+      idempotencyKey,
+    );
+  }
+
+  // ============================================
+  // MANUAL PAYMENT ENDPOINTS
+  // ============================================
 
   @Post('payments/manual')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
-  @ApiOperation({ summary: 'Make a manual payment (non-due payment)' })
+  @ApiOperation({
+    summary: 'Make a manual payment',
+    description:
+      'Processes a manual payment (admin-only operation). Idempotency key should be passed in the header.',
+  })
+  @ApiHeader({
+    name: 'Idempotency-Key',
+    description: 'Unique key to prevent duplicate payment processing',
+    required: false,
+    example: 'manual_1234567890_abc',
+  })
   @ApiBody({ type: CreateManualPaymentDto })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -376,13 +445,102 @@ export class FinanceController {
   async makeManualPayment(
     @Request() req: any,
     @Body() dto: CreateManualPaymentDto,
+    @IdempotencyKey() idempotencyKey?: string,
   ) {
     this.logger.log('Make manual payment endpoint called');
-    return this.financeService.processManualPayment(req.user.id, dto);
+    return this.financeService.processManualPayment(
+      req.user.id,
+      dto,
+      idempotencyKey,
+    );
   }
 
   // ============================================
-  // ORGANIZATION WITHDRAWAL ENDPOINTS - NO CACHE (Write operations)
+  // PENDING PAYMENT ENDPOINTS
+  // ============================================
+
+  @Get('payments/pending/:id')
+  @ApiOperation({
+    summary: 'Get pending payment status',
+    description: 'Check the status of a pending payment',
+  })
+  @ApiParam({ name: 'id', description: 'Pending payment ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Payment status retrieved',
+  })
+  async getPendingPaymentStatus(@Param('id') id: string, @Request() req: any) {
+    return this.financeService.getPendingPaymentStatus(id, req.user.id);
+  }
+
+  @Post('payments/pending/:id/cancel')
+  @ApiOperation({
+    summary: 'Cancel a pending payment',
+    description: 'Cancel a pending payment before it is completed',
+  })
+  @ApiParam({ name: 'id', description: 'Pending payment ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Payment cancelled',
+  })
+  async cancelPendingPayment(@Param('id') id: string, @Request() req: any) {
+    return this.financeService.cancelPendingPayment(id, req.user.id);
+  }
+
+  @Get('payments/success')
+  @ApiOperation({
+    summary: 'Payment success callback',
+    description: 'Handle successful payment redirect from Bachs',
+  })
+  @ApiQuery({ name: 'checkout_id', description: 'Bachs checkout ID' })
+  async paymentSuccess(
+    @Query('checkout_id') checkoutId: string,
+    @Request() req: any,
+  ) {
+    const pendingPayment = await this.prisma.pendingPayment.findFirst({
+      where: { bachsCheckoutId: checkoutId },
+    });
+
+    if (!pendingPayment) {
+      throw new NotFoundException('Payment not found');
+    }
+
+    if (pendingPayment.userId !== req.user.id) {
+      throw new ForbiddenException('You do not have access to this payment');
+    }
+
+    return this.financeService.getPendingPaymentStatus(
+      pendingPayment.id,
+      req.user.id,
+    );
+  }
+
+  @Get('payments/cancel')
+  @ApiOperation({
+    summary: 'Payment cancel callback',
+    description: 'Handle cancelled payment redirect from Bachs',
+  })
+  @ApiQuery({ name: 'checkout_id', description: 'Bachs checkout ID' })
+  async paymentCancel(
+    @Query('checkout_id') checkoutId: string,
+    @Request() req: any,
+  ) {
+    const pendingPayment = await this.prisma.pendingPayment.findFirst({
+      where: { bachsCheckoutId: checkoutId },
+    });
+
+    if (pendingPayment && pendingPayment.userId === req.user.id) {
+      await this.financeService.cancelPendingPayment(
+        pendingPayment.id,
+        req.user.id,
+      );
+    }
+
+    return { message: 'Payment cancelled' };
+  }
+
+  // ============================================
+  // ORGANIZATION WITHDRAWAL ENDPOINTS
   // ============================================
 
   @Post('withdrawals/organization')
@@ -495,7 +653,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `savings:user:${request.user.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'savings'],
   })
   @ApiOperation({ summary: 'Get savings goals' })
@@ -518,7 +676,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `organization:overview:${request.params.organizationId}:user:${request.user.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'organization', 'overview'],
   })
   @ApiOperation({
@@ -555,7 +713,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `organization:dashboard:${request.params.organizationId}:user:${request.user.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'organization', 'dashboard'],
   })
   @ApiOperation({
@@ -615,7 +773,7 @@ export class FinanceController {
       const { page, limit, startDate, endDate, organizationId } = request.query;
       return `receipts:user:${userId}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}:${organizationId || 'all'}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'receipts'],
   })
   @ApiOperation({
@@ -667,7 +825,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `receipt:${request.params.id}`;
     },
-    ttl: 3600, // 1 hour
+    ttl: 3600,
     tags: ['finance', 'receipts'],
   })
   @ApiOperation({
@@ -758,7 +916,7 @@ export class FinanceController {
       const { page, limit } = request.query;
       return `receipts:organization:${organizationId}:user:${userId}:${page || 1}:${limit || 10}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'receipts', 'organization'],
   })
   @ApiOperation({
@@ -803,7 +961,7 @@ export class FinanceController {
       const { type, ownerType, ownerId, isActive } = request.query;
       return `ledger:accounts:${type || 'all'}:${ownerType || 'all'}:${ownerId || 'all'}:${isActive || 'all'}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'ledger'],
   })
   @ApiOperation({ summary: 'Get ledger accounts (Admin only)' })
@@ -848,7 +1006,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `ledger:account:${request.params.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'ledger'],
   })
   @ApiOperation({ summary: 'Get ledger account by ID (Admin only)' })
@@ -867,7 +1025,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `ledger:account:balance:${request.params.id}`;
     },
-    ttl: 60, // 1 minute - balances change frequently
+    ttl: 60,
     tags: ['finance', 'ledger'],
   })
   @ApiOperation({ summary: 'Get ledger account balance (Admin only)' })
@@ -888,7 +1046,7 @@ export class FinanceController {
         request.query;
       return `ledger:journals:${status || 'all'}:${startDate || 'all'}:${endDate || 'all'}:${transactionId || 'all'}:${paymentId || 'all'}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'ledger', 'journal'],
   })
   @ApiOperation({ summary: 'Get journal entries (Admin only)' })
@@ -939,7 +1097,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `ledger:journal:${request.params.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['finance', 'ledger', 'journal'],
   })
   @ApiOperation({ summary: 'Get journal entry by ID (Admin only)' })
@@ -997,7 +1155,7 @@ export class FinanceController {
   }
 
   // ============================================
-  // CHARGES CALCULATION - NO CACHE (Dynamic)
+  // CHARGES CALCULATION
   // ============================================
 
   @Get('charges/calculate')
@@ -1067,7 +1225,7 @@ export class FinanceController {
       const request = context.switchToHttp().getRequest();
       return `reports:overview:${request.query.institutionId || 'all'}`;
     },
-    ttl: 900, // 15 minutes
+    ttl: 900,
     tags: ['finance', 'reports'],
   })
   @ApiOperation({ summary: 'Get financial overview (Admin only)' })
@@ -1083,6 +1241,37 @@ export class FinanceController {
   async getFinancialOverview(@Query('institutionId') institutionId?: string) {
     this.logger.log('Get financial overview endpoint called');
     return this.financeService.getFinancialOverview(institutionId);
+  }
+
+  // ============================================
+  // IDEMPOTENCY KEY GENERATION
+  // ============================================
+
+  @Post('idempotency-key')
+  @ApiOperation({
+    summary: 'Generate idempotency key',
+    description: 'Generates a unique idempotency key for payment requests',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Idempotency key generated',
+    schema: {
+      type: 'object',
+      properties: {
+        idempotencyKey: { type: 'string' },
+        expiresIn: { type: 'number' },
+        message: { type: 'string' },
+      },
+    },
+  })
+  async generateIdempotencyKey(@Request() req: any) {
+    const key = this.idempotencyService.generateKey();
+    return {
+      idempotencyKey: key,
+      expiresIn: 86400,
+      message:
+        'Use this key in the Idempotency-Key header of your payment request',
+    };
   }
 
   // ============================================
