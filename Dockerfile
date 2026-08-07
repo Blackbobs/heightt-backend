@@ -6,11 +6,17 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy package files and .npmrc
-COPY package*.json pnpm-lock.yaml .npmrc ./
+# Copy package files
+COPY package*.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Install dependencies
+# Install dependencies with flags to skip build script prompts
+RUN pnpm install --frozen-lockfile --ignore-scripts
+
+# Run approve-builds automatically (non-interactive)
+RUN pnpm approve-builds --yes || true
+
+# Install again to run build scripts that were skipped
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
@@ -31,9 +37,6 @@ FROM node:22-alpine AS production
 RUN npm install -g pnpm
 
 WORKDIR /app
-
-# Copy .npmrc for production
-COPY .npmrc ./
 
 # Copy built application and dependencies
 COPY --from=builder /app/node_modules ./node_modules
