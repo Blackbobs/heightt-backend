@@ -1,5 +1,5 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Build stage - Use Node.js 22 Alpine
+FROM node:22-alpine AS builder
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -25,7 +25,7 @@ RUN pnpm build
 # ============================================
 # Production stage
 # ============================================
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
 # Install pnpm
 RUN npm install -g pnpm

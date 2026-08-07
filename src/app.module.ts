@@ -22,6 +22,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CacheModule } from './redis/cache.module';
 import { BachsModule } from './v1/bachs/bachs.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { BachsModule } from './v1/bachs/bachs.module';
     EventsModule,
     BachsModule,
     GatewaysModule,
+    CommonModule,
     V1Module,
   ],
   providers: [
