@@ -1,4 +1,3 @@
-// src/v1/users/users.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -18,6 +17,168 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
   ) {}
+
+  // ============================================
+  // USERNAME AVAILABILITY
+  // ============================================
+
+  /**
+   * Check if a username is available
+   */
+  async checkUsernameAvailability(
+    username: string,
+    excludeUserId?: string,
+  ): Promise<{ available: boolean; username: string; message: string }> {
+    // Build the where clause
+    const where: any = {
+      username: {
+        equals: username,
+        mode: 'insensitive',
+      },
+    };
+
+    // Exclude a specific user ID (for updates)
+    if (excludeUserId) {
+      where.id = {
+        not: excludeUserId,
+      };
+    }
+
+    // Check if user exists with this username
+    const existingUser = await this.prisma.user.findFirst({
+      where,
+      select: { id: true, username: true },
+    });
+
+    if (existingUser) {
+      return {
+        available: false,
+        username,
+        message: `Username "${username}" is already taken`,
+      };
+    }
+
+    return {
+      available: true,
+      username,
+      message: `Username "${username}" is available`,
+    };
+  }
+
+  /**
+   * Generate username suggestions
+   */
+  async generateUsernameSuggestions(baseUsername: string): Promise<string[]> {
+    const suggestions: string[] = [];
+    const maxAttempts = 5;
+
+    // Clean up the base username
+    let cleanBase = baseUsername.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+    // If empty after cleaning, use a default
+    if (!cleanBase) {
+      cleanBase = 'user';
+    }
+
+    // Truncate to a reasonable length
+    if (cleanBase.length > 20) {
+      cleanBase = cleanBase.substring(0, 20);
+    }
+
+    // Generate suggestions with different suffixes
+    const suffixOptions = [
+      '', // Original cleaned version
+      '1',
+      '2',
+      '3',
+      '_',
+      '_01',
+      '2024',
+      '2025',
+    ];
+
+    for (const suffix of suffixOptions) {
+      if (suggestions.length >= maxAttempts) break;
+
+      let candidate = cleanBase;
+      if (suffix) {
+        candidate = `${cleanBase}${suffix}`;
+      }
+
+      // Check if the candidate is available
+      const isAvailable = await this.isUsernameAvailable(candidate);
+      if (isAvailable && !suggestions.includes(candidate)) {
+        suggestions.push(candidate);
+      }
+    }
+
+    // If still no suggestions, add some with random numbers
+    for (let i = 0; i < maxAttempts - suggestions.length; i++) {
+      const randomSuffix = Math.floor(Math.random() * 1000);
+      const candidate = `${cleanBase}${randomSuffix}`;
+      const isAvailable = await this.isUsernameAvailable(candidate);
+      if (isAvailable && !suggestions.includes(candidate)) {
+        suggestions.push(candidate);
+      }
+    }
+
+    return suggestions;
+  }
+
+  /**
+   * Check if a username is available (internal helper)
+   */
+  private async isUsernameAvailable(username: string): Promise<boolean> {
+    const existingUser = await this.prisma.user.findUnique({
+      where: { username },
+      select: { id: true },
+    });
+    return !existingUser;
+  }
+
+  // ============================================
+  // EMAIL AVAILABILITY
+  // ============================================
+
+  /**
+   * Check if an email is available
+   */
+  async checkEmailAvailability(
+    email: string,
+    excludeUserId?: string,
+  ): Promise<{ available: boolean; email: string; message: string }> {
+    const where: any = {
+      email: {
+        equals: email,
+        mode: 'insensitive',
+      },
+    };
+
+    if (excludeUserId) {
+      where.id = {
+        not: excludeUserId,
+      };
+    }
+
+    const existingUser = await this.prisma.user.findFirst({
+      where,
+      select: { id: true, email: true },
+    });
+
+    if (existingUser) {
+      return {
+        available: false,
+        email,
+        message: `Email "${email}" is already registered`,
+      };
+    }
+
+    return {
+      available: true,
+      email,
+      message: `Email "${email}" is available`,
+    };
+  }
 
   // ============================================
   // CACHE INVALIDATION HELPERS
@@ -40,10 +201,11 @@ export class UsersService {
         // Get user to invalidate email cache
         const user = await this.prisma.user.findUnique({
           where: { id: userId },
-          select: { email: true },
+          select: { email: true, username: true },
         });
         if (user) {
           await this.cacheService.delete(`user:email:${user.email}`);
+          await this.cacheService.delete(`user:username:${user.username}`);
         }
       }
 
@@ -219,14 +381,17 @@ export class UsersService {
 
     // Check if username is being updated and is unique
     if (dto.username) {
-      const existing = await this.prisma.user.findFirst({
-        where: {
-          username: dto.username.toLowerCase(),
-          NOT: { id: userId },
-        },
-      });
-      if (existing) {
+      const isAvailable = await this.isUsernameAvailable(dto.username);
+      if (!isAvailable) {
         throw new ConflictException('Username is already taken');
+      }
+    }
+
+    // Check if email is being updated and is unique
+    if (dto.email) {
+      const emailCheck = await this.checkEmailAvailability(dto.email, userId);
+      if (!emailCheck.available) {
+        throw new ConflictException('Email is already registered');
       }
     }
 
@@ -236,6 +401,9 @@ export class UsersService {
       const userUpdate: any = {};
       if (dto.username) {
         userUpdate.username = dto.username.toLowerCase();
+      }
+      if (dto.email) {
+        userUpdate.email = dto.email.toLowerCase();
       }
 
       const updated = await tx.user.update({

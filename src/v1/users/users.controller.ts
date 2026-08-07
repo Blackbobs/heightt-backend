@@ -1,4 +1,3 @@
-// src/v1/users/users.controller.ts
 import {
   Controller,
   Get,
@@ -31,6 +30,8 @@ import {
   UserListResponseDto,
   UpdateUserDto,
   UpdateUserStatusDto,
+  UsernameAvailabilityResponseDto,
+  EmailAvailabilityResponseDto,
 } from './dto';
 // Import cache decorators
 import {
@@ -48,6 +49,146 @@ export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 
   constructor(private readonly usersService: UsersService) {}
+
+  // ============================================
+  // USERNAME AVAILABILITY CHECK
+  // ============================================
+
+  @Get('check-username')
+  @ApiOperation({
+    summary: 'Check username availability',
+    description: 'Check if a username is available for registration or update',
+  })
+  @ApiQuery({
+    name: 'username',
+    description: 'Username to check',
+    required: true,
+    example: 'john_doe',
+  })
+  @ApiQuery({
+    name: 'excludeUserId',
+    description: 'Optional user ID to exclude from the check (for updates)',
+    required: false,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Username availability status',
+    type: UsernameAvailabilityResponseDto,
+  })
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { username, excludeUserId } = request.query;
+      return `username:check:${username}:${excludeUserId || 'none'}`;
+    },
+    ttl: 60, // 1 minute cache
+    tags: ['users', 'username'],
+  })
+  async checkUsernameAvailability(
+    @Query('username') username: string,
+    @Query('excludeUserId') excludeUserId?: string,
+  ) {
+    if (!username || username.trim().length === 0) {
+      return {
+        available: false,
+        username,
+        message: 'Username is required',
+        suggestions: [],
+      };
+    }
+
+    // Validate username format
+    const usernameRegex = /^[a-zA-Z0-9_.-]{3,30}$/;
+    if (!usernameRegex.test(username)) {
+      return {
+        available: false,
+        username,
+        message:
+          'Username must be 3-30 characters and can only contain letters, numbers, underscores, dots, and hyphens',
+        suggestions: [],
+      };
+    }
+
+    const result = await this.usersService.checkUsernameAvailability(
+      username,
+      excludeUserId,
+    );
+
+    // Generate suggestions if username is taken and no excludeUserId (for new registrations)
+    let suggestions: string[] = [];
+    if (!result.available && !excludeUserId) {
+      suggestions =
+        await this.usersService.generateUsernameSuggestions(username);
+    }
+
+    return {
+      ...result,
+      suggestions,
+    };
+  }
+
+  // ============================================
+  // EMAIL AVAILABILITY CHECK
+  // ============================================
+
+  @Get('check-email')
+  @ApiOperation({
+    summary: 'Check email availability',
+    description: 'Check if an email is available for registration or update',
+  })
+  @ApiQuery({
+    name: 'email',
+    description: 'Email to check',
+    required: true,
+    example: 'user@example.com',
+  })
+  @ApiQuery({
+    name: 'excludeUserId',
+    description: 'Optional user ID to exclude from the check (for updates)',
+    required: false,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Email availability status',
+    type: EmailAvailabilityResponseDto,
+  })
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { email, excludeUserId } = request.query;
+      return `email:check:${email}:${excludeUserId || 'none'}`;
+    },
+    ttl: 60,
+    tags: ['users', 'email'],
+  })
+  async checkEmailAvailability(
+    @Query('email') email: string,
+    @Query('excludeUserId') excludeUserId?: string,
+  ) {
+    if (!email || email.trim().length === 0) {
+      return {
+        available: false,
+        email,
+        message: 'Email is required',
+      };
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return {
+        available: false,
+        email,
+        message: 'Invalid email format',
+      };
+    }
+
+    return this.usersService.checkEmailAvailability(email, excludeUserId);
+  }
+
+  // ============================================
+  // EXISTING USER ENDPOINTS
+  // ============================================
 
   @Get()
   @UseGuards(AdminGuard)
