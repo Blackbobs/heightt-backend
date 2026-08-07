@@ -1,0 +1,12 @@
+{
+  "region": "eu-central-1",
+  "app": {
+    "name": "heightt-backend",
+    "framework": "nestjs",
+    "httpPort": 3000,
+    "build": {
+      "command": "pnpm run build",
+      "outputDirectory": "dist"
+    }
+  }
+}
