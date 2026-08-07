@@ -1,5 +1,5 @@
-# Build stage - Use Node.js 22 Alpine
-FROM node:22-alpine AS builder
+# Build stage - Use Debian slim for better native module compatibility
+FROM node:22-slim AS builder
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -7,15 +7,11 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 # Copy package files
-COPY package*.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Install dependencies with config flags
-RUN pnpm install --frozen-lockfile \
-    --config.confirmModulesPurge=false \
-    --config.enable-pre-post-scripts=true \
-    --config.auto-install-peers=true \
-    --config.ignore-scripts=false
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
@@ -29,7 +25,7 @@ RUN pnpm build
 # ============================================
 # Production stage
 # ============================================
-FROM node:22-alpine AS production
+FROM node:22-slim AS production
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -37,23 +33,13 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 # Copy built application and dependencies
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
-
-# Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile \
-    --config.confirmModulesPurge=false \
-    --config.enable-pre-post-scripts=true \
-    --config.auto-install-peers=true \
-    --config.ignore-scripts=false
+COPY --from=builder /app/dist ./dist
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
+RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 USER nodejs
 
 # Expose port
