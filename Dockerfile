@@ -10,14 +10,12 @@ WORKDIR /app
 COPY package*.json pnpm-lock.yaml ./
 COPY prisma ./prisma/
 
-# Install dependencies with flags to skip build script prompts
-RUN pnpm install --frozen-lockfile --ignore-scripts
-
-# Run approve-builds automatically (non-interactive)
-RUN pnpm approve-builds --yes || true
-
-# Install again to run build scripts that were skipped
-RUN pnpm install --frozen-lockfile
+# Install dependencies with config flags
+RUN pnpm install --frozen-lockfile \
+    --config.confirmModulesPurge=false \
+    --config.enable-pre-post-scripts=true \
+    --config.auto-install-peers=true \
+    --config.ignore-scripts=false
 
 # Copy source code
 COPY . .
@@ -46,7 +44,11 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 
 # Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --frozen-lockfile \
+    --config.confirmModulesPurge=false \
+    --config.enable-pre-post-scripts=true \
+    --config.auto-install-peers=true \
+    --config.ignore-scripts=false
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
