@@ -6,8 +6,8 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json pnpm-lock.yaml ./
+# Copy package files and .npmrc
+COPY package*.json pnpm-lock.yaml .npmrc ./
 COPY prisma ./prisma/
 
 # Install dependencies
@@ -31,6 +31,9 @@ FROM node:22-alpine AS production
 RUN npm install -g pnpm
 
 WORKDIR /app
+
+# Copy .npmrc for production
+COPY .npmrc ./
 
 # Copy built application and dependencies
 COPY --from=builder /app/node_modules ./node_modules
