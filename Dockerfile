@@ -6,8 +6,8 @@ RUN npm install -g pnpm
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy package files and .pnpmrc
+COPY package.json pnpm-lock.yaml .pnpmrc ./
 COPY prisma ./prisma/
 
 # Install dependencies
@@ -31,6 +31,9 @@ FROM node:22-slim AS production
 RUN npm install -g pnpm
 
 WORKDIR /app
+
+# Copy .pnpmrc for production
+COPY .pnpmrc ./
 
 # Copy built application and dependencies
 COPY --from=builder /app/package.json ./

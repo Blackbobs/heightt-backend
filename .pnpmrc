@@ -1,0 +1,10 @@
+# Allow specific packages to run build scripts
+only-built-dependencies[0]=@prisma/engines
+only-built-dependencies[1]=prisma
+only-built-dependencies[2]=argon2
+only-built-dependencies[3]=msgpackr-extract
+only-built-dependencies[4]=unrs-resolver
+only-built-dependencies[5]=@scarf/scarf
+
+# Set package manager version
+package-manager-strict=false
