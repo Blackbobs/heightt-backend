@@ -2,144 +2,59 @@
 version: '3.8'
 
 services:
-  # ============================================
-  # PostgreSQL Database
-  # ============================================
   postgres:
     image: postgres:15-alpine
     container_name: heightt-postgres
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-heightt_db}
-      POSTGRES_INITDB_ARGS: "-A scram-sha-256"
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: heightt_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - heightt-network
-    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
 
-  # ============================================
-  # Redis Cache
-  # ============================================
   redis:
     image: redis:7-alpine
     container_name: heightt-redis
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis_data:/data
-    networks:
-      - heightt-network
-    restart: unless-stopped
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-        reservations:
-          memory: 128M
 
-  # ============================================
-  # Application API
-  # ============================================
   api:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
     container_name: heightt-api
     environment:
       NODE_ENV: production
       PORT: 3000
-      DATABASE_URL: postgresql://postgres:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-heightt_db}
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/heightt_db?schema=public
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
-      PAYSTACK_SECRET_KEY: ${PAYSTACK_SECRET_KEY}
-      PAYSTACK_PUBLIC_KEY: ${PAYSTACK_PUBLIC_KEY}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:3001}
-      THROTTLE_TTL: 60
-      THROTTLE_LIMIT: 100
-      LOG_LEVEL: info
+      REDIS_PASSWORD: ''
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-secret-key}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-secret-key}
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - heightt-network
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
-  # ============================================
-  # Database Migration (Run once)
-  # ============================================
-  migrate:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: builder
-    container_name: heightt-migrate
-    environment:
-      DATABASE_URL: postgresql://postgres:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-heightt_db}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - heightt-network
-    command: sh -c "pnpm prisma migrate deploy && pnpm prisma generate"
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 5
-
-# ============================================
-# Volumes
-# ============================================
 volumes:
   postgres_data:
-    driver: local
   redis_data:
-    driver: local
-
-# ============================================
-# Networks
-# ============================================
-networks:
-  heightt-network:
-    driver: bridge
