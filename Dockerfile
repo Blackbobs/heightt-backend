@@ -1,12 +1,15 @@
-# Build stage - use non-root user from the start
+# Build stage
 FROM node:22-slim AS builder
 
-# Create non-root user first
+# Create non-root user
 RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 
 WORKDIR /app
 
-# Copy package files and set ownership
+# Create the app directory and set ownership BEFORE switching user
+RUN chown -R nodejs:nodejs /app
+
+# Copy package files with correct ownership
 COPY --chown=nodejs:nodejs package*.json ./
 COPY --chown=nodejs:nodejs prisma ./prisma/
 
@@ -38,7 +41,7 @@ RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 
 WORKDIR /app
 
-# Install OpenSSL
+# Install OpenSSL for Prisma
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Copy all files with correct ownership
@@ -53,6 +56,10 @@ USER nodejs
 
 # Expose port
 EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"
 
 # Start the application
 CMD ["node", "scripts/start.js"]
