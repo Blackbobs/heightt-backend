@@ -9,32 +9,49 @@ export class KeepAliveService {
   private readonly appUrl: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.appUrl = this.configService.get('APP_URL') || 'http://localhost:3000';
+    // Use the Render URL or fallback
+    this.appUrl = this.configService.get('APP_URL') || 
+                  this.configService.get('RENDER_EXTERNAL_URL') ||
+                  'http://localhost:3000';
+    
+    this.logger.log(`Keep-alive service configured with URL: ${this.appUrl}`);
   }
 
-  @Cron('*/10 * * * *') // Every 10 minutes
+  @Cron('*/14 * * * *') // Every 14 minutes
   async keepAlive() {
     try {
-      const response = await axios.get(`${this.appUrl}/health`, {
+      const url = `${this.appUrl}/health`;
+      this.logger.debug(`Pinging: ${url}`);
+      
+      const response = await axios.get(url, {
         timeout: 10000,
+        headers: {
+          'User-Agent': 'KeepAlive/1.0',
+        },
       });
+      
       this.logger.log(
-        `Keep-alive: ${response.status} - ${response.statusText}`,
+        `✅ Keep-alive: ${response.status} - ${response.statusText} at ${new Date().toISOString()}`,
       );
     } catch (error) {
-      this.logger.warn(`Keep-alive failed: ${error.message}`);
+      if (error.response) {
+        this.logger.warn(`Keep-alive failed: ${error.response.status} - ${error.response.statusText}`);
+      } else if (error.request) {
+        this.logger.warn(`Keep-alive failed: No response - ${error.message}`);
+      } else {
+        this.logger.warn(`Keep-alive failed: ${error.message}`);
+      }
     }
   }
 
-  // Also run on application startup
-  @Cron(CronExpression.EVERY_5_SECONDS, {
+  // Run once on startup
+  @Cron(CronExpression.EVERY_30_SECONDS, {
     name: 'initial-keep-alive',
     disabled: false,
   })
   async initialPing() {
-    // Run once to ensure the service is warmed up
     await this.keepAlive();
-    // Stop this cron after first run
+    // Disable this cron after first run
     this.initialPing = async () => {};
   }
 }

@@ -23,6 +23,7 @@ import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CacheModule } from './redis/cache.module';
 import { BachsModule } from './v1/bachs/bachs.module';
 import { CommonModule } from './common/common.module';
+import { HealthModule } from './v1/health/health.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { CommonModule } from './common/common.module';
     GatewaysModule,
     CommonModule,
     V1Module,
+    HealthModule,
   ],
   providers: [
     {

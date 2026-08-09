@@ -15,22 +15,32 @@ export class HealthController {
   @ApiOperation({ summary: 'Get overall health status' })
   @ApiResponse({ status: 200, description: 'Health status' })
   async getHealth() {
-    const [db, cache] = await Promise.all([
-      this.checkDatabase(),
-      this.checkCache(),
-    ]);
+    try {
+      const [db, cache] = await Promise.all([
+        this.checkDatabase(),
+        this.checkCache(),
+      ]);
 
-    const isHealthy = db && cache;
+      const isHealthy = db && cache;
 
-    return {
-      status: isHealthy ? 'healthy' : 'unhealthy',
-      timestamp: new Date().toISOString(),
-      services: {
-        database: db,
-        cache: cache,
-      },
-      uptime: process.uptime(),
-    };
+      return {
+        status: isHealthy ? 'healthy' : 'unhealthy',
+        timestamp: new Date().toISOString(),
+        services: {
+          database: db,
+          cache: cache,
+        },
+        uptime: process.uptime(),
+        environment: process.env.NODE_ENV || 'development',
+      };
+    } catch (error) {
+      return {
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        error: error.message,
+        uptime: process.uptime(),
+      };
+    }
   }
 
   @Get('db')
@@ -51,6 +61,16 @@ export class HealthController {
     const isHealthy = await this.checkCache();
     return {
       status: isHealthy ? 'healthy' : 'unhealthy',
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get('ping')
+  @ApiOperation({ summary: 'Simple ping' })
+  @ApiResponse({ status: 200, description: 'Pong' })
+  async ping() {
+    return {
+      pong: true,
       timestamp: new Date().toISOString(),
     };
   }

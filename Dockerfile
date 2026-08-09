@@ -19,9 +19,6 @@ RUN npx prisma generate
 # Build the application
 RUN npm run build
 
-# Show build output
-RUN echo "=== Build output ===" && ls -la dist/
-
 # Prune dev dependencies
 RUN npm prune --production
 
@@ -49,5 +46,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"
 
-# Start the application - use the correct path with src
-CMD ["node", "dist/src/main.js"]
+# Run migrations and start the app (migrations run every time the container starts)
+CMD ["sh", "-c", "echo 'Running migrations...' && npx prisma migrate deploy && echo 'Starting app...' && node dist/src/main.js"]
