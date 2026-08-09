@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies with npm (use install instead of ci)
+# Install dependencies
 RUN npm install --legacy-peer-deps
 
 # Copy source code
@@ -18,6 +18,9 @@ RUN npx prisma generate
 
 # Build the application
 RUN npm run build
+
+# Show build output
+RUN echo "=== Build output ===" && ls -la dist/ && ls -la dist/src/
 
 # Prune dev dependencies
 RUN npm prune --production
@@ -46,5 +49,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"
 
-# Start the application
-CMD ["node", "dist/main"]
+# Start the application - use the correct path
+CMD ["node", "dist/src/main.js"]
