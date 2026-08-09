@@ -1,26 +1,17 @@
-# Build stage
+# Build stage - run as root (simpler)
 FROM node:22-slim AS builder
-
-# Create non-root user
-RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 
 WORKDIR /app
 
-# Create the app directory and set ownership BEFORE switching user
-RUN chown -R nodejs:nodejs /app
+# Copy package files
+COPY package*.json ./
+COPY prisma ./prisma/
 
-# Copy package files with correct ownership
-COPY --chown=nodejs:nodejs package*.json ./
-COPY --chown=nodejs:nodejs prisma ./prisma/
-
-# Switch to non-root user
-USER nodejs
-
-# Install dependencies
+# Install dependencies (as root)
 RUN npm install --legacy-peer-deps
 
 # Copy source code
-COPY --chown=nodejs:nodejs . .
+COPY . .
 
 # Generate Prisma client
 RUN npx prisma generate
@@ -44,12 +35,15 @@ WORKDIR /app
 # Install OpenSSL for Prisma
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-# Copy all files with correct ownership
-COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nodejs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
-COPY --from=builder --chown=nodejs:nodejs /app/scripts ./scripts
+# Copy all files (as root)
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/scripts ./scripts
+
+# Fix permissions for the non-root user
+RUN chown -R nodejs:nodejs /app
 
 # Switch to non-root user
 USER nodejs
