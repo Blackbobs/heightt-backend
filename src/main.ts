@@ -68,19 +68,19 @@ async function bootstrap() {
   // ============================================
   // 3. CSRF Protection (only in production)
   // ============================================
-  if (isProduction) {
-    app.use(
-      csurf({
-        cookie: {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
-        },
-        ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-      }),
-    );
-    logger.log('🔒 CSRF protection enabled');
-  }
+  // if (isProduction) {
+  //   app.use(
+  //     csurf({
+  //       cookie: {
+  //         httpOnly: true,
+  //         secure: true,
+  //         sameSite: 'strict',
+  //       },
+  //       ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+  //     }),
+  //   );
+  //   logger.log('🔒 CSRF protection enabled');
+  // }
 
   // ============================================
   // 4. Global Validation Pipe (Enhanced)
