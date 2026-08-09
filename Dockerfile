@@ -1,37 +1,31 @@
 # Build stage
 FROM node:22-slim AS builder
 
-# Install pnpm
-RUN npm install -g pnpm
-
 WORKDIR /app
 
-# Copy package files and pnpm config
-COPY package.json pnpm-lock.yaml .pnpmrc ./
+# Copy package files
+COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies with npm
+RUN npm ci --legacy-peer-deps
 
 # Copy source code
 COPY . .
 
 # Generate Prisma client
-RUN pnpm prisma generate
+RUN npx prisma generate
 
 # Build the application
-RUN pnpm build
+RUN npm run build
 
 # Prune dev dependencies
-RUN pnpm prune --prod
+RUN npm prune --production
 
 # ============================================
 # Production stage
 # ============================================
 FROM node:22-slim AS production
-
-# Install pnpm
-RUN npm install -g pnpm
 
 WORKDIR /app
 
@@ -39,9 +33,7 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
-COPY .pnpmrc ./
+COPY --from=builder /app/package*.json ./
 
 # Create non-root user
 RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
