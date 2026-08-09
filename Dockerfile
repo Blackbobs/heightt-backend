@@ -35,6 +35,9 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package*.json ./
 
+# Install OpenSSL for Prisma
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
 # Create non-root user
 RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 USER nodejs
@@ -42,9 +45,5 @@ USER nodejs
 # Expose port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"
-
-# Run migrations and start the app (migrations run every time the container starts)
-CMD ["sh", "-c", "echo 'Running migrations...' && npx prisma migrate deploy && echo 'Starting app...' && node dist/src/main.js"]
+# Start the application
+CMD ["node", "scripts/migrate.js", "&&", "node", "dist/src/main.js"]
