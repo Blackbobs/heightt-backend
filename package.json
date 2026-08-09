@@ -5,10 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-   "type": "module",
   "scripts": {
-    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "build": "nest build",
     "start": "node dist/src/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
