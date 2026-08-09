@@ -19,9 +19,6 @@ RUN npx prisma generate
 # Build the application
 RUN npm run build
 
-# Copy scripts to dist (they won't be compiled, but will be available)
-RUN cp -r scripts/ dist/scripts/
-
 # Prune dev dependencies
 RUN npm prune --production
 
@@ -35,18 +32,24 @@ WORKDIR /app
 # Install OpenSSL for Prisma
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-# Copy all files
+# Copy all files as root
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/scripts ./scripts
+
+# Fix permissions - change ownership to nodejs user
+RUN chown -R nodejs:nodejs /app
 
 # Create non-root user
 RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
+
+# Switch to non-root user
 USER nodejs
 
 # Expose port
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "dist/scripts/start.js"]
+CMD ["node", "scripts/start.js"]
