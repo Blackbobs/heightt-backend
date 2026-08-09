@@ -46,4 +46,4 @@ USER nodejs
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "scripts/migrate.js", "&&", "node", "dist/src/main.js"]
+CMD ["node", "dist/src/scripts/migrate.js", "&&", "node", "dist/src/main.js"]
