@@ -1,4 +1,4 @@
-# Build stage - run as root (simpler)
+# Build stage
 FROM node:22-slim AS builder
 
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies (as root)
+# Install dependencies
 RUN npm install --legacy-peer-deps
 
 # Copy source code
@@ -32,17 +32,16 @@ RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 
 WORKDIR /app
 
-# Install OpenSSL for Prisma
+# Install OpenSSL
 RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
-# Copy all files (as root)
+# Copy from builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/scripts ./scripts
 
-# Fix permissions for the non-root user
+# Fix permissions
 RUN chown -R nodejs:nodejs /app
 
 # Switch to non-root user
@@ -51,9 +50,5 @@ USER nodejs
 # Expose port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"
-
-# Start the application
-CMD ["node", "scripts/start.js"]
+# Just start the app - no migrations
+CMD ["node", "dist/src/main.js"]
