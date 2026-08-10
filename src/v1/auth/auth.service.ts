@@ -1,4 +1,3 @@
-// src/v1/auth/auth.service.ts
 import {
   Injectable,
   ConflictException,
@@ -58,7 +57,6 @@ export class AuthService {
     const existingEmail = await this.prisma.user.findUnique({
       where: { email: dto.email.toLowerCase() },
     });
-
     if (existingEmail) {
       throw new ConflictException('User with this email already exists');
     }
@@ -67,7 +65,6 @@ export class AuthService {
     const existingUsername = await this.prisma.user.findUnique({
       where: { username: dto.username.toLowerCase() },
     });
-
     if (existingUsername) {
       throw new ConflictException('Username is already taken');
     }
@@ -85,7 +82,7 @@ export class AuthService {
         },
       });
 
-      // Create initial profile (will be filled during onboarding)
+      // Create initial profile
       await tx.userProfile.create({
         data: {
           userId: newUser.id,
@@ -120,8 +117,23 @@ export class AuthService {
       return newUser;
     });
 
-    // Send verification email
-    await this.emailService.sendVerificationEmail(user.email, user.username);
+    // Get the verification token and send email with link
+    const verification = await this.prisma.emailVerification.findFirst({
+      where: { userId: user.id, verifiedAt: null },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (verification) {
+      const frontendUrl =
+        this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+      const verificationLink = `${frontendUrl}/verify-email?token=${verification.token}`;
+
+      await this.emailService.sendVerificationEmailWithLink(
+        user.email,
+        user.username,
+        verificationLink,
+      );
+    }
 
     // Invalidate user cache
     await this.cacheService.invalidateUserCache(user.id);
@@ -134,6 +146,127 @@ export class AuthService {
       username: user.username,
       message:
         'Registration successful. Please check your email for verification.',
+    };
+  }
+
+  async verifyEmail(token: string) {
+    this.logger.log(`Verifying email with token: ${token.substring(0, 10)}...`);
+
+    // Find the verification record
+    const verification = await this.prisma.emailVerification.findUnique({
+      where: { token },
+      include: { user: true },
+    });
+
+    if (!verification) {
+      throw new BadRequestException('Invalid verification token');
+    }
+
+    // Check if already verified
+    if (verification.verifiedAt) {
+      throw new BadRequestException('Email already verified');
+    }
+
+    // Check if token is expired
+    if (verification.expiresAt < new Date()) {
+      throw new BadRequestException(
+        'Verification token has expired. Please request a new one.',
+      );
+    }
+
+    // Update user and verification record in transaction
+    await this.prisma.$transaction([
+      this.prisma.user.update({
+        where: { id: verification.userId },
+        data: { emailVerified: true },
+      }),
+      this.prisma.emailVerification.update({
+        where: { id: verification.id },
+        data: { verifiedAt: new Date() },
+      }),
+      this.prisma.userProfile.update({
+        where: { userId: verification.userId },
+        data: { verificationStatus: 'VERIFIED', verifiedAt: new Date() },
+      }),
+      this.prisma.auditLog.create({
+        data: {
+          userId: verification.userId,
+          action: 'EMAIL_VERIFIED',
+          entity: 'User',
+          entityId: verification.userId,
+          metadata: { email: verification.email },
+        },
+      }),
+    ]);
+
+    // Send welcome email
+    await this.emailService.sendWelcomeEmail(
+      verification.user.email,
+      verification.user.username,
+    );
+
+    // Invalidate user cache
+    await this.cacheService.invalidateUserCache(verification.userId);
+
+    this.logger.log(
+      `Email verified successfully for user: ${verification.userId}`,
+    );
+
+    return {
+      message: 'Email verified successfully',
+      email: verification.email,
+    };
+  }
+
+  async resendVerificationEmail(email: string) {
+    this.logger.log(`Resending verification email to: ${email}`);
+
+    const user = await this.prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.emailVerified) {
+      throw new BadRequestException('Email already verified');
+    }
+
+    // Delete old verification tokens
+    await this.prisma.emailVerification.deleteMany({
+      where: {
+        userId: user.id,
+        verifiedAt: null,
+      },
+    });
+
+    // Create new verification token
+    const verificationToken = randomBytes(32).toString('hex');
+    await this.prisma.emailVerification.create({
+      data: {
+        userId: user.id,
+        email: user.email,
+        token: verificationToken,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+
+    // Send verification email with the new token
+    const frontendUrl =
+      this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+    const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
+
+    await this.emailService.sendVerificationEmailWithLink(
+      user.email,
+      user.username,
+      verificationLink,
+    );
+
+    this.logger.log(`Verification email resent to: ${email}`);
+
+    return {
+      message: 'Verification email sent successfully. Please check your inbox.',
     };
   }
 
@@ -249,23 +382,17 @@ export class AuthService {
 
     this.logger.log(`User logged in successfully: ${user.id}`);
 
-    // Cache user profile with tags for invalidation
+    // Cache user profile
     const userData = {
       id: user.id,
       email: user.email,
       username: user.username,
+      emailVerified: user.emailVerified,
       profile: user.profile,
       hasCompletedOnboarding: user.profile?.onboardingCompleted || false,
     };
-    
+
     await this.cacheService.cacheUserProfile(user.id, userData);
-    // Also cache with tags for bulk invalidation
-    await this.cacheService.setWithTag(
-      `user:auth:${user.id}`,
-      { sessionId: session.id, loggedInAt: new Date().toISOString() },
-      ['auth', `user:${user.id}`],
-      3600, // 1 hour
-    );
 
     return {
       user: {
@@ -286,13 +413,11 @@ export class AuthService {
       throw new UnauthorizedException('Refresh token required');
     }
 
-    // Verify refresh token
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
     if (!payload) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    // Find session
     const session = await this.prisma.session.findFirst({
       where: {
         userId: payload.sub,
@@ -307,7 +432,6 @@ export class AuthService {
       throw new UnauthorizedException('Session not found');
     }
 
-    // Verify refresh token hash
     const isValid = await this.tokenService.verifyRefreshTokenHash(
       refreshToken,
       session.refreshTokenHash,
@@ -317,7 +441,6 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    // Rotate tokens
     const newAccessToken = await this.tokenService.generateAccessToken(
       session.userId,
       session.user.email,
@@ -329,7 +452,6 @@ export class AuthService {
     const newRefreshTokenHash =
       await this.tokenService.hashRefreshToken(newRefreshToken);
 
-    // Update session
     await this.prisma.session.update({
       where: { id: session.id },
       data: {
@@ -338,7 +460,6 @@ export class AuthService {
       },
     });
 
-    // Log refresh
     await this.prisma.auditLog.create({
       data: {
         userId: session.userId,
@@ -349,17 +470,8 @@ export class AuthService {
       },
     });
 
-    // Set new cookies
     this.cookieService.setAccessTokenCookie(response, newAccessToken);
     this.cookieService.setRefreshTokenCookie(response, newRefreshToken);
-
-    // Update session cache
-    await this.cacheService.setWithTag(
-      `user:auth:${session.userId}`,
-      { sessionId: session.id, refreshedAt: new Date().toISOString() },
-      ['auth', `user:${session.userId}`],
-      3600,
-    );
 
     this.logger.log(`Token refreshed for user: ${session.userId}`);
 
@@ -375,7 +487,6 @@ export class AuthService {
 
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
     if (payload) {
-      // Find and revoke session
       const session = await this.prisma.session.findFirst({
         where: {
           userId: payload.sub,
@@ -402,14 +513,12 @@ export class AuthService {
           },
         });
 
-        // Invalidate auth cache
         await this.cacheService.invalidateUserCache(payload.sub);
         await this.cacheService.invalidateByTag(`user:${payload.sub}`);
         await this.cacheService.invalidateByTag('auth');
       }
     }
 
-    // Clear cookies
     this.cookieService.clearAllCookies(response);
 
     this.logger.log(`User logged out successfully`);
@@ -426,7 +535,6 @@ export class AuthService {
 
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
     if (payload) {
-      // Revoke all sessions
       const sessions = await this.prisma.session.updateMany({
         where: {
           userId: payload.sub,
@@ -449,13 +557,11 @@ export class AuthService {
         },
       });
 
-      // Invalidate all auth cache
       await this.cacheService.invalidateUserCache(payload.sub);
       await this.cacheService.invalidateByTag(`user:${payload.sub}`);
       await this.cacheService.invalidateByTag('auth');
     }
 
-    // Clear cookies
     this.cookieService.clearAllCookies(response);
 
     this.logger.log(`User logged out from all devices`);
@@ -463,125 +569,7 @@ export class AuthService {
     return { message: 'Logged out from all devices' };
   }
 
-  async verifyEmail(token: string) {
-    this.logger.log(`Verifying email with token: ${token.substring(0, 10)}...`);
-
-    // Find the verification record
-    const verification = await this.prisma.emailVerification.findUnique({
-      where: { token },
-      include: { user: true },
-    });
-
-    if (!verification) {
-      throw new BadRequestException('Invalid verification token');
-    }
-
-    // Check if already verified
-    if (verification.verifiedAt) {
-      throw new BadRequestException('Email already verified');
-    }
-
-    // Check if token is expired
-    if (verification.expiresAt < new Date()) {
-      throw new BadRequestException(
-        'Verification token has expired. Please request a new one.',
-      );
-    }
-
-    // Update user and verification record in transaction
-    await this.prisma.$transaction([
-      // Mark user as verified
-      this.prisma.user.update({
-        where: { id: verification.userId },
-        data: { emailVerified: true },
-      }),
-      // Mark verification as used
-      this.prisma.emailVerification.update({
-        where: { id: verification.id },
-        data: { verifiedAt: new Date() },
-      }),
-      // Update user profile verification status
-      this.prisma.userProfile.update({
-        where: { userId: verification.userId },
-        data: { verificationStatus: 'VERIFIED', verifiedAt: new Date() },
-      }),
-      // Log the action
-      this.prisma.auditLog.create({
-        data: {
-          userId: verification.userId,
-          action: 'EMAIL_VERIFIED',
-          entity: 'User',
-          entityId: verification.userId,
-          metadata: { email: verification.email },
-        },
-      }),
-    ]);
-
-    // Send welcome email
-    await this.emailService.sendWelcomeEmail(
-      verification.user.email,
-      verification.user.username,
-    );
-
-    // Invalidate user cache
-    await this.cacheService.invalidateUserCache(verification.userId);
-
-    this.logger.log(
-      `Email verified successfully for user: ${verification.userId}`,
-    );
-
-    return {
-      message: 'Email verified successfully',
-      email: verification.email,
-    };
-  }
-
-  async resendVerificationEmail(email: string) {
-    this.logger.log(`Resending verification email to: ${email}`);
-
-    const user = await this.prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-    });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    if (user.emailVerified) {
-      throw new BadRequestException('Email already verified');
-    }
-
-    // Delete old verification tokens
-    await this.prisma.emailVerification.deleteMany({
-      where: {
-        userId: user.id,
-        verifiedAt: null,
-      },
-    });
-
-    // Create new verification token
-    const verificationToken = randomBytes(32).toString('hex');
-    await this.prisma.emailVerification.create({
-      data: {
-        userId: user.id,
-        email: user.email,
-        token: verificationToken,
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-      },
-    });
-
-    // Send verification email
-    await this.emailService.sendVerificationEmail(user.email, user.username);
-
-    this.logger.log(`Verification email resent to: ${email}`);
-
-    return {
-      message: 'Verification email sent successfully. Please check your inbox.',
-    };
-  }
-
   async getCurrentUser(userId: string) {
-    // Check cache first
     const cached = await this.cacheService.getUserProfile(userId);
     if (cached) {
       return cached;
@@ -608,14 +596,7 @@ export class AuthService {
       onboardingStep: user.profile?.onboardingStep || 'PERSONAL_INFO',
     };
 
-    // Cache for 5 minutes with tags
     await this.cacheService.cacheUserProfile(userId, userData);
-    await this.cacheService.setWithTag(
-      `user:profile:${userId}`,
-      userData,
-      ['users', `user:${userId}`],
-      300,
-    );
 
     return userData;
   }
@@ -648,7 +629,6 @@ export class AuthService {
       },
     });
 
-    // Cache for 1 minute (sessions change frequently)
     await this.cacheService.set(cacheKey, sessions, 60);
 
     return sessions;
@@ -685,7 +665,6 @@ export class AuthService {
       },
     });
 
-    // Invalidate session cache
     await this.cacheService.delete(`user:sessions:${userId}`);
     await this.cacheService.invalidateByTag(`user:${userId}`);
 
@@ -693,7 +672,6 @@ export class AuthService {
   }
 
   async isAdmin(userId: string): Promise<boolean> {
-    // Cache admin status
     const cacheKey = `user:admin:${userId}`;
     const cached = await this.cacheService.get<boolean>(cacheKey);
     if (cached !== null) {
@@ -706,9 +684,9 @@ export class AuthService {
         status: 'ACTIVE',
       },
     });
-    
+
     const isAdmin = !!admin;
-    await this.cacheService.set(cacheKey, isAdmin, 300); // 5 minutes
+    await this.cacheService.set(cacheKey, isAdmin, 300);
 
     return isAdmin;
   }
@@ -735,25 +713,7 @@ export class AuthService {
     }
   }
 
-  async hasPermission(
-    userId: string,
-    permission: string,
-    resourceId?: string,
-  ): Promise<boolean> {
-    return this.permissionService.checkPermission(
-      userId,
-      permission,
-      resourceId,
-    );
-  }
-
-  async getAdminScope(userId: string): Promise<{
-    adminType?: string;
-    institutionId?: string;
-    facultyId?: string;
-    departmentId?: string;
-    organizationId?: string;
-  } | null> {
+  async getAdminScope(userId: string): Promise<any> {
     const cacheKey = `user:adminScope:${userId}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
@@ -787,73 +747,16 @@ export class AuthService {
     }
   }
 
-  async canAccessResource(
+  async hasPermission(
     userId: string,
-    resourceType:
-      | 'institution'
-      | 'faculty'
-      | 'department'
-      | 'organization'
-      | 'student',
-    resourceId: string,
+    permission: string,
+    resourceId?: string,
   ): Promise<boolean> {
-    const admin = await this.prisma.admin.findFirst({
-      where: {
-        userId,
-        status: 'ACTIVE',
-      },
-    });
-
-    if (!admin) {
-      return false;
-    }
-
-    if (admin.adminType === 'PLATFORM_ADMIN') {
-      return true;
-    }
-
-    switch (resourceType) {
-      case 'institution':
-        return admin.institutionId === resourceId;
-      case 'faculty':
-        return (
-          admin.facultyId === resourceId || admin.institutionId === resourceId
-        );
-      case 'department':
-        return (
-          admin.departmentId === resourceId || admin.facultyId === resourceId
-        );
-      case 'organization':
-        return admin.organizationId === resourceId;
-      case 'student':
-        const student = await this.prisma.studentProfile.findUnique({
-          where: { id: resourceId },
-          select: { institutionId: true, facultyId: true, departmentId: true },
-        });
-        if (!student) return false;
-
-        if (
-          admin.adminType === 'INSTITUTION_ADMIN' &&
-          admin.institutionId === student.institutionId
-        ) {
-          return true;
-        }
-        if (
-          admin.adminType === 'FACULTY_ADMIN' &&
-          admin.facultyId === student.facultyId
-        ) {
-          return true;
-        }
-        if (
-          admin.adminType === 'DEPARTMENT_ADMIN' &&
-          admin.departmentId === student.departmentId
-        ) {
-          return true;
-        }
-        return false;
-      default:
-        return false;
-    }
+    return this.permissionService.checkPermission(
+      userId,
+      permission,
+      resourceId,
+    );
   }
 
   async getUserPermissions(userId: string): Promise<string[]> {
@@ -874,10 +777,6 @@ export class AuthService {
     return this.permissionService.checkPermissions(userId, permissions);
   }
 
-  // ============================================
-  // CACHE INVALIDATION HELPERS
-  // ============================================
-
   async invalidateAuthCache(userId?: string): Promise<void> {
     try {
       if (userId) {
@@ -891,11 +790,13 @@ export class AuthService {
         await this.cacheService.delete(`user:profile:${userId}`);
         await this.cacheService.delete(`auth:user:${userId}`);
       }
-      
+
       await this.cacheService.invalidateByTag('auth');
       await this.cacheService.invalidateByTag('users');
-      
-      this.logger.log(`Auth cache invalidated${userId ? ` for user: ${userId}` : ''}`);
+
+      this.logger.log(
+        `Auth cache invalidated${userId ? ` for user: ${userId}` : ''}`,
+      );
     } catch (error) {
       this.logger.error(`Failed to invalidate auth cache: ${error.message}`);
     }
