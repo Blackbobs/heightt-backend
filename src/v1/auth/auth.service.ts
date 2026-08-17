@@ -40,7 +40,6 @@ export class AuthService {
   async register(dto: RegisterDto, request: any) {
     this.logger.log(`Registration attempt for email: ${dto.email}`);
 
-    // Check rate limit
     const rateLimitKey = `register:${request.ip}`;
     const rateLimit = await this.rateLimitService.checkRateLimit(
       rateLimitKey,
@@ -53,7 +52,6 @@ export class AuthService {
       );
     }
 
-    // Check if email exists
     const existingEmail = await this.prisma.user.findUnique({
       where: { email: dto.email.toLowerCase() },
     });
@@ -61,7 +59,6 @@ export class AuthService {
       throw new ConflictException('User with this email already exists');
     }
 
-    // Check if username exists
     const existingUsername = await this.prisma.user.findUnique({
       where: { username: dto.username.toLowerCase() },
     });
@@ -69,10 +66,8 @@ export class AuthService {
       throw new ConflictException('Username is already taken');
     }
 
-    // Hash password
     const hashedPassword = await PasswordUtil.hash(dto.password);
 
-    // Create user
     const user = await this.prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
@@ -82,7 +77,6 @@ export class AuthService {
         },
       });
 
-      // Create initial profile
       await tx.userProfile.create({
         data: {
           userId: newUser.id,
@@ -93,7 +87,6 @@ export class AuthService {
         },
       });
 
-      // Create email verification token
       const verificationToken = randomBytes(32).toString('hex');
       await tx.emailVerification.create({
         data: {
@@ -117,7 +110,6 @@ export class AuthService {
       return newUser;
     });
 
-    // Get the verification token and send email with link
     const verification = await this.prisma.emailVerification.findFirst({
       where: { userId: user.id, verifiedAt: null },
       orderBy: { createdAt: 'desc' },
@@ -135,7 +127,6 @@ export class AuthService {
       );
     }
 
-    // Invalidate user cache
     await this.cacheService.invalidateUserCache(user.id);
 
     this.logger.log(`User registered successfully: ${user.id}`);
@@ -152,7 +143,6 @@ export class AuthService {
   async verifyEmail(token: string) {
     this.logger.log(`Verifying email with token: ${token.substring(0, 10)}...`);
 
-    // Find the verification record
     const verification = await this.prisma.emailVerification.findUnique({
       where: { token },
       include: { user: true },
@@ -162,19 +152,16 @@ export class AuthService {
       throw new BadRequestException('Invalid verification token');
     }
 
-    // Check if already verified
     if (verification.verifiedAt) {
       throw new BadRequestException('Email already verified');
     }
 
-    // Check if token is expired
     if (verification.expiresAt < new Date()) {
       throw new BadRequestException(
         'Verification token has expired. Please request a new one.',
       );
     }
 
-    // Update user and verification record in transaction
     await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id: verification.userId },
@@ -199,13 +186,11 @@ export class AuthService {
       }),
     ]);
 
-    // Send welcome email
     await this.emailService.sendWelcomeEmail(
       verification.user.email,
       verification.user.username,
     );
 
-    // Invalidate user cache
     await this.cacheService.invalidateUserCache(verification.userId);
 
     this.logger.log(
@@ -233,7 +218,6 @@ export class AuthService {
       throw new BadRequestException('Email already verified');
     }
 
-    // Delete old verification tokens
     await this.prisma.emailVerification.deleteMany({
       where: {
         userId: user.id,
@@ -241,7 +225,6 @@ export class AuthService {
       },
     });
 
-    // Create new verification token
     const verificationToken = randomBytes(32).toString('hex');
     await this.prisma.emailVerification.create({
       data: {
@@ -252,7 +235,6 @@ export class AuthService {
       },
     });
 
-    // Send verification email with the new token
     const frontendUrl =
       this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
     const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
@@ -273,7 +255,6 @@ export class AuthService {
   async login(dto: LoginDto, request: any, response: Response) {
     this.logger.log(`Login attempt for identifier: ${dto.identifier}`);
 
-    // Check rate limit
     const rateLimitKey = `login:${request.ip}`;
     const attempts = await this.rateLimitService.checkLoginAttempts(
       rateLimitKey,
@@ -287,7 +268,6 @@ export class AuthService {
       );
     }
 
-    // Find user by email OR username
     const user = await this.prisma.user.findFirst({
       where: {
         OR: [
@@ -311,7 +291,6 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Verify password
     const isValidPassword = await PasswordUtil.compare(
       dto.password,
       user.passwordHash,
@@ -321,31 +300,18 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Reset login attempts
     await this.rateLimitService.resetLoginAttempts(rateLimitKey);
-
-    // Generate tokens
-    const accessToken = await this.tokenService.generateAccessToken(
-      user.id,
-      user.email,
-    );
-    const refreshToken = await this.tokenService.generateRefreshToken(
-      user.id,
-      user.email,
-    );
-    const refreshTokenHash =
-      await this.tokenService.hashRefreshToken(refreshToken);
 
     // Parse user agent
     const agent = useragent.parse(request.headers['user-agent'] || '');
     const browser = agent.family;
     const os = agent.os.family;
 
-    // Create session
+    // Create session with refreshTokenHash placeholder
     const session = await this.prisma.session.create({
       data: {
         userId: user.id,
-        refreshTokenHash,
+        refreshTokenHash: 'pending', // Placeholder, will be updated after token generation
         browser,
         operatingSystem: os,
         ipAddress: request.ip || request.headers['x-forwarded-for'] || '',
@@ -354,6 +320,28 @@ export class AuthService {
         expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         lastUsedAt: new Date(),
         isActive: true,
+      },
+    });
+
+    // Generate tokens with session ID
+    const accessToken = await this.tokenService.generateAccessToken(
+      user.id,
+      user.email,
+      session.id,
+    );
+    const refreshToken = await this.tokenService.generateRefreshToken(
+      user.id,
+      user.email,
+      session.id,
+    );
+    const refreshTokenHash =
+      await this.tokenService.hashRefreshToken(refreshToken);
+
+    // Update session with actual refresh token hash
+    await this.prisma.session.update({
+      where: { id: session.id },
+      data: {
+        refreshTokenHash,
       },
     });
 
@@ -410,72 +398,160 @@ export class AuthService {
   async refresh(request: any, response: Response) {
     const refreshToken = this.cookieService.getRefreshTokenFromCookie(request);
     if (!refreshToken) {
+      this.logger.warn('Refresh token not found in cookies');
       throw new UnauthorizedException('Refresh token required');
     }
 
-    const payload = await this.tokenService.verifyRefreshToken(refreshToken);
-    if (!payload) {
-      throw new UnauthorizedException('Invalid refresh token');
+    try {
+      const payload = await this.tokenService.verifyRefreshToken(refreshToken);
+      if (!payload) {
+        this.logger.warn('Invalid refresh token payload');
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      // Check if token is expired
+      if (payload.expired) {
+        this.logger.warn('Refresh token expired');
+        throw new UnauthorizedException('Refresh token expired');
+      }
+
+      // Get session ID from payload
+      const sessionId = payload.sessionId;
+      let session: any = null;
+
+      if (sessionId) {
+        // Try to find the specific session by ID
+        session = await this.prisma.session.findFirst({
+          where: {
+            id: sessionId,
+            userId: payload.sub,
+            isActive: true,
+            revokedAt: null,
+            expiresAt: { gt: new Date() },
+          },
+          include: { user: true },
+        });
+      }
+
+      // If session not found by ID or no session ID in payload, find by userId
+      if (!session) {
+        this.logger.warn(
+          `Session not found by ID, searching by userId: ${payload.sub}`,
+        );
+
+        // Find all active sessions for the user
+        const sessions = await this.prisma.session.findMany({
+          where: {
+            userId: payload.sub,
+            isActive: true,
+            revokedAt: null,
+            expiresAt: { gt: new Date() },
+          },
+          include: { user: true },
+          orderBy: { lastUsedAt: 'desc' },
+        });
+
+        if (sessions.length === 0) {
+          this.logger.warn(`No active sessions found for user: ${payload.sub}`);
+          throw new UnauthorizedException('Session not found or expired');
+        }
+
+        // Try to find the matching session by hash
+        let foundSession: any = null;
+        for (const possibleSession of sessions) {
+          const isValid = await this.tokenService.verifyRefreshTokenHash(
+            refreshToken,
+            possibleSession.refreshTokenHash,
+          );
+          if (isValid) {
+            foundSession = possibleSession;
+            this.logger.debug(`Found matching session: ${foundSession.id}`);
+            break;
+          }
+        }
+
+        if (foundSession) {
+          session = foundSession;
+        } else {
+          // If no match, use the most recent session
+          this.logger.warn(
+            `No matching session found, using most recent: ${sessions[0].id}`,
+          );
+          session = sessions[0];
+        }
+      }
+
+      if (!session) {
+        this.logger.warn(`Session not found for user: ${payload.sub}`);
+        throw new UnauthorizedException('Session not found or expired');
+      }
+
+      // Verify the refresh token hash
+      const isValid = await this.tokenService.verifyRefreshTokenHash(
+        refreshToken,
+        session.refreshTokenHash,
+      );
+
+      if (!isValid) {
+        this.logger.warn(`Invalid refresh token hash for user: ${payload.sub}`);
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      // Generate new tokens with session ID
+      const newAccessToken = await this.tokenService.generateAccessToken(
+        session.userId,
+        session.user.email,
+        session.id,
+      );
+      const newRefreshToken = await this.tokenService.generateRefreshToken(
+        session.userId,
+        session.user.email,
+        session.id,
+      );
+      const newRefreshTokenHash =
+        await this.tokenService.hashRefreshToken(newRefreshToken);
+
+      // Update session with new refresh token hash
+      await this.prisma.session.update({
+        where: { id: session.id },
+        data: {
+          refreshTokenHash: newRefreshTokenHash,
+          lastUsedAt: new Date(),
+        },
+      });
+
+      // Log the refresh
+      await this.prisma.auditLog.create({
+        data: {
+          userId: session.userId,
+          action: 'TOKEN_REFRESHED',
+          entity: 'Session',
+          entityId: session.id,
+          metadata: {
+            sessionId: session.id,
+            timestamp: new Date().toISOString(),
+          },
+        },
+      });
+
+      // Set new cookies
+      this.cookieService.setAccessTokenCookie(response, newAccessToken);
+      this.cookieService.setRefreshTokenCookie(response, newRefreshToken);
+
+      this.logger.log(
+        `Token refreshed for user: ${session.userId} (session: ${session.id})`,
+      );
+
+      return {
+        message: 'Tokens refreshed successfully',
+        accessToken: newAccessToken,
+      };
+    } catch (error) {
+      // Clear cookies on error
+      this.cookieService.clearAllCookies(response);
+      this.logger.error(`Refresh failed: ${error.message}`);
+      throw error;
     }
-
-    const session = await this.prisma.session.findFirst({
-      where: {
-        userId: payload.sub,
-        isActive: true,
-        revokedAt: null,
-        expiresAt: { gt: new Date() },
-      },
-      include: { user: true },
-    });
-
-    if (!session) {
-      throw new UnauthorizedException('Session not found');
-    }
-
-    const isValid = await this.tokenService.verifyRefreshTokenHash(
-      refreshToken,
-      session.refreshTokenHash,
-    );
-
-    if (!isValid) {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
-
-    const newAccessToken = await this.tokenService.generateAccessToken(
-      session.userId,
-      session.user.email,
-    );
-    const newRefreshToken = await this.tokenService.generateRefreshToken(
-      session.userId,
-      session.user.email,
-    );
-    const newRefreshTokenHash =
-      await this.tokenService.hashRefreshToken(newRefreshToken);
-
-    await this.prisma.session.update({
-      where: { id: session.id },
-      data: {
-        refreshTokenHash: newRefreshTokenHash,
-        lastUsedAt: new Date(),
-      },
-    });
-
-    await this.prisma.auditLog.create({
-      data: {
-        userId: session.userId,
-        action: 'TOKEN_REFRESHED',
-        entity: 'Session',
-        entityId: session.id,
-        metadata: { sessionId: session.id },
-      },
-    });
-
-    this.cookieService.setAccessTokenCookie(response, newAccessToken);
-    this.cookieService.setRefreshTokenCookie(response, newRefreshToken);
-
-    this.logger.log(`Token refreshed for user: ${session.userId}`);
-
-    return { message: 'Tokens refreshed successfully' };
   }
 
   async logout(request: any, response: Response) {
@@ -487,13 +563,31 @@ export class AuthService {
 
     const payload = await this.tokenService.verifyRefreshToken(refreshToken);
     if (payload) {
-      const session = await this.prisma.session.findFirst({
-        where: {
-          userId: payload.sub,
-          isActive: true,
-          revokedAt: null,
-        },
-      });
+      // Try to find the specific session
+      let session: any = null;
+
+      if (payload.sessionId) {
+        session = await this.prisma.session.findFirst({
+          where: {
+            id: payload.sessionId,
+            userId: payload.sub,
+            isActive: true,
+            revokedAt: null,
+          },
+        });
+      }
+
+      // If not found, find by userId
+      if (!session) {
+        session = await this.prisma.session.findFirst({
+          where: {
+            userId: payload.sub,
+            isActive: true,
+            revokedAt: null,
+          },
+          orderBy: { lastUsedAt: 'desc' },
+        });
+      }
 
       if (session) {
         await this.prisma.session.update({
@@ -501,6 +595,7 @@ export class AuthService {
           data: {
             revokedAt: new Date(),
             isActive: false,
+            revokedReason: 'User logout',
           },
         });
 
@@ -544,6 +639,7 @@ export class AuthService {
         data: {
           revokedAt: new Date(),
           isActive: false,
+          revokedReason: 'Logout all devices',
         },
       });
 
@@ -586,6 +682,26 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
+    const adminScopes = await this.prisma.admin.findMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      include: {
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            type: true,
+          },
+        },
+      },
+      orderBy: {
+        assignedAt: 'asc',
+      },
+    });
+
     const userData = {
       id: user.id,
       email: user.email,
@@ -594,6 +710,25 @@ export class AuthService {
       profile: user.profile,
       hasCompletedOnboarding: user.profile?.onboardingCompleted || false,
       onboardingStep: user.profile?.onboardingStep || 'PERSONAL_INFO',
+      adminScopes: adminScopes.map((admin) => ({
+        id: admin.id,
+        adminType: admin.adminType,
+        institutionId: admin.institutionId || undefined,
+        facultyId: admin.facultyId || undefined,
+        departmentId: admin.departmentId || undefined,
+        organizationId: admin.organizationId || undefined,
+        organization: admin.organization
+          ? {
+              id: admin.organization.id,
+              name: admin.organization.name,
+              slug: admin.organization.slug,
+              type: admin.organization.type,
+            }
+          : null,
+      })),
+      activeOrganizationId:
+        adminScopes.find((admin) => admin.organizationId)?.organizationId ||
+        null,
     };
 
     await this.cacheService.cacheUserProfile(userId, userData);
@@ -653,6 +788,7 @@ export class AuthService {
       data: {
         revokedAt: new Date(),
         isActive: false,
+        revokedReason: 'Revoked by user',
       },
     });
 
@@ -689,6 +825,35 @@ export class AuthService {
     await this.cacheService.set(cacheKey, isAdmin, 300);
 
     return isAdmin;
+  }
+
+  async getAdminScopes(userId: string): Promise<any[]> {
+    const cacheKey = `user:adminScopes:${userId}`;
+    const cached = await this.cacheService.get<any[]>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const admins = await this.prisma.admin.findMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      orderBy: {
+        assignedAt: 'asc',
+      },
+    });
+
+    const scopes = admins.map((admin) => ({
+      adminType: admin.adminType,
+      institutionId: admin.institutionId || undefined,
+      facultyId: admin.facultyId || undefined,
+      departmentId: admin.departmentId || undefined,
+      organizationId: admin.organizationId || undefined,
+    }));
+
+    await this.cacheService.set(cacheKey, scopes, 300);
+    return scopes;
   }
 
   async getAdminType(userId: string): Promise<string | null> {

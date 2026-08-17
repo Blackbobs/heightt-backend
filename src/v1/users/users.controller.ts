@@ -40,6 +40,7 @@ import {
   CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @ApiTags('users')
 @Controller('users')
@@ -48,7 +49,10 @@ import {
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   // ============================================
   // USERNAME AVAILABILITY CHECK
@@ -491,6 +495,42 @@ export class UsersController {
       `Update user status endpoint called: ${id} -> ${dto.status}`,
     );
     return this.usersService.updateStatus(id, dto);
+  }
+
+  @Get('me/organizations')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `user:${request.user.id}:organizations`;
+    },
+    ttl: 120,
+    tags: ['users', 'organizations'],
+  })
+  @ApiOperation({ summary: 'Get user organizations' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Organizations retrieved',
+  })
+  async getUserOrganizations(@Request() req: any) {
+    const memberships = await this.prisma.organizationMembership.findMany({
+      where: {
+        userId: req.user.id,
+        status: { in: ['PENDING', 'ACTIVE'] },
+      },
+      include: {
+        organization: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            description: true,
+            type: true,
+            status: true,
+          },
+        },
+      },
+    });
+    return memberships;
   }
 
   @Delete(':id')

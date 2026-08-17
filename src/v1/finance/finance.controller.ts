@@ -63,10 +63,11 @@ import {
 } from '../../common/decorators/cache.decorator';
 import { IdempotencyService } from '../../redis/idempotency.service';
 import { IdempotencyKey } from '../../common/decorators/idempotency.decorator';
+import { WalletGuard } from '../../common/guards/wallet.guard';
 
 @ApiTags('finance')
 @Controller('finance')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, WalletGuard)
 @ApiBearerAuth('access-token')
 export class FinanceController {
   private readonly logger = new Logger(FinanceController.name);

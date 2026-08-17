@@ -30,6 +30,8 @@ import { HealthModule } from './v1/health/health.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.development', '.env.production'],
+      cache: true,
+      expandVariables: true,
       validationOptions: {
         allowUnknownKeys: true,
       },

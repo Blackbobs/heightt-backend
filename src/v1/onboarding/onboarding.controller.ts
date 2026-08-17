@@ -1,4 +1,5 @@
 // src/v1/onboarding/onboarding.controller.ts
+
 import {
   Controller,
   Post,
@@ -53,6 +54,30 @@ export class OnboardingController {
     return this.onboardingService.updatePersonalInfo(req.user.id, dto);
   }
 
+  @Post('complete')
+  @InvalidateCache(['onboarding', 'user'])
+  @ApiOperation({
+    summary: 'Complete onboarding',
+    description: 'Marks the onboarding process as completed.',
+  })
+  @ApiOkResponse({ description: 'Onboarding completed successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  async completeOnboarding(
+    @Request() req: any,
+    @Body()
+    body: {
+      phone?: string;
+      studentId?: string;
+      institution?: string;
+      faculty?: string;
+      department?: string;
+      organizationId?: string;
+      membershipType?: string;
+    },
+  ) {
+    return this.onboardingService.completeOnboarding(req.user.id, body);
+  }
+
   @Patch('institution')
   @InvalidateCache(['onboarding', 'user'])
   @ApiOperation({
@@ -70,6 +95,36 @@ export class OnboardingController {
     @Body() dto: OnboardingInstitutionDto,
   ) {
     return this.onboardingService.updateInstitutionInfo(req.user.id, dto);
+  }
+
+  @Get('check')
+  @ApiOperation({
+    summary: 'Check if user needs onboarding',
+    description: 'Returns whether the user has completed onboarding.',
+  })
+  @ApiOkResponse({
+    description: 'Onboarding status check result',
+    schema: {
+      type: 'object',
+      properties: {
+        needsOnboarding: { type: 'boolean' },
+        onboardingCompleted: { type: 'boolean' },
+        onboardingStep: { type: 'string' },
+        redirectTo: { type: 'string' },
+      },
+    },
+  })
+  async checkOnboardingStatus(@Request() req: any) {
+    const status = await this.onboardingService.getOnboardingStatus(
+      req.user.id,
+    );
+
+    return {
+      needsOnboarding: !status.onboardingCompleted,
+      onboardingCompleted: status.onboardingCompleted,
+      onboardingStep: status.onboardingStep,
+      redirectTo: status.onboardingCompleted ? '/dashboard' : '/onboarding',
+    };
   }
 
   @Get('status')

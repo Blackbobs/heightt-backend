@@ -287,7 +287,6 @@ async function bootstrap() {
   logger.log(
     `⏱️  Rate Limit: ${configService.get('THROTTLE_LIMIT', 100)} requests per minute`,
   );
-  logger.log('═══════════════════════════════════════════════════════');
 
   // Log security status
   if (isProduction) {

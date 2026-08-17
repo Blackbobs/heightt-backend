@@ -29,6 +29,7 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto } from './dto';
 import { JwtGuard } from '../../common/guards/jwt.guard';
+import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
 import type { Response } from 'express';
 import {
@@ -100,7 +101,16 @@ export class AuthController {
     description:
       'Uses refresh token from HTTP-only cookie to generate new access and refresh tokens.',
   })
-  @ApiOkResponse({ description: 'Tokens refreshed successfully' })
+  @ApiOkResponse({
+    description: 'Tokens refreshed successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+        accessToken: { type: 'string' },
+      },
+    },
+  })
   @ApiUnauthorizedResponse({ description: 'Invalid or expired refresh token' })
   async refresh(
     @Request() req: any,
@@ -280,14 +290,11 @@ export class AuthController {
     },
   })
   async getCsrfToken(@Request() req: any) {
-    // Generate CSRF token
     let token = '';
 
-    // Check if csrf token generation is available
     if (req.csrfToken) {
       token = req.csrfToken();
     } else {
-      // Fallback for development or if csurf is not active
       token = 'test-token-for-development';
     }
 
@@ -299,10 +306,11 @@ export class AuthController {
   }
 
   @Post('cache/invalidate')
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, AdminGuard)
   @Version('1')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('access-token')
+  @RequirePermission('admin:manage')
   @ApiOperation({
     summary: 'Invalidate auth cache (Admin only)',
     description: 'Clear all authentication-related cache.',

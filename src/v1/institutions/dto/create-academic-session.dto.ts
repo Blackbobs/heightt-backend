@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsUUID,
   IsDateString,
   IsBoolean,
   IsOptional,
@@ -27,8 +26,11 @@ export class CreateAcademicSessionDto {
   @IsDateString()
   endDate: string;
 
-  @ApiProperty({ example: 'inst_123', description: 'Institution ID' })
-  @IsUUID()
+  @ApiProperty({
+    example: 'cmswz4nb500020ntv5m0tpq69',
+    description: 'Institution ID (CUID)',
+  })
+  @IsString()
   institutionId: string;
 
   @ApiProperty({

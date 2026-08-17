@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsUUID,
   IsNumber,
   Min,
   Max,
@@ -27,7 +26,10 @@ export class CreateAcademicLevelDto {
   @Min(1)
   order: number;
 
-  @ApiProperty({ example: 'dept_123', description: 'Department ID' })
-  @IsUUID()
+  @ApiProperty({
+    example: 'cmswz4nb500020ntv5m0tpq69',
+    description: 'Department ID (CUID)',
+  })
+  @IsString()
   departmentId: string;
 }

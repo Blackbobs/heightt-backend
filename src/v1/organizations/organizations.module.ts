@@ -4,10 +4,11 @@ import { AuthModule } from '../auth/auth.module';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsController } from './organizations.controller';
 import { CacheService } from '../../redis/cache.service';
+import { FinanceModule } from '../finance/finance.module';
 // import { PrismaService } from '../../prisma/prisma.service';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, FinanceModule],
   controllers: [OrganizationsController],
   providers: [OrganizationsService, CacheService],
   exports: [OrganizationsService],

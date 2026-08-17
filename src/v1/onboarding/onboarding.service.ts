@@ -1,4 +1,5 @@
 // src/v1/onboarding/onboarding.service.ts
+
 import {
   Injectable,
   NotFoundException,
@@ -39,6 +40,220 @@ export class OnboardingService {
         `Failed to invalidate onboarding cache: ${error.message}`,
       );
     }
+  }
+
+  // ============================================
+  // COMPLETE ONBOARDING (with simple text inputs)
+  // ============================================
+
+  async completeOnboarding(
+    userId: string,
+    body: {
+      phone?: string;
+      studentId?: string;
+      institution?: string;
+      faculty?: string;
+      department?: string;
+      organizationId?: string;
+      membershipType?: string;
+    },
+  ) {
+    this.logger.log(`Completing onboarding for user: ${userId}`);
+
+    // Update user profile with onboarding data
+    await this.prisma.userProfile.update({
+      where: { userId },
+      data: {
+        phone: body.phone,
+        onboardingStep: 'COMPLETED',
+        onboardingCompleted: true,
+        onboardingCompletedAt: new Date(),
+      },
+    });
+
+    // If institution info is provided, update student profile
+    if (body.institution && body.faculty && body.department) {
+      // Find or create institution
+      let institution = await this.prisma.institution.findFirst({
+        where: { name: body.institution },
+      });
+
+      if (!institution) {
+        institution = await this.prisma.institution.create({
+          data: {
+            name: body.institution,
+            shortName: body.institution.substring(0, 10),
+            code: body.institution.substring(0, 10).toUpperCase(),
+            status: 'ACTIVE',
+          },
+        });
+      }
+
+      // Find or create faculty
+      let faculty = await this.prisma.faculty.findFirst({
+        where: {
+          name: body.faculty,
+          institutionId: institution.id,
+        },
+      });
+
+      if (!faculty) {
+        faculty = await this.prisma.faculty.create({
+          data: {
+            name: body.faculty,
+            code: body.faculty.substring(0, 10).toUpperCase(),
+            institutionId: institution.id,
+            status: 'ACTIVE',
+          },
+        });
+      }
+
+      // Find or create department
+      let department = await this.prisma.department.findFirst({
+        where: {
+          name: body.department,
+          facultyId: faculty.id,
+        },
+      });
+
+      if (!department) {
+        department = await this.prisma.department.create({
+          data: {
+            name: body.department,
+            code: body.department.substring(0, 10).toUpperCase(),
+            facultyId: faculty.id,
+            promotionType: 'AUTOMATIC',
+            status: 'ACTIVE',
+          },
+        });
+      }
+
+      // Update or create student profile
+      await this.prisma.studentProfile.upsert({
+        where: { userId },
+        update: {
+          institutionId: institution.id,
+          facultyId: faculty.id,
+          departmentId: department.id,
+          onboardingStep: 'COMPLETED',
+          onboardingCompleted: true,
+          onboardingCompletedAt: new Date(),
+        },
+        create: {
+          userId,
+          institutionId: institution.id,
+          facultyId: faculty.id,
+          departmentId: department.id,
+          matricNumber: body.studentId || '',
+          onboardingStep: 'COMPLETED',
+          onboardingCompleted: true,
+          onboardingCompletedAt: new Date(),
+        },
+      });
+      // Auto-join matching institutional organizations
+      await this.autoJoinInstitutionalOrganizations(
+        userId,
+        institution.id,
+        faculty.id,
+        department.id,
+      );
+    }
+
+    // If explicit organization is provided, directly join
+    if (body.organizationId) {
+      // Check if organization exists and is active
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: body.organizationId },
+      });
+
+      if (!organization) {
+        throw new NotFoundException('Organization not found');
+      }
+
+      if (organization.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          'Organization is not active and cannot accept new members',
+        );
+      }
+
+      // Check if user is already a member
+      const existingMembership = await this.prisma.organizationMembership.findUnique({
+        where: {
+          organizationId_userId: {
+            organizationId: body.organizationId,
+            userId,
+          },
+        },
+      });
+
+      if (!existingMembership) {
+        // Directly create active membership (No pending request needed)
+        await this.prisma.organizationMembership.create({
+          data: {
+            organizationId: body.organizationId,
+            userId,
+            membershipType: (body.membershipType as any) || 'STUDENT',
+            status: 'ACTIVE',
+            joinedAt: new Date(),
+            isPrimary: true,
+          },
+        });
+
+        // Record approved join request for history
+        await this.prisma.organizationJoinRequest.upsert({
+          where: {
+            organizationId_userId: {
+              organizationId: body.organizationId,
+              userId,
+            },
+          },
+          update: {
+            status: 'APPROVED',
+            reviewedAt: new Date(),
+          },
+          create: {
+            organizationId: body.organizationId,
+            userId,
+            membershipType: (body.membershipType as any) || 'STUDENT',
+            status: 'APPROVED',
+            reviewedAt: new Date(),
+            message: 'Direct join during onboarding',
+          },
+        });
+
+        this.logger.log(
+          `User ${userId} directly joined organization ${body.organizationId} during onboarding`,
+        );
+      } else {
+        this.logger.log(
+          `User ${userId} is already a member of organization ${body.organizationId}`,
+        );
+      }
+    }
+
+    // Log activity
+    await this.prisma.activityLog.create({
+      data: {
+        userId,
+        activity: 'ONBOARDING_COMPLETED',
+        details: JSON.stringify({
+          phone: body.phone,
+          institution: body.institution,
+          faculty: body.faculty,
+          department: body.department,
+          organizationId: body.organizationId,
+        }),
+      },
+    });
+
+    // Invalidate cache
+    await this.invalidateOnboardingCache(userId);
+
+    return {
+      message: 'Onboarding completed successfully',
+      onboardingCompleted: true,
+      hasJoinRequest: !!body.organizationId,
+    };
   }
 
   // ============================================
@@ -241,6 +456,15 @@ export class OnboardingService {
       },
     });
 
+    // Auto-join matching institutional organizations directly
+    await this.autoJoinInstitutionalOrganizations(
+      userId,
+      dto.institutionId,
+      dto.facultyId,
+      dto.departmentId,
+      dto.levelId,
+    );
+
     // Update UserProfile to COMPLETED
     const updatedProfile = await this.prisma.userProfile.update({
       where: { userId },
@@ -354,6 +578,81 @@ export class OnboardingService {
   // ============================================
   // HELPER METHODS
   // ============================================
+
+  private async autoJoinInstitutionalOrganizations(
+    userId: string,
+    institutionId: string,
+    facultyId?: string,
+    departmentId?: string,
+    levelId?: string,
+  ) {
+    try {
+      const orConditions: any[] = [{ scope: 'INSTITUTION' }];
+      if (facultyId) orConditions.push({ scope: 'FACULTY', facultyId });
+      if (departmentId) orConditions.push({ scope: 'DEPARTMENT', departmentId });
+      if (levelId) orConditions.push({ scope: 'LEVEL', academicLevelId: levelId });
+
+      const matchingOrgs = await this.prisma.organization.findMany({
+        where: {
+          institutionId,
+          OR: orConditions,
+          status: 'ACTIVE',
+        },
+      });
+
+      for (const org of matchingOrgs) {
+        const existing = await this.prisma.organizationMembership.findUnique({
+          where: {
+            organizationId_userId: {
+              organizationId: org.id,
+              userId,
+            },
+          },
+        });
+
+        if (!existing) {
+          await this.prisma.organizationMembership.create({
+            data: {
+              organizationId: org.id,
+              userId,
+              membershipType: 'STUDENT',
+              status: 'ACTIVE',
+              joinedAt: new Date(),
+            },
+          });
+
+          await this.prisma.organizationJoinRequest.upsert({
+            where: {
+              organizationId_userId: {
+                organizationId: org.id,
+                userId,
+              },
+            },
+            update: {
+              status: 'APPROVED',
+              reviewedAt: new Date(),
+            },
+            create: {
+              organizationId: org.id,
+              userId,
+              membershipType: 'STUDENT',
+              status: 'APPROVED',
+              reviewedAt: new Date(),
+              message: 'Auto-joined during onboarding',
+            },
+          });
+
+          this.logger.log(
+            `User ${userId} auto-joined organization ${org.name} (${org.id}) during onboarding`,
+          );
+        }
+      }
+    } catch (error) {
+      this.logger.warn(
+        `Failed to auto-join institutional orgs for user ${userId}: ${error.message}`,
+      );
+    }
+  }
 
   private getMissingPersonalFields(profile: any): string[] {
     const missing: string[] = [];

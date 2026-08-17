@@ -4,10 +4,11 @@ import { InstitutionsService } from './institutions.service';
 import { InstitutionsController } from './institutions.controller';
 import { AuthModule } from '../auth/auth.module';
 import { CacheService } from '../../redis/cache.service';
+import { FinanceModule } from '../finance/finance.module';
 // import { PrismaService } from '../../prisma/prisma.service';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, FinanceModule],
   controllers: [InstitutionsController],
   providers: [InstitutionsService, CacheService],
   exports: [InstitutionsService],

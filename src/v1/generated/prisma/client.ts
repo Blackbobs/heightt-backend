@@ -125,6 +125,11 @@ export type Organization = Prisma.OrganizationModel
  */
 export type OrganizationMembership = Prisma.OrganizationMembershipModel
 /**
+ * Model OrganizationJoinRequest
+ * 
+ */
+export type OrganizationJoinRequest = Prisma.OrganizationJoinRequestModel
+/**
  * Model Role
  * 
  */

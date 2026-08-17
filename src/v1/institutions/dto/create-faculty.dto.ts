@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsUUID,
-  MinLength,
-  MaxLength,
-  IsOptional,
-} from 'class-validator';
+import { IsString, MinLength, MaxLength, IsOptional } from 'class-validator';
 
 export class CreateFacultyDto {
   @ApiProperty({
@@ -23,7 +17,10 @@ export class CreateFacultyDto {
   @MaxLength(20)
   code: string;
 
-  @ApiProperty({ example: 'inst_123', description: 'Institution ID' })
-  @IsUUID()
+  @ApiProperty({
+    example: 'cmswz4nb500020ntv5m0tpq69',
+    description: 'Institution ID (CUID)',
+  })
+  @IsString()
   institutionId: string;
 }

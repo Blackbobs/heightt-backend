@@ -131,7 +131,7 @@ export class PermissionService {
     resourceId?: string,
   ): Promise<boolean> {
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admins = await (this.prisma as any).admin.findMany({
         where: {
           userId,
           status: 'ACTIVE',
@@ -141,27 +141,27 @@ export class PermissionService {
         },
       });
 
-      if (!admin) {
+      if (!admins.length) {
         return false;
       }
 
-      // Platform admins have all permissions
-      if (admin.adminType === 'PLATFORM_ADMIN') {
+      if (admins.some((admin) => admin.adminType === 'PLATFORM_ADMIN')) {
         return true;
       }
 
-      // Check if admin has the specific permission
-      const hasPermission = admin.permissions.some((perm: any) => {
-        if (perm.permissionKey === permissionKey) {
+      return admins.some((admin) =>
+        admin.permissions.some((perm: any) => {
+          if (perm.permissionKey !== permissionKey) {
+            return false;
+          }
+
           if (resourceId) {
             return perm.resourceId === resourceId || perm.resourceId === null;
           }
-          return true;
-        }
-        return false;
-      });
 
-      return hasPermission;
+          return true;
+        }),
+      );
     } catch (error) {
       this.logger.error(`Permission check failed: ${error.message}`);
       return false;
@@ -204,7 +204,7 @@ export class PermissionService {
    */
   async getUserPermissions(userId: string): Promise<string[]> {
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admins = await (this.prisma as any).admin.findMany({
         where: {
           userId,
           status: 'ACTIVE',
@@ -214,18 +214,50 @@ export class PermissionService {
         },
       });
 
-      if (!admin) {
+      if (!admins.length) {
         return [];
       }
 
-      // Platform admins get all permissions
-      if (admin.adminType === 'PLATFORM_ADMIN') {
+      if (admins.some((admin) => admin.adminType === 'PLATFORM_ADMIN')) {
         return Object.values(PermissionService.PERMISSIONS);
       }
 
-      return admin.permissions.map((perm: any) => perm.permissionKey);
+      const permissions = admins.flatMap((admin) => admin.permissions || []);
+      return Array.from(
+        new Set(permissions.map((perm: any) => String(perm.permissionKey))),
+      );
     } catch (error) {
       this.logger.error(`Failed to get user permissions: ${error.message}`);
+      return [];
+    }
+  }
+
+  async getUserAdminScopes(userId: string): Promise<
+    Array<{
+      adminType?: string;
+      institutionId?: string;
+      facultyId?: string;
+      departmentId?: string;
+      organizationId?: string;
+    }>
+  > {
+    try {
+      const admins = await (this.prisma as any).admin.findMany({
+        where: {
+          userId,
+          status: 'ACTIVE',
+        },
+      });
+
+      return admins.map((admin: any) => ({
+        adminType: admin.adminType,
+        institutionId: admin.institutionId || undefined,
+        facultyId: admin.facultyId || undefined,
+        departmentId: admin.departmentId || undefined,
+        organizationId: admin.organizationId || undefined,
+      }));
+    } catch (error) {
+      this.logger.error(`Failed to get user admin scopes: ${error.message}`);
       return [];
     }
   }

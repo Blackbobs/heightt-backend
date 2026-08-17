@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsOptional,
-  IsUUID,
   IsEnum,
   MinLength,
   MaxLength,
@@ -91,7 +90,7 @@ export class CreateOrganizationDto {
   scope: string;
 
   @ApiProperty({ example: 'inst_123', description: 'Institution ID' })
-  @IsUUID()
+  @IsString()
   institutionId: string;
 
   @ApiProperty({
@@ -100,7 +99,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   facultyId?: string;
 
   @ApiProperty({
@@ -109,7 +108,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   departmentId?: string;
 
   @ApiProperty({
@@ -118,7 +117,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   academicLevelId?: string;
 
   @ApiProperty({
@@ -127,6 +126,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   parentOrganizationId?: string;
 }
+

@@ -414,6 +414,7 @@ export const ModelName = {
   StudentVerification: 'StudentVerification',
   Organization: 'Organization',
   OrganizationMembership: 'OrganizationMembership',
+  OrganizationJoinRequest: 'OrganizationJoinRequest',
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
@@ -484,7 +485,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
+    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1743,6 +1744,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OrganizationMembershipCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrganizationMembershipCountAggregateOutputType> | number
+        }
+      }
+    }
+    OrganizationJoinRequest: {
+      payload: Prisma.$OrganizationJoinRequestPayload<ExtArgs>
+      fields: Prisma.OrganizationJoinRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrganizationJoinRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrganizationJoinRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.OrganizationJoinRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrganizationJoinRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>
+        }
+        findMany: {
+          args: Prisma.OrganizationJoinRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>[]
+        }
+        create: {
+          args: Prisma.OrganizationJoinRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>
+        }
+        createMany: {
+          args: Prisma.OrganizationJoinRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrganizationJoinRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.OrganizationJoinRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>
+        }
+        update: {
+          args: Prisma.OrganizationJoinRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.OrganizationJoinRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrganizationJoinRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrganizationJoinRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.OrganizationJoinRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationJoinRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.OrganizationJoinRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganizationJoinRequest>
+        }
+        groupBy: {
+          args: Prisma.OrganizationJoinRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationJoinRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrganizationJoinRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationJoinRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -6155,6 +6230,22 @@ export const OrganizationMembershipScalarFieldEnum = {
 export type OrganizationMembershipScalarFieldEnum = (typeof OrganizationMembershipScalarFieldEnum)[keyof typeof OrganizationMembershipScalarFieldEnum]
 
 
+export const OrganizationJoinRequestScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  status: 'status',
+  membershipType: 'membershipType',
+  message: 'message',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganizationJoinRequestScalarFieldEnum = (typeof OrganizationJoinRequestScalarFieldEnum)[keyof typeof OrganizationJoinRequestScalarFieldEnum]
+
+
 export const RoleScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
@@ -7375,6 +7466,20 @@ export type ListEnumMembershipStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
+ * Reference to a field of type 'JoinRequestStatus'
+ */
+export type EnumJoinRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JoinRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'JoinRequestStatus[]'
+ */
+export type ListEnumJoinRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'JoinRequestStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'AdminType'
  */
 export type EnumAdminTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdminType'>
@@ -8129,6 +8234,7 @@ export type GlobalOmitConfig = {
   studentVerification?: Prisma.StudentVerificationOmit
   organization?: Prisma.OrganizationOmit
   organizationMembership?: Prisma.OrganizationMembershipOmit
+  organizationJoinRequest?: Prisma.OrganizationJoinRequestOmit
   role?: Prisma.RoleOmit
   permission?: Prisma.PermissionOmit
   rolePermission?: Prisma.RolePermissionOmit

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 
 @Injectable()
 export class EmailService {
@@ -12,51 +13,68 @@ export class EmailService {
    */
   async sendEmail(to: string, subject: string, html: string): Promise<boolean> {
     try {
-      const apiKey = this.configService.get('SENDLIB_API_KEY');
-      const fromEmail = this.configService.get('SENDLIB_FROM_EMAIL');
+      const apiKey = this.configService.get<string>('SENDLIB_API_KEY');
+      const fromEmail = this.configService.get<string>('SENDLIB_FROM_EMAIL');
+
+      this.logger.debug(
+        `Email configuration: API Key set: ${!!apiKey}, From: ${fromEmail || 'noreply@heightt.com'}`,
+      );
 
       if (!apiKey) {
-        this.logger.error('SendLib API key not configured');
+        this.logger.warn(
+          'SendLib API key not configured. Falling back to development mode.',
+        );
         if (process.env.NODE_ENV === 'development') {
-          this.logger.warn(`[DEV MODE] Email would be sent to ${to}`);
-          this.logger.debug(`[DEV MODE] Subject: ${subject}`);
+          this.logger.log(`[DEV MODE] 📧 Email would be sent to ${to}`);
+          this.logger.log(`[DEV MODE] 📧 Subject: ${subject}`);
           return true;
         }
         return false;
       }
 
-      this.logger.log(`Attempting to send email to ${to}`);
+      this.logger.log(`📧 Attempting to send email to ${to}`);
 
-      const response = await fetch('https://sendlib.samueltuoyo.com/api/send', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
+      const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
+
+      const requestBody = {
+        from: fromEmail?.trim() || 'noreply@heightt.com',
+        to: to.trim(),
+        subject: subject.trim(),
+        html: html,
+      };
+
+      this.logger.debug(`Sending to SendLib with from: ${requestBody.from}`);
+
+      const response = await axios.post(
+        'https://sendlib.samueltuoyo.com/api/send',
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${cleanApiKey}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          timeout: 15000,
         },
-        body: JSON.stringify({
-          from: fromEmail || 'noreply@heightt.com',
-          to,
-          subject,
-          html,
-        }),
-      });
+      );
 
-      const responseText = await response.text();
-      this.logger.debug(`SendLib response: ${responseText}`);
+      this.logger.debug(`SendLib response: ${JSON.stringify(response.data)}`);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         this.logger.error(
-          `SendLib error (${response.status}): ${responseText}`,
+          `SendLib error (${response.status}): ${JSON.stringify(response.data)}`,
         );
         return false;
       }
 
       this.logger.log(`✅ Email sent successfully to ${to}`);
       return true;
-    } catch (error) {
-      this.logger.error(`❌ Error sending email: ${error.message}`);
+    } catch (error: any) {
+      this.logger.error(`❌ Error sending email to ${to}: ${error.message}`);
+
       if (process.env.NODE_ENV === 'development') {
-        this.logger.warn(`[DEV MODE] Email would have been sent to ${to}`);
+        this.logger.warn(`[DEV MODE] 📧 Email would have been sent to ${to}`);
+        this.logger.warn(`[DEV MODE] 📧 Subject: ${subject}`);
         return true;
       }
       return false;

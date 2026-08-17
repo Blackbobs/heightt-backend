@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
+import { FinanceService } from '../finance/finance.service';
 import {
   CreateInstitutionDto,
   UpdateInstitutionDto,
@@ -31,6 +32,13 @@ interface BulkCreateResult {
   updatedAt: Date;
 }
 
+// Define the level type
+interface LevelData {
+  name: string;
+  numericLevel: number;
+  order: number;
+}
+
 @Injectable()
 export class InstitutionsService {
   private readonly logger = new Logger(InstitutionsService.name);
@@ -38,6 +46,7 @@ export class InstitutionsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
+    private readonly financeService: FinanceService,
   ) {}
 
   // ============================================
@@ -51,6 +60,7 @@ export class InstitutionsService {
       await this.cacheService.invalidateByTag('departments');
       await this.cacheService.invalidateByTag('academic-levels');
       await this.cacheService.invalidateByTag('sessions');
+      await this.cacheService.invalidateByTag('organizations');
 
       if (institutionId) {
         await this.cacheService.delete(`institution:${institutionId}`);
@@ -74,6 +84,7 @@ export class InstitutionsService {
       await this.cacheService.invalidatePattern('departments:*');
       await this.cacheService.invalidatePattern('academic-levels:*');
       await this.cacheService.invalidatePattern('sessions:*');
+      await this.cacheService.invalidatePattern('organization:*');
 
       this.logger.log(
         `Institutions cache invalidated${institutionId ? ` for institution: ${institutionId}` : ''}`,
@@ -116,6 +127,50 @@ export class InstitutionsService {
         status: 'ACTIVE',
       },
     });
+
+    // Auto-create Organization for Institution
+    const instOrgSlug = `${dto.code.toLowerCase()}-institution`;
+    const existingInstOrg = await this.prisma.organization.findFirst({
+      where: {
+        slug: instOrgSlug,
+        institutionId: institution.id,
+      },
+    });
+
+    if (!existingInstOrg) {
+      try {
+        const instOrg = await this.prisma.organization.create({
+          data: {
+            name: `${institution.name}`,
+            slug: instOrgSlug,
+            description: `Institution organization for ${institution.name}`,
+            type: 'INSTITUTION',
+            scope: 'INSTITUTION',
+            institutionId: institution.id,
+            createdBy: userId,
+            status: 'ACTIVE',
+          },
+        });
+        this.logger.log(`Institution organization created: ${instOrg.id}`);
+
+        try {
+          await this.financeService.createWallet(userId, {
+            organizationId: instOrg.id,
+          });
+          this.logger.log(
+            `Wallet created for institution organization: ${instOrg.id}`,
+          );
+        } catch (walletError) {
+          this.logger.warn(
+            `Failed to create wallet for institution organization ${instOrg.id}: ${walletError.message}`,
+          );
+        }
+      } catch (orgError) {
+        this.logger.warn(
+          `Failed to create organization for institution ${institution.id}: ${orgError.message}`,
+        );
+      }
+    }
 
     await this.invalidateInstitutionsCache();
 
@@ -362,6 +417,51 @@ export class InstitutionsService {
       },
     });
 
+    // Auto-create Organization for Faculty
+    const facultyOrgSlug = `${dto.code.toLowerCase()}-faculty`;
+    const existingFacultyOrg = await this.prisma.organization.findFirst({
+      where: {
+        slug: facultyOrgSlug,
+        institutionId: dto.institutionId,
+      },
+    });
+
+    if (!existingFacultyOrg) {
+      try {
+        const facultyOrg = await this.prisma.organization.create({
+          data: {
+            name: `${faculty.name}`,
+            slug: facultyOrgSlug,
+            description: `Faculty organization for ${faculty.name}`,
+            type: 'FACULTY',
+            scope: 'FACULTY',
+            institutionId: dto.institutionId,
+            facultyId: faculty.id,
+            createdBy: userId,
+            status: 'ACTIVE',
+          },
+        });
+        this.logger.log(`Faculty organization created: ${facultyOrg.id}`);
+
+        try {
+          await this.financeService.createWallet(userId, {
+            organizationId: facultyOrg.id,
+          });
+          this.logger.log(
+            `Wallet created for faculty organization: ${facultyOrg.id}`,
+          );
+        } catch (walletError) {
+          this.logger.warn(
+            `Failed to create wallet for faculty organization ${facultyOrg.id}: ${walletError.message}`,
+          );
+        }
+      } catch (orgError) {
+        this.logger.warn(
+          `Failed to create organization for faculty ${faculty.id}: ${orgError.message}`,
+        );
+      }
+    }
+
     await this.invalidateInstitutionsCache(dto.institutionId);
 
     await this.prisma.activityLog.create({
@@ -526,14 +626,99 @@ export class InstitutionsService {
   }
 
   // ============================================
-  // DEPARTMENT CRUD
+  // DEPARTMENT CRUD (WITH AUTO ORGANIZATION CREATION)
   // ============================================
+
+  /**
+   * Get default number of levels based on department name
+   */
+  private getDefaultLevelCount(departmentName: string): number {
+    const name = departmentName.toLowerCase();
+
+    // Check for departments with 5 levels
+    const fiveYearPrograms = [
+      'engineering',
+      'law',
+      'architecture',
+      'pharmacy',
+      'veterinary',
+      'agriculture',
+    ];
+
+    if (fiveYearPrograms.some((program) => name.includes(program))) {
+      return 5;
+    }
+
+    // Check for departments with 6 levels
+    const sixYearPrograms = ['medicine', 'surgery', 'dentistry'];
+    if (sixYearPrograms.some((program) => name.includes(program))) {
+      return 6;
+    }
+
+    // Default to 4 levels
+    return 4;
+  }
+
+  /**
+   * Generate academic levels based on number of levels and custom names
+   */
+  private generateAcademicLevels(
+    numberOfLevels: number,
+    customLevelNames?: string[],
+  ): LevelData[] {
+    const levels: LevelData[] = [];
+
+    // If custom level names are provided and match the count, use them
+    if (customLevelNames && customLevelNames.length === numberOfLevels) {
+      for (let i = 0; i < customLevelNames.length; i++) {
+        levels.push({
+          name: customLevelNames[i],
+          numericLevel: (i + 1) * 100,
+          order: i + 1,
+        });
+      }
+      return levels;
+    }
+
+    // Default level generation
+    const standardLevelNames = [
+      '100 Level',
+      '200 Level',
+      '300 Level',
+      '400 Level',
+      '500 Level',
+      '600 Level',
+      '700 Level',
+      '800 Level',
+      '900 Level',
+      '1000 Level',
+    ];
+
+    for (let i = 0; i < numberOfLevels; i++) {
+      const levelNumber = (i + 1) * 100;
+      const name =
+        customLevelNames?.[i] ||
+        standardLevelNames[i] ||
+        `${levelNumber} Level`;
+
+      levels.push({
+        name,
+        numericLevel: levelNumber,
+        order: i + 1,
+      });
+    }
+
+    return levels;
+  }
 
   async createDepartment(userId: string, dto: CreateDepartmentDto) {
     this.logger.log(`Creating department: ${dto.name}`);
 
     const faculty = await this.prisma.faculty.findUnique({
       where: { id: dto.facultyId },
+      include: {
+        institution: true,
+      },
     });
     if (!faculty) {
       throw new NotFoundException('Faculty not found');
@@ -551,6 +736,7 @@ export class InstitutionsService {
       );
     }
 
+    // Create the department
     const department = await this.prisma.department.create({
       data: {
         name: dto.name,
@@ -561,6 +747,134 @@ export class InstitutionsService {
         status: 'ACTIVE',
       },
     });
+
+    this.logger.log(`Department created: ${department.id}`);
+
+    // Determine number of levels
+    const numberOfLevels =
+      dto.numberOfLevels || this.getDefaultLevelCount(dto.name);
+
+    // Generate academic levels
+    const levels: LevelData[] = this.generateAcademicLevels(
+      numberOfLevels,
+      dto.customLevelNames,
+    );
+
+    this.logger.log(
+      `Generating ${levels.length} levels for department: ${department.name}`,
+    );
+
+    // Create academic levels and organizations
+    const createdLevels: any[] = [];
+    const createdOrganizations: any[] = [];
+
+    // Use a transaction for all operations
+    for (const level of levels) {
+      // Create academic level
+      const createdLevel = await this.prisma.academicLevel.create({
+        data: {
+          name: level.name,
+          numericLevel: level.numericLevel,
+          order: level.order,
+          departmentId: department.id,
+          status: 'ACTIVE',
+        },
+      });
+      createdLevels.push(createdLevel);
+      this.logger.log(`Academic level created: ${createdLevel.name}`);
+
+      // Create organization for this level
+      const orgSlug = `${department.code.toLowerCase()}-${level.name.toLowerCase().replace(/\s/g, '-')}`;
+
+      const existingOrg = await this.prisma.organization.findFirst({
+        where: {
+          slug: orgSlug,
+          institutionId: faculty.institutionId,
+        },
+      });
+
+      if (!existingOrg) {
+        const org = await this.prisma.organization.create({
+          data: {
+            name: `${department.name} - ${level.name}`,
+            slug: orgSlug,
+            description: `${level.name} organization for ${department.name}`,
+            type: 'LEVEL',
+            scope: 'LEVEL',
+            institutionId: faculty.institutionId,
+            facultyId: dto.facultyId,
+            departmentId: department.id,
+            academicLevelId: createdLevel.id,
+            createdBy: userId,
+            status: 'ACTIVE',
+          },
+        });
+        createdOrganizations.push(org);
+        this.logger.log(`Organization created for ${level.name}: ${org.id}`);
+
+        // Create wallet for the organization
+        try {
+          await this.financeService.createWallet(userId, {
+            organizationId: org.id,
+          });
+          this.logger.log(`Wallet created for organization: ${org.id}`);
+        } catch (walletError) {
+          this.logger.warn(
+            `Failed to create wallet for organization ${org.id}: ${walletError.message}`,
+          );
+        }
+      } else {
+        this.logger.log(
+          `Organization for ${level.name} already exists, skipping creation`,
+        );
+      }
+    }
+
+    // Also create a department-level organization
+    const deptOrgSlug = `${department.code.toLowerCase()}-department`;
+    const existingDeptOrg = await this.prisma.organization.findFirst({
+      where: {
+        slug: deptOrgSlug,
+        institutionId: faculty.institutionId,
+      },
+    });
+
+    if (!existingDeptOrg) {
+      const deptOrg = await this.prisma.organization.create({
+        data: {
+          name: `${department.name} Department`,
+          slug: deptOrgSlug,
+          description: `Department organization for ${department.name}`,
+          type: 'DEPARTMENT',
+          scope: 'DEPARTMENT',
+          institutionId: faculty.institutionId,
+          facultyId: dto.facultyId,
+          departmentId: department.id,
+          createdBy: userId,
+          status: 'ACTIVE',
+        },
+      });
+      createdOrganizations.push(deptOrg);
+      this.logger.log(`Department organization created: ${deptOrg.id}`);
+
+      // Create wallet for department organization
+      try {
+        await this.financeService.createWallet(userId, {
+          organizationId: deptOrg.id,
+        });
+        this.logger.log(
+          `Wallet created for department organization: ${deptOrg.id}`,
+        );
+      } catch (walletError) {
+        this.logger.warn(
+          `Failed to create wallet for department organization ${deptOrg.id}: ${walletError.message}`,
+        );
+      }
+    } else {
+      this.logger.log(
+        `Department organization already exists, skipping creation`,
+      );
+    }
 
     await this.invalidateInstitutionsCache(faculty.institutionId);
 
@@ -573,12 +887,31 @@ export class InstitutionsService {
           name: department.name,
           code: department.code,
           facultyId: dto.facultyId,
+          numberOfLevels: levels.length,
+          levelsCreated: createdLevels.length,
+          organizationsCreated: createdOrganizations.length,
         }),
       },
     });
 
-    this.logger.log(`Department created: ${department.id}`);
-    return department;
+    this.logger.log(
+      `Department created: ${department.id} with ${createdLevels.length} levels and ${createdOrganizations.length} organizations`,
+    );
+
+    // Return the department with all related data
+    return this.prisma.department.findUnique({
+      where: { id: department.id },
+      include: {
+        academicLevels: {
+          orderBy: { order: 'asc' },
+        },
+        faculty: {
+          include: {
+            institution: true,
+          },
+        },
+      },
+    });
   }
 
   async getDepartmentsByFaculty(facultyId: string) {
@@ -598,7 +931,9 @@ export class InstitutionsService {
     const departments = await this.prisma.department.findMany({
       where: { facultyId },
       include: {
-        academicLevels: true,
+        academicLevels: {
+          orderBy: { order: 'asc' },
+        },
       },
       orderBy: { name: 'asc' },
     });
@@ -628,7 +963,9 @@ export class InstitutionsService {
             institution: true,
           },
         },
-        academicLevels: true,
+        academicLevels: {
+          orderBy: { order: 'asc' },
+        },
       },
     });
     if (!department) {
@@ -734,6 +1071,13 @@ export class InstitutionsService {
 
     const department = await this.prisma.department.findUnique({
       where: { id: dto.departmentId },
+      include: {
+        faculty: {
+          include: {
+            institution: true,
+          },
+        },
+      },
     });
     if (!department) {
       throw new NotFoundException('Department not found');
@@ -760,6 +1104,46 @@ export class InstitutionsService {
         status: 'ACTIVE',
       },
     });
+
+    // Create an organization for this academic level
+    const orgSlug = `${department.code.toLowerCase()}-${level.name.toLowerCase().replace(/\s/g, '-')}`;
+    const existingOrg = await this.prisma.organization.findFirst({
+      where: {
+        slug: orgSlug,
+        institutionId: department.faculty.institutionId,
+      },
+    });
+
+    if (!existingOrg) {
+      const org = await this.prisma.organization.create({
+        data: {
+          name: `${department.name} - ${level.name}`,
+          slug: orgSlug,
+          description: `${level.name} organization for ${department.name}`,
+          type: 'LEVEL',
+          scope: 'LEVEL',
+          institutionId: department.faculty.institutionId,
+          facultyId: department.facultyId,
+          departmentId: department.id,
+          academicLevelId: level.id,
+          createdBy: userId,
+          status: 'ACTIVE',
+        },
+      });
+
+      // Create wallet for the organization
+      try {
+        await this.financeService.createWallet(userId, {
+          organizationId: org.id,
+        });
+      } catch (walletError) {
+        this.logger.warn(
+          `Failed to create wallet for organization ${org.id}: ${walletError.message}`,
+        );
+      }
+
+      this.logger.log(`Organization created for academic level: ${level.name}`);
+    }
 
     await this.invalidateInstitutionsCache();
 
@@ -1170,7 +1554,7 @@ export class InstitutionsService {
   }
 
   // ============================================
-  // BULK OPERATIONS (FIXED)
+  // BULK OPERATIONS
   // ============================================
 
   async bulkCreateAcademicLevels(
@@ -1184,6 +1568,13 @@ export class InstitutionsService {
 
     const department = await this.prisma.department.findUnique({
       where: { id: departmentId },
+      include: {
+        faculty: {
+          include: {
+            institution: true,
+          },
+        },
+      },
     });
     if (!department) {
       throw new NotFoundException('Department not found');
@@ -1217,6 +1608,48 @@ export class InstitutionsService {
           createdAt: created.createdAt,
           updatedAt: created.updatedAt,
         });
+
+        // Create organization for this academic level
+        const orgSlug = `${department.code.toLowerCase()}-${level.name.toLowerCase().replace(/\s/g, '-')}`;
+        const existingOrg = await this.prisma.organization.findFirst({
+          where: {
+            slug: orgSlug,
+            institutionId: department.faculty.institutionId,
+          },
+        });
+
+        if (!existingOrg) {
+          const org = await this.prisma.organization.create({
+            data: {
+              name: `${department.name} - ${level.name}`,
+              slug: orgSlug,
+              description: `${level.name} organization for ${department.name}`,
+              type: 'LEVEL',
+              scope: 'LEVEL',
+              institutionId: department.faculty.institutionId,
+              facultyId: department.facultyId,
+              departmentId: department.id,
+              academicLevelId: created.id,
+              createdBy: userId,
+              status: 'ACTIVE',
+            },
+          });
+
+          // Create wallet for organization
+          try {
+            await this.financeService.createWallet(userId, {
+              organizationId: org.id,
+            });
+          } catch (walletError) {
+            this.logger.warn(
+              `Failed to create wallet for organization ${org.id}: ${walletError.message}`,
+            );
+          }
+
+          this.logger.log(
+            `Organization created for academic level: ${level.name}`,
+          );
+        }
       }
     }
 
@@ -1235,5 +1668,125 @@ export class InstitutionsService {
 
     this.logger.log(`Bulk created ${createdLevels.length} academic levels`);
     return createdLevels;
+  }
+
+  /**
+   * Generate organizations for a department's academic levels
+   * This can be called separately to create missing organizations
+   */
+  async generateOrganizationsForDepartment(
+    departmentId: string,
+    userId: string,
+  ) {
+    this.logger.log(`Generating organizations for department: ${departmentId}`);
+
+    const department = await this.prisma.department.findUnique({
+      where: { id: departmentId },
+      include: {
+        academicLevels: true,
+        faculty: {
+          include: {
+            institution: true,
+          },
+        },
+      },
+    });
+
+    if (!department) {
+      throw new NotFoundException('Department not found');
+    }
+
+    const createdOrgs: any[] = [];
+
+    // Create organizations for each academic level
+    for (const level of department.academicLevels) {
+      const slug = `${department.code.toLowerCase()}-${level.name.toLowerCase().replace(/\s/g, '-')}`;
+
+      const existingOrg = await this.prisma.organization.findFirst({
+        where: {
+          slug,
+          institutionId: department.faculty.institutionId,
+        },
+      });
+
+      if (!existingOrg) {
+        const org = await this.prisma.organization.create({
+          data: {
+            name: `${department.name} - ${level.name}`,
+            slug,
+            description: `${level.name} organization for ${department.name}`,
+            type: 'LEVEL',
+            scope: 'LEVEL',
+            institutionId: department.faculty.institutionId,
+            facultyId: department.facultyId,
+            departmentId: department.id,
+            academicLevelId: level.id,
+            createdBy: userId,
+            status: 'ACTIVE',
+          },
+        });
+        createdOrgs.push(org);
+
+        // Create wallet
+        try {
+          await this.financeService.createWallet(userId, {
+            organizationId: org.id,
+          });
+        } catch (walletError) {
+          this.logger.warn(
+            `Failed to create wallet for organization ${org.id}: ${walletError.message}`,
+          );
+        }
+
+        this.logger.log(`Created organization for ${level.name}: ${org.id}`);
+      }
+    }
+
+    // Also create a department-level organization
+    const deptSlug = `${department.code.toLowerCase()}-department`;
+    const existingDeptOrg = await this.prisma.organization.findFirst({
+      where: {
+        slug: deptSlug,
+        institutionId: department.faculty.institutionId,
+      },
+    });
+
+    if (!existingDeptOrg) {
+      const deptOrg = await this.prisma.organization.create({
+        data: {
+          name: `${department.name} Department`,
+          slug: deptSlug,
+          description: `Department organization for ${department.name}`,
+          type: 'DEPARTMENT',
+          scope: 'DEPARTMENT',
+          institutionId: department.faculty.institutionId,
+          facultyId: department.facultyId,
+          departmentId: department.id,
+          createdBy: userId,
+          status: 'ACTIVE',
+        },
+      });
+      createdOrgs.push(deptOrg);
+
+      try {
+        await this.financeService.createWallet(userId, {
+          organizationId: deptOrg.id,
+        });
+      } catch (walletError) {
+        this.logger.warn(
+          `Failed to create wallet for department organization ${deptOrg.id}: ${walletError.message}`,
+        );
+      }
+
+      this.logger.log(`Created department organization: ${deptOrg.id}`);
+    }
+
+    // Invalidate cache
+    await this.invalidateInstitutionsCache(department.faculty.institutionId);
+
+    return {
+      department,
+      organizationsCreated: createdOrgs,
+    };
   }
 }

@@ -50,6 +50,8 @@ model User {
   pushQueues              PushQueue[]
   organizationMemberships OrganizationMembership[]
   admins                  Admin[]
+  joinRequests            OrganizationJoinRequest[] @relation("JoinRequestUser")
+  reviewedJoinRequests    OrganizationJoinRequest[] @relation("JoinRequestReviewer")
 
   createdEvents   Event[]          @relation("EventCreator")
   approvedEvents  Event[]          @relation("EventApprover")
@@ -478,6 +480,7 @@ model Organization {
   receipts           Receipt[]
   files              File[]
   pendingPayments    PendingPayment[]
+  joinRequests       OrganizationJoinRequest[]
 
   @@unique([institutionId, slug])
   @@index([institutionId])
@@ -515,6 +518,33 @@ model OrganizationMembership {
   @@index([organizationId])
   @@index([status])
   @@map("organization_memberships")
+}
+model OrganizationJoinRequest {
+  id             String             @id @default(cuid())
+  organizationId String
+  userId         String
+  status         JoinRequestStatus  @default(PENDING)
+  membershipType MembershipType     @default(STUDENT)
+  message        String?            // Optional message from the user
+  reviewedBy     String?            // Admin who reviewed the request
+  reviewedAt     DateTime?
+  
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User               @relation("JoinRequestUser", fields: [userId], references: [id], onDelete: Cascade)
+  reviewer       User?              @relation("JoinRequestReviewer", fields: [reviewedBy], references: [id])
+
+  @@unique([organizationId, userId]) // Prevent duplicate requests
+  @@index([organizationId, status])
+  @@map("organization_join_requests")
+}
+
+enum JoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Role {

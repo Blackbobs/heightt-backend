@@ -12,14 +12,22 @@ export class TokenService {
     private readonly configService: ConfigService,
   ) {}
 
-  async generateAccessToken(userId: string, email: string): Promise<string> {
-    const payload = {
+  async generateAccessToken(
+    userId: string,
+    email: string,
+    sessionId?: string,
+  ): Promise<string> {
+    const payload: any = {
       sub: userId,
       email,
       type: 'access',
     };
 
-    // JWT expects seconds, not a string with 'm'
+    // Include session ID if provided
+    if (sessionId) {
+      payload.sessionId = sessionId;
+    }
+
     const expiresIn = parseInt(
       this.configService.get('JWT_ACCESS_EXPIRY', '900'),
       10,
@@ -27,16 +35,26 @@ export class TokenService {
     this.logger.debug(`Generating access token with expiry: ${expiresIn}s`);
 
     return this.jwtService.signAsync(payload, {
-      expiresIn: expiresIn, // seconds
+      secret: this.configService.get('JWT_ACCESS_SECRET'),
+      expiresIn: expiresIn,
     });
   }
 
-  async generateRefreshToken(userId: string, email: string): Promise<string> {
-    const payload = {
+  async generateRefreshToken(
+    userId: string,
+    email: string,
+    sessionId?: string,
+  ): Promise<string> {
+    const payload: any = {
       sub: userId,
       email,
       type: 'refresh',
     };
+
+    // Include session ID if provided
+    if (sessionId) {
+      payload.sessionId = sessionId;
+    }
 
     const expiresIn = parseInt(
       this.configService.get('JWT_REFRESH_EXPIRY', '2592000'),
@@ -45,7 +63,8 @@ export class TokenService {
     this.logger.debug(`Generating refresh token with expiry: ${expiresIn}s`);
 
     return this.jwtService.signAsync(payload, {
-      expiresIn: expiresIn, // seconds
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: expiresIn,
     });
   }
 
@@ -69,22 +88,38 @@ export class TokenService {
 
   async verifyAccessToken(token: string): Promise<any> {
     try {
-      return await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('JWT_ACCESS_SECRET'),
       });
+      return payload;
     } catch (error) {
       this.logger.debug(`Access token verification failed: ${error.message}`);
+
+      if (error.name === 'TokenExpiredError') {
+        return { expired: true, error: 'TokenExpiredError' };
+      }
+      if (error.name === 'JsonWebTokenError') {
+        return { invalid: true, error: 'JsonWebTokenError' };
+      }
       return null;
     }
   }
 
   async verifyRefreshToken(token: string): Promise<any> {
     try {
-      return await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('JWT_REFRESH_SECRET'),
       });
+      return payload;
     } catch (error) {
       this.logger.debug(`Refresh token verification failed: ${error.message}`);
+
+      if (error.name === 'TokenExpiredError') {
+        return { expired: true, error: 'TokenExpiredError' };
+      }
+      if (error.name === 'JsonWebTokenError') {
+        return { invalid: true, error: 'JsonWebTokenError' };
+      }
       return null;
     }
   }

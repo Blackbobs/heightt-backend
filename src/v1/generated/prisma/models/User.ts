@@ -256,6 +256,8 @@ export type UserWhereInput = {
   pushQueues?: Prisma.PushQueueListRelationFilter
   organizationMemberships?: Prisma.OrganizationMembershipListRelationFilter
   admins?: Prisma.AdminListRelationFilter
+  joinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
   createdEvents?: Prisma.EventListRelationFilter
   approvedEvents?: Prisma.EventListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
@@ -301,6 +303,8 @@ export type UserOrderByWithRelationInput = {
   pushQueues?: Prisma.PushQueueOrderByRelationAggregateInput
   organizationMemberships?: Prisma.OrganizationMembershipOrderByRelationAggregateInput
   admins?: Prisma.AdminOrderByRelationAggregateInput
+  joinRequests?: Prisma.OrganizationJoinRequestOrderByRelationAggregateInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestOrderByRelationAggregateInput
   createdEvents?: Prisma.EventOrderByRelationAggregateInput
   approvedEvents?: Prisma.EventOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
@@ -349,6 +353,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   pushQueues?: Prisma.PushQueueListRelationFilter
   organizationMemberships?: Prisma.OrganizationMembershipListRelationFilter
   admins?: Prisma.AdminListRelationFilter
+  joinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
   createdEvents?: Prisma.EventListRelationFilter
   approvedEvents?: Prisma.EventListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
@@ -428,6 +434,8 @@ export type UserCreateInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -473,6 +481,8 @@ export type UserUncheckedCreateInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -518,6 +528,8 @@ export type UserUpdateInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -563,6 +575,8 @@ export type UserUncheckedUpdateInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -786,6 +800,36 @@ export type UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutOrganizationMembershipsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrganizationMembershipsInput, Prisma.UserUpdateWithoutOrganizationMembershipsInput>, Prisma.UserUncheckedUpdateWithoutOrganizationMembershipsInput>
+}
+
+export type UserCreateNestedOneWithoutJoinRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJoinRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviewedJoinRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedJoinRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutJoinRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJoinRequestsInput
+  upsert?: Prisma.UserUpsertWithoutJoinRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJoinRequestsInput, Prisma.UserUpdateWithoutJoinRequestsInput>, Prisma.UserUncheckedUpdateWithoutJoinRequestsInput>
+}
+
+export type UserUpdateOneWithoutReviewedJoinRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedJoinRequestsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedJoinRequestsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedJoinRequestsInput, Prisma.UserUpdateWithoutReviewedJoinRequestsInput>, Prisma.UserUncheckedUpdateWithoutReviewedJoinRequestsInput>
 }
 
 export type UserCreateNestedOneWithoutAdminsInput = {
@@ -1177,6 +1221,8 @@ export type UserCreateWithoutSessionsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -1221,6 +1267,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -1281,6 +1329,8 @@ export type UserUpdateWithoutSessionsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -1325,6 +1375,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -1369,6 +1421,8 @@ export type UserCreateWithoutPasswordResetsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -1413,6 +1467,8 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -1473,6 +1529,8 @@ export type UserUpdateWithoutPasswordResetsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -1517,6 +1575,8 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -1561,6 +1621,8 @@ export type UserCreateWithoutEmailVerificationsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -1605,6 +1667,8 @@ export type UserUncheckedCreateWithoutEmailVerificationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -1665,6 +1729,8 @@ export type UserUpdateWithoutEmailVerificationsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -1709,6 +1775,8 @@ export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -1753,6 +1821,8 @@ export type UserCreateWithoutProfileInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -1797,6 +1867,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -1857,6 +1929,8 @@ export type UserUpdateWithoutProfileInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -1901,6 +1975,8 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -1945,6 +2021,8 @@ export type UserCreateWithoutStudentProfileInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -1989,6 +2067,8 @@ export type UserUncheckedCreateWithoutStudentProfileInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -2049,6 +2129,8 @@ export type UserUpdateWithoutStudentProfileInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -2093,6 +2175,8 @@ export type UserUncheckedUpdateWithoutStudentProfileInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -2137,6 +2221,8 @@ export type UserCreateWithoutCreatedOrganizationsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -2181,6 +2267,8 @@ export type UserUncheckedCreateWithoutCreatedOrganizationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -2241,6 +2329,8 @@ export type UserUpdateWithoutCreatedOrganizationsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -2285,6 +2375,8 @@ export type UserUncheckedUpdateWithoutCreatedOrganizationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -2329,6 +2421,8 @@ export type UserCreateWithoutOrganizationMembershipsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -2373,6 +2467,8 @@ export type UserUncheckedCreateWithoutOrganizationMembershipsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -2433,6 +2529,8 @@ export type UserUpdateWithoutOrganizationMembershipsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -2477,6 +2575,408 @@ export type UserUncheckedUpdateWithoutOrganizationMembershipsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutJoinRequestsInput = {
+  id?: string
+  email: string
+  username: string
+  passwordHash: string
+  emailVerified?: boolean
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutJoinRequestsInput = {
+  id?: string
+  email: string
+  username: string
+  passwordHash: string
+  emailVerified?: boolean
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutJoinRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+}
+
+export type UserCreateWithoutReviewedJoinRequestsInput = {
+  id?: string
+  email: string
+  username: string
+  passwordHash: string
+  emailVerified?: boolean
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReviewedJoinRequestsInput = {
+  id?: string
+  email: string
+  username: string
+  passwordHash: string
+  emailVerified?: boolean
+  status?: $Enums.UserStatus
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReviewedJoinRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+}
+
+export type UserUpsertWithoutJoinRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutJoinRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJoinRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutJoinRequestsInput>
+}
+
+export type UserUpdateWithoutJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutReviewedJoinRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutReviewedJoinRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedJoinRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutReviewedJoinRequestsInput>
+}
+
+export type UserUpdateWithoutReviewedJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -2521,6 +3021,8 @@ export type UserCreateWithoutAdminsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -2565,6 +3067,8 @@ export type UserUncheckedCreateWithoutAdminsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -2625,6 +3129,8 @@ export type UserUpdateWithoutAdminsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -2669,6 +3175,8 @@ export type UserUncheckedUpdateWithoutAdminsInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -2713,6 +3221,8 @@ export type UserCreateWithoutWalletInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -2757,6 +3267,8 @@ export type UserUncheckedCreateWithoutWalletInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -2817,6 +3329,8 @@ export type UserUpdateWithoutWalletInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -2861,6 +3375,8 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -2905,6 +3421,8 @@ export type UserCreateWithoutPaymentsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -2949,6 +3467,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -3009,6 +3529,8 @@ export type UserUpdateWithoutPaymentsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -3053,6 +3575,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -3097,6 +3621,8 @@ export type UserCreateWithoutWithdrawalsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -3141,6 +3667,8 @@ export type UserUncheckedCreateWithoutWithdrawalsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -3201,6 +3729,8 @@ export type UserUpdateWithoutWithdrawalsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -3245,6 +3775,8 @@ export type UserUncheckedUpdateWithoutWithdrawalsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -3289,6 +3821,8 @@ export type UserCreateWithoutSavingsGoalsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -3333,6 +3867,8 @@ export type UserUncheckedCreateWithoutSavingsGoalsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -3393,6 +3929,8 @@ export type UserUpdateWithoutSavingsGoalsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -3437,6 +3975,8 @@ export type UserUncheckedUpdateWithoutSavingsGoalsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -3482,6 +4022,8 @@ export type UserCreateWithoutReceiptsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
@@ -3526,6 +4068,8 @@ export type UserUncheckedCreateWithoutReceiptsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
@@ -3586,6 +4130,8 @@ export type UserUpdateWithoutReceiptsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
@@ -3630,6 +4176,8 @@ export type UserUncheckedUpdateWithoutReceiptsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
@@ -3673,6 +4221,8 @@ export type UserCreateWithoutAnnouncementAuthorInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -3717,6 +4267,8 @@ export type UserUncheckedCreateWithoutAnnouncementAuthorInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -3777,6 +4329,8 @@ export type UserUpdateWithoutAnnouncementAuthorInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -3821,6 +4375,8 @@ export type UserUncheckedUpdateWithoutAnnouncementAuthorInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -3865,6 +4421,8 @@ export type UserCreateWithoutAnnouncementReadsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -3909,6 +4467,8 @@ export type UserUncheckedCreateWithoutAnnouncementReadsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -3969,6 +4529,8 @@ export type UserUpdateWithoutAnnouncementReadsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -4013,6 +4575,8 @@ export type UserUncheckedUpdateWithoutAnnouncementReadsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -4057,6 +4621,8 @@ export type UserCreateWithoutNotificationsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -4101,6 +4667,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -4161,6 +4729,8 @@ export type UserUpdateWithoutNotificationsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -4205,6 +4775,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -4249,6 +4821,8 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -4293,6 +4867,8 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -4353,6 +4929,8 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -4397,6 +4975,8 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -4441,6 +5021,8 @@ export type UserCreateWithoutPushQueuesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -4485,6 +5067,8 @@ export type UserUncheckedCreateWithoutPushQueuesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -4545,6 +5129,8 @@ export type UserUpdateWithoutPushQueuesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -4589,6 +5175,8 @@ export type UserUncheckedUpdateWithoutPushQueuesInput = {
   notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -4633,6 +5221,8 @@ export type UserCreateWithoutFeatureFlagTargetsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -4677,6 +5267,8 @@ export type UserUncheckedCreateWithoutFeatureFlagTargetsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -4737,6 +5329,8 @@ export type UserUpdateWithoutFeatureFlagTargetsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -4781,6 +5375,8 @@ export type UserUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -4825,6 +5421,8 @@ export type UserCreateWithoutOperationalAuditLogsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -4869,6 +5467,8 @@ export type UserUncheckedCreateWithoutOperationalAuditLogsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -4929,6 +5529,8 @@ export type UserUpdateWithoutOperationalAuditLogsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -4973,6 +5575,8 @@ export type UserUncheckedUpdateWithoutOperationalAuditLogsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -5017,6 +5621,8 @@ export type UserCreateWithoutAuditLogsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -5061,6 +5667,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -5121,6 +5729,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -5165,6 +5775,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -5209,6 +5821,8 @@ export type UserCreateWithoutActivityLogsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -5253,6 +5867,8 @@ export type UserUncheckedCreateWithoutActivityLogsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -5313,6 +5929,8 @@ export type UserUpdateWithoutActivityLogsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -5357,6 +5975,8 @@ export type UserUncheckedUpdateWithoutActivityLogsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -5401,6 +6021,8 @@ export type UserCreateWithoutCandidatesInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -5445,6 +6067,8 @@ export type UserUncheckedCreateWithoutCandidatesInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -5505,6 +6129,8 @@ export type UserUpdateWithoutCandidatesInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -5549,6 +6175,8 @@ export type UserUncheckedUpdateWithoutCandidatesInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -5593,6 +6221,8 @@ export type UserCreateWithoutVotesInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -5637,6 +6267,8 @@ export type UserUncheckedCreateWithoutVotesInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -5697,6 +6329,8 @@ export type UserUpdateWithoutVotesInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -5741,6 +6375,8 @@ export type UserUncheckedUpdateWithoutVotesInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -5785,6 +6421,8 @@ export type UserCreateWithoutExecutiveMembersInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -5829,6 +6467,8 @@ export type UserUncheckedCreateWithoutExecutiveMembersInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -5889,6 +6529,8 @@ export type UserUpdateWithoutExecutiveMembersInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -5933,6 +6575,8 @@ export type UserUncheckedUpdateWithoutExecutiveMembersInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -5978,6 +6622,8 @@ export type UserCreateWithoutCreatedEventsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
@@ -6022,6 +6668,8 @@ export type UserUncheckedCreateWithoutCreatedEventsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
@@ -6071,6 +6719,8 @@ export type UserCreateWithoutApprovedEventsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
@@ -6115,6 +6765,8 @@ export type UserUncheckedCreateWithoutApprovedEventsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
@@ -6175,6 +6827,8 @@ export type UserUpdateWithoutCreatedEventsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
@@ -6219,6 +6873,8 @@ export type UserUncheckedUpdateWithoutCreatedEventsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
@@ -6274,6 +6930,8 @@ export type UserUpdateWithoutApprovedEventsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
@@ -6318,6 +6976,8 @@ export type UserUncheckedUpdateWithoutApprovedEventsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
@@ -6361,6 +7021,8 @@ export type UserCreateWithoutTicketPurchasesInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -6405,6 +7067,8 @@ export type UserUncheckedCreateWithoutTicketPurchasesInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -6465,6 +7129,8 @@ export type UserUpdateWithoutTicketPurchasesInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -6509,6 +7175,8 @@ export type UserUncheckedUpdateWithoutTicketPurchasesInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -6553,6 +7221,8 @@ export type UserCreateWithoutEventRegistrationsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -6597,6 +7267,8 @@ export type UserUncheckedCreateWithoutEventRegistrationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -6657,6 +7329,8 @@ export type UserUpdateWithoutEventRegistrationsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -6701,6 +7375,8 @@ export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -6746,6 +7422,8 @@ export type UserCreateWithoutPendingPaymentsInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -6790,6 +7468,8 @@ export type UserUncheckedCreateWithoutPendingPaymentsInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -6850,6 +7530,8 @@ export type UserUpdateWithoutPendingPaymentsInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -6894,6 +7576,8 @@ export type UserUncheckedUpdateWithoutPendingPaymentsInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -6938,6 +7622,8 @@ export type UserCreateWithoutFilesInput = {
   pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
@@ -6982,6 +7668,8 @@ export type UserUncheckedCreateWithoutFilesInput = {
   pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
@@ -7042,6 +7730,8 @@ export type UserUpdateWithoutFilesInput = {
   pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
@@ -7086,6 +7776,8 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
@@ -7121,6 +7813,8 @@ export type UserCountOutputType = {
   pushQueues: number
   organizationMemberships: number
   admins: number
+  joinRequests: number
+  reviewedJoinRequests: number
   createdEvents: number
   approvedEvents: number
   receipts: number
@@ -7152,6 +7846,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   pushQueues?: boolean | UserCountOutputTypeCountPushQueuesArgs
   organizationMemberships?: boolean | UserCountOutputTypeCountOrganizationMembershipsArgs
   admins?: boolean | UserCountOutputTypeCountAdminsArgs
+  joinRequests?: boolean | UserCountOutputTypeCountJoinRequestsArgs
+  reviewedJoinRequests?: boolean | UserCountOutputTypeCountReviewedJoinRequestsArgs
   createdEvents?: boolean | UserCountOutputTypeCountCreatedEventsArgs
   approvedEvents?: boolean | UserCountOutputTypeCountApprovedEventsArgs
   receipts?: boolean | UserCountOutputTypeCountReceiptsArgs
@@ -7333,6 +8029,20 @@ export type UserCountOutputTypeCountAdminsArgs<ExtArgs extends runtime.Types.Ext
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountJoinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationJoinRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewedJoinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationJoinRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountCreatedEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.EventWhereInput
 }
@@ -7404,6 +8114,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   pushQueues?: boolean | Prisma.User$pushQueuesArgs<ExtArgs>
   organizationMemberships?: boolean | Prisma.User$organizationMembershipsArgs<ExtArgs>
   admins?: boolean | Prisma.User$adminsArgs<ExtArgs>
+  joinRequests?: boolean | Prisma.User$joinRequestsArgs<ExtArgs>
+  reviewedJoinRequests?: boolean | Prisma.User$reviewedJoinRequestsArgs<ExtArgs>
   createdEvents?: boolean | Prisma.User$createdEventsArgs<ExtArgs>
   approvedEvents?: boolean | Prisma.User$approvedEventsArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
@@ -7482,6 +8194,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pushQueues?: boolean | Prisma.User$pushQueuesArgs<ExtArgs>
   organizationMemberships?: boolean | Prisma.User$organizationMembershipsArgs<ExtArgs>
   admins?: boolean | Prisma.User$adminsArgs<ExtArgs>
+  joinRequests?: boolean | Prisma.User$joinRequestsArgs<ExtArgs>
+  reviewedJoinRequests?: boolean | Prisma.User$reviewedJoinRequestsArgs<ExtArgs>
   createdEvents?: boolean | Prisma.User$createdEventsArgs<ExtArgs>
   approvedEvents?: boolean | Prisma.User$approvedEventsArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
@@ -7521,6 +8235,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     pushQueues: Prisma.$PushQueuePayload<ExtArgs>[]
     organizationMemberships: Prisma.$OrganizationMembershipPayload<ExtArgs>[]
     admins: Prisma.$AdminPayload<ExtArgs>[]
+    joinRequests: Prisma.$OrganizationJoinRequestPayload<ExtArgs>[]
+    reviewedJoinRequests: Prisma.$OrganizationJoinRequestPayload<ExtArgs>[]
     createdEvents: Prisma.$EventPayload<ExtArgs>[]
     approvedEvents: Prisma.$EventPayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
@@ -7959,6 +8675,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   pushQueues<T extends Prisma.User$pushQueuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushQueuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organizationMemberships<T extends Prisma.User$organizationMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizationMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   admins<T extends Prisma.User$adminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  joinRequests<T extends Prisma.User$joinRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$joinRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationJoinRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedJoinRequests<T extends Prisma.User$reviewedJoinRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedJoinRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationJoinRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdEvents<T extends Prisma.User$createdEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedEvents<T extends Prisma.User$approvedEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.User$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9003,6 +9721,54 @@ export type User$adminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.AdminScalarFieldEnum | Prisma.AdminScalarFieldEnum[]
+}
+
+/**
+ * User.joinRequests
+ */
+export type User$joinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationJoinRequest
+   */
+  select?: Prisma.OrganizationJoinRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationJoinRequest
+   */
+  omit?: Prisma.OrganizationJoinRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationJoinRequestInclude<ExtArgs> | null
+  where?: Prisma.OrganizationJoinRequestWhereInput
+  orderBy?: Prisma.OrganizationJoinRequestOrderByWithRelationInput | Prisma.OrganizationJoinRequestOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationJoinRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationJoinRequestScalarFieldEnum | Prisma.OrganizationJoinRequestScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedJoinRequests
+ */
+export type User$reviewedJoinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationJoinRequest
+   */
+  select?: Prisma.OrganizationJoinRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationJoinRequest
+   */
+  omit?: Prisma.OrganizationJoinRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationJoinRequestInclude<ExtArgs> | null
+  where?: Prisma.OrganizationJoinRequestWhereInput
+  orderBy?: Prisma.OrganizationJoinRequestOrderByWithRelationInput | Prisma.OrganizationJoinRequestOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationJoinRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationJoinRequestScalarFieldEnum | Prisma.OrganizationJoinRequestScalarFieldEnum[]
 }
 
 /**

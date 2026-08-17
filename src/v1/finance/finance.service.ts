@@ -173,13 +173,11 @@ export class FinanceService {
   }
 
   async getWalletByUserId(userId: string) {
-    const cacheKey = `wallet:user:${userId}`;
-    const cached = await this.cacheService.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
+    // Ensure wallet exists
+    const wallet = await this.ensureWalletExists(userId);
 
-    const wallet = await this.prisma.wallet.findUnique({
+    // Get fresh wallet with relations
+    const fullWallet = await this.prisma.wallet.findUnique({
       where: { userId },
       include: {
         transactions: {
@@ -193,16 +191,19 @@ export class FinanceService {
       },
     });
 
-    if (!wallet) {
-      throw new NotFoundException('Wallet not found');
-    }
+    // Cache the wallet
+    const cacheKey = `wallet:user:${userId}`;
+    await this.cacheService.set(cacheKey, fullWallet, 300);
 
-    await this.cacheService.set(cacheKey, wallet, 300);
-    return wallet;
+    return fullWallet;
   }
 
   async getWalletByOrganizationId(organizationId: string) {
-    const wallet = await this.prisma.wallet.findUnique({
+    // Ensure organization wallet exists
+    const wallet = await this.ensureOrganizationWalletExists(organizationId);
+
+    // Get fresh wallet with relations
+    const fullWallet = await this.prisma.wallet.findUnique({
       where: { organizationId },
       include: {
         transactions: {
@@ -216,8 +217,137 @@ export class FinanceService {
       },
     });
 
+    return fullWallet;
+  }
+
+  /**
+   * Ensure a user has a wallet. Creates one if it doesn't exist.
+   * Returns the wallet with ledgerAccount included.
+   */
+  async ensureWalletExists(userId: string): Promise<any> {
+    let wallet = await this.prisma.wallet.findUnique({
+      where: { userId },
+      include: { ledgerAccount: true },
+    });
+
     if (!wallet) {
-      throw new NotFoundException('Organization wallet not found');
+      this.logger.log(`Creating wallet for user: ${userId}`);
+
+      wallet = await this.prisma.$transaction(async (tx) => {
+        const newWallet = await tx.wallet.create({
+          data: {
+            userId,
+            currency: 'NGN',
+            balance: 0,
+            heldBalance: 0,
+            status: 'ACTIVE',
+          },
+        });
+
+        // Create ledger account for the wallet
+        const ledgerAccount = await tx.ledgerAccount.create({
+          data: {
+            code: `WALLET-${newWallet.id.substring(0, 8)}`,
+            name: `User Wallet - ${newWallet.id.substring(0, 8)}`,
+            type: 'ASSET',
+            category: 'CASH',
+            ownerType: 'USER',
+            ownerId: userId,
+            walletId: newWallet.id,
+            description: `Wallet account for user ${userId}`,
+            isSystem: false,
+            isActive: true,
+            balance: 0,
+            pendingBalance: 0,
+          },
+        });
+
+        await tx.wallet.update({
+          where: { id: newWallet.id },
+          data: { ledgerAccountId: ledgerAccount.id },
+        });
+
+        await tx.activityLog.create({
+          data: {
+            userId,
+            activity: 'WALLET_AUTO_CREATED',
+            details: JSON.stringify({
+              userId,
+              walletId: newWallet.id,
+              ledgerAccountId: ledgerAccount.id,
+              timestamp: new Date().toISOString(),
+            }),
+          },
+        });
+
+        // Return the wallet with ledgerAccount included
+        return tx.wallet.findUnique({
+          where: { id: newWallet.id },
+          include: { ledgerAccount: true },
+        });
+      });
+
+      this.logger.log(`Wallet created for user: ${userId}`);
+    }
+
+    return wallet;
+  }
+
+  /**
+   * Ensure an organization has a wallet. Creates one if it doesn't exist.
+   * Returns the wallet with ledgerAccount included.
+   */
+  async ensureOrganizationWalletExists(organizationId: string): Promise<any> {
+    let wallet = await this.prisma.wallet.findUnique({
+      where: { organizationId },
+      include: { ledgerAccount: true },
+    });
+
+    if (!wallet) {
+      this.logger.log(`Creating wallet for organization: ${organizationId}`);
+
+      wallet = await this.prisma.$transaction(async (tx) => {
+        const newWallet = await tx.wallet.create({
+          data: {
+            organizationId,
+            currency: 'NGN',
+            balance: 0,
+            heldBalance: 0,
+            status: 'ACTIVE',
+          },
+        });
+
+        // Create ledger account for the wallet
+        const ledgerAccount = await tx.ledgerAccount.create({
+          data: {
+            code: `ORG-WALLET-${newWallet.id.substring(0, 8)}`,
+            name: `Organization Wallet - ${newWallet.id.substring(0, 8)}`,
+            type: 'ASSET',
+            category: 'CASH',
+            ownerType: 'ORGANIZATION',
+            ownerId: organizationId,
+            walletId: newWallet.id,
+            description: `Wallet account for organization ${organizationId}`,
+            isSystem: false,
+            isActive: true,
+            balance: 0,
+            pendingBalance: 0,
+          },
+        });
+
+        await tx.wallet.update({
+          where: { id: newWallet.id },
+          data: { ledgerAccountId: ledgerAccount.id },
+        });
+
+        // Return the wallet with ledgerAccount included
+        return tx.wallet.findUnique({
+          where: { id: newWallet.id },
+          include: { ledgerAccount: true },
+        });
+      });
+
+      this.logger.log(`Wallet created for organization: ${organizationId}`);
     }
 
     return wallet;
@@ -233,6 +363,9 @@ export class FinanceService {
     );
 
     return this.prisma.$transaction(async (tx) => {
+      // Ensure target user has a wallet
+      await this.ensureWalletExists(dto.userId);
+
       const wallet = await tx.wallet.findUnique({
         where: { userId: dto.userId },
       });
@@ -327,6 +460,9 @@ export class FinanceService {
     );
 
     return this.prisma.$transaction(async (tx) => {
+      // Ensure target user has a wallet
+      await this.ensureWalletExists(dto.userId);
+
       const wallet = await tx.wallet.findUnique({
         where: { userId: dto.userId },
       });
@@ -434,13 +570,8 @@ export class FinanceService {
       endDate?: string;
     },
   ) {
-    const wallet = await this.prisma.wallet.findUnique({
-      where: { userId },
-    });
-
-    if (!wallet) {
-      throw new NotFoundException('Wallet not found');
-    }
+    // Ensure user has a wallet before fetching transactions
+    const wallet = await this.ensureWalletExists(userId);
 
     const skip = (page - 1) * limit;
     const where: any = { walletId: wallet.id };
@@ -504,6 +635,9 @@ export class FinanceService {
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
+
+    // Ensure organization has a wallet
+    await this.ensureOrganizationWalletExists(dto.organizationId);
 
     const due = await this.prisma.due.create({
       data: {
@@ -681,10 +815,15 @@ export class FinanceService {
   async getStudentDues(studentId: string) {
     const student = await this.prisma.studentProfile.findUnique({
       where: { id: studentId },
+      include: { user: true },
     });
+
     if (!student) {
       throw new NotFoundException('Student not found');
     }
+
+    // Ensure user has a wallet
+    await this.ensureWalletExists(student.userId);
 
     const assignments = await this.prisma.dueAssignment.findMany({
       where: { studentId },
@@ -732,6 +871,9 @@ export class FinanceService {
       throw new BadRequestException('Amount must be greater than 0');
     }
 
+    // Ensure user has a wallet
+    await this.ensureWalletExists(userId);
+
     const organization = await this.prisma.organization.findUnique({
       where: { id: dto.organizationId },
     });
@@ -739,6 +881,9 @@ export class FinanceService {
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
+
+    // Ensure organization has a wallet
+    await this.ensureOrganizationWalletExists(dto.organizationId);
 
     if (dto.dueAssignmentId) {
       const dueAssignment = await this.prisma.dueAssignment.findUnique({
@@ -877,6 +1022,9 @@ export class FinanceService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
+    // Ensure user has a wallet
+    await this.ensureWalletExists(userId);
 
     return this.prisma.$transaction(async (tx) => {
       const wallet = await tx.wallet.findUnique({
@@ -1076,10 +1224,10 @@ export class FinanceService {
         data: { journalEntryId: escrowJournal.id },
       });
 
-      const orgWallet = await tx.wallet.findUnique({
-        where: { organizationId: dto.organizationId },
-        include: { ledgerAccount: true },
-      });
+      // Ensure organization has a wallet
+      const orgWallet = await this.ensureOrganizationWalletExists(
+        dto.organizationId,
+      );
 
       if (orgWallet) {
         const orgLedgerAccount = await tx.ledgerAccount.findUnique({
@@ -1203,14 +1351,8 @@ export class FinanceService {
     organizationId: string,
     tx: any,
   ) {
-    const orgWallet = await tx.wallet.findUnique({
-      where: { organizationId },
-      include: { ledgerAccount: true },
-    });
-
-    if (!orgWallet) {
-      throw new NotFoundException('Organization wallet not found');
-    }
+    // Ensure organization has a wallet
+    const orgWallet = await this.ensureOrganizationWalletExists(organizationId);
 
     return orgWallet.ledgerAccount;
   }
@@ -1293,6 +1435,9 @@ export class FinanceService {
       throw new NotFoundException('User not found');
     }
 
+    // Ensure user has a wallet
+    await this.ensureWalletExists(userId);
+
     return this.prisma.$transaction(async (tx) => {
       const wallet = await tx.wallet.findUnique({
         where: { userId },
@@ -1311,14 +1456,10 @@ export class FinanceService {
         throw new BadRequestException('Insufficient balance');
       }
 
-      const orgWallet = await tx.wallet.findUnique({
-        where: { organizationId: dto.organizationId },
-        include: { ledgerAccount: true },
-      });
-
-      if (!orgWallet) {
-        throw new NotFoundException('Organization wallet not found');
-      }
+      // Ensure organization has a wallet
+      const orgWallet = await this.ensureOrganizationWalletExists(
+        dto.organizationId,
+      );
 
       const walletBalanceBefore = wallet.balance;
       const walletBalanceAfter = walletBalanceBefore - dto.amount;
@@ -1673,6 +1814,9 @@ export class FinanceService {
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
+
+    // Ensure organization has a wallet
+    await this.ensureOrganizationWalletExists(dto.organizationId);
 
     return this.prisma.$transaction(async (tx) => {
       const wallet = await tx.wallet.findUnique({
@@ -2068,6 +2212,9 @@ export class FinanceService {
       `Creating savings goal for user: ${userId} - Target: ${dto.targetAmount} Kobo`,
     );
 
+    // Ensure user has a wallet
+    await this.ensureWalletExists(userId);
+
     const goal = await this.prisma.savingsGoal.create({
       data: {
         userId,
@@ -2111,6 +2258,9 @@ export class FinanceService {
     );
 
     return this.prisma.$transaction(async (tx) => {
+      // Ensure user has a wallet
+      await this.ensureWalletExists(userId);
+
       const wallet = await tx.wallet.findUnique({
         where: { userId },
         include: { ledgerAccount: true },
@@ -2239,6 +2389,9 @@ export class FinanceService {
   }
 
   async getSavingsGoals(userId: string) {
+    // Ensure user has a wallet
+    await this.ensureWalletExists(userId);
+
     const goals = await this.prisma.savingsGoal.findMany({
       where: { userId },
       include: {
@@ -2385,6 +2538,9 @@ export class FinanceService {
         "You do not have access to this organization's financial data",
       );
     }
+
+    // Ensure organization has a wallet
+    await this.ensureOrganizationWalletExists(organizationId);
 
     const organization = await this.prisma.organization.findUnique({
       where: { id: organizationId },
@@ -2708,6 +2864,9 @@ export class FinanceService {
         "You do not have access to this organization's financial data",
       );
     }
+
+    // Ensure organization has a wallet
+    await this.ensureOrganizationWalletExists(organizationId);
 
     const organization = await this.prisma.organization.findUnique({
       where: { id: organizationId },

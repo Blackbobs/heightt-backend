@@ -56,8 +56,7 @@ export class AdminGuard implements CanActivate {
     }
 
     try {
-      // Check if user has any admin role
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admins = await (this.prisma as any).admin.findMany({
         where: {
           userId: user.id,
           status: 'ACTIVE',
@@ -67,12 +66,25 @@ export class AdminGuard implements CanActivate {
         },
       });
 
-      if (!admin) {
+      if (!admins.length) {
         this.logger.warn(
           `User ${user.id} attempted to access admin endpoint without admin privileges`,
         );
         throw new ForbiddenException('Admin access required');
       }
+
+      const organizationId =
+        request.params?.organizationId ||
+        request.query?.organizationId ||
+        request.body?.organizationId;
+
+      const admin =
+        admins.find(
+          (entry) =>
+            organizationId &&
+            entry.organizationId &&
+            entry.organizationId === organizationId,
+        ) || admins[0];
 
       // Check for admin type requirements
       const requiredAdminTypes = this.reflector.get<string[]>(
@@ -81,9 +93,13 @@ export class AdminGuard implements CanActivate {
       );
 
       if (requiredAdminTypes && requiredAdminTypes.length > 0) {
-        if (!requiredAdminTypes.includes(admin.adminType)) {
+        const matchingAdminType = admins.some((entry) =>
+          requiredAdminTypes.includes(entry.adminType),
+        );
+
+        if (!matchingAdminType) {
           this.logger.warn(
-            `User ${user.id} with admin type ${admin.adminType} does not have required admin type`,
+            `User ${user.id} does not have required admin type: ${requiredAdminTypes.join(', ')}`,
           );
           throw new ForbiddenException('Insufficient admin privileges');
         }

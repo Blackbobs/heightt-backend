@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
 import { AnalyticsQueryDto, AnalyticsPeriod } from './dto/analytics.dto';
+import { Prisma } from '../generated/prisma/client';
 
 @Injectable()
 export class AnalyticsService {
@@ -85,8 +86,7 @@ export class AnalyticsService {
     }
 
     // Total revenue and transactions
-    const [totalAgg, paymentMethods, topOrgs, topInstitutions] =
-      await Promise.all([
+    const [totalAgg, paymentMethods, topOrgs] = await Promise.all([
         this.prisma.payment.aggregate({
           where,
           _sum: { amount: true },
@@ -105,17 +105,50 @@ export class AnalyticsService {
           orderBy: { _sum: { amount: 'desc' } },
           take: 10,
         }),
-        this.prisma.payment.groupBy({
-          by: ['organizationId'],
-          where: {
-            ...where,
-            organization: { institutionId: { not: null } },
-          },
-          _sum: { amount: true },
-          orderBy: { _sum: { amount: 'desc' } },
-          take: 10,
-        }),
       ]);
+
+    // A payment belongs to an organization, while the institution is a field
+    // on that organization. Prisma cannot group a model by a related field, so
+    // aggregate the payment totals at the institution level in SQL.
+    const institutionConditions = [
+      Prisma.sql`p."status" = CAST(${'COMPLETED'} AS "PaymentStatus")`,
+    ];
+    if (dto.institutionId) {
+      institutionConditions.push(
+        Prisma.sql`o."institutionId" = ${dto.institutionId}`,
+      );
+    }
+    if (dto.organizationId) {
+      institutionConditions.push(
+        Prisma.sql`p."organizationId" = ${dto.organizationId}`,
+      );
+    }
+    if (startDate) {
+      institutionConditions.push(
+        Prisma.sql`p."paidAt" >= ${new Date(startDate)}`,
+      );
+    }
+    if (endDate) {
+      institutionConditions.push(
+        Prisma.sql`p."paidAt" <= ${new Date(endDate)}`,
+      );
+    }
+
+    const topInstitutions = await this.prisma.$queryRaw<
+      Array<{ id: string; name: string; revenue: bigint }>
+    >(Prisma.sql`
+      SELECT
+        i."id" AS "id",
+        i."name" AS "name",
+        SUM(p."amount")::bigint AS "revenue"
+      FROM "payments" p
+      INNER JOIN "organizations" o ON o."id" = p."organizationId"
+      INNER JOIN "institutions" i ON i."id" = o."institutionId"
+      WHERE ${Prisma.join(institutionConditions, ' AND ')}
+      GROUP BY i."id", i."name"
+      ORDER BY SUM(p."amount") DESC
+      LIMIT 10
+    `);
 
     // Revenue trend - using raw query
     const revenueTrend = await this.getRevenueTrend(where, period);
@@ -127,14 +160,6 @@ export class AnalyticsService {
       select: { id: true, name: true },
     });
     const orgMap = new Map(organizations.map((o) => [o.id, o.name]));
-
-    // Get institution names
-    const instIds = topInstitutions.map((o) => o.organizationId);
-    const institutions = await this.prisma.institution.findMany({
-      where: { id: { in: instIds } },
-      select: { id: true, name: true },
-    });
-    const instMap = new Map(institutions.map((i) => [i.id, i.name]));
 
     const totalRevenue = totalAgg._sum.amount || 0;
     const totalTransactions = totalAgg._count.id || 0;
@@ -153,11 +178,14 @@ export class AnalyticsService {
           : '₦0.00',
       revenueGrowth: await this.calculateRevenueGrowth(where),
       revenueTrend: Array.isArray(revenueTrend)
-        ? revenueTrend.map((item: any) => ({
-            period: item.period,
-            amount: item.total || 0,
-            amountFormatted: `₦${((item.total || 0) / 100).toFixed(2)}`,
-          }))
+        ? revenueTrend.map((item: any) => {
+            const amount = Number(item.total || 0);
+            return {
+              period: item.period,
+              amount,
+              amountFormatted: `₦${(amount / 100).toFixed(2)}`,
+            };
+          })
         : [],
       revenueByPaymentMethod: paymentMethods.map((pm) => ({
         method: pm.paymentMethod,
@@ -175,11 +203,11 @@ export class AnalyticsService {
           revenue: o._sum.amount || 0,
           revenueFormatted: `₦${((o._sum.amount || 0) / 100).toFixed(2)}`,
         })),
-        institutions: topInstitutions.map((o) => ({
-          id: o.organizationId,
-          name: instMap.get(o.organizationId) || 'Unknown',
-          revenue: o._sum.amount || 0,
-          revenueFormatted: `₦${((o._sum.amount || 0) / 100).toFixed(2)}`,
+        institutions: topInstitutions.map((institution) => ({
+          id: institution.id,
+          name: institution.name,
+          revenue: Number(institution.revenue),
+          revenueFormatted: `₦${(Number(institution.revenue) / 100).toFixed(2)}`,
         })),
       },
     };
@@ -555,33 +583,34 @@ export class AnalyticsService {
   // ============================================
 
   private async getRevenueTrend(where: any, period: AnalyticsPeriod) {
-    const conditions = ["status = 'COMPLETED'"];
+    const conditions = [
+      Prisma.sql`"status" = CAST(${'COMPLETED'} AS "PaymentStatus")`,
+    ];
 
     if (where.organizationId) {
-      conditions.push(`organization_id = '${where.organizationId}'`);
+      conditions.push(
+        Prisma.sql`"organizationId" = ${where.organizationId}`,
+      );
     }
     if (where.paidAt?.gte) {
-      conditions.push(`paid_at >= '${where.paidAt.gte.toISOString()}'`);
+      conditions.push(Prisma.sql`"paidAt" >= ${where.paidAt.gte}`);
     }
     if (where.paidAt?.lte) {
-      conditions.push(`paid_at <= '${where.paidAt.lte.toISOString()}'`);
+      conditions.push(Prisma.sql`"paidAt" <= ${where.paidAt.lte}`);
     }
 
-    const whereClause =
-      conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-
-    const query = `
-      SELECT 
-        DATE_TRUNC('month', paid_at) as period,
-        SUM(amount) as total
-      FROM payments
-      ${whereClause}
-      GROUP BY DATE_TRUNC('month', paid_at)
-      ORDER BY period ASC
+    return this.prisma.$queryRaw<
+      Array<{ period: Date; total: bigint }>
+    >(Prisma.sql`
+      SELECT
+        DATE_TRUNC('month', "paidAt") AS "period",
+        SUM("amount")::bigint AS "total"
+      FROM "payments"
+      WHERE ${Prisma.join(conditions, ' AND ')}
+      GROUP BY DATE_TRUNC('month', "paidAt")
+      ORDER BY "period" ASC
       LIMIT 12
-    `;
-
-    return await this.prisma.$queryRawUnsafe(query);
+    `);
   }
 
   private async calculateRevenueGrowth(where: any): Promise<number> {

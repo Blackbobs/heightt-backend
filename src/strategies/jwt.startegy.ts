@@ -23,26 +23,43 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
+          // Try to get token from cookie
           const token = request?.cookies?.accessToken;
           if (token) {
             this.logger.debug('✅ Token extracted from cookie');
+            return token;
           }
-          return token || null;
+
+          // Try to get token from Authorization header
+          const authHeader = request?.headers?.authorization;
+          if (authHeader && authHeader.startsWith('Bearer ')) {
+            const bearerToken = authHeader.substring(7);
+            this.logger.debug('✅ Token extracted from Authorization header');
+            return bearerToken;
+          }
+
+          return null;
         },
-        ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
       secretOrKey: secret,
       ignoreExpiration: false,
+      passReqToCallback: true, // Pass request to validate method
     });
   }
 
-  async validate(payload: any) {
+  async validate(req: Request, payload: any) {
     this.logger.debug(`🔍 Validating user: ${payload.sub}`);
 
     // Check if token is expired
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
       this.logger.warn(`❌ Token expired for user: ${payload.sub}`);
-      throw new UnauthorizedException('Token expired');
+      throw new UnauthorizedException('Access token expired');
+    }
+
+    // Check token type
+    if (payload.type && payload.type !== 'access') {
+      this.logger.warn(`❌ Invalid token type for user: ${payload.sub}`);
+      throw new UnauthorizedException('Invalid token type');
     }
 
     const user = await this.prisma.user.findUnique({
@@ -58,7 +75,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException('User not found');
     }
 
-    // Check user status instead of isActive/isDeleted
+    // Check user status
     if (
       user.status === 'DELETED' ||
       user.status === 'INACTIVE' ||

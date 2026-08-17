@@ -11,19 +11,26 @@ export class JwtGuard extends AuthGuard('jwt') {
   private readonly logger = new Logger(JwtGuard.name);
 
   canActivate(context: ExecutionContext) {
-    // Add your custom authentication logic here
-    // For example, call super.logIn(request) to establish a session
     return super.canActivate(context);
   }
 
   handleRequest(err: any, user: any, info: any) {
-    // You can throw an exception based on either "info" or "err" arguments
+    // Handle JWT errors
     if (err || !user) {
-      this.logger.debug(
-        `Authentication failed: ${info?.message || 'No user found'}`,
-      );
-      throw err || new UnauthorizedException('Invalid or expired token');
+      let message = 'Unauthorized';
+
+      if (info?.name === 'TokenExpiredError') {
+        message = 'Access token expired';
+      } else if (info?.name === 'JsonWebTokenError') {
+        message = 'Invalid access token';
+      } else if (info?.name === 'NotBeforeError') {
+        message = 'Token not yet active';
+      }
+
+      this.logger.debug(`JWT Guard: ${message}`);
+      throw new UnauthorizedException(message);
     }
+
     return user;
   }
 }

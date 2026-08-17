@@ -9,6 +9,15 @@
 * 🟢 You can import this file directly.
 */
 
+export const JoinRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type JoinRequestStatus = (typeof JoinRequestStatus)[keyof typeof JoinRequestStatus]
+
+
 export const AdminType = {
   PLATFORM_ADMIN: 'PLATFORM_ADMIN',
   INSTITUTION_ADMIN: 'INSTITUTION_ADMIN',

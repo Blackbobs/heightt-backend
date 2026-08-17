@@ -601,6 +601,35 @@ export class InstitutionsController {
     return this.institutionsService.deleteAcademicSession(id, req.user.id);
   }
 
+  /**
+   * Generate organizations for a department's academic levels
+   */
+  @Post(':departmentId/generate-organizations')
+  @UseGuards(AdminGuard)
+  @RequirePermission('department:update')
+  @InvalidateCache(['institutions', 'organizations'])
+  @ApiOperation({
+    summary: 'Generate organizations for department academic levels',
+    description:
+      'Creates organizations for each academic level in a department',
+  })
+  @ApiParam({ name: 'departmentId', description: 'Department ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Organizations generated successfully',
+  })
+  async generateOrganizationsForDepartment(
+    @Param('departmentId') departmentId: string,
+    @Request() req: any,
+  ) {
+    this.logger.log(
+      `Generate organizations for department endpoint called: ${departmentId}`,
+    );
+    return this.institutionsService.generateOrganizationsForDepartment(
+      departmentId,
+      req.user.id,
+    );
+  }
   // ============================================
   // CACHE INVALIDATION ENDPOINT (Admin only)
   // ============================================

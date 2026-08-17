@@ -68,6 +68,7 @@ export const ModelName = {
   StudentVerification: 'StudentVerification',
   Organization: 'Organization',
   OrganizationMembership: 'OrganizationMembership',
+  OrganizationJoinRequest: 'OrganizationJoinRequest',
   Role: 'Role',
   Permission: 'Permission',
   RolePermission: 'RolePermission',
@@ -439,6 +440,22 @@ export const OrganizationMembershipScalarFieldEnum = {
 } as const
 
 export type OrganizationMembershipScalarFieldEnum = (typeof OrganizationMembershipScalarFieldEnum)[keyof typeof OrganizationMembershipScalarFieldEnum]
+
+
+export const OrganizationJoinRequestScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  status: 'status',
+  membershipType: 'membershipType',
+  message: 'message',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganizationJoinRequestScalarFieldEnum = (typeof OrganizationJoinRequestScalarFieldEnum)[keyof typeof OrganizationJoinRequestScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {
