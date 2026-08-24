@@ -1,3 +1,5 @@
+// src/v1/bachs/bachs.service.ts
+
 import {
   Injectable,
   Logger,
@@ -147,7 +149,9 @@ export class BachsService {
 
     const checkoutPayload = {
       customer: {
-        customer_id: bachsCustomer.id,
+        customer_id: bachsCustomer.id, // FIX: Use the Bachs customer ID
+        email: user.email, // Also include email as fallback
+        name: customerName || 'Customer', // Include name as well
       },
       pricing: {
         currency: 'NGN',
@@ -568,5 +572,153 @@ export class BachsService {
       completedAt: pendingPayment.completedAt,
       createdAt: pendingPayment.createdAt,
     };
+  }
+
+  /**
+   * Get all pending payments for a user
+   */
+  async getUserPendingPayments(userId: string): Promise<any[]> {
+    return this.prisma.pendingPayment.findMany({
+      where: {
+        userId,
+        status: 'PENDING',
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  /**
+   * Cleanup expired pending payments
+   * This should be called by a cron job
+   */
+  async cleanupExpiredPayments(): Promise<number> {
+    const expiryMinutes = 60;
+    const cutoffTime = new Date();
+    cutoffTime.setMinutes(cutoffTime.getMinutes() - expiryMinutes);
+
+    const expiredPayments = await this.prisma.pendingPayment.updateMany({
+      where: {
+        status: 'PENDING',
+        createdAt: {
+          lt: cutoffTime,
+        },
+      },
+      data: {
+        status: 'EXPIRED',
+        metadata: {
+          expiredAt: new Date().toISOString(),
+          reason: 'Payment session expired',
+        },
+      },
+    });
+
+    this.logger.log(
+      `Cleaned up ${expiredPayments.count} expired pending payments`,
+    );
+    return expiredPayments.count;
+  }
+
+  /**
+   * Retry failed pending payments (for webhook retries)
+   */
+  async retryFailedPayment(pendingPaymentId: string): Promise<any> {
+    const pendingPayment = await this.prisma.pendingPayment.findUnique({
+      where: { id: pendingPaymentId },
+    });
+
+    if (!pendingPayment) {
+      throw new NotFoundException('Pending payment not found');
+    }
+
+    if (pendingPayment.status !== 'FAILED') {
+      throw new BadRequestException('Payment is not in failed state');
+    }
+
+    // Increment retry count
+    const retryCount = ((pendingPayment.metadata as any)?.retryCount || 0) + 1;
+
+    if (retryCount > 3) {
+      throw new BadRequestException('Maximum retry attempts exceeded');
+    }
+
+    // Reset status to PENDING
+    await this.prisma.pendingPayment.update({
+      where: { id: pendingPaymentId },
+      data: {
+        status: 'PENDING',
+        metadata: {
+          ...((pendingPayment.metadata as any) || {}),
+          retryCount,
+          retriedAt: new Date().toISOString(),
+        },
+      },
+    });
+
+    // Return the pending payment data for retry processing
+    return {
+      ...pendingPayment,
+      retryCount,
+    };
+  }
+
+  /**
+   * Validate if a payment can be made
+   */
+  async validatePayment(
+    userId: string,
+    organizationId: string,
+    amount: number,
+  ): Promise<{ valid: boolean; message?: string }> {
+    // Check if amount meets minimum
+    if (amount < MIN_BACHS_CHECKOUT_AMOUNT_KOBO) {
+      return {
+        valid: false,
+        message: `Amount must be at least ${CurrencyUtil.formatNaira(
+          MIN_BACHS_CHECKOUT_AMOUNT_KOBO,
+        )}`,
+      };
+    }
+
+    // Check if user exists
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return {
+        valid: false,
+        message: 'User not found',
+      };
+    }
+
+    // Check if organization exists
+    const organization = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+    });
+
+    if (!organization) {
+      return {
+        valid: false,
+        message: 'Organization not found',
+      };
+    }
+
+    // Check if user is a member of the organization
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: {
+        userId,
+        organizationId,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!membership) {
+      return {
+        valid: false,
+        message: 'You are not a member of this organization',
+      };
+    }
+
+    return { valid: true };
   }
 }
