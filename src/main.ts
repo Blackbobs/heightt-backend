@@ -86,35 +86,19 @@ async function bootstrap() {
       ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
     });
 
-    // Apply CSRF protection with proper exclusion for webhooks
     app.use((req: any, res: any, next: any) => {
-      const url = req.originalUrl || req.url || '';
+      const path = req.path;
 
-      // Log the incoming request URL for debugging
-      logger.debug(`CSRF Check - URL: ${url}, Method: ${req.method}`);
-
-      // Exclude ALL webhook routes from CSRF protection
-      // Match both /api/webhooks/* and /api/v1/webhooks/* patterns
-      const isWebhook =
-        url.includes('/webhooks') ||
-        url.includes('/webhook') ||
-        url.includes('/api/webhooks') ||
-        url.includes('/api/v1/webhooks') ||
-        url.includes('/webhooks/bachs') ||
-        url.includes('/webhooks/paystack') ||
-        url.includes('/webhooks/flutterwave');
-
-      if (isWebhook) {
-        logger.debug(`Webhook detected - skipping CSRF for ${url}`);
+      // Payment-provider webhooks are authenticated
+      // using their own cryptographic signatures.
+      if (
+        req.method === 'POST' &&
+        (path === '/api/webhooks/bachs' || path === '/api/v1/webhooks/bachs')
+      ) {
+        logger.debug(`Skipping CSRF for Bachs webhook: ${path}`);
         return next();
       }
 
-      // Also skip health check endpoints
-      if (url.includes('/health')) {
-        return next();
-      }
-
-      // Apply CSRF protection for all other routes
       return csrfProtection(req, res, next);
     });
 
