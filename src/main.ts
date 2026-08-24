@@ -69,17 +69,24 @@ async function bootstrap() {
   // 3. CSRF Protection (only in production)
   // ============================================
   if (isProduction) {
-    app.use(
-      csurf({
-        cookie: {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
-        },
-        ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-      }),
-    );
-    logger.log('🔒 CSRF protection enabled');
+    const csrfProtection = csurf({
+      cookie: {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      },
+      ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+    });
+
+    app.use((req: any, res: any, next: any) => {
+      const url = req.originalUrl || req.url || '';
+      // Exclude webhook routes from CSRF protection as external providers cannot supply CSRF tokens
+      if (url.includes('/webhook')) {
+        return next();
+      }
+      return csrfProtection(req, res, next);
+    });
+    logger.log('🔒 CSRF protection enabled (webhooks excluded)');
   }
 
   // ============================================
