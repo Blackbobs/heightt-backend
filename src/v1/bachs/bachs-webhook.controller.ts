@@ -23,32 +23,38 @@ export class BachsWebhookController {
   @Post()
   @HttpCode(HttpStatus.OK)
   async handleWebhook(
-    @Headers('x-bachs-signature') signature: string,
+    @Headers('x-bachs-signature') sig1: string,
+    @Headers('x-signature') sig2: string,
+    @Headers('signature') sig3: string,
+    @Headers('x-bachs-signature-256') sig4: string,
     @Headers('x-request-id') requestId: string,
     @Body() payload: any,
   ) {
+    const signature = sig1 || sig2 || sig3 || sig4;
+    const eventType = payload.type || payload.event || payload.event_type;
+
     this.logger.log(
-      `Received webhook event: ${payload.type}, request-id: ${requestId}`,
+      `Received webhook event: ${eventType}, request-id: ${requestId}`,
     );
 
     // 1. Verify signature
-    if (!signature) {
-      this.logger.warn('Webhook missing signature header');
-      throw new BadRequestException('Missing signature');
-    }
-
     if (!this.bachsClient.verifyWebhookSignature(payload, signature)) {
       this.logger.warn('Invalid webhook signature');
       throw new BadRequestException('Invalid signature');
     }
 
     // 2. Handle specific events
-    switch (payload.type) {
+    switch (eventType) {
       case 'collection.succeeded':
+      case 'payment.succeeded':
+      case 'charge.succeeded':
+      case 'checkout.session.completed':
         await this.handleCollectionSucceeded(payload);
         break;
 
       case 'collection.failed':
+      case 'payment.failed':
+      case 'charge.failed':
         await this.handleCollectionFailed(payload);
         break;
 
@@ -65,38 +71,49 @@ export class BachsWebhookController {
         break;
 
       default:
-        this.logger.log(`Unhandled webhook event type: ${payload.type}`);
+        this.logger.log(`Unhandled webhook event type: ${eventType}`);
         break;
     }
 
     // Always return 200 OK to acknowledge receipt
-    return { received: true, event: payload.type };
+    return { received: true, event: eventType };
   }
 
   /**
    * Handle successful payment collection
    */
   private async handleCollectionSucceeded(payload: any) {
-    const data = payload.data;
-    const chargeId = data.charge_id;
-    const checkoutId = data.checkout_id;
-    const amount = data.amount;
-    const customerId = data.customer?.id;
-    const metadata = data.metadata || {};
+    const data = payload.data || payload;
+    const metadata = data.metadata || payload.metadata || {};
+    const chargeId =
+      data.charge_id || data.id || payload.id || `charge_${Date.now()}`;
+    const checkoutId =
+      data.checkout_id ||
+      data.checkout_session_id ||
+      data.checkoutId ||
+      metadata.checkoutId ||
+      metadata.bachsCheckoutId ||
+      payload.checkout_id;
+    const amount =
+      data.amount || data.amount_paid || data.pricing?.amount || payload.amount;
+    const customerId =
+      data.customer?.id || data.customer_id || metadata.bachsCustomerId;
 
-    this.logger.log(`Processing successful collection: charge ${chargeId}`);
+    this.logger.log(
+      `Processing successful collection: charge ${chargeId}, checkout ${checkoutId}`,
+    );
 
     try {
       const result = await this.bachsService.completePayment(
         checkoutId,
         chargeId,
-        amount,
+        String(amount),
         customerId,
         metadata,
       );
 
-      this.logger.log(`Payment completed: ${result.payment.id}`);
-    } catch (error) {
+      this.logger.log(`Payment completed: ${result.payment?.id || result.id}`);
+    } catch (error: any) {
       this.logger.error(`Failed to complete payment: ${error.message}`);
     }
   }

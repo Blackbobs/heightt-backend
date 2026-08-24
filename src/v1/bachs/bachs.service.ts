@@ -143,8 +143,10 @@ export class BachsService {
     });
 
     // 4. Prepare Bachs checkout payload
-    const appUrl =
-      this.configService.get<string>('APP_URL') || 'http://localhost:3000';
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') ||
+      this.configService.get<string>('APP_URL') ||
+      'http://localhost:3001';
     const bachsAmount = this.bachsClient.toBachsAmount(paymentData.amount);
 
     const checkoutPayload = {
@@ -165,8 +167,8 @@ export class BachsService {
         organizationId: paymentData.organizationId,
         internalReference: pendingPayment.reference,
       },
-      success_url: successUrl || `${appUrl}/api/v1/payments/success`,
-      cancel_url: cancelUrl || `${appUrl}/api/v1/payments/cancel`,
+      success_url: successUrl || `${frontendUrl}/dashboard/payments/success`,
+      cancel_url: cancelUrl || `${frontendUrl}/dashboard/payments/cancel`,
       expires_in_minutes: 60,
     };
 
@@ -214,9 +216,18 @@ export class BachsService {
 
     return this.prisma.$transaction(async (tx) => {
       // 1. Find the pending payment
+      const pendingPaymentIdFromMeta =
+        paymentData?.pendingPaymentId || paymentData?.metadata?.pendingPaymentId;
+      const internalRefFromMeta =
+        paymentData?.internalReference || paymentData?.metadata?.internalReference;
+
       const pendingPayment = await tx.pendingPayment.findFirst({
         where: {
-          bachsCheckoutId: checkoutId,
+          OR: [
+            ...(checkoutId ? [{ bachsCheckoutId: checkoutId }] : []),
+            ...(pendingPaymentIdFromMeta ? [{ id: pendingPaymentIdFromMeta }] : []),
+            ...(internalRefFromMeta ? [{ reference: internalRefFromMeta }] : []),
+          ],
           status: 'PENDING',
         },
         include: {
@@ -227,7 +238,7 @@ export class BachsService {
 
       if (!pendingPayment) {
         throw new NotFoundException(
-          `Pending payment not found for checkout ${checkoutId}`,
+          `Pending payment not found for checkout ${checkoutId || 'unknown'}`,
         );
       }
 

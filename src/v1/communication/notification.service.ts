@@ -418,35 +418,63 @@ export class NotificationService {
 
   @OnEvent(SystemEvents.PAYMENT_RECEIVED)
   async handlePaymentReceived(data: any) {
-    const { userId, payment, organization } = data;
+    try {
+      const userId = data.userId || data.payment?.payerId;
+      const paymentId = data.paymentId || data.payment?.id;
+      const organizationId = data.organizationId || data.organization?.id;
+      const amount = data.amount ?? data.payment?.amount;
 
-    await this.createNotification(userId, {
-      title: 'Payment Received ✅',
-      body: `Your payment of ₦${(Number(payment.amount) / 100).toFixed(2)} to ${organization.name} was successful.`,
-      type: 'FINANCIAL',
-      priority: 'NORMAL',
-      data: { paymentId: payment.id, organizationId: organization.id },
-      sendEmail: true,
-    });
+      if (!userId) {
+        this.logger.warn('PAYMENT_RECEIVED event missing userId, skipping notification');
+        return;
+      }
 
-    const admins = await this.prisma.organizationMembership.findMany({
-      where: {
-        organizationId: organization.id,
-        membershipType: 'ADMIN',
-        status: 'ACTIVE',
-      },
-      select: { userId: true },
-    });
+      let orgName = data.organization?.name;
+      if (!orgName && organizationId) {
+        const org = await this.prisma.organization.findUnique({
+          where: { id: organizationId },
+          select: { name: true },
+        });
+        orgName = org?.name || 'Organization';
+      }
 
-    for (const admin of admins) {
-      await this.createNotification(admin.userId, {
-        title: 'New Payment Received 💰',
-        body: `A payment of ₦${(Number(payment.amount) / 100).toFixed(2)} was received from a member.`,
+      const formattedAmount = (Number(amount || 0) / 100).toFixed(2);
+
+      await this.createNotification(userId, {
+        title: 'Payment Received ✅',
+        body: `Your payment of ₦${formattedAmount} to ${orgName || 'Organization'} was successful.`,
         type: 'FINANCIAL',
         priority: 'NORMAL',
-        data: { paymentId: payment.id, organizationId: organization.id },
-        sendEmail: false,
+        data: { paymentId, organizationId },
+        sendEmail: true,
       });
+
+      if (organizationId) {
+        const admins = await this.prisma.organizationMembership.findMany({
+          where: {
+            organizationId,
+            membershipType: 'ADMIN',
+            status: 'ACTIVE',
+          },
+          select: { userId: true },
+        });
+
+        for (const admin of admins) {
+          await this.createNotification(admin.userId, {
+            title: 'New Payment Received 💰',
+            body: `A payment of ₦${formattedAmount} was received from a member.`,
+            type: 'FINANCIAL',
+            priority: 'NORMAL',
+            data: { paymentId, organizationId },
+            sendEmail: false,
+          });
+        }
+      }
+    } catch (error: any) {
+      this.logger.error(
+        `Failed to handle PAYMENT_RECEIVED event: ${error.message}`,
+        error.stack,
+      );
     }
   }
 
