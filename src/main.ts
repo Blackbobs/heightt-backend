@@ -36,7 +36,11 @@ async function bootstrap() {
           scriptSrc: ["'self'"],
           imgSrc: ["'self'", 'data:', 'https:'],
           fontSrc: ["'self'", 'https:'],
-          connectSrc: ["'self'", 'https://api.paystack.co'],
+          connectSrc: [
+            "'self'",
+            'https://api.paystack.co',
+            'https://*.bachs.io',
+          ],
           frameAncestors: ["'none'"],
           formAction: ["'self'"],
         },
@@ -66,9 +70,13 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // ============================================
-  // 3. CSRF Protection (only in production)
+  // 3. CSRF Protection - FIXED
   // ============================================
+  // IMPORTANT: CSRF protection must be applied after cookie parser
+  // but before routes are handled
+
   if (isProduction) {
+    // Create CSRF protection middleware
     const csrfProtection = csurf({
       cookie: {
         httpOnly: true,
@@ -78,15 +86,42 @@ async function bootstrap() {
       ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
     });
 
+    // Apply CSRF protection with proper exclusion for webhooks
     app.use((req: any, res: any, next: any) => {
       const url = req.originalUrl || req.url || '';
-      // Exclude webhook routes from CSRF protection as external providers cannot supply CSRF tokens
-      if (url.includes('/webhook')) {
+
+      // Log the incoming request URL for debugging
+      logger.debug(`CSRF Check - URL: ${url}, Method: ${req.method}`);
+
+      // Exclude ALL webhook routes from CSRF protection
+      // Match both /api/webhooks/* and /api/v1/webhooks/* patterns
+      const isWebhook =
+        url.includes('/webhooks') ||
+        url.includes('/webhook') ||
+        url.includes('/api/webhooks') ||
+        url.includes('/api/v1/webhooks') ||
+        url.includes('/webhooks/bachs') ||
+        url.includes('/webhooks/paystack') ||
+        url.includes('/webhooks/flutterwave');
+
+      if (isWebhook) {
+        logger.debug(`Webhook detected - skipping CSRF for ${url}`);
         return next();
       }
+
+      // Also skip health check endpoints
+      if (url.includes('/health')) {
+        return next();
+      }
+
+      // Apply CSRF protection for all other routes
       return csrfProtection(req, res, next);
     });
+
     logger.log('🔒 CSRF protection enabled (webhooks excluded)');
+  } else {
+    // In development, log that CSRF is disabled
+    logger.log('⚠️ CSRF protection disabled (development mode)');
   }
 
   // ============================================
@@ -118,7 +153,7 @@ async function bootstrap() {
     }),
   );
 
-    // ============================================
+  // ============================================
   // 5. CORS Configuration (Enhanced)
   // ============================================
   // Use dedicated CORS_ORIGIN env var if available; fall back to FRONTEND_URL.
@@ -126,7 +161,10 @@ async function bootstrap() {
   // while CORS_ORIGIN is a comma-separated list designed for CORS.
   const rawOrigins =
     configService.get<string>('CORS_ORIGIN') ||
-    configService.get<string>('FRONTEND_URL', 'http://localhost:3000,http://localhost:3001');
+    configService.get<string>(
+      'FRONTEND_URL',
+      'http://localhost:3000,http://localhost:3001',
+    );
 
   const allowedOrigins = rawOrigins
     .split(',')
@@ -154,6 +192,8 @@ async function bootstrap() {
       'Accept',
       'Origin',
       'Idempotency-Key',
+      'X-Bachs-Signature', // Add Bachs webhook signature header
+      'X-Request-ID', // Add Bachs request ID header
     ],
     exposedHeaders: [
       'Set-Cookie',
