@@ -198,10 +198,10 @@ export type EventRegistrationWhereInput = {
   status?: Prisma.EnumRegistrationStatusFilter<"EventRegistration"> | $Enums.RegistrationStatus
   registeredAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
   attendedAt?: Prisma.DateTimeNullableFilter<"EventRegistration"> | Date | string | null
-  event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  ticketPurchase?: Prisma.XOR<Prisma.TicketPurchaseNullableScalarRelationFilter, Prisma.TicketPurchaseWhereInput> | null
   attendance?: Prisma.XOR<Prisma.AttendanceNullableScalarRelationFilter, Prisma.AttendanceWhereInput> | null
+  event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  ticketPurchase?: Prisma.XOR<Prisma.TicketPurchaseNullableScalarRelationFilter, Prisma.TicketPurchaseWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type EventRegistrationOrderByWithRelationInput = {
@@ -212,10 +212,10 @@ export type EventRegistrationOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   registeredAt?: Prisma.SortOrder
   attendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  event?: Prisma.EventOrderByWithRelationInput
-  user?: Prisma.UserOrderByWithRelationInput
-  ticketPurchase?: Prisma.TicketPurchaseOrderByWithRelationInput
   attendance?: Prisma.AttendanceOrderByWithRelationInput
+  event?: Prisma.EventOrderByWithRelationInput
+  ticketPurchase?: Prisma.TicketPurchaseOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type EventRegistrationWhereUniqueInput = Prisma.AtLeast<{
@@ -230,10 +230,10 @@ export type EventRegistrationWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumRegistrationStatusFilter<"EventRegistration"> | $Enums.RegistrationStatus
   registeredAt?: Prisma.DateTimeFilter<"EventRegistration"> | Date | string
   attendedAt?: Prisma.DateTimeNullableFilter<"EventRegistration"> | Date | string | null
-  event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  ticketPurchase?: Prisma.XOR<Prisma.TicketPurchaseNullableScalarRelationFilter, Prisma.TicketPurchaseWhereInput> | null
   attendance?: Prisma.XOR<Prisma.AttendanceNullableScalarRelationFilter, Prisma.AttendanceWhereInput> | null
+  event?: Prisma.XOR<Prisma.EventScalarRelationFilter, Prisma.EventWhereInput>
+  ticketPurchase?: Prisma.XOR<Prisma.TicketPurchaseNullableScalarRelationFilter, Prisma.TicketPurchaseWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "ticketPurchaseId" | "eventId_userId">
 
 export type EventRegistrationOrderByWithAggregationInput = {
@@ -267,10 +267,10 @@ export type EventRegistrationCreateInput = {
   status?: $Enums.RegistrationStatus
   registeredAt?: Date | string
   attendedAt?: Date | string | null
-  event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
-  user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
-  ticketPurchase?: Prisma.TicketPurchaseCreateNestedOneWithoutRegistrationInput
   attendance?: Prisma.AttendanceCreateNestedOneWithoutRegistrationInput
+  event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
+  ticketPurchase?: Prisma.TicketPurchaseCreateNestedOneWithoutRegistrationInput
+  user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
 }
 
 export type EventRegistrationUncheckedCreateInput = {
@@ -289,10 +289,10 @@ export type EventRegistrationUpdateInput = {
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
-  ticketPurchase?: Prisma.TicketPurchaseUpdateOneWithoutRegistrationNestedInput
   attendance?: Prisma.AttendanceUpdateOneWithoutRegistrationNestedInput
+  event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
+  ticketPurchase?: Prisma.TicketPurchaseUpdateOneWithoutRegistrationNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
 }
 
 export type EventRegistrationUncheckedUpdateInput = {
@@ -527,9 +527,9 @@ export type EventRegistrationCreateWithoutUserInput = {
   status?: $Enums.RegistrationStatus
   registeredAt?: Date | string
   attendedAt?: Date | string | null
+  attendance?: Prisma.AttendanceCreateNestedOneWithoutRegistrationInput
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
   ticketPurchase?: Prisma.TicketPurchaseCreateNestedOneWithoutRegistrationInput
-  attendance?: Prisma.AttendanceCreateNestedOneWithoutRegistrationInput
 }
 
 export type EventRegistrationUncheckedCreateWithoutUserInput = {
@@ -586,9 +586,9 @@ export type EventRegistrationCreateWithoutEventInput = {
   status?: $Enums.RegistrationStatus
   registeredAt?: Date | string
   attendedAt?: Date | string | null
-  user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
-  ticketPurchase?: Prisma.TicketPurchaseCreateNestedOneWithoutRegistrationInput
   attendance?: Prisma.AttendanceCreateNestedOneWithoutRegistrationInput
+  ticketPurchase?: Prisma.TicketPurchaseCreateNestedOneWithoutRegistrationInput
+  user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
 }
 
 export type EventRegistrationUncheckedCreateWithoutEventInput = {
@@ -632,9 +632,9 @@ export type EventRegistrationCreateWithoutTicketPurchaseInput = {
   status?: $Enums.RegistrationStatus
   registeredAt?: Date | string
   attendedAt?: Date | string | null
+  attendance?: Prisma.AttendanceCreateNestedOneWithoutRegistrationInput
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
   user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
-  attendance?: Prisma.AttendanceCreateNestedOneWithoutRegistrationInput
 }
 
 export type EventRegistrationUncheckedCreateWithoutTicketPurchaseInput = {
@@ -668,9 +668,9 @@ export type EventRegistrationUpdateWithoutTicketPurchaseInput = {
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendance?: Prisma.AttendanceUpdateOneWithoutRegistrationNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
-  attendance?: Prisma.AttendanceUpdateOneWithoutRegistrationNestedInput
 }
 
 export type EventRegistrationUncheckedUpdateWithoutTicketPurchaseInput = {
@@ -689,8 +689,8 @@ export type EventRegistrationCreateWithoutAttendanceInput = {
   registeredAt?: Date | string
   attendedAt?: Date | string | null
   event: Prisma.EventCreateNestedOneWithoutRegistrationsInput
-  user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
   ticketPurchase?: Prisma.TicketPurchaseCreateNestedOneWithoutRegistrationInput
+  user: Prisma.UserCreateNestedOneWithoutEventRegistrationsInput
 }
 
 export type EventRegistrationUncheckedCreateWithoutAttendanceInput = {
@@ -725,8 +725,8 @@ export type EventRegistrationUpdateWithoutAttendanceInput = {
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
   ticketPurchase?: Prisma.TicketPurchaseUpdateOneWithoutRegistrationNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
 }
 
 export type EventRegistrationUncheckedUpdateWithoutAttendanceInput = {
@@ -753,9 +753,9 @@ export type EventRegistrationUpdateWithoutUserInput = {
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  attendance?: Prisma.AttendanceUpdateOneWithoutRegistrationNestedInput
   event?: Prisma.EventUpdateOneRequiredWithoutRegistrationsNestedInput
   ticketPurchase?: Prisma.TicketPurchaseUpdateOneWithoutRegistrationNestedInput
-  attendance?: Prisma.AttendanceUpdateOneWithoutRegistrationNestedInput
 }
 
 export type EventRegistrationUncheckedUpdateWithoutUserInput = {
@@ -791,9 +791,9 @@ export type EventRegistrationUpdateWithoutEventInput = {
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   registeredAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   attendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
-  ticketPurchase?: Prisma.TicketPurchaseUpdateOneWithoutRegistrationNestedInput
   attendance?: Prisma.AttendanceUpdateOneWithoutRegistrationNestedInput
+  ticketPurchase?: Prisma.TicketPurchaseUpdateOneWithoutRegistrationNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutEventRegistrationsNestedInput
 }
 
 export type EventRegistrationUncheckedUpdateWithoutEventInput = {
@@ -825,10 +825,10 @@ export type EventRegistrationSelect<ExtArgs extends runtime.Types.Extensions.Int
   status?: boolean
   registeredAt?: boolean
   attendedAt?: boolean
-  event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
   attendance?: boolean | Prisma.EventRegistration$attendanceArgs<ExtArgs>
+  event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["eventRegistration"]>
 
 export type EventRegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -840,8 +840,8 @@ export type EventRegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.T
   registeredAt?: boolean
   attendedAt?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["eventRegistration"]>
 
 export type EventRegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -853,8 +853,8 @@ export type EventRegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   registeredAt?: boolean
   attendedAt?: boolean
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["eventRegistration"]>
 
 export type EventRegistrationSelectScalar = {
@@ -869,29 +869,29 @@ export type EventRegistrationSelectScalar = {
 
 export type EventRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "eventId" | "userId" | "ticketPurchaseId" | "status" | "registeredAt" | "attendedAt", ExtArgs["result"]["eventRegistration"]>
 export type EventRegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
   attendance?: boolean | Prisma.EventRegistration$attendanceArgs<ExtArgs>
+  event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
+  ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type EventRegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type EventRegistrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   event?: boolean | Prisma.EventDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   ticketPurchase?: boolean | Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $EventRegistrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "EventRegistration"
   objects: {
-    event: Prisma.$EventPayload<ExtArgs>
-    user: Prisma.$UserPayload<ExtArgs>
-    ticketPurchase: Prisma.$TicketPurchasePayload<ExtArgs> | null
     attendance: Prisma.$AttendancePayload<ExtArgs> | null
+    event: Prisma.$EventPayload<ExtArgs>
+    ticketPurchase: Prisma.$TicketPurchasePayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1295,10 +1295,10 @@ readonly fields: EventRegistrationFieldRefs;
  */
 export interface Prisma__EventRegistrationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  ticketPurchase<T extends Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>>): Prisma.Prisma__TicketPurchaseClient<runtime.Types.Result.GetResult<Prisma.$TicketPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   attendance<T extends Prisma.EventRegistration$attendanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventRegistration$attendanceArgs<ExtArgs>>): Prisma.Prisma__AttendanceClient<runtime.Types.Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  event<T extends Prisma.EventDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventDefaultArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  ticketPurchase<T extends Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EventRegistration$ticketPurchaseArgs<ExtArgs>>): Prisma.Prisma__TicketPurchaseClient<runtime.Types.Result.GetResult<Prisma.$TicketPurchasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1736,25 +1736,6 @@ export type EventRegistrationDeleteManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * EventRegistration.ticketPurchase
- */
-export type EventRegistration$ticketPurchaseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TicketPurchase
-   */
-  select?: Prisma.TicketPurchaseSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TicketPurchase
-   */
-  omit?: Prisma.TicketPurchaseOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TicketPurchaseInclude<ExtArgs> | null
-  where?: Prisma.TicketPurchaseWhereInput
-}
-
-/**
  * EventRegistration.attendance
  */
 export type EventRegistration$attendanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1771,6 +1752,25 @@ export type EventRegistration$attendanceArgs<ExtArgs extends runtime.Types.Exten
    */
   include?: Prisma.AttendanceInclude<ExtArgs> | null
   where?: Prisma.AttendanceWhereInput
+}
+
+/**
+ * EventRegistration.ticketPurchase
+ */
+export type EventRegistration$ticketPurchaseArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TicketPurchase
+   */
+  select?: Prisma.TicketPurchaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TicketPurchase
+   */
+  omit?: Prisma.TicketPurchaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketPurchaseInclude<ExtArgs> | null
+  where?: Prisma.TicketPurchaseWhereInput
 }
 
 /**

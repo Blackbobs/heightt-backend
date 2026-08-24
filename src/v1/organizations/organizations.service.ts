@@ -12,6 +12,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
 import { PermissionService } from '../auth/permission.service';
 import { FinanceService } from '../finance/finance.service';
+import { WalletService } from '../finance/wallet.service';
 import {
   CreateOrganizationDto,
   UpdateOrganizationDto,
@@ -29,7 +30,50 @@ export class OrganizationsService {
     private readonly cacheService: CacheService,
     private readonly permissionService: PermissionService,
     private readonly financeService: FinanceService,
+    private readonly walletService: WalletService,
   ) {}
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateOrganizationsCache(organizationId?: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('organizations');
+      await this.cacheService.invalidateByTag('members');
+      await this.cacheService.invalidateByTag('stats');
+
+      if (organizationId) {
+        await this.cacheService.delete(`organization:${organizationId}`);
+        await this.cacheService.invalidatePattern(
+          `organization:${organizationId}:members:*`,
+        );
+        await this.cacheService.invalidatePattern(
+          `organizations:*:${organizationId}:*`,
+        );
+
+        const org = await this.prisma.organization.findUnique({
+          where: { id: organizationId },
+          select: { institutionId: true },
+        });
+        if (org) {
+          await this.cacheService.delete(`institution:${org.institutionId}`);
+        }
+      }
+
+      await this.cacheService.invalidatePattern('organization:*');
+      await this.cacheService.invalidatePattern('organizations:*');
+      await this.cacheService.invalidatePattern('organization:slug:*');
+
+      this.logger.log(
+        `Organizations cache invalidated${organizationId ? ` for organization: ${organizationId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Failed to invalidate organizations cache: ${error.message}`,
+      );
+    }
+  }
 
   // ============================================
   // ORGANIZATION CRUD
@@ -38,7 +82,6 @@ export class OrganizationsService {
   async createOrganization(userId: string, dto: CreateOrganizationDto) {
     this.logger.log(`Creating organization: ${dto.name}`);
 
-    // Validate institution exists
     const institution = await this.prisma.institution.findUnique({
       where: { id: dto.institutionId },
     });
@@ -46,20 +89,33 @@ export class OrganizationsService {
       throw new NotFoundException('Institution not found');
     }
 
-    // Validate slug uniqueness within institution
+    if (dto.academicSessionId) {
+      const session = await this.prisma.academicSession.findUnique({
+        where: { id: dto.academicSessionId },
+      });
+      if (!session) {
+        throw new NotFoundException('Academic session not found');
+      }
+      if (session.institutionId !== dto.institutionId) {
+        throw new BadRequestException(
+          'Academic session must belong to the selected institution',
+        );
+      }
+    }
+
     const existingSlug = await this.prisma.organization.findFirst({
       where: {
         institutionId: dto.institutionId,
         slug: dto.slug,
+        academicSessionId: dto.academicSessionId || null,
       },
     });
     if (existingSlug) {
       throw new ConflictException(
-        'Organization slug already exists in this institution',
+        'Organization slug already exists in this institution for this session',
       );
     }
 
-    // Validate parent organization if provided
     let parentOrganization: any = null;
     if (dto.parentOrganizationId) {
       parentOrganization = await this.prisma.organization.findUnique({
@@ -75,7 +131,6 @@ export class OrganizationsService {
       }
     }
 
-    // Validate faculty if provided
     if (dto.facultyId) {
       const faculty = await this.prisma.faculty.findUnique({
         where: { id: dto.facultyId },
@@ -90,7 +145,6 @@ export class OrganizationsService {
       }
     }
 
-    // Validate department if provided
     if (dto.departmentId) {
       const department = await this.prisma.department.findUnique({
         where: { id: dto.departmentId },
@@ -106,7 +160,6 @@ export class OrganizationsService {
       }
     }
 
-    // Validate academic level if provided
     if (dto.academicLevelId) {
       const level = await this.prisma.academicLevel.findUnique({
         where: { id: dto.academicLevelId },
@@ -134,19 +187,17 @@ export class OrganizationsService {
         departmentId: dto.departmentId,
         academicLevelId: dto.academicLevelId,
         parentOrganizationId: dto.parentOrganizationId,
+        academicSessionId: dto.academicSessionId,
         createdBy: userId,
         status: 'DRAFT',
       },
     });
 
-    // Every organization receives a dedicated receiving wallet and its linked
-    // ledger account at creation time. This means it is immediately ready to
-    // receive dues and other member payments.
-    const wallet = await this.financeService.createWallet(userId, {
-      organizationId: organization.id,
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'ORGANIZATION',
+      id: organization.id,
     });
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -156,12 +207,13 @@ export class OrganizationsService {
           name: organization.name,
           slug: organization.slug,
           institutionId: dto.institutionId,
+          academicSessionId: dto.academicSessionId,
         }),
       },
     });
 
-    // Invalidate cache
     await this.cacheService.delete(`institution:${dto.institutionId}`);
+    await this.invalidateOrganizationsCache(organization.id);
 
     this.logger.log(
       `Organization created: ${organization.id} with wallet: ${wallet.id}`,
@@ -179,6 +231,7 @@ export class OrganizationsService {
       scope?: string;
       search?: string;
       parentId?: string;
+      academicSessionId?: string;
     },
   ) {
     const skip = (page - 1) * limit;
@@ -199,6 +252,9 @@ export class OrganizationsService {
     if (filters?.parentId) {
       where.parentOrganizationId = filters.parentId;
     }
+    if (filters?.academicSessionId) {
+      where.academicSessionId = filters.academicSessionId;
+    }
     if (filters?.search) {
       where.OR = [
         { name: { contains: filters.search, mode: 'insensitive' } },
@@ -216,6 +272,7 @@ export class OrganizationsService {
           faculty: true,
           department: true,
           academicLevel: true,
+          academicSession: true,
           parent: {
             select: {
               id: true,
@@ -255,7 +312,6 @@ export class OrganizationsService {
   }
 
   async getOrganizationById(id: string, includeRelations: boolean = true) {
-    // Check cache
     const cacheKey = `organization:${id}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
@@ -271,6 +327,7 @@ export class OrganizationsService {
             faculty: true,
             department: true,
             academicLevel: true,
+            academicSession: true,
             parent: {
               select: {
                 id: true,
@@ -284,6 +341,7 @@ export class OrganizationsService {
                 name: true,
                 slug: true,
                 status: true,
+                academicSessionId: true,
               },
             },
             memberships: {
@@ -301,6 +359,7 @@ export class OrganizationsService {
                     role: true,
                   },
                 },
+                session: true,
               },
               orderBy: { joinedAt: 'desc' },
             },
@@ -313,9 +372,7 @@ export class OrganizationsService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Cache for 5 minutes
     await this.cacheService.set(cacheKey, organization, 300);
-
     return organization;
   }
 
@@ -330,6 +387,7 @@ export class OrganizationsService {
         faculty: true,
         department: true,
         academicLevel: true,
+        academicSession: true,
         parent: true,
         children: true,
         memberships: {
@@ -369,7 +427,6 @@ export class OrganizationsService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Check if user has permission to update
     const canUpdate = await this.permissionService.checkPermission(
       userId,
       'organization:update',
@@ -381,21 +438,40 @@ export class OrganizationsService {
       );
     }
 
-    // If slug is being updated, check uniqueness
     if (dto.slug && dto.slug !== organization.slug) {
       const existingSlug = await this.prisma.organization.findFirst({
         where: {
           institutionId: organization.institutionId,
           slug: dto.slug,
+          academicSessionId:
+            dto.academicSessionId || organization.academicSessionId || null,
           NOT: { id },
         },
       });
       if (existingSlug) {
-        throw new ConflictException('Slug already exists in this institution');
+        throw new ConflictException(
+          'Slug already exists in this institution for this session',
+        );
       }
     }
 
-    // If status is being changed, validate transition
+    if (
+      dto.academicSessionId &&
+      dto.academicSessionId !== organization.academicSessionId
+    ) {
+      const session = await this.prisma.academicSession.findUnique({
+        where: { id: dto.academicSessionId },
+      });
+      if (!session) {
+        throw new NotFoundException('Academic session not found');
+      }
+      if (session.institutionId !== organization.institutionId) {
+        throw new BadRequestException(
+          'Academic session must belong to the same institution',
+        );
+      }
+    }
+
     if (dto.status) {
       this.validateStatusTransition(organization.status, dto.status);
     }
@@ -411,17 +487,17 @@ export class OrganizationsService {
         facultyId: dto.facultyId,
         departmentId: dto.departmentId,
         academicLevelId: dto.academicLevelId,
+        academicSessionId: dto.academicSessionId,
         status: dto.status as any,
         updatedBy: userId,
         activatedAt: dto.status === 'ACTIVE' ? new Date() : undefined,
       },
     });
 
-    // Invalidate cache
     await this.cacheService.delete(`organization:${id}`);
     await this.cacheService.delete(`institution:${organization.institutionId}`);
+    await this.invalidateOrganizationsCache(id);
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -455,7 +531,6 @@ export class OrganizationsService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Only platform admins can delete organizations
     const isPlatformAdmin = await this.permissionService.checkPermission(
       userId,
       'organization:delete',
@@ -466,7 +541,6 @@ export class OrganizationsService {
       );
     }
 
-    // Check for related data
     if (
       organization.children.length > 0 ||
       organization.memberships.length > 0 ||
@@ -484,11 +558,8 @@ export class OrganizationsService {
       where: { id },
     });
 
-    // Invalidate cache
-    await this.cacheService.delete(`organization:${id}`);
-    await this.cacheService.delete(`institution:${organization.institutionId}`);
+    await this.invalidateOrganizationsCache(id);
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -514,12 +585,12 @@ export class OrganizationsService {
 
     const organization = await this.prisma.organization.findUnique({
       where: { id: organizationId },
+      include: { academicSession: true },
     });
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
 
-    // Check if user exists
     const user = await this.prisma.user.findUnique({
       where: { id: dto.userId },
     });
@@ -527,7 +598,25 @@ export class OrganizationsService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if already a member
+    let sessionId = dto.sessionId;
+    if (!sessionId && organization.academicSessionId) {
+      sessionId = organization.academicSessionId;
+    }
+
+    if (sessionId) {
+      const session = await this.prisma.academicSession.findUnique({
+        where: { id: sessionId },
+      });
+      if (!session) {
+        throw new NotFoundException('Academic session not found');
+      }
+      if (session.institutionId !== organization.institutionId) {
+        throw new BadRequestException(
+          'Academic session must belong to the same institution as the organization',
+        );
+      }
+    }
+
     const existing = await this.prisma.organizationMembership.findUnique({
       where: {
         organizationId_userId: {
@@ -542,7 +631,6 @@ export class OrganizationsService {
       );
     }
 
-    // If this is a student membership, validate student profile exists
     if (dto.membershipType === 'STUDENT') {
       const studentProfile = await this.prisma.studentProfile.findUnique({
         where: { userId: dto.userId },
@@ -562,7 +650,7 @@ export class OrganizationsService {
         status: (dto.status || 'PENDING') as any,
         isPrimary: dto.isPrimary || false,
         joinedAt: new Date(),
-        joinedSessionId: dto.sessionId,
+        joinedSessionId: sessionId,
       },
       include: {
         user: {
@@ -573,10 +661,10 @@ export class OrganizationsService {
             profile: true,
           },
         },
+        session: true,
       },
     });
 
-    // If this is the first member, activate the organization
     const memberCount = await this.prisma.organizationMembership.count({
       where: { organizationId, status: 'ACTIVE' },
     });
@@ -590,7 +678,6 @@ export class OrganizationsService {
       });
     }
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -599,12 +686,12 @@ export class OrganizationsService {
           organizationId,
           memberId: dto.userId,
           membershipType: dto.membershipType,
+          sessionId,
         }),
       },
     });
 
-    // Invalidate cache
-    await this.cacheService.delete(`organization:${organizationId}`);
+    await this.invalidateOrganizationsCache(organizationId);
 
     this.logger.log(`Member added to organization: ${organizationId}`);
     return membership;
@@ -675,6 +762,7 @@ export class OrganizationsService {
               role: true,
             },
           },
+          session: true,
         },
         orderBy: { joinedAt: 'desc' },
       }),
@@ -732,7 +820,6 @@ export class OrganizationsService {
       },
     });
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -770,7 +857,6 @@ export class OrganizationsService {
       throw new NotFoundException('Membership not found');
     }
 
-    // Soft delete - update status to LEFT or REMOVED
     const removed = await this.prisma.organizationMembership.update({
       where: { id: membershipId },
       data: {
@@ -780,7 +866,6 @@ export class OrganizationsService {
       },
     });
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -800,6 +885,200 @@ export class OrganizationsService {
   }
 
   // ============================================
+  // ORGANIZATION ACTIVATION
+  // ============================================
+
+  async activateOrganization(id: string, userId: string) {
+    this.logger.log(`Activating organization: ${id}`);
+
+    const organization = await this.prisma.organization.findUnique({
+      where: { id },
+      include: {
+        memberships: {
+          where: { status: 'ACTIVE' },
+        },
+      },
+    });
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    if (organization.status === 'ACTIVE') {
+      throw new BadRequestException('Organization is already active');
+    }
+
+    if (organization.memberships.length === 0) {
+      throw new BadRequestException(
+        'Organization needs at least one active member to activate',
+      );
+    }
+
+    const updated = await this.prisma.organization.update({
+      where: { id },
+      data: {
+        status: 'ACTIVE',
+        activatedAt: new Date(),
+        updatedBy: userId,
+      },
+    });
+
+    await this.prisma.activityLog.create({
+      data: {
+        userId,
+        activity: 'ORGANIZATION_ACTIVATED',
+        details: JSON.stringify({
+          organizationId: id,
+          name: organization.name,
+        }),
+      },
+    });
+
+    await this.cacheService.delete(`organization:${id}`);
+    await this.cacheService.delete(`institution:${organization.institutionId}`);
+
+    this.logger.log(`Organization activated: ${id}`);
+    return updated;
+  }
+
+  async archiveOrganization(id: string, userId: string) {
+    this.logger.log(`Archiving organization: ${id}`);
+
+    const organization = await this.prisma.organization.findUnique({
+      where: { id },
+    });
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    if (organization.status === 'ARCHIVED') {
+      throw new BadRequestException('Organization is already archived');
+    }
+
+    const updated = await this.prisma.organization.update({
+      where: { id },
+      data: {
+        status: 'ARCHIVED',
+        archivedAt: new Date(),
+        updatedBy: userId,
+      },
+    });
+
+    await this.prisma.activityLog.create({
+      data: {
+        userId,
+        activity: 'ORGANIZATION_ARCHIVED',
+        details: JSON.stringify({
+          organizationId: id,
+          name: organization.name,
+        }),
+      },
+    });
+
+    await this.cacheService.delete(`organization:${id}`);
+    await this.cacheService.delete(`institution:${organization.institutionId}`);
+
+    this.logger.log(`Organization archived: ${id}`);
+    return updated;
+  }
+
+  // ============================================
+  // HELPER METHODS
+  // ============================================
+
+  private validateStatusTransition(
+    currentStatus: string,
+    newStatus: string,
+  ): void {
+    const validTransitions: Record<string, string[]> = {
+      DRAFT: ['PENDING_ACTIVATION', 'INACTIVE'],
+      PENDING_ACTIVATION: ['ACTIVE', 'INACTIVE', 'DRAFT'],
+      ACTIVE: ['INACTIVE', 'SUSPENDED', 'ARCHIVED'],
+      INACTIVE: ['ACTIVE', 'ARCHIVED'],
+      SUSPENDED: ['ACTIVE', 'ARCHIVED'],
+      ARCHIVED: [],
+    };
+
+    const allowed = validTransitions[currentStatus] || [];
+    if (!allowed.includes(newStatus)) {
+      throw new BadRequestException(
+        `Cannot transition from ${currentStatus} to ${newStatus}`,
+      );
+    }
+  }
+
+  // ============================================
+  // ORGANIZATION STATISTICS
+  // ============================================
+
+  async getOrganizationStats(
+    institutionId?: string,
+    academicSessionId?: string,
+  ) {
+    const where: any = {};
+    if (institutionId) {
+      where.institutionId = institutionId;
+    }
+    if (academicSessionId) {
+      where.academicSessionId = academicSessionId;
+    }
+
+    const [
+      total,
+      byStatus,
+      byType,
+      totalMembers,
+      activeMembers,
+      totalChildren,
+    ] = await Promise.all([
+      this.prisma.organization.count({ where }),
+      this.prisma.organization.groupBy({
+        by: ['status'],
+        where,
+        _count: { id: true },
+      }),
+      this.prisma.organization.groupBy({
+        by: ['type'],
+        where,
+        _count: { id: true },
+      }),
+      this.prisma.organizationMembership.count({
+        where: {
+          organization: where,
+        },
+      }),
+      this.prisma.organizationMembership.count({
+        where: {
+          organization: where,
+          status: 'ACTIVE',
+        },
+      }),
+      this.prisma.organization.count({
+        where: {
+          ...where,
+          parentOrganizationId: { not: null },
+        },
+      }),
+    ]);
+
+    return {
+      total,
+      byStatus: byStatus.map((item) => ({
+        status: item.status,
+        count: item._count.id,
+      })),
+      byType: byType.map((item) => ({
+        type: item.type,
+        count: item._count.id,
+      })),
+      members: {
+        total: totalMembers,
+        active: activeMembers,
+      },
+      children: totalChildren,
+    };
+  }
+
+  // ============================================
   // ORGANIZATION JOIN REQUESTS
   // ============================================
 
@@ -813,24 +1092,23 @@ export class OrganizationsService {
       `User ${userId} requesting to join organization: ${organizationId}`,
     );
 
-    // Check if organization exists and is active
     const organization = await this.prisma.organization.findUnique({
       where: { id: organizationId },
       include: {
         institution: true,
+        academicSession: true,
       },
     });
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
 
-    if (organization.status !== 'ACTIVE') {
+    if (organization.status !== 'ACTIVE' && organization.status !== 'DRAFT') {
       throw new BadRequestException(
         'Organization is not active and cannot accept new members',
       );
     }
 
-    // Check if user exists
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -838,7 +1116,6 @@ export class OrganizationsService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if user is already a member
     const existingMembership =
       await this.prisma.organizationMembership.findUnique({
         where: {
@@ -854,7 +1131,6 @@ export class OrganizationsService {
       );
     }
 
-    // Check for existing pending request
     const existingRequest =
       await this.prisma.organizationJoinRequest.findUnique({
         where: {
@@ -877,14 +1153,12 @@ export class OrganizationsService {
         );
       }
       if (existingRequest.status === 'REJECTED') {
-        // Allow re-request if rejected
         await this.prisma.organizationJoinRequest.delete({
           where: { id: existingRequest.id },
         });
       }
     }
 
-    // If this is a student membership, validate student profile exists
     if (membershipType === 'STUDENT') {
       const studentProfile = await this.prisma.studentProfile.findUnique({
         where: { userId },
@@ -896,7 +1170,8 @@ export class OrganizationsService {
       }
     }
 
-    // Direct Join: Create active organization membership
+    const sessionId = organization.academicSessionId;
+
     const membership = await this.prisma.organizationMembership.create({
       data: {
         organizationId,
@@ -905,6 +1180,7 @@ export class OrganizationsService {
         status: 'ACTIVE',
         joinedAt: new Date(),
         isPrimary: false,
+        joinedSessionId: sessionId,
       },
       include: {
         organization: {
@@ -922,10 +1198,10 @@ export class OrganizationsService {
             profile: true,
           },
         },
+        session: true,
       },
     });
 
-    // Record an approved join request for history/audit
     const joinRequest = await this.prisma.organizationJoinRequest.upsert({
       where: {
         organizationId_userId: {
@@ -948,7 +1224,23 @@ export class OrganizationsService {
       },
     });
 
-    // Log activity
+    if (organization.status === 'DRAFT') {
+      const memberCount = await this.prisma.organizationMembership.count({
+        where: {
+          organizationId,
+          status: 'ACTIVE',
+        },
+      });
+      if (memberCount === 1) {
+        await this.prisma.organization.update({
+          where: { id: organizationId },
+          data: {
+            status: 'PENDING_ACTIVATION',
+          },
+        });
+      }
+    }
+
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -956,14 +1248,13 @@ export class OrganizationsService {
         details: JSON.stringify({
           organizationId,
           membershipType,
+          sessionId,
           message,
         }),
       },
     });
 
-    // Invalidate cache
-    await this.cacheService.delete(`organization:${organizationId}`);
-    await this.cacheService.delete(`organization:${organizationId}:members`);
+    await this.invalidateOrganizationsCache(organizationId);
 
     this.logger.log(
       `User ${userId} directly joined organization ${organizationId}`,
@@ -985,7 +1276,6 @@ export class OrganizationsService {
       `Fetching pending join requests for organization: ${organizationId}`,
     );
 
-    // Verify organization exists and user has admin rights
     const organization = await this.prisma.organization.findUnique({
       where: { id: organizationId },
     });
@@ -993,7 +1283,6 @@ export class OrganizationsService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Verify user has admin permission for this organization
     const hasPermission = await this.permissionService.checkPermission(
       adminUserId,
       'organization:manage_members',
@@ -1085,7 +1374,6 @@ export class OrganizationsService {
       );
     }
 
-    // Verify admin has permission
     const hasPermission = await this.permissionService.checkPermission(
       adminUserId,
       'organization:manage_members',
@@ -1097,7 +1385,6 @@ export class OrganizationsService {
       );
     }
 
-    // Update the request status
     const updatedRequest = await this.prisma.organizationJoinRequest.update({
       where: { id: requestId },
       data: {
@@ -1107,7 +1394,6 @@ export class OrganizationsService {
       },
     });
 
-    // If approved, add the user as a member
     if (status === 'APPROVED') {
       try {
         const membership = await this.prisma.organizationMembership.create({
@@ -1118,6 +1404,7 @@ export class OrganizationsService {
             status: 'ACTIVE',
             isPrimary: false,
             joinedAt: new Date(),
+            joinedSessionId: joinRequest.organization.academicSessionId,
           },
           include: {
             user: {
@@ -1131,7 +1418,6 @@ export class OrganizationsService {
           },
         });
 
-        // If this is the first member, activate the organization
         const memberCount = await this.prisma.organizationMembership.count({
           where: {
             organizationId: joinRequest.organizationId,
@@ -1149,7 +1435,6 @@ export class OrganizationsService {
           });
         }
 
-        // Log activity
         await this.prisma.activityLog.create({
           data: {
             userId: joinRequest.userId,
@@ -1166,7 +1451,6 @@ export class OrganizationsService {
           `User ${joinRequest.userId} approved and added to organization ${joinRequest.organizationId}`,
         );
       } catch (error) {
-        // If membership creation fails, revert the request status
         await this.prisma.organizationJoinRequest.update({
           where: { id: requestId },
           data: {
@@ -1180,7 +1464,6 @@ export class OrganizationsService {
         );
       }
     } else {
-      // Rejected
       await this.prisma.activityLog.create({
         data: {
           userId: joinRequest.userId,
@@ -1196,7 +1479,6 @@ export class OrganizationsService {
       this.logger.log(`Join request ${requestId} rejected by ${adminUserId}`);
     }
 
-    // Invalidate cache
     await this.cacheService.delete(
       `organization:${joinRequest.organizationId}`,
     );
@@ -1263,7 +1545,6 @@ export class OrganizationsService {
       where: { id: requestId },
     });
 
-    // Log activity
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -1283,7 +1564,6 @@ export class OrganizationsService {
     organizationId: string,
     adminUserId: string,
   ) {
-    // Verify admin has permission
     const hasPermission = await this.permissionService.checkPermission(
       adminUserId,
       'organization:manage_members',
@@ -1317,242 +1597,5 @@ export class OrganizationsService {
       rejected,
       total,
     };
-  }
-
-  // ============================================
-  // ORGANIZATION ACTIVATION
-  // ============================================
-
-  async activateOrganization(id: string, userId: string) {
-    this.logger.log(`Activating organization: ${id}`);
-
-    const organization = await this.prisma.organization.findUnique({
-      where: { id },
-      include: {
-        memberships: {
-          where: { status: 'ACTIVE' },
-        },
-      },
-    });
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-
-    if (organization.status === 'ACTIVE') {
-      throw new BadRequestException('Organization is already active');
-    }
-
-    // Need at least one active member to activate
-    if (organization.memberships.length === 0) {
-      throw new BadRequestException(
-        'Organization needs at least one active member to activate',
-      );
-    }
-
-    const updated = await this.prisma.organization.update({
-      where: { id },
-      data: {
-        status: 'ACTIVE',
-        activatedAt: new Date(),
-        updatedBy: userId,
-      },
-    });
-
-    // Log activity
-    await this.prisma.activityLog.create({
-      data: {
-        userId,
-        activity: 'ORGANIZATION_ACTIVATED',
-        details: JSON.stringify({
-          organizationId: id,
-          name: organization.name,
-        }),
-      },
-    });
-
-    await this.cacheService.delete(`organization:${id}`);
-    await this.cacheService.delete(`institution:${organization.institutionId}`);
-
-    this.logger.log(`Organization activated: ${id}`);
-    return updated;
-  }
-
-  async archiveOrganization(id: string, userId: string) {
-    this.logger.log(`Archiving organization: ${id}`);
-
-    const organization = await this.prisma.organization.findUnique({
-      where: { id },
-    });
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-
-    if (organization.status === 'ARCHIVED') {
-      throw new BadRequestException('Organization is already archived');
-    }
-
-    const updated = await this.prisma.organization.update({
-      where: { id },
-      data: {
-        status: 'ARCHIVED',
-        archivedAt: new Date(),
-        updatedBy: userId,
-      },
-    });
-
-    // Log activity
-    await this.prisma.activityLog.create({
-      data: {
-        userId,
-        activity: 'ORGANIZATION_ARCHIVED',
-        details: JSON.stringify({
-          organizationId: id,
-          name: organization.name,
-        }),
-      },
-    });
-
-    await this.cacheService.delete(`organization:${id}`);
-    await this.cacheService.delete(`institution:${organization.institutionId}`);
-
-    this.logger.log(`Organization archived: ${id}`);
-    return updated;
-  }
-
-  // ============================================
-  // HELPER METHODS
-  // ============================================
-
-  private validateStatusTransition(
-    currentStatus: string,
-    newStatus: string,
-  ): void {
-    const validTransitions: Record<string, string[]> = {
-      DRAFT: ['PENDING_ACTIVATION', 'INACTIVE'],
-      PENDING_ACTIVATION: ['ACTIVE', 'INACTIVE', 'DRAFT'],
-      ACTIVE: ['INACTIVE', 'SUSPENDED', 'ARCHIVED'],
-      INACTIVE: ['ACTIVE', 'ARCHIVED'],
-      SUSPENDED: ['ACTIVE', 'ARCHIVED'],
-      ARCHIVED: [],
-    };
-
-    const allowed = validTransitions[currentStatus] || [];
-    if (!allowed.includes(newStatus)) {
-      throw new BadRequestException(
-        `Cannot transition from ${currentStatus} to ${newStatus}`,
-      );
-    }
-  }
-
-  // ============================================
-  // ORGANIZATION STATISTICS
-  // ============================================
-
-  async getOrganizationStats(institutionId?: string) {
-    const where: any = {};
-    if (institutionId) {
-      where.institutionId = institutionId;
-    }
-
-    const [
-      total,
-      byStatus,
-      byType,
-      totalMembers,
-      activeMembers,
-      totalChildren,
-    ] = await Promise.all([
-      this.prisma.organization.count({ where }),
-      this.prisma.organization.groupBy({
-        by: ['status'],
-        where,
-        _count: { id: true },
-      }),
-      this.prisma.organization.groupBy({
-        by: ['type'],
-        where,
-        _count: { id: true },
-      }),
-      this.prisma.organizationMembership.count({
-        where: {
-          organization: where,
-        },
-      }),
-      this.prisma.organizationMembership.count({
-        where: {
-          organization: where,
-          status: 'ACTIVE',
-        },
-      }),
-      this.prisma.organization.count({
-        where: {
-          ...where,
-          parentOrganizationId: { not: null },
-        },
-      }),
-    ]);
-
-    return {
-      total,
-      byStatus: byStatus.map((item) => ({
-        status: item.status,
-        count: item._count.id,
-      })),
-      byType: byType.map((item) => ({
-        type: item.type,
-        count: item._count.id,
-      })),
-      members: {
-        total: totalMembers,
-        active: activeMembers,
-      },
-      children: totalChildren,
-    };
-  }
-
-  // ============================================
-  // CACHE INVALIDATION HELPERS
-  // ============================================
-
-  async invalidateOrganizationsCache(organizationId?: string): Promise<void> {
-    try {
-      // Invalidate all organization tags
-      await this.cacheService.invalidateByTag('organizations');
-      await this.cacheService.invalidateByTag('members');
-      await this.cacheService.invalidateByTag('stats');
-
-      if (organizationId) {
-        // Invalidate specific organization caches
-        await this.cacheService.delete(`organization:${organizationId}`);
-        await this.cacheService.invalidatePattern(
-          `organization:${organizationId}:members:*`,
-        );
-        await this.cacheService.invalidatePattern(
-          `organizations:*:${organizationId}:*`,
-        );
-
-        // Get organization to invalidate institution cache
-        const org = await this.prisma.organization.findUnique({
-          where: { id: organizationId },
-          select: { institutionId: true },
-        });
-        if (org) {
-          await this.cacheService.delete(`institution:${org.institutionId}`);
-        }
-      }
-
-      // Also invalidate all patterns
-      await this.cacheService.invalidatePattern('organization:*');
-      await this.cacheService.invalidatePattern('organizations:*');
-      await this.cacheService.invalidatePattern('organization:slug:*');
-
-      this.logger.log(
-        `Organizations cache invalidated${organizationId ? ` for organization: ${organizationId}` : ''}`,
-      );
-    } catch (error) {
-      this.logger.error(
-        `Failed to invalidate organizations cache: ${error.message}`,
-      );
-    }
   }
 }

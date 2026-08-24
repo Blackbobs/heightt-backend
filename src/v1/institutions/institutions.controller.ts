@@ -1,4 +1,5 @@
 // src/v1/institutions/institutions.controller.ts
+
 import {
   Controller,
   Get,
@@ -42,11 +43,8 @@ import {
   InstitutionResponseDto,
   InstitutionListResponseDto,
 } from './dto';
-// Import cache decorators
 import {
   Cache,
-  Cacheable,
-  CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
 
@@ -79,6 +77,10 @@ export class InstitutionsController {
     status: HttpStatus.FORBIDDEN,
     description: 'Insufficient permissions',
   })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'At least one academic session is required',
+  })
   async createInstitution(
     @Request() req: any,
     @Body() dto: CreateInstitutionDto,
@@ -94,7 +96,7 @@ export class InstitutionsController {
       const { page, limit, status, search } = request.query;
       return `institutions:${page || 1}:${limit || 10}:${status || 'all'}:${search || 'all'}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions'],
   })
   @ApiOperation({ summary: 'Get all institutions (Public)' })
@@ -135,7 +137,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `institution:${request.params.id}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions'],
   })
   @ApiOperation({ summary: 'Get institution by ID (Public)' })
@@ -197,6 +199,26 @@ export class InstitutionsController {
     return this.institutionsService.deleteInstitution(id, req.user.id);
   }
 
+  @Get(':id/stats')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `institution:stats:${request.params.id}`;
+    },
+    ttl: 900,
+    tags: ['institutions', 'stats'],
+  })
+  @ApiOperation({ summary: 'Get institution statistics' })
+  @ApiParam({ name: 'id', description: 'Institution ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Institution statistics retrieved',
+  })
+  async getInstitutionStats(@Param('id') id: string) {
+    this.logger.log(`Get institution stats endpoint called: ${id}`);
+    return this.institutionsService.getInstitutionStats(id);
+  }
+
   // ============================================
   // FACULTY ENDPOINTS
   // ============================================
@@ -226,7 +248,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `faculties:institution:${request.params.institutionId}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'faculties'],
   })
   @ApiOperation({ summary: 'Get all faculties by institution (Public)' })
@@ -247,7 +269,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `faculty:${request.params.id}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'faculties'],
   })
   @ApiOperation({ summary: 'Get faculty by ID (Public)' })
@@ -329,7 +351,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `departments:faculty:${request.params.facultyId}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'departments'],
   })
   @ApiOperation({ summary: 'Get all departments by faculty (Public)' })
@@ -346,7 +368,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `department:${request.params.id}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'departments'],
   })
   @ApiOperation({ summary: 'Get department by ID (Public)' })
@@ -428,7 +450,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `academic-levels:department:${request.params.departmentId}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'academic-levels'],
   })
   @ApiOperation({ summary: 'Get all academic levels by department (Public)' })
@@ -452,7 +474,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `academic-level:${request.params.id}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'academic-levels'],
   })
   @ApiOperation({ summary: 'Get academic level by ID (Public)' })
@@ -502,6 +524,10 @@ export class InstitutionsController {
     status: HttpStatus.FORBIDDEN,
     description: 'Insufficient permissions',
   })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'Session already exists for this institution',
+  })
   async createAcademicSession(
     @Request() req: any,
     @Body() dto: CreateAcademicSessionDto,
@@ -516,7 +542,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `sessions:institution:${request.params.institutionId}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'sessions'],
   })
   @ApiOperation({
@@ -542,7 +568,7 @@ export class InstitutionsController {
       const request = context.switchToHttp().getRequest();
       return `session:${request.params.id}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['institutions', 'sessions'],
   })
   @ApiOperation({ summary: 'Get academic session by ID (Public)' })
@@ -554,6 +580,187 @@ export class InstitutionsController {
   async getAcademicSessionById(@Param('id') id: string) {
     this.logger.log(`Get academic session by ID endpoint called: ${id}`);
     return this.institutionsService.getAcademicSessionById(id);
+  }
+
+  @Get('academic-sessions/:id/stats')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `session:stats:${request.params.id}`;
+    },
+    ttl: 300,
+    tags: ['institutions', 'sessions', 'stats'],
+  })
+  @ApiOperation({ summary: 'Get academic session statistics' })
+  @ApiParam({ name: 'id', description: 'Academic session ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Session statistics retrieved',
+  })
+  async getAcademicSessionStats(@Param('id') id: string) {
+    this.logger.log(`Get academic session stats endpoint called: ${id}`);
+    return this.institutionsService.getAcademicSessionStats(id);
+  }
+
+  @Get('academic-sessions/:id/students')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { id } = request.params;
+      const { page, limit } = request.query;
+      return `session:${id}:students:${page || 1}:${limit || 10}`;
+    },
+    ttl: 120,
+    tags: ['institutions', 'sessions', 'students'],
+  })
+  @ApiOperation({ summary: 'Get students by academic session' })
+  @ApiParam({ name: 'id', description: 'Academic session ID' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Students retrieved',
+  })
+  async getStudentsBySession(
+    @Param('id') id: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    this.logger.log(`Get students by session endpoint called: ${id}`);
+    return this.institutionsService.getStudentsBySession(
+      id,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+    );
+  }
+
+  @Get('academic-sessions/:id/organizations')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { id } = request.params;
+      const { type, status } = request.query;
+      return `session:${id}:organizations:${type || 'all'}:${status || 'all'}`;
+    },
+    ttl: 300,
+    tags: ['institutions', 'sessions', 'organizations'],
+  })
+  @ApiOperation({ summary: 'Get organizations by academic session' })
+  @ApiParam({ name: 'id', description: 'Academic session ID' })
+  @ApiQuery({ name: 'type', required: false, description: 'Organization type' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Organization status',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Organizations retrieved',
+  })
+  async getOrganizationsBySession(
+    @Param('id') id: string,
+    @Query('type') type?: string,
+    @Query('status') status?: string,
+  ) {
+    this.logger.log(`Get organizations by session endpoint called: ${id}`);
+    return this.institutionsService.getOrganizationsBySession(id, type, status);
+  }
+
+  @Get('faculties/:facultyId/sessions')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `sessions:faculty:${request.params.facultyId}`;
+    },
+    ttl: 600,
+    tags: ['institutions', 'sessions', 'faculties'],
+  })
+  @ApiOperation({ summary: 'Get all faculty-level academic sessions (Public)' })
+  @ApiParam({ name: 'facultyId', description: 'Faculty ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Academic sessions retrieved',
+  })
+  async getSessionsByFaculty(@Param('facultyId') facultyId: string) {
+    this.logger.log(`Get sessions by faculty endpoint called: ${facultyId}`);
+    return this.institutionsService.getSessionsByFaculty(facultyId);
+  }
+
+  @Get('departments/:departmentId/sessions')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `sessions:department:${request.params.departmentId}`;
+    },
+    ttl: 600,
+    tags: ['institutions', 'sessions', 'departments'],
+  })
+  @ApiOperation({
+    summary: 'Get all department-level academic sessions (Public)',
+  })
+  @ApiParam({ name: 'departmentId', description: 'Department ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Academic sessions retrieved',
+  })
+  async getSessionsByDepartment(@Param('departmentId') departmentId: string) {
+    this.logger.log(
+      `Get sessions by department endpoint called: ${departmentId}`,
+    );
+    return this.institutionsService.getSessionsByDepartment(departmentId);
+  }
+
+  @Get('departments/:departmentId/sessions/with-levels')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `sessions:department:${request.params.departmentId}:with-levels`;
+    },
+    ttl: 600,
+    tags: ['institutions', 'sessions', 'departments', 'academic-levels'],
+  })
+  @ApiOperation({
+    summary:
+      'Get all sessions for a department including level-specific sessions (Public)',
+    description:
+      'Returns sessions at both department level and individual level sessions',
+  })
+  @ApiParam({ name: 'departmentId', description: 'Department ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Department sessions with levels retrieved',
+  })
+  async getDepartmentSessionsWithLevels(
+    @Param('departmentId') departmentId: string,
+  ) {
+    this.logger.log(
+      `Get department sessions with levels endpoint called: ${departmentId}`,
+    );
+    return this.institutionsService.getDepartmentSessionsWithLevels(
+      departmentId,
+    );
+  }
+
+  @Get('academic-levels/:levelId/sessions')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `sessions:level:${request.params.levelId}`;
+    },
+    ttl: 600,
+    tags: ['institutions', 'sessions', 'academic-levels'],
+  })
+  @ApiOperation({
+    summary: 'Get all level-specific academic sessions (Public)',
+  })
+  @ApiParam({ name: 'levelId', description: 'Academic Level ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Academic sessions retrieved',
+  })
+  async getSessionsByLevel(@Param('levelId') levelId: string) {
+    this.logger.log(`Get sessions by level endpoint called: ${levelId}`);
+    return this.institutionsService.getSessionsByLevel(levelId);
   }
 
   @Patch('academic-sessions/:id')
@@ -601,9 +808,6 @@ export class InstitutionsController {
     return this.institutionsService.deleteAcademicSession(id, req.user.id);
   }
 
-  /**
-   * Generate organizations for a department's academic levels
-   */
   @Post(':departmentId/generate-organizations')
   @UseGuards(AdminGuard)
   @RequirePermission('department:update')
@@ -630,6 +834,7 @@ export class InstitutionsController {
       req.user.id,
     );
   }
+
   // ============================================
   // CACHE INVALIDATION ENDPOINT (Admin only)
   // ============================================

@@ -146,5 +146,13 @@ export class UpdateOrganizationDto {
     'ARCHIVED',
   ])
   status?: string;
-}
 
+  @ApiProperty({
+    example: 'sess_123',
+    description: 'Academic session ID',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  academicSessionId?: string;
+}

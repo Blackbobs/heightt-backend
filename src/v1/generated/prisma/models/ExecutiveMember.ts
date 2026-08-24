@@ -182,9 +182,9 @@ export type ExecutiveMemberWhereInput = {
   userId?: Prisma.StringFilter<"ExecutiveMember"> | string
   roleId?: Prisma.StringFilter<"ExecutiveMember"> | string
   assignedAt?: Prisma.DateTimeFilter<"ExecutiveMember"> | Date | string
+  role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>
   term?: Prisma.XOR<Prisma.ExecutiveTermScalarRelationFilter, Prisma.ExecutiveTermWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>
 }
 
 export type ExecutiveMemberOrderByWithRelationInput = {
@@ -193,9 +193,9 @@ export type ExecutiveMemberOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
+  role?: Prisma.RoleOrderByWithRelationInput
   term?: Prisma.ExecutiveTermOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
-  role?: Prisma.RoleOrderByWithRelationInput
 }
 
 export type ExecutiveMemberWhereUniqueInput = Prisma.AtLeast<{
@@ -208,9 +208,9 @@ export type ExecutiveMemberWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"ExecutiveMember"> | string
   roleId?: Prisma.StringFilter<"ExecutiveMember"> | string
   assignedAt?: Prisma.DateTimeFilter<"ExecutiveMember"> | Date | string
+  role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>
   term?: Prisma.XOR<Prisma.ExecutiveTermScalarRelationFilter, Prisma.ExecutiveTermWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>
 }, "id" | "termId_userId">
 
 export type ExecutiveMemberOrderByWithAggregationInput = {
@@ -238,9 +238,9 @@ export type ExecutiveMemberScalarWhereWithAggregatesInput = {
 export type ExecutiveMemberCreateInput = {
   id?: string
   assignedAt?: Date | string
+  role: Prisma.RoleCreateNestedOneWithoutExecutiveMembersInput
   term: Prisma.ExecutiveTermCreateNestedOneWithoutMembersInput
   user: Prisma.UserCreateNestedOneWithoutExecutiveMembersInput
-  role: Prisma.RoleCreateNestedOneWithoutExecutiveMembersInput
 }
 
 export type ExecutiveMemberUncheckedCreateInput = {
@@ -254,9 +254,9 @@ export type ExecutiveMemberUncheckedCreateInput = {
 export type ExecutiveMemberUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  role?: Prisma.RoleUpdateOneRequiredWithoutExecutiveMembersNestedInput
   term?: Prisma.ExecutiveTermUpdateOneRequiredWithoutMembersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutExecutiveMembersNestedInput
-  role?: Prisma.RoleUpdateOneRequiredWithoutExecutiveMembersNestedInput
 }
 
 export type ExecutiveMemberUncheckedUpdateInput = {
@@ -456,8 +456,8 @@ export type ExecutiveMemberUncheckedUpdateManyWithoutTermNestedInput = {
 export type ExecutiveMemberCreateWithoutUserInput = {
   id?: string
   assignedAt?: Date | string
-  term: Prisma.ExecutiveTermCreateNestedOneWithoutMembersInput
   role: Prisma.RoleCreateNestedOneWithoutExecutiveMembersInput
+  term: Prisma.ExecutiveTermCreateNestedOneWithoutMembersInput
 }
 
 export type ExecutiveMemberUncheckedCreateWithoutUserInput = {
@@ -547,8 +547,8 @@ export type ExecutiveMemberUpdateManyWithWhereWithoutRoleInput = {
 export type ExecutiveMemberCreateWithoutTermInput = {
   id?: string
   assignedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutExecutiveMembersInput
   role: Prisma.RoleCreateNestedOneWithoutExecutiveMembersInput
+  user: Prisma.UserCreateNestedOneWithoutExecutiveMembersInput
 }
 
 export type ExecutiveMemberUncheckedCreateWithoutTermInput = {
@@ -594,8 +594,8 @@ export type ExecutiveMemberCreateManyUserInput = {
 export type ExecutiveMemberUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  term?: Prisma.ExecutiveTermUpdateOneRequiredWithoutMembersNestedInput
   role?: Prisma.RoleUpdateOneRequiredWithoutExecutiveMembersNestedInput
+  term?: Prisma.ExecutiveTermUpdateOneRequiredWithoutMembersNestedInput
 }
 
 export type ExecutiveMemberUncheckedUpdateWithoutUserInput = {
@@ -650,8 +650,8 @@ export type ExecutiveMemberCreateManyTermInput = {
 export type ExecutiveMemberUpdateWithoutTermInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutExecutiveMembersNestedInput
   role?: Prisma.RoleUpdateOneRequiredWithoutExecutiveMembersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutExecutiveMembersNestedInput
 }
 
 export type ExecutiveMemberUncheckedUpdateWithoutTermInput = {
@@ -676,9 +676,9 @@ export type ExecutiveMemberSelect<ExtArgs extends runtime.Types.Extensions.Inter
   userId?: boolean
   roleId?: boolean
   assignedAt?: boolean
+  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   term?: boolean | Prisma.ExecutiveTermDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["executiveMember"]>
 
 export type ExecutiveMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -687,9 +687,9 @@ export type ExecutiveMemberSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
   userId?: boolean
   roleId?: boolean
   assignedAt?: boolean
+  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   term?: boolean | Prisma.ExecutiveTermDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["executiveMember"]>
 
 export type ExecutiveMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -698,9 +698,9 @@ export type ExecutiveMemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
   userId?: boolean
   roleId?: boolean
   assignedAt?: boolean
+  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   term?: boolean | Prisma.ExecutiveTermDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["executiveMember"]>
 
 export type ExecutiveMemberSelectScalar = {
@@ -713,27 +713,27 @@ export type ExecutiveMemberSelectScalar = {
 
 export type ExecutiveMemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "termId" | "userId" | "roleId" | "assignedAt", ExtArgs["result"]["executiveMember"]>
 export type ExecutiveMemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   term?: boolean | Prisma.ExecutiveTermDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
 }
 export type ExecutiveMemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   term?: boolean | Prisma.ExecutiveTermDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
 }
 export type ExecutiveMemberIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   term?: boolean | Prisma.ExecutiveTermDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
 }
 
 export type $ExecutiveMemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ExecutiveMember"
   objects: {
+    role: Prisma.$RolePayload<ExtArgs>
     term: Prisma.$ExecutiveTermPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
-    role: Prisma.$RolePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1135,9 +1135,9 @@ readonly fields: ExecutiveMemberFieldRefs;
  */
 export interface Prisma__ExecutiveMemberClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  role<T extends Prisma.RoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoleDefaultArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   term<T extends Prisma.ExecutiveTermDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExecutiveTermDefaultArgs<ExtArgs>>): Prisma.Prisma__ExecutiveTermClient<runtime.Types.Result.GetResult<Prisma.$ExecutiveTermPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  role<T extends Prisma.RoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoleDefaultArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

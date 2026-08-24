@@ -46,6 +46,9 @@ services:
       REDIS_PASSWORD: ''
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-secret-key}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-secret-key}
+      FRONTEND_URL: ${FRONTEND_URL:-https://heightt-frontend.vercel.app}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://heightt-frontend.vercel.app,https://your-frontend-production-url.onrender.com}
+      APP_URL: ${APP_URL:-https://api.heightt.com}
     ports:
       - '3000:3000'
     depends_on:

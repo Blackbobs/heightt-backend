@@ -23,11 +23,8 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
-// Import cache decorators
 import {
   Cache,
-  Cacheable,
-  CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
 
@@ -66,13 +63,19 @@ export class OnboardingController {
     @Request() req: any,
     @Body()
     body: {
+      firstName?: string;
+      lastName?: string;
       phone?: string;
       studentId?: string;
+      gender?: string;
+      dateOfBirth?: string;
+      country?: string;
+      state?: string;
+      bio?: string;
       institution?: string;
       faculty?: string;
       department?: string;
-      organizationId?: string;
-      membershipType?: string;
+      academicLevelId?: string;
     },
   ) {
     return this.onboardingService.completeOnboarding(req.user.id, body);
@@ -133,7 +136,7 @@ export class OnboardingController {
       const request = context.switchToHttp().getRequest();
       return `onboarding:status:${request.user.id}`;
     },
-    ttl: 60, // 1 minute
+    ttl: 60,
     tags: ['onboarding', 'user'],
   })
   @ApiOperation({

@@ -1,69 +1,60 @@
+// src/v1/institutions/dto/create-department.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsEnum,
-  MinLength,
-  MaxLength,
+  IsUUID,
   IsOptional,
+  IsArray,
+  IsNotEmpty,
+  MaxLength,
+  MinLength,
   IsNumber,
   Min,
   Max,
-  IsArray,
 } from 'class-validator';
 
 export class CreateDepartmentDto {
-  @ApiProperty({
-    example: 'Department of Computer Science',
-    description: 'Department name',
-  })
+  @ApiProperty({ example: 'Computer Science' })
   @IsString()
+  @IsNotEmpty()
   @MinLength(2)
   @MaxLength(255)
   name: string;
 
-  @ApiProperty({ example: 'CSC', description: 'Department code' })
+  @ApiProperty({ example: 'CSC' })
   @IsString()
+  @IsNotEmpty()
   @MinLength(2)
   @MaxLength(20)
   code: string;
 
-  @ApiProperty({
-    example: 'cmswz4nb500020ntv5m0tpq69',
-    description: 'Faculty ID (CUID)',
-  })
+  @ApiProperty({ example: 'cmsz2nuwd00002ptvprnzloq6' })
   @IsString()
+  @IsNotEmpty()
   facultyId: string;
 
   @ApiProperty({
-    enum: ['AUTOMATIC', 'MANUAL'],
-    description: 'Promotion type',
+    example: 'https://res.cloudinary.com/demo/image/upload/logo.png',
+    description: 'Department logo URL (upload via the files module, then pass the URL)',
     required: false,
-    default: 'AUTOMATIC',
   })
+  @IsOptional()
+  @IsString()
+  logo?: string;
+
+  @ApiProperty({ enum: ['AUTOMATIC', 'MANUAL'], required: false })
   @IsOptional()
   @IsString()
   promotionType?: 'AUTOMATIC' | 'MANUAL';
 
-  @ApiProperty({
-    description:
-      'Number of academic levels (e.g., 4 for 4-year program, 5 for 5-year program)',
-    required: false,
-    default: 4,
-    minimum: 1,
-    maximum: 10,
-  })
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   @Min(1)
   @Max(10)
   numberOfLevels?: number;
 
-  @ApiProperty({
-    description:
-      'Custom level names (optional - must match numberOfLevels count)',
-    example: ['100 Level', '200 Level', '300 Level', '400 Level'],
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })

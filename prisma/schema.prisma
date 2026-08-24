@@ -9,55 +9,51 @@ datasource db {
 }
 
 model User {
-  id           String @id @default(cuid())
-  email        String @unique
-  username     String @unique
-  passwordHash String
-
-  emailVerified Boolean    @default(false)
-  status        UserStatus @default(ACTIVE)
-
-  lastLoginAt DateTime?
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  deletedBy String?
-
-  profile                 UserProfile?
-  sessions                Session[]
-  passwordResets          PasswordReset[]
-  emailVerifications      EmailVerification[]
-  studentProfile          StudentProfile?
-  auditLogs               AuditLog[]
-  operationalAuditLogs    OperationalAuditLog[]
+  id                      String                    @id @default(cuid())
+  email                   String                    @unique
+  passwordHash            String
+  emailVerified           Boolean                   @default(false)
+  lastLoginAt             DateTime?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  username                String                    @unique
+  deletedAt               DateTime?
+  deletedBy               String?
+  status                  UserStatus                @default(ACTIVE)
   activityLogs            ActivityLog[]
-  createdOrganizations    Organization[]           @relation("OrganizationCreator")
-  notifications           Notification[]
-  announcementReads       AnnouncementRead[]
-  eventRegistrations      EventRegistration[]
-  votes                   Vote[]
-  candidates              Candidate[]
-  ticketPurchases         TicketPurchase[]
-  payments                Payment[]
-  withdrawals             Withdrawal[]
-  savingsGoals            SavingsGoal[]
-  wallet                  Wallet?
-  featureFlagTargets      FeatureFlagTarget[]
-  executiveMembers        ExecutiveMember[]
-  announcementAuthor      Announcement[]           @relation("AnnouncementAuthor")
-  notificationPreferences NotificationPreference[]
-  pushQueues              PushQueue[]
-  organizationMemberships OrganizationMembership[]
   admins                  Admin[]
-  joinRequests            OrganizationJoinRequest[] @relation("JoinRequestUser")
+  announcementReads       AnnouncementRead[]
+  announcementAuthor      Announcement[]            @relation("AnnouncementAuthor")
+  auditLogs               AuditLog[]
+  candidates              Candidate[]
+  emailVerifications      EmailVerification[]
+  eventRegistrations      EventRegistration[]
+  approvedEvents          Event[]                   @relation("EventApprover")
+  createdEvents           Event[]                   @relation("EventCreator")
+  executiveMembers        ExecutiveMember[]
+  featureFlagTargets      FeatureFlagTarget[]
+  files                   File[]
+  notificationPreferences NotificationPreference[]
+  notifications           Notification[]
+  operationalAuditLogs    OperationalAuditLog[]
   reviewedJoinRequests    OrganizationJoinRequest[] @relation("JoinRequestReviewer")
-
-  createdEvents   Event[]          @relation("EventCreator")
-  approvedEvents  Event[]          @relation("EventApprover")
-  receipts        Receipt[]
-  files           File[]
-  pendingPayments PendingPayment[]
+  joinRequests            OrganizationJoinRequest[] @relation("JoinRequestUser")
+  organizationMemberships OrganizationMembership[]
+  createdOrganizations    Organization[]            @relation("OrganizationCreator")
+  passwordResets          PasswordReset[]
+  payments                Payment[]
+  pendingPayments         PendingPayment[]
+  pushQueues              PushQueue[]
+  receipts                Receipt[]
+  savingsGoals            SavingsGoal[]
+  sessions                Session[]
+  studentProfile          StudentProfile?
+  ticketPurchases         TicketPurchase[]
+  profile                 UserProfile?
+  votes                   Vote[]
+  wallet                  Wallet?
+  withdrawals             Withdrawal[]
+  bankAccounts            BankAccount[]
 
   @@index([email])
   @@index([username])
@@ -66,26 +62,21 @@ model User {
 }
 
 model Session {
-  id     String @id @default(cuid())
-  userId String
-
-  refreshTokenHash String @unique
-
-  deviceName      String?
-  browser         String?
-  operatingSystem String?
-  ipAddress       String?
-  userAgent       String?
-
-  revokedReason String?
-
-  createdAt  DateTime  @default(now())
-  expiresAt  DateTime
-  lastUsedAt DateTime  @default(now())
-  revokedAt  DateTime?
-  isActive   Boolean   @default(true)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               String    @id @default(cuid())
+  userId           String
+  expiresAt        DateTime
+  ipAddress        String?
+  userAgent        String?
+  createdAt        DateTime  @default(now())
+  browser          String?
+  deviceName       String?
+  isActive         Boolean   @default(true)
+  lastUsedAt       DateTime  @default(now())
+  operatingSystem  String?
+  refreshTokenHash String    @unique
+  revokedAt        DateTime?
+  revokedReason    String?
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([refreshTokenHash])
@@ -100,8 +91,7 @@ model PasswordReset {
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([token])
@@ -116,8 +106,7 @@ model EmailVerification {
   expiresAt  DateTime
   verifiedAt DateTime?
   createdAt  DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([token])
@@ -125,93 +114,80 @@ model EmailVerification {
 }
 
 model UserProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-
-  firstName  String
-  lastName   String
-  middleName String?
-  phone      String?
-  avatar     String?
-
-  gender      Gender?
-  dateOfBirth DateTime?
-  country     String?
-  state       String?
-  city        String?
-  address     String?
-
-  bio String?
-
-  onboardingStep        OnboardingStep @default(PERSONAL_INFO)
-  onboardingCompleted   Boolean        @default(false)
+  id                    String             @id @default(cuid())
+  userId                String             @unique
+  firstName             String
+  lastName              String
+  middleName            String?
+  phone                 String?
+  avatar                String?
+  gender                Gender?
+  dateOfBirth           DateTime?
+  country               String?
+  state                 String?
+  city                  String?
+  address               String?
+  bio                   String?
+  onboardingStep        OnboardingStep     @default(PERSONAL_INFO)
+  onboardingCompleted   Boolean            @default(false)
   onboardingCompletedAt DateTime?
-
-  verificationStatus VerificationStatus @default(UNVERIFIED)
-  verifiedAt         DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  verificationStatus    VerificationStatus @default(UNVERIFIED)
+  verifiedAt            DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+  user                  User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_profiles")
 }
 
 model Institution {
-  id        String  @id @default(cuid())
-  name      String
-  shortName String
-  code      String  @unique
-  logo      String?
-  website   String?
-  email     String?
-  phone     String?
-  address   String?
-  city      String?
-  state     String?
-  country   String?
-
-  status InstitutionStatus @default(ACTIVE)
-
-  createdBy String?
-  updatedBy String?
-
-  deletedAt DateTime?
-  deletedBy String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  faculties     Faculty[]
+  id            String            @id @default(cuid())
+  name          String
+  shortName     String
+  code          String            @unique
+  logo          String?
+  website       String?
+  email         String?
+  phone         String?
+  address       String?
+  city          String?
+  state         String?
+  country       String?
+  status        InstitutionStatus @default(ACTIVE)
+  createdBy     String?
+  updatedBy     String?
+  deletedAt     DateTime?
+  deletedBy     String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   sessions      AcademicSession[]
+  admins        Admin[]
+  dues          Due[]
+  faculties     Faculty[]
   organizations Organization[]
   students      StudentProfile[]
-  dues          Due[]
-  admins        Admin[]
 
   @@index([code])
   @@map("institutions")
 }
 
 model Faculty {
-  id            String        @id @default(cuid())
-  institutionId String
-  name          String
-  code          String
-  status        FacultyStatus @default(ACTIVE)
-
-  createdBy String?
-  updatedBy String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  institution   Institution      @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  departments   Department[]
-  organizations Organization[]
-  students      StudentProfile[]
-  admins        Admin[]
+  id               String            @id @default(cuid())
+  institutionId    String
+  name             String
+  code             String
+  logo             String?
+  status           FacultyStatus     @default(ACTIVE)
+  createdBy        String?
+  updatedBy        String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  academicSessions AcademicSession[]
+  admins           Admin[]
+  departments      Department[]
+  institution      Institution       @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  organizations    Organization[]
+  students         StudentProfile[]
 
   @@unique([institutionId, code])
   @@index([institutionId])
@@ -219,26 +195,24 @@ model Faculty {
 }
 
 model Department {
-  id        String @id @default(cuid())
-  facultyId String
-  name      String
-  code      String
-
-  promotionType PromotionType
-  status        DepartmentStatus @default(ACTIVE)
-
-  createdBy String?
-  updatedBy String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  faculty         Faculty                 @relation(fields: [facultyId], references: [id], onDelete: Cascade)
-  academicLevels  AcademicLevel[]
-  organizations   Organization[]
-  studentProfiles StudentProfile[]
-  students        StudentAcademicRecord[]
-  admins          Admin[]
+  id               String                  @id @default(cuid())
+  facultyId        String
+  name             String
+  code             String
+  logo             String?
+  promotionType    PromotionType
+  status           DepartmentStatus        @default(ACTIVE)
+  createdBy        String?
+  updatedBy        String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  academicLevels   AcademicLevel[]
+  academicSessions AcademicSession[]
+  admins           Admin[]
+  faculty          Faculty                 @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  organizations    Organization[]
+  students         StudentAcademicRecord[]
+  studentProfiles  StudentProfile[]
 
   @@unique([facultyId, code])
   @@index([facultyId])
@@ -246,25 +220,21 @@ model Department {
 }
 
 model AcademicLevel {
-  id           String @id @default(cuid())
-  departmentId String
-
-  name         String
-  numericLevel Int
-  order        Int
-
-  status AcademicLevelStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-
-  students        StudentProfile[]
-  academicRecords StudentAcademicRecord[]
-  organizations   Organization[]
-  promotionsFrom  StudentPromotion[]      @relation("FromLevel")
-  promotionsTo    StudentPromotion[]      @relation("ToLevel")
+  id               String                  @id @default(cuid())
+  departmentId     String
+  name             String
+  numericLevel     Int
+  order            Int
+  status           AcademicLevelStatus     @default(ACTIVE)
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  academicSessions AcademicSession[]
+  department       Department              @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  organizations    Organization[]
+  academicRecords  StudentAcademicRecord[]
+  students         StudentProfile[]
+  promotionsFrom   StudentPromotion[]      @relation("FromLevel")
+  promotionsTo     StudentPromotion[]      @relation("ToLevel")
 
   @@unique([departmentId, name])
   @@index([departmentId])
@@ -272,66 +242,69 @@ model AcademicLevel {
 }
 
 model AcademicSession {
-  id            String                @id @default(cuid())
-  institutionId String
-  name          String
-  startDate     DateTime
-  endDate       DateTime
-  status        AcademicSessionStatus
-  isCurrent     Boolean               @default(false)
-
-  createdBy String?
-  updatedBy String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  institution    Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
-  dues           Due[]
-  studentRecords StudentAcademicRecord[]
-  memberships    OrganizationMembership[]
-  promotions     StudentPromotion[]
+  id              String                   @id @default(cuid())
+  institutionId   String
+  facultyId       String?
+  departmentId    String?
+  academicLevelId String?
+  name            String
+  startDate       DateTime
+  endDate         DateTime
+  status          AcademicSessionStatus
+  scope           SessionScope             @default(INSTITUTION)
+  isCurrent       Boolean                  @default(false)
+  createdBy       String?
+  updatedBy       String?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  academicLevel   AcademicLevel?           @relation(fields: [academicLevelId], references: [id])
+  department      Department?              @relation(fields: [departmentId], references: [id])
+  faculty         Faculty?                 @relation(fields: [facultyId], references: [id])
+  institution     Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  admins          Admin[]
+  dues            Due[]
+  memberships     OrganizationMembership[]
+  organizations   Organization[]
+  studentRecords  StudentAcademicRecord[]
+  promotions      StudentPromotion[]
 
   @@unique([institutionId, name])
   @@index([institutionId])
+  @@index([facultyId])
+  @@index([departmentId])
+  @@index([academicLevelId])
   @@index([isCurrent])
+  @@index([scope])
   @@map("academic_sessions")
 }
 
 model StudentProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-
+  id                     String                  @id @default(cuid())
+  userId                 String                  @unique
   institutionId          String
   facultyId              String
   departmentId           String
   currentAcademicLevelId String?
   matricNumber           String?
-
-  academicStatus AcademicStatus @default(ACTIVE)
-
-  onboardingStep        OnboardingStep @default(INSTITUTION)
-  onboardingCompleted   Boolean        @default(false)
-  onboardingCompletedAt DateTime?
-
-  verificationStatus VerificationStatus @default(UNVERIFIED)
-  verifiedAt         DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user                 User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  institution          Institution    @relation(fields: [institutionId], references: [id])
-  faculty              Faculty        @relation(fields: [facultyId], references: [id])
-  department           Department     @relation(fields: [departmentId], references: [id])
-  currentAcademicLevel AcademicLevel? @relation(fields: [currentAcademicLevelId], references: [id])
-
-  academicRecords StudentAcademicRecord[]
-  promotions      StudentPromotion[]
-  enrollments     StudentEnrollment[]
-  verifications   StudentVerification[]
-  dueAssignments  DueAssignment[]
-  files           File[]
+  academicStatus         AcademicStatus          @default(ACTIVE)
+  onboardingStep         OnboardingStep          @default(INSTITUTION)
+  onboardingCompleted    Boolean                 @default(false)
+  onboardingCompletedAt  DateTime?
+  verificationStatus     VerificationStatus      @default(UNVERIFIED)
+  verifiedAt             DateTime?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  dueAssignments         DueAssignment[]
+  files                  File[]
+  academicRecords        StudentAcademicRecord[]
+  enrollments            StudentEnrollment[]
+  currentAcademicLevel   AcademicLevel?          @relation(fields: [currentAcademicLevelId], references: [id])
+  department             Department              @relation(fields: [departmentId], references: [id])
+  faculty                Faculty                 @relation(fields: [facultyId], references: [id])
+  institution            Institution             @relation(fields: [institutionId], references: [id])
+  user                   User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  promotions             StudentPromotion[]
+  verifications          StudentVerification[]
 
   @@index([userId])
   @@index([institutionId])
@@ -342,26 +315,22 @@ model StudentProfile {
 }
 
 model StudentAcademicRecord {
-  id              String @id @default(cuid())
-  studentId       String
-  sessionId       String
-  departmentId    String
-  academicLevelId String
-
+  id               String          @id @default(cuid())
+  studentId        String
+  sessionId        String
+  departmentId     String
+  academicLevelId  String
   gpa              Float?
   cgpa             Float?
   creditsAttempted Int?
   creditsEarned    Int?
-
-  status AcademicStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  student       StudentProfile  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  session       AcademicSession @relation(fields: [sessionId], references: [id])
-  department    Department      @relation(fields: [departmentId], references: [id])
-  academicLevel AcademicLevel   @relation(fields: [academicLevelId], references: [id])
+  status           AcademicStatus  @default(ACTIVE)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  academicLevel    AcademicLevel   @relation(fields: [academicLevelId], references: [id])
+  department       Department      @relation(fields: [departmentId], references: [id])
+  session          AcademicSession @relation(fields: [sessionId], references: [id])
+  student          StudentProfile  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, sessionId])
   @@index([studentId])
@@ -370,36 +339,33 @@ model StudentAcademicRecord {
 }
 
 model StudentPromotion {
-  id            String   @id @default(cuid())
+  id            String          @id @default(cuid())
   studentId     String
   fromLevelId   String
   toLevelId     String
   sessionId     String
   promotedBy    String?
-  promotionDate DateTime @default(now())
+  promotionDate DateTime        @default(now())
   notes         String?
-
-  student   StudentProfile  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  fromLevel AcademicLevel   @relation("FromLevel", fields: [fromLevelId], references: [id])
-  toLevel   AcademicLevel   @relation("ToLevel", fields: [toLevelId], references: [id])
-  session   AcademicSession @relation(fields: [sessionId], references: [id])
+  fromLevel     AcademicLevel   @relation("FromLevel", fields: [fromLevelId], references: [id])
+  session       AcademicSession @relation(fields: [sessionId], references: [id])
+  student       StudentProfile  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  toLevel       AcademicLevel   @relation("ToLevel", fields: [toLevelId], references: [id])
 
   @@map("student_promotions")
 }
 
 model StudentEnrollment {
-  id             String  @id @default(cuid())
+  id             String           @id @default(cuid())
   studentId      String
   organizationId String
   roleId         String?
-
-  status      EnrollmentStatus @default(ACTIVE)
-  enrolledAt  DateTime         @default(now())
-  completedAt DateTime?
-
-  student      StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  organization Organization   @relation(fields: [organizationId], references: [id])
-  role         Role?          @relation(fields: [roleId], references: [id])
+  status         EnrollmentStatus @default(ACTIVE)
+  enrolledAt     DateTime         @default(now())
+  completedAt    DateTime?
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  role           Role?            @relation(fields: [roleId], references: [id])
+  student        StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, organizationId])
   @@index([studentId])
@@ -414,12 +380,10 @@ model StudentVerification {
   status      VerificationStatus @default(PENDING)
   documentUrl String?
   notes       String?
-
-  requestedAt DateTime  @default(now())
+  requestedAt DateTime           @default(now())
   verifiedAt  DateTime?
   expiresAt   DateTime?
-
-  student StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student     StudentProfile     @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
   @@index([status])
@@ -427,91 +391,82 @@ model StudentVerification {
 }
 
 model Organization {
-  id String @id @default(cuid())
-
+  id                   String                    @id @default(cuid())
   institutionId        String
   facultyId            String?
   departmentId         String?
   academicLevelId      String?
   parentOrganizationId String?
+  name                 String
+  slug                 String
+  description          String?
+  type                 OrganizationType
+  scope                OrganizationScope
+  status               OrganizationStatus        @default(DRAFT)
+  createdBy            String?
+  updatedBy            String?
+  activatedAt          DateTime?
+  archivedAt           DateTime?
+  deletedAt            DateTime?
+  deletedBy            String?
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  academicSessionId    String?
+  admins               Admin[]
+  announcements        Announcement[]
+  committees           Committee[]
+  dues                 Due[]
+  elections            Election[]
+  events               Event[]
+  executiveTerms       ExecutiveTerm[]
+  featureFlagTargets   FeatureFlagTarget[]
+  files                File[]
+  ledgerAccounts       LedgerAccount[]
+  joinRequests         OrganizationJoinRequest[]
+  memberships          OrganizationMembership[]
+  academicLevel        AcademicLevel?            @relation(fields: [academicLevelId], references: [id])
+  academicSession      AcademicSession?          @relation(fields: [academicSessionId], references: [id])
+  creator              User?                     @relation("OrganizationCreator", fields: [createdBy], references: [id])
+  department           Department?               @relation(fields: [departmentId], references: [id])
+  faculty              Faculty?                  @relation(fields: [facultyId], references: [id])
+  institution          Institution               @relation(fields: [institutionId], references: [id])
+  parent               Organization?             @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id])
+  children             Organization[]            @relation("OrganizationHierarchy")
+  payments             Payment[]
+  pendingPayments      PendingPayment[]
+  receipts             Receipt[]
+  roles                Role[]
+  settlements          Settlement[]
+  studentEnrollments   StudentEnrollment[]
+  wallet               Wallet?
 
-  name        String
-  slug        String  @unique
-  description String?
-
-  type  OrganizationType
-  scope OrganizationScope
-
-  status OrganizationStatus @default(DRAFT)
-
-  createdBy   String?
-  updatedBy   String?
-  activatedAt DateTime?
-  archivedAt  DateTime?
-  deletedAt   DateTime?
-  deletedBy   String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  institution   Institution    @relation(fields: [institutionId], references: [id])
-  faculty       Faculty?       @relation(fields: [facultyId], references: [id])
-  department    Department?    @relation(fields: [departmentId], references: [id])
-  academicLevel AcademicLevel? @relation(fields: [academicLevelId], references: [id])
-  parent        Organization?  @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id])
-  children      Organization[] @relation("OrganizationHierarchy")
-  creator       User?          @relation("OrganizationCreator", fields: [createdBy], references: [id])
-
-  memberships        OrganizationMembership[]
-  roles              Role[]
-  dues               Due[]
-  announcements      Announcement[]
-  events             Event[]
-  wallet             Wallet?
-  studentEnrollments StudentEnrollment[]
-  featureFlagTargets FeatureFlagTarget[]
-  elections          Election[]
-  executiveTerms     ExecutiveTerm[]
-  committees         Committee[]
-  ledgerAccounts     LedgerAccount[]
-  settlements        Settlement[]
-  payments           Payment[]
-  admins             Admin[]
-  receipts           Receipt[]
-  files              File[]
-  pendingPayments    PendingPayment[]
-  joinRequests       OrganizationJoinRequest[]
-
-  @@unique([institutionId, slug])
+  @@unique([institutionId, slug, academicSessionId])
   @@index([institutionId])
   @@index([facultyId])
   @@index([departmentId])
   @@index([academicLevelId])
+  @@index([academicSessionId])
   @@index([type])
   @@index([status])
   @@map("organizations")
 }
 
 model OrganizationMembership {
-  id             String @id @default(cuid())
-  organizationId String
-  userId         String
-
-  membershipType MembershipType
-  status         MembershipStatus
-  isPrimary      Boolean          @default(false)
-
+  id              String           @id @default(cuid())
+  organizationId  String
+  userId          String
+  membershipType  MembershipType
+  status          MembershipStatus
+  isPrimary       Boolean          @default(false)
   joinedAt        DateTime
   joinedSessionId String?
   leftAt          DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization     @relation(fields: [organizationId], references: [id])
-  user         User             @relation(fields: [userId], references: [id])
-  session      AcademicSession? @relation(fields: [joinedSessionId], references: [id])
-  roles        MembershipRole[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  roles           MembershipRole[]
+  session         AcademicSession? @relation(fields: [joinedSessionId], references: [id])
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
 
   @@unique([organizationId, userId])
   @@index([userId])
@@ -519,51 +474,41 @@ model OrganizationMembership {
   @@index([status])
   @@map("organization_memberships")
 }
+
 model OrganizationJoinRequest {
-  id             String             @id @default(cuid())
+  id             String            @id @default(cuid())
   organizationId String
   userId         String
-  status         JoinRequestStatus  @default(PENDING)
-  membershipType MembershipType     @default(STUDENT)
-  message        String?            // Optional message from the user
-  reviewedBy     String?            // Admin who reviewed the request
+  status         JoinRequestStatus @default(PENDING)
+  membershipType MembershipType    @default(STUDENT)
+  message        String?
+  reviewedBy     String?
   reviewedAt     DateTime?
-  
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  reviewer       User?             @relation("JoinRequestReviewer", fields: [reviewedBy], references: [id])
+  user           User              @relation("JoinRequestUser", fields: [userId], references: [id], onDelete: Cascade)
 
-  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user           User               @relation("JoinRequestUser", fields: [userId], references: [id], onDelete: Cascade)
-  reviewer       User?              @relation("JoinRequestReviewer", fields: [reviewedBy], references: [id])
-
-  @@unique([organizationId, userId]) // Prevent duplicate requests
+  @@unique([organizationId, userId])
   @@index([organizationId, status])
   @@map("organization_join_requests")
 }
 
-enum JoinRequestStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 model Role {
-  id             String @id @default(cuid())
-  organizationId String
-
-  name        String
-  description String?
-  isSystem    Boolean @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization       Organization        @relation(fields: [organizationId], references: [id])
-  permissions        RolePermission[]
-  members            MembershipRole[]
-  studentEnrollments StudentEnrollment[]
-  featureFlagTargets FeatureFlagTarget[]
+  id                 String              @id @default(cuid())
+  organizationId     String
+  name               String
+  description        String?
+  isSystem           Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
   executiveMembers   ExecutiveMember[]
+  featureFlagTargets FeatureFlagTarget[]
+  members            MembershipRole[]
+  permissions        RolePermission[]
+  organization       Organization        @relation(fields: [organizationId], references: [id])
+  studentEnrollments StudentEnrollment[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -571,15 +516,13 @@ model Role {
 }
 
 model Permission {
-  id          String  @id @default(cuid())
-  key         String  @unique
+  id          String           @id @default(cuid())
+  key         String           @unique
   name        String
   description String?
   category    String?
-
-  createdAt DateTime @default(now())
-
-  roles RolePermission[]
+  createdAt   DateTime         @default(now())
+  roles       RolePermission[]
 
   @@index([key])
   @@index([category])
@@ -587,29 +530,1097 @@ model Permission {
 }
 
 model RolePermission {
-  id           String @id @default(cuid())
+  id           String     @id @default(cuid())
   roleId       String
   permissionId String
-
-  role       Role       @relation(fields: [roleId], references: [id])
-  permission Permission @relation(fields: [permissionId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  role         Role       @relation(fields: [roleId], references: [id])
 
   @@unique([roleId, permissionId])
   @@map("role_permissions")
 }
 
 model MembershipRole {
-  id           String   @id @default(cuid())
+  id           String                 @id @default(cuid())
   membershipId String
   roleId       String
   assignedBy   String?
-  assignedAt   DateTime @default(now())
-
-  membership OrganizationMembership @relation(fields: [membershipId], references: [id])
-  role       Role                   @relation(fields: [roleId], references: [id])
+  assignedAt   DateTime               @default(now())
+  membership   OrganizationMembership @relation(fields: [membershipId], references: [id])
+  role         Role                   @relation(fields: [roleId], references: [id])
 
   @@unique([membershipId, roleId])
   @@map("membership_roles")
+}
+
+model Admin {
+  id                String            @id @default(cuid())
+  userId            String
+  adminType         AdminType
+  institutionId     String?
+  facultyId         String?
+  departmentId      String?
+  organizationId    String?
+  assignedBy        String?
+  assignedAt        DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  status            AdminStatus       @default(ACTIVE)
+  revokedAt         DateTime?
+  revokedReason     String?
+  academicSessionId String?
+  permissions       AdminPermission[]
+  academicSession   AcademicSession?  @relation(fields: [academicSessionId], references: [id])
+  department        Department?       @relation(fields: [departmentId], references: [id])
+  faculty           Faculty?          @relation(fields: [facultyId], references: [id])
+  institution       Institution?      @relation(fields: [institutionId], references: [id])
+  organization      Organization?     @relation(fields: [organizationId], references: [id])
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, adminType, institutionId, facultyId, departmentId, organizationId, academicSessionId])
+  @@index([userId])
+  @@index([adminType])
+  @@index([status])
+  @@map("admins")
+}
+
+model AdminPermission {
+  id                 String             @id @default(cuid())
+  adminId            String
+  permissionKey      String
+  permissionCategory PermissionCategory
+  permissionAction   PermissionAction
+  resourceId         String?
+  grantedBy          String?
+  grantedAt          DateTime           @default(now())
+  admin              Admin              @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@unique([adminId, permissionKey, resourceId])
+  @@index([adminId])
+  @@index([permissionKey])
+  @@map("admin_permissions")
+}
+
+model SystemRole {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  description String?
+  category    SystemRoleCategory
+  isDefault   Boolean            @default(false)
+  permissions String[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@map("system_roles")
+}
+
+model Wallet {
+  id               String       @id @default(cuid())
+  userId           String?      @unique
+  organizationId   String?      @unique
+  isPlatformWallet Boolean      @default(false)
+  balance          Int          @default(0)
+  heldBalance      Int          @default(0)
+  currency         String       @default("NGN")
+  status           WalletStatus @default(ACTIVE)
+  ledgerAccountId  String?      @unique
+  metadata         Json? // ADD THIS FIELD
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  ledgerAccount LedgerAccount? @relation(fields: [ledgerAccountId], references: [id])
+  user          User?          @relation(fields: [userId], references: [id])
+  organization  Organization?  @relation(fields: [organizationId], references: [id])
+  transactions  Transaction[]
+  holds         WalletHold[]
+  withdrawals   Withdrawal[]
+
+  @@index([isPlatformWallet])
+  @@map("wallets")
+}
+
+model WalletHold {
+  id         String     @id @default(cuid())
+  walletId   String
+  amount     Int
+  reason     String?
+  expiresAt  DateTime?
+  status     HoldStatus @default(ACTIVE)
+  createdAt  DateTime   @default(now())
+  releasedAt DateTime?
+  wallet     Wallet     @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId])
+  @@index([status])
+  @@map("wallet_holds")
+}
+
+model LedgerAccount {
+  id             String                 @id @default(cuid())
+  organizationId String?
+  name           String
+  code           String                 @unique
+  type           LedgerAccountType
+  balance        Int                    @default(0)
+  currency       String                 @default("NGN")
+  isActive       Boolean                @default(true)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  category       LedgerAccountCategory?
+  description    String?
+  isSystem       Boolean                @default(false)
+  ownerId        String?
+  ownerType      LedgerAccountOwnerType @default(SYSTEM)
+  parentId       String?
+  pendingBalance Int                    @default(0)
+  walletId       String?                @unique
+  createdBy      String?
+  metadata       Json?
+  journalLines   JournalLine[]
+  organization   Organization?          @relation(fields: [organizationId], references: [id])
+  parent         LedgerAccount?         @relation("LedgerAccountHierarchy", fields: [parentId], references: [id])
+  children       LedgerAccount[]        @relation("LedgerAccountHierarchy")
+  ledgerEntries  LedgerEntry[]
+  wallet         Wallet?
+
+  @@unique([ownerType, ownerId, code])
+  @@index([organizationId])
+  @@index([code])
+  @@index([type])
+  @@index([ownerType])
+  @@index([ownerId])
+  @@map("ledger_accounts")
+}
+
+model LedgerEntry {
+  id            String          @id @default(cuid())
+  accountId     String
+  transactionId String
+  amount        Int
+  type          LedgerEntryType
+  balanceBefore Int
+  balanceAfter  Int
+  description   String?
+  createdAt     DateTime        @default(now())
+  account       LedgerAccount   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  transaction   Transaction     @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([transactionId])
+  @@map("ledger_entries")
+}
+
+model JournalEntry {
+  id            String             @id @default(cuid())
+  reference     String             @unique
+  description   String?
+  transactionId String?            @unique
+  paymentId     String?            @unique
+  withdrawalId  String?            @unique
+  refundId      String?            @unique
+  entryDate     DateTime           @default(now())
+  status        JournalEntryStatus @default(POSTED)
+  isBalanced    Boolean            @default(false)
+  verifiedBy    String?
+  verifiedAt    DateTime?
+  createdBy     String?
+  notes         String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  lines         JournalLine[]
+  payment       Payment?
+  refund        Refund?
+  transaction   Transaction?
+  withdrawal    Withdrawal?
+
+  @@index([reference])
+  @@index([transactionId])
+  @@index([paymentId])
+  @@index([entryDate])
+  @@index([status])
+  @@map("journal_entries")
+}
+
+model JournalLine {
+  id              String          @id @default(cuid())
+  journalEntryId  String
+  ledgerAccountId String
+  type            JournalLineType
+  amount          Int
+  description     String?
+  createdAt       DateTime        @default(now())
+  journalEntry    JournalEntry    @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  ledgerAccount   LedgerAccount   @relation(fields: [ledgerAccountId], references: [id])
+
+  @@index([journalEntryId])
+  @@index([ledgerAccountId])
+  @@map("journal_lines")
+}
+
+model Transaction {
+  id             String            @id @default(cuid())
+  walletId       String
+  type           TransactionType
+  amount         Int
+  fee            Int               @default(0)
+  netAmount      Int
+  status         TransactionStatus @default(PENDING)
+  reference      String            @unique
+  description    String?
+  metadata       Json?
+  completedAt    DateTime?
+  failedAt       DateTime?
+  failureReason  String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  journalEntryId String?           @unique
+  entries        LedgerEntry[]
+  payment        Payment?
+  refund         Refund?
+  settlement     Settlement?
+  journalEntry   JournalEntry?     @relation(fields: [journalEntryId], references: [id])
+  wallet         Wallet            @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  withdrawal     Withdrawal?
+
+  @@index([walletId])
+  @@index([reference])
+  @@index([status])
+  @@index([journalEntryId])
+  @@map("transactions")
+}
+
+model Payment {
+  id              String            @id @default(cuid())
+  payerId         String
+  organizationId  String
+  transactionId   String?           @unique
+  amount          Int
+  serviceFee      Int               @default(0)
+  status          PaymentStatus     @default(PENDING)
+  paymentMethod   PaymentMethodType
+  reference       String            @unique
+  description     String?
+  metadata        Json?
+  paidAt          DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  journalEntryId  String?           @unique
+  bachsChargeId   String?           @unique
+  bachsCheckoutId String?
+  bachsCustomerId String?
+  duePayment      DuePayment?
+  journalEntry    JournalEntry?     @relation(fields: [journalEntryId], references: [id])
+  organization    Organization      @relation(fields: [organizationId], references: [id])
+  payer           User              @relation(fields: [payerId], references: [id])
+  transaction     Transaction?      @relation(fields: [transactionId], references: [id])
+  receipt         Receipt?
+  refund          Refund?
+
+  @@index([payerId])
+  @@index([organizationId])
+  @@index([reference])
+  @@index([status])
+  @@index([journalEntryId])
+  @@map("payments")
+}
+
+model Due {
+  id             String           @id @default(cuid())
+  organizationId String
+  sessionId      String?
+  institutionId  String?
+  name           String
+  description    String?
+  amount         Int
+  dueDate        DateTime
+  lateFee        Int              @default(0)
+  isRequired     Boolean          @default(true)
+  status         DueStatus        @default(ACTIVE)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  assignments    DueAssignment[]
+  institution    Institution?     @relation(fields: [institutionId], references: [id])
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  session        AcademicSession? @relation(fields: [sessionId], references: [id])
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("dues")
+}
+
+model DueAssignment {
+  id              String           @id @default(cuid())
+  dueId           String
+  studentId       String
+  amount          Int
+  isPaid          Boolean          @default(false)
+  paidAt          DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  due             Due              @relation(fields: [dueId], references: [id], onDelete: Cascade)
+  student         StudentProfile   @relation(fields: [studentId], references: [id])
+  duePayments     DuePayment[]
+  pendingPayments PendingPayment[]
+
+  @@unique([dueId, studentId])
+  @@index([studentId])
+  @@index([isPaid])
+  @@map("due_assignments")
+}
+
+model DuePayment {
+  id           String        @id @default(cuid())
+  assignmentId String
+  paymentId    String        @unique
+  amount       Int
+  paidAt       DateTime      @default(now())
+  assignment   DueAssignment @relation(fields: [assignmentId], references: [id])
+  payment      Payment       @relation(fields: [paymentId], references: [id])
+
+  @@map("due_payments")
+}
+
+model Withdrawal {
+  id             String           @id @default(cuid())
+  userId         String
+  walletId       String
+  transactionId  String?          @unique
+  amount         Int
+  fee            Int              @default(0) // ADD THIS
+  netAmount      Int              @default(0) // ADD THIS
+  status         WithdrawalStatus @default(PENDING)
+  bankName       String?
+  accountNumber  String?
+  accountName    String?
+  reference      String           @unique
+  metadata       Json?
+  requestedAt    DateTime         @default(now())
+  processedAt    DateTime?
+  completedAt    DateTime?
+  failedAt       DateTime?
+  failureReason  String?
+  journalEntryId String?          @unique
+
+  // Webhook tracking fields
+  webhookId          String?   @unique // ADD THIS
+  webhookStatus      String?   @default("PENDING") // ADD THIS
+  webhookAttempts    Int       @default(0) // ADD THIS
+  webhookResponse    Json? // ADD THIS
+  webhookCompletedAt DateTime? // ADD THIS
+
+  refund            Refund?
+  journalEntry      JournalEntry?      @relation(fields: [journalEntryId], references: [id])
+  transaction       Transaction?       @relation(fields: [transactionId], references: [id])
+  user              User               @relation(fields: [userId], references: [id])
+  wallet            Wallet             @relation(fields: [walletId], references: [id])
+  withdrawalWebhook WithdrawalWebhook?
+
+  @@index([userId])
+  @@index([walletId])
+  @@index([status])
+  @@index([webhookStatus])
+  @@index([journalEntryId])
+  @@map("withdrawals")
+}
+
+// Add WithdrawalWebhook model
+model WithdrawalWebhook {
+  id                String    @id @default(cuid())
+  withdrawalId      String    @unique
+  event             String
+  status            String
+  amount            Int
+  reference         String
+  provider          String?
+  providerReference String?
+  response          Json?
+  receivedAt        DateTime  @default(now())
+  processedAt       DateTime?
+
+  withdrawal Withdrawal @relation(fields: [withdrawalId], references: [id], onDelete: Cascade)
+
+  @@map("withdrawal_webhooks")
+}
+
+// Add BankAccount model
+model BankAccount {
+  id            String   @id @default(cuid())
+  userId        String
+  bankName      String
+  accountNumber String
+  accountName   String
+  bankCode      String?
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountNumber, bankName])
+  @@map("bank_accounts")
+}
+
+model Refund {
+  id             String        @id @default(cuid())
+  paymentId      String        @unique
+  withdrawalId   String?       @unique
+  amount         Int
+  reason         String?
+  status         RefundStatus  @default(PENDING)
+  transactionId  String?       @unique
+  createdAt      DateTime      @default(now())
+  processedAt    DateTime?
+  journalEntryId String?       @unique
+  journalEntry   JournalEntry? @relation(fields: [journalEntryId], references: [id])
+  payment        Payment       @relation(fields: [paymentId], references: [id])
+  transaction    Transaction?  @relation(fields: [transactionId], references: [id])
+  withdrawal     Withdrawal?   @relation(fields: [withdrawalId], references: [id])
+
+  @@index([paymentId])
+  @@index([status])
+  @@index([journalEntryId])
+  @@map("refunds")
+}
+
+model Settlement {
+  id             String           @id @default(cuid())
+  organizationId String
+  transactionId  String           @unique
+  amount         Int
+  reference      String           @unique
+  status         SettlementStatus @default(PENDING)
+  settledAt      DateTime?
+  createdAt      DateTime         @default(now())
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+  transaction    Transaction      @relation(fields: [transactionId], references: [id])
+
+  @@map("settlements")
+}
+
+model SavingsGoal {
+  id            String               @id @default(cuid())
+  userId        String
+  title         String
+  description   String?
+  targetAmount  Int
+  currentAmount Int                  @default(0)
+  targetDate    DateTime?
+  status        SavingsStatus        @default(ACTIVE)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  user          User                 @relation(fields: [userId], references: [id])
+  transactions  SavingsTransaction[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("savings_goals")
+}
+
+model SavingsTransaction {
+  id          String                 @id @default(cuid())
+  goalId      String
+  amount      Int
+  type        SavingsTransactionType
+  description String?
+  createdAt   DateTime               @default(now())
+  goal        SavingsGoal            @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@index([goalId])
+  @@map("savings_transactions")
+}
+
+model Receipt {
+  id               String            @id @default(cuid())
+  paymentId        String            @unique
+  userId           String
+  organizationId   String?
+  receiptNumber    String            @unique
+  reference        String            @unique
+  amount           Int
+  serviceFee       Int               @default(0)
+  totalAmount      Int
+  currency         String            @default("NGN")
+  payerName        String
+  payerEmail       String
+  payerPhone       String?
+  paymentMethod    PaymentMethodType
+  paymentDate      DateTime
+  description      String?
+  organizationName String?
+  organizationSlug String?
+  metadata         Json?
+  items            Json?
+  status           ReceiptStatus     @default(ISSUED)
+  downloadCount    Int               @default(0)
+  lastDownloaded   DateTime?
+  viewedAt         DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  files            File[]
+  organization     Organization?     @relation(fields: [organizationId], references: [id])
+  payment          Payment           @relation(fields: [paymentId], references: [id])
+  user             User              @relation(fields: [userId], references: [id])
+
+  @@index([paymentId])
+  @@index([userId])
+  @@index([organizationId])
+  @@index([receiptNumber])
+  @@index([reference])
+  @@map("receipts")
+}
+
+model Announcement {
+  id             String               @id @default(cuid())
+  organizationId String
+  authorId       String?
+  title          String
+  content        String
+  type           AnnouncementType     @default(GENERAL)
+  priority       AnnouncementPriority @default(NORMAL)
+  isPublished    Boolean              @default(false)
+  publishedAt    DateTime?
+  expiresAt      DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  reads          AnnouncementRead[]
+  author         User?                @relation("AnnouncementAuthor", fields: [authorId], references: [id])
+  organization   Organization         @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@index([isPublished])
+  @@index([type])
+  @@map("announcements")
+}
+
+model AnnouncementRead {
+  id             String       @id @default(cuid())
+  announcementId String
+  userId         String
+  readAt         DateTime     @default(now())
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([announcementId, userId])
+  @@map("announcement_reads")
+}
+
+model Notification {
+  id          String               @id @default(cuid())
+  userId      String
+  title       String
+  body        String
+  type        NotificationType
+  priority    NotificationPriority @default(NORMAL)
+  read        Boolean              @default(false)
+  readAt      DateTime?
+  deliveredAt DateTime?
+  data        Json?
+  metadata    Json?
+  createdAt   DateTime             @default(now())
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([type])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  email     Boolean          @default(true)
+  push      Boolean          @default(true)
+  inApp     Boolean          @default(true)
+  updatedAt DateTime         @updatedAt
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@map("notification_preferences")
+}
+
+model EmailQueue {
+  id            String      @id @default(cuid())
+  to            String
+  from          String?
+  subject       String
+  html          String
+  text          String?
+  status        QueueStatus @default(PENDING)
+  attempts      Int         @default(0)
+  maxAttempts   Int         @default(3)
+  lastAttemptAt DateTime?
+  errorMessage  String?
+  scheduledAt   DateTime?
+  sentAt        DateTime?
+  createdAt     DateTime    @default(now())
+
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("email_queue")
+}
+
+model PushQueue {
+  id            String      @id @default(cuid())
+  userId        String
+  title         String
+  body          String
+  data          Json?
+  status        QueueStatus @default(PENDING)
+  attempts      Int         @default(0)
+  maxAttempts   Int         @default(3)
+  lastAttemptAt DateTime?
+  errorMessage  String?
+  scheduledAt   DateTime?
+  sentAt        DateTime?
+  createdAt     DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("push_queue")
+}
+
+model FeatureFlag {
+  id          String              @id @default(cuid())
+  key         String              @unique
+  name        String
+  description String?
+  enabled     Boolean             @default(false)
+  percentage  Int                 @default(100)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  targets     FeatureFlagTarget[]
+
+  @@index([key])
+  @@map("feature_flags")
+}
+
+model FeatureFlagTarget {
+  id             String                @id @default(cuid())
+  featureId      String
+  targetType     FeatureFlagTargetType
+  userId         String?
+  organizationId String?
+  roleId         String?
+  enabled        Boolean               @default(true)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  feature        FeatureFlag           @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  organization   Organization?         @relation(fields: [organizationId], references: [id])
+  role           Role?                 @relation(fields: [roleId], references: [id])
+  user           User?                 @relation(fields: [userId], references: [id])
+
+  @@unique([featureId, targetType, userId])
+  @@unique([featureId, targetType, organizationId])
+  @@unique([featureId, targetType, roleId])
+  @@map("feature_flag_targets")
+}
+
+model MaintenanceMode {
+  id        String    @id @default(cuid())
+  enabled   Boolean   @default(false)
+  message   String?
+  startsAt  DateTime?
+  endsAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("maintenance_modes")
+}
+
+model KillSwitch {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String?
+  enabled     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("kill_switches")
+}
+
+model PlatformSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
+model ReleaseChannel {
+  id          String           @id @default(cuid())
+  name        String           @unique
+  description String?
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  waves       DeploymentWave[]
+
+  @@map("release_channels")
+}
+
+model DeploymentWave {
+  id          String         @id @default(cuid())
+  channelId   String
+  name        String
+  description String?
+  percentage  Int
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  channel     ReleaseChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@map("deployment_waves")
+}
+
+model ScheduledJob {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  schedule    String
+  handler     String
+  status      JobStatus @default(PENDING)
+  lastRunAt   DateTime?
+  nextRunAt   DateTime?
+  lastError   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("scheduled_jobs")
+}
+
+model OperationalAuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String?
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("operational_audit_logs")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String?
+  entityId  String?
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  activity  String
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([activity])
+  @@map("activity_logs")
+}
+
+model Election {
+  id             String             @id @default(cuid())
+  organizationId String
+  title          String
+  description    String?
+  startDate      DateTime
+  endDate        DateTime
+  status         ElectionStatus     @default(DRAFT)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  candidates     Candidate[]
+  positions      ElectionPosition[]
+  organization   Organization       @relation(fields: [organizationId], references: [id])
+  votes          Vote[]
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("elections")
+}
+
+model ElectionPosition {
+  id            String      @id @default(cuid())
+  electionId    String
+  title         String
+  description   String?
+  maxCandidates Int         @default(1)
+  maxVotes      Int         @default(1)
+  order         Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  candidates    Candidate[]
+  election      Election    @relation(fields: [electionId], references: [id], onDelete: Cascade)
+
+  @@map("election_positions")
+}
+
+model Candidate {
+  id         String           @id @default(cuid())
+  electionId String
+  positionId String
+  userId     String
+  manifesto  String?
+  photo      String?
+  status     CandidateStatus  @default(NOMINATED)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  election   Election         @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  position   ElectionPosition @relation(fields: [positionId], references: [id])
+  user       User             @relation(fields: [userId], references: [id])
+  votes      Vote[]
+
+  @@unique([electionId, positionId, userId])
+  @@map("candidates")
+}
+
+model Vote {
+  id          String    @id @default(cuid())
+  electionId  String
+  candidateId String
+  voterId     String
+  createdAt   DateTime  @default(now())
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  election    Election  @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  voter       User      @relation(fields: [voterId], references: [id])
+
+  @@unique([electionId, voterId, candidateId])
+  @@map("votes")
+}
+
+model ExecutiveTerm {
+  id             String            @id @default(cuid())
+  organizationId String
+  title          String
+  description    String?
+  startDate      DateTime
+  endDate        DateTime
+  status         TermStatus        @default(UPCOMING)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  members        ExecutiveMember[]
+  organization   Organization      @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@map("executive_terms")
+}
+
+model ExecutiveMember {
+  id         String        @id @default(cuid())
+  termId     String
+  userId     String
+  roleId     String
+  assignedAt DateTime      @default(now())
+  role       Role          @relation(fields: [roleId], references: [id])
+  term       ExecutiveTerm @relation(fields: [termId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id])
+
+  @@unique([termId, userId])
+  @@map("executive_members")
+}
+
+model Committee {
+  id             String          @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  purpose        String?
+  status         CommitteeStatus @default(ACTIVE)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@map("committees")
+}
+
+model Event {
+  id              String              @id @default(cuid())
+  organizationId  String?
+  title           String
+  description     String?
+  location        String?
+  startDate       DateTime
+  endDate         DateTime
+  capacity        Int?
+  isFree          Boolean             @default(true)
+  price           Int?                @default(0)
+  status          EventStatus         @default(DRAFT)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  approvedAt      DateTime?
+  approvedBy      String?
+  createdBy       String
+  isApproved      Boolean             @default(false)
+  isPublic        Boolean             @default(false)
+  rejectionReason String?
+  registrations   EventRegistration[]
+  approver        User?               @relation("EventApprover", fields: [approvedBy], references: [id])
+  creator         User                @relation("EventCreator", fields: [createdBy], references: [id])
+  organization    Organization?       @relation(fields: [organizationId], references: [id])
+  files           File[]
+  tickets         Ticket[]
+
+  @@index([organizationId])
+  @@index([createdBy])
+  @@index([status])
+  @@index([isPublic])
+  @@map("events")
+}
+
+model Ticket {
+  id        String          @id @default(cuid())
+  eventId   String
+  code      String          @unique
+  type      TicketType      @default(REGULAR)
+  price     Decimal
+  isUsed    Boolean         @default(false)
+  usedAt    DateTime?
+  createdAt DateTime        @default(now())
+  purchase  TicketPurchase?
+  event     Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+  @@index([code])
+  @@map("tickets")
+}
+
+model TicketPurchase {
+  id           String             @id @default(cuid())
+  ticketId     String             @unique
+  userId       String
+  amount       Decimal
+  status       TicketStatus       @default(PENDING)
+  purchasedAt  DateTime           @default(now())
+  registration EventRegistration?
+  ticket       Ticket             @relation(fields: [ticketId], references: [id])
+  user         User               @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("ticket_purchases")
+}
+
+model EventRegistration {
+  id               String             @id @default(cuid())
+  eventId          String
+  userId           String
+  ticketPurchaseId String?            @unique
+  status           RegistrationStatus @default(PENDING)
+  registeredAt     DateTime           @default(now())
+  attendedAt       DateTime?
+  attendance       Attendance?
+  event            Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketPurchase   TicketPurchase?    @relation(fields: [ticketPurchaseId], references: [id])
+  user             User               @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+  @@map("event_registrations")
+}
+
+model Attendance {
+  id             String            @id @default(cuid())
+  registrationId String            @unique
+  checkedInAt    DateTime          @default(now())
+  checkedOutAt   DateTime?
+  registration   EventRegistration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@map("attendances")
+}
+
+model PendingPayment {
+  id              String               @id @default(cuid())
+  userId          String
+  organizationId  String
+  amount          Int
+  paymentMethod   String
+  description     String?
+  dueAssignmentId String?
+  category        String               @default("OTHER")
+  reference       String               @unique
+  status          PendingPaymentStatus @default(PENDING)
+  bachsCheckoutId String?              @unique
+  bachsCustomerId String?
+  bachsChargeId   String?
+  completedAt     DateTime?
+  metadata        Json?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  dueAssignment   DueAssignment?       @relation(fields: [dueAssignmentId], references: [id])
+  organization    Organization         @relation(fields: [organizationId], references: [id])
+  user            User                 @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([status])
+  @@index([bachsCheckoutId])
+  @@map("pending_payments")
+}
+
+model File {
+  id             String          @id @default(cuid())
+  filename       String
+  originalName   String
+  mimeType       String
+  size           Int
+  url            String
+  publicId       String          @unique
+  folder         String          @default("uploads")
+  userId         String?
+  organizationId String?
+  purpose        String?
+  metadata       Json?
+  isDeleted      Boolean         @default(false)
+  deletedAt      DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  receiptId      String?
+  studentId      String?
+  eventId        String?
+  event          Event?          @relation(fields: [eventId], references: [id])
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  receipt        Receipt?        @relation(fields: [receiptId], references: [id])
+  student        StudentProfile? @relation(fields: [studentId], references: [id])
+  user           User?           @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([publicId])
+  @@index([folder])
+  @@index([purpose])
+  @@map("files")
+}
+
+enum JoinRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum AdminType {
@@ -650,70 +1661,6 @@ enum PermissionAction {
   REVOKE
 }
 
-model Admin {
-  id             String    @id @default(cuid())
-  userId         String
-  adminType      AdminType
-  institutionId  String?
-  facultyId      String?
-  departmentId   String?
-  organizationId String?
-
-  assignedBy String?
-  assignedAt DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  status        AdminStatus @default(ACTIVE)
-  revokedAt     DateTime?
-  revokedReason String?
-
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  institution  Institution?  @relation(fields: [institutionId], references: [id])
-  faculty      Faculty?      @relation(fields: [facultyId], references: [id])
-  department   Department?   @relation(fields: [departmentId], references: [id])
-  organization Organization? @relation(fields: [organizationId], references: [id])
-
-  permissions AdminPermission[]
-
-  @@unique([userId, adminType, institutionId, facultyId, departmentId, organizationId])
-  @@index([userId])
-  @@index([adminType])
-  @@index([status])
-  @@map("admins")
-}
-
-model AdminPermission {
-  id                 String             @id @default(cuid())
-  adminId            String
-  permissionKey      String
-  permissionCategory PermissionCategory
-  permissionAction   PermissionAction
-  resourceId         String?
-  grantedBy          String?
-  grantedAt          DateTime           @default(now())
-
-  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
-
-  @@unique([adminId, permissionKey, resourceId])
-  @@index([adminId])
-  @@index([permissionKey])
-  @@map("admin_permissions")
-}
-
-model SystemRole {
-  id          String             @id @default(cuid())
-  name        String             @unique
-  description String?
-  category    SystemRoleCategory
-  isDefault   Boolean            @default(false)
-  permissions String[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("system_roles")
-}
-
 enum AdminStatus {
   ACTIVE
   INACTIVE
@@ -725,484 +1672,6 @@ enum SystemRoleCategory {
   INSTITUTION
   ORGANIZATION
   CLUB
-}
-
-// ============================================
-// FIXED FINANCE MODELS
-// ============================================
-
-model Wallet {
-  id             String  @id @default(cuid())
-  userId         String?
-  organizationId String?
-
-  balance     Int          @default(0)
-  heldBalance Int          @default(0)
-  currency    String       @default("NGN")
-  status      WalletStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user         User?         @relation(fields: [userId], references: [id])
-  organization Organization? @relation(fields: [organizationId], references: [id])
-  holds        WalletHold[]
-  transactions Transaction[]
-  withdrawals  Withdrawal[]
-
-  ledgerAccountId String?        @unique
-  ledgerAccount   LedgerAccount? @relation(fields: [ledgerAccountId], references: [id])
-
-  @@unique([userId])
-  @@unique([organizationId])
-  @@map("wallets")
-}
-
-model WalletHold {
-  id        String     @id @default(cuid())
-  walletId  String
-  amount    Int
-  reason    String?
-  expiresAt DateTime?
-  status    HoldStatus @default(ACTIVE)
-
-  createdAt  DateTime  @default(now())
-  releasedAt DateTime?
-
-  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
-
-  @@index([walletId])
-  @@index([status])
-  @@map("wallet_holds")
-}
-
-model LedgerAccount {
-  id             String  @id @default(cuid())
-  organizationId String?
-  walletId       String? @unique
-
-  code        String  @unique
-  name        String
-  description String?
-
-  type     LedgerAccountType
-  category LedgerAccountCategory?
-
-  ownerType LedgerAccountOwnerType @default(SYSTEM)
-  ownerId   String?
-
-  balance        Int @default(0)
-  pendingBalance Int @default(0)
-
-  currency String  @default("NGN")
-  isActive Boolean @default(true)
-  isSystem Boolean @default(false)
-
-  parentId String?
-  parent   LedgerAccount?  @relation("LedgerAccountHierarchy", fields: [parentId], references: [id])
-  children LedgerAccount[] @relation("LedgerAccountHierarchy")
-
-  createdBy String?
-  metadata  Json?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization  Organization? @relation(fields: [organizationId], references: [id])
-  wallet        Wallet?       @relation
-  journalLines  JournalLine[]
-  ledgerEntries LedgerEntry[]
-
-  @@unique([ownerType, ownerId, code])
-  @@index([organizationId])
-  @@index([code])
-  @@index([type])
-  @@index([ownerType])
-  @@index([ownerId])
-  @@map("ledger_accounts")
-}
-
-model LedgerEntry {
-  id            String @id @default(cuid())
-  accountId     String
-  transactionId String
-
-  amount        Int
-  type          LedgerEntryType
-  balanceBefore Int
-  balanceAfter  Int
-  description   String?
-
-  createdAt DateTime @default(now())
-
-  account     LedgerAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  transaction Transaction   @relation(fields: [transactionId], references: [id], onDelete: Cascade)
-
-  @@index([accountId])
-  @@index([transactionId])
-  @@map("ledger_entries")
-}
-
-model JournalEntry {
-  id String @id @default(cuid())
-
-  reference   String  @unique
-  description String?
-
-  transactionId String? @unique
-  paymentId     String? @unique
-  withdrawalId  String? @unique
-  refundId      String? @unique
-
-  entryDate DateTime           @default(now())
-  status    JournalEntryStatus @default(POSTED)
-
-  isBalanced Boolean   @default(false)
-  verifiedBy String?
-  verifiedAt DateTime?
-
-  createdBy String?
-  notes     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  lines       JournalLine[]
-  transaction Transaction?  @relation
-  payment     Payment?      @relation
-  withdrawal  Withdrawal?   @relation
-  refund      Refund?       @relation
-
-  @@index([reference])
-  @@index([transactionId])
-  @@index([paymentId])
-  @@index([entryDate])
-  @@index([status])
-  @@map("journal_entries")
-}
-
-model JournalLine {
-  id              String @id @default(cuid())
-  journalEntryId  String
-  ledgerAccountId String
-
-  type   JournalLineType
-  amount Int
-
-  description String?
-
-  createdAt DateTime @default(now())
-
-  journalEntry  JournalEntry  @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
-  ledgerAccount LedgerAccount @relation(fields: [ledgerAccountId], references: [id])
-
-  @@index([journalEntryId])
-  @@index([ledgerAccountId])
-  @@map("journal_lines")
-}
-
-model Transaction {
-  id       String @id @default(cuid())
-  walletId String
-
-  type      TransactionType
-  amount    Int
-  fee       Int             @default(0)
-  netAmount Int
-
-  status TransactionStatus @default(PENDING)
-
-  reference   String  @unique
-  description String?
-  metadata    Json?
-
-  journalEntryId String? @unique
-
-  completedAt   DateTime?
-  failedAt      DateTime?
-  failureReason String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  wallet       Wallet        @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  entries      LedgerEntry[]
-  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
-  payment      Payment?
-  settlement   Settlement?
-  withdrawal   Withdrawal?
-  refund       Refund?
-
-  @@index([walletId])
-  @@index([reference])
-  @@index([status])
-  @@index([journalEntryId])
-  @@map("transactions")
-}
-
-model Payment {
-  id             String  @id @default(cuid())
-  payerId        String
-  organizationId String
-  transactionId  String? @unique
-
-  amount        Int
-  serviceFee    Int               @default(0)
-  status        PaymentStatus     @default(PENDING)
-  paymentMethod PaymentMethodType
-
-  reference   String  @unique
-  description String?
-  metadata    Json?
-
-  bachsChargeId   String? @unique
-  bachsCheckoutId String?
-  bachsCustomerId String?
-
-  journalEntryId String? @unique
-
-  paidAt    DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  payer        User          @relation(fields: [payerId], references: [id])
-  organization Organization  @relation(fields: [organizationId], references: [id])
-  transaction  Transaction?  @relation(fields: [transactionId], references: [id])
-  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
-  duePayment   DuePayment?
-  refund       Refund?
-  receipt      Receipt?
-
-  @@index([payerId])
-  @@index([organizationId])
-  @@index([reference])
-  @@index([status])
-  @@index([journalEntryId])
-  @@map("payments")
-}
-
-model Due {
-  id             String    @id @default(cuid())
-  organizationId String
-  sessionId      String?
-  institutionId  String?
-  name           String
-  description    String?
-  amount         Int
-  dueDate        DateTime
-  lateFee        Int       @default(0)
-  isRequired     Boolean   @default(true)
-  status         DueStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  institution  Institution?     @relation(fields: [institutionId], references: [id])
-  organization Organization     @relation(fields: [organizationId], references: [id])
-  session      AcademicSession? @relation(fields: [sessionId], references: [id])
-  assignments  DueAssignment[]
-
-  @@index([organizationId])
-  @@index([status])
-  @@map("dues")
-}
-
-model DueAssignment {
-  id        String    @id @default(cuid())
-  dueId     String
-  studentId String
-  amount    Int
-  isPaid    Boolean   @default(false)
-  paidAt    DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  due             Due              @relation(fields: [dueId], references: [id], onDelete: Cascade)
-  student         StudentProfile   @relation(fields: [studentId], references: [id])
-  duePayments     DuePayment[]
-  pendingPayments PendingPayment[]
-
-  @@unique([dueId, studentId])
-  @@index([studentId])
-  @@index([isPaid])
-  @@map("due_assignments")
-}
-
-model DuePayment {
-  id           String   @id @default(cuid())
-  assignmentId String
-  paymentId    String   @unique
-  amount       Int
-  paidAt       DateTime @default(now())
-
-  assignment DueAssignment @relation(fields: [assignmentId], references: [id])
-  payment    Payment       @relation(fields: [paymentId], references: [id])
-
-  @@map("due_payments")
-}
-
-model Withdrawal {
-  id            String           @id @default(cuid())
-  userId        String
-  walletId      String
-  transactionId String?          @unique
-  amount        Int
-  status        WithdrawalStatus @default(PENDING)
-  bankName      String?
-  accountNumber String?
-  accountName   String?
-  reference     String           @unique
-  metadata      Json?
-
-  journalEntryId String? @unique
-
-  requestedAt   DateTime  @default(now())
-  processedAt   DateTime?
-  completedAt   DateTime?
-  failedAt      DateTime?
-  failureReason String?
-
-  user         User          @relation(fields: [userId], references: [id])
-  wallet       Wallet        @relation(fields: [walletId], references: [id])
-  transaction  Transaction?  @relation(fields: [transactionId], references: [id])
-  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
-  refund       Refund?
-
-  @@index([userId])
-  @@index([walletId])
-  @@index([status])
-  @@index([journalEntryId])
-  @@map("withdrawals")
-}
-
-model Refund {
-  id            String       @id @default(cuid())
-  paymentId     String       @unique
-  withdrawalId  String?      @unique
-  amount        Int
-  reason        String?
-  status        RefundStatus @default(PENDING)
-  transactionId String?      @unique
-
-  journalEntryId String? @unique
-
-  createdAt   DateTime  @default(now())
-  processedAt DateTime?
-
-  payment      Payment       @relation(fields: [paymentId], references: [id])
-  withdrawal   Withdrawal?   @relation(fields: [withdrawalId], references: [id])
-  transaction  Transaction?  @relation(fields: [transactionId], references: [id])
-  journalEntry JournalEntry? @relation(fields: [journalEntryId], references: [id])
-
-  @@index([paymentId])
-  @@index([status])
-  @@index([journalEntryId])
-  @@map("refunds")
-}
-
-model Settlement {
-  id             String           @id @default(cuid())
-  organizationId String
-  transactionId  String           @unique
-  amount         Int
-  reference      String           @unique
-  status         SettlementStatus @default(PENDING)
-
-  settledAt DateTime?
-  createdAt DateTime  @default(now())
-
-  organization Organization @relation(fields: [organizationId], references: [id])
-  transaction  Transaction  @relation(fields: [transactionId], references: [id])
-
-  @@map("settlements")
-}
-
-model SavingsGoal {
-  id            String        @id @default(cuid())
-  userId        String
-  title         String
-  description   String?
-  targetAmount  Int
-  currentAmount Int           @default(0)
-  targetDate    DateTime?
-  status        SavingsStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user         User                 @relation(fields: [userId], references: [id])
-  transactions SavingsTransaction[]
-
-  @@index([userId])
-  @@index([status])
-  @@map("savings_goals")
-}
-
-model SavingsTransaction {
-  id          String                 @id @default(cuid())
-  goalId      String
-  amount      Int
-  type        SavingsTransactionType
-  description String?
-
-  createdAt DateTime @default(now())
-
-  goal SavingsGoal @relation(fields: [goalId], references: [id], onDelete: Cascade)
-
-  @@index([goalId])
-  @@map("savings_transactions")
-}
-
-model Receipt {
-  id String @id @default(cuid())
-
-  paymentId      String  @unique
-  userId         String
-  organizationId String?
-
-  receiptNumber String @unique
-  reference     String @unique
-
-  amount      Int
-  serviceFee  Int    @default(0)
-  totalAmount Int
-  currency    String @default("NGN")
-
-  payerName  String
-  payerEmail String
-  payerPhone String?
-
-  paymentMethod PaymentMethodType
-  paymentDate   DateTime
-  description   String?
-
-  organizationName String?
-  organizationSlug String?
-
-  metadata Json?
-  items    Json?
-
-  status ReceiptStatus @default(ISSUED)
-
-  downloadCount  Int       @default(0)
-  lastDownloaded DateTime?
-  viewedAt       DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  payment      Payment       @relation(fields: [paymentId], references: [id])
-  user         User          @relation(fields: [userId], references: [id])
-  organization Organization? @relation(fields: [organizationId], references: [id])
-  files        File[]
-
-  @@index([paymentId])
-  @@index([userId])
-  @@index([organizationId])
-  @@index([receiptNumber])
-  @@index([reference])
-  @@map("receipts")
 }
 
 enum WalletStatus {
@@ -1344,646 +1813,12 @@ enum ReceiptStatus {
   CANCELLED
 }
 
-// ============================================
-// DOMAIN 8: COMMUNICATION
-// ============================================
-
-model Announcement {
-  id             String               @id @default(cuid())
-  organizationId String
-  authorId       String?
-  title          String
-  content        String
-  type           AnnouncementType     @default(GENERAL)
-  priority       AnnouncementPriority @default(NORMAL)
-
-  isPublished Boolean   @default(false)
-  publishedAt DateTime?
-  expiresAt   DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization       @relation(fields: [organizationId], references: [id])
-  author       User?              @relation("AnnouncementAuthor", fields: [authorId], references: [id])
-  reads        AnnouncementRead[]
-
-  @@index([organizationId])
-  @@index([isPublished])
-  @@index([type])
-  @@map("announcements")
-}
-
-model AnnouncementRead {
-  id             String   @id @default(cuid())
-  announcementId String
-  userId         String
-  readAt         DateTime @default(now())
-
-  announcement Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id])
-
-  @@unique([announcementId, userId])
-  @@map("announcement_reads")
-}
-
-model Notification {
-  id       String               @id @default(cuid())
-  userId   String
-  title    String
-  body     String
-  type     NotificationType
-  priority NotificationPriority @default(NORMAL)
-
-  read        Boolean   @default(false)
-  readAt      DateTime?
-  deliveredAt DateTime?
-
-  data     Json?
-  metadata Json?
-
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([read])
-  @@index([type])
-  @@map("notifications")
-}
-
-model NotificationPreference {
-  id     String           @id @default(cuid())
-  userId String
-  type   NotificationType
-
-  email Boolean @default(true)
-  push  Boolean @default(true)
-  inApp Boolean @default(true)
-
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, type])
-  @@map("notification_preferences")
-}
-
-model EmailQueue {
-  id      String  @id @default(cuid())
-  to      String
-  from    String?
-  subject String
-  html    String
-  text    String?
-
-  status        QueueStatus @default(PENDING)
-  attempts      Int         @default(0)
-  maxAttempts   Int         @default(3)
-  lastAttemptAt DateTime?
-  errorMessage  String?
-
-  scheduledAt DateTime?
-  sentAt      DateTime?
-  createdAt   DateTime  @default(now())
-
-  @@index([status])
-  @@index([scheduledAt])
-  @@map("email_queue")
-}
-
-model PushQueue {
-  id     String @id @default(cuid())
-  userId String
-  title  String
-  body   String
-  data   Json?
-
-  status        QueueStatus @default(PENDING)
-  attempts      Int         @default(0)
-  maxAttempts   Int         @default(3)
-  lastAttemptAt DateTime?
-  errorMessage  String?
-
-  scheduledAt DateTime?
-  sentAt      DateTime?
-  createdAt   DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([status])
-  @@map("push_queue")
-}
-
-model FeatureFlag {
-  id          String  @id @default(cuid())
-  key         String  @unique
-  name        String
-  description String?
-  enabled     Boolean @default(false)
-  percentage  Int     @default(100)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  targets FeatureFlagTarget[]
-
-  @@index([key])
-  @@map("feature_flags")
-}
-
-model FeatureFlagTarget {
-  id         String                @id @default(cuid())
-  featureId  String
-  targetType FeatureFlagTargetType
-
-  userId         String?
-  organizationId String?
-  roleId         String?
-
-  enabled Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  feature      FeatureFlag   @relation(fields: [featureId], references: [id], onDelete: Cascade)
-  user         User?         @relation(fields: [userId], references: [id])
-  organization Organization? @relation(fields: [organizationId], references: [id])
-  role         Role?         @relation(fields: [roleId], references: [id])
-
-  @@unique([featureId, targetType, userId])
-  @@unique([featureId, targetType, organizationId])
-  @@unique([featureId, targetType, roleId])
-  @@map("feature_flag_targets")
-}
-
-model MaintenanceMode {
-  id       String    @id @default(cuid())
-  enabled  Boolean   @default(false)
-  message  String?
-  startsAt DateTime?
-  endsAt   DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("maintenance_modes")
-}
-
-model KillSwitch {
-  id          String  @id @default(cuid())
-  key         String  @unique
-  name        String
-  description String?
-  enabled     Boolean @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("kill_switches")
-}
-
-model PlatformSetting {
-  id          String  @id @default(cuid())
-  key         String  @unique
-  value       String
-  description String?
-  isPublic    Boolean @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("platform_settings")
-}
-
-model ReleaseChannel {
-  id          String  @id @default(cuid())
-  name        String  @unique
-  description String?
-  isActive    Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  waves DeploymentWave[]
-
-  @@map("release_channels")
-}
-
-model DeploymentWave {
-  id          String  @id @default(cuid())
-  channelId   String
-  name        String
-  description String?
-  percentage  Int
-  isActive    Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  channel ReleaseChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-
-  @@map("deployment_waves")
-}
-
-model ScheduledJob {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  schedule    String
-  handler     String
-  status      JobStatus @default(PENDING)
-  lastRunAt   DateTime?
-  nextRunAt   DateTime?
-  lastError   String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("scheduled_jobs")
-}
-
-model OperationalAuditLog {
-  id        String   @id @default(cuid())
-  userId    String?
-  action    String
-  entity    String?
-  entityId  String?
-  metadata  Json?
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@index([createdAt])
-  @@index([action])
-  @@map("operational_audit_logs")
-}
-
-model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String?
-  action    String
-  entity    String?
-  entityId  String?
-  metadata  Json?
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@index([createdAt])
-  @@index([action])
-  @@map("audit_logs")
-}
-
-model ActivityLog {
-  id        String   @id @default(cuid())
-  userId    String?
-  activity  String
-  details   Json?
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
-
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@index([createdAt])
-  @@index([activity])
-  @@map("activity_logs")
-}
-
-model Election {
-  id             String @id @default(cuid())
-  organizationId String
-
-  title       String
-  description String?
-
-  startDate DateTime
-  endDate   DateTime
-
-  status ElectionStatus @default(DRAFT)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization       @relation(fields: [organizationId], references: [id])
-  candidates   Candidate[]
-  votes        Vote[]
-  positions    ElectionPosition[]
-
-  @@index([organizationId])
-  @@index([status])
-  @@map("elections")
-}
-
-model ElectionPosition {
-  id            String  @id @default(cuid())
-  electionId    String
-  title         String
-  description   String?
-  maxCandidates Int     @default(1)
-  maxVotes      Int     @default(1)
-  order         Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  election   Election    @relation(fields: [electionId], references: [id], onDelete: Cascade)
-  candidates Candidate[]
-
-  @@map("election_positions")
-}
-
-model Candidate {
-  id         String @id @default(cuid())
-  electionId String
-  positionId String
-  userId     String
-
-  manifesto String?
-  photo     String?
-  status    CandidateStatus @default(NOMINATED)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  election Election         @relation(fields: [electionId], references: [id], onDelete: Cascade)
-  position ElectionPosition @relation(fields: [positionId], references: [id])
-  user     User             @relation(fields: [userId], references: [id])
-  votes    Vote[]
-
-  @@unique([electionId, positionId, userId])
-  @@map("candidates")
-}
-
-model Vote {
-  id          String @id @default(cuid())
-  electionId  String
-  candidateId String
-  voterId     String
-
-  createdAt DateTime @default(now())
-
-  election  Election  @relation(fields: [electionId], references: [id], onDelete: Cascade)
-  candidate Candidate @relation(fields: [candidateId], references: [id])
-  voter     User      @relation(fields: [voterId], references: [id])
-
-  @@unique([electionId, voterId, candidateId])
-  @@map("votes")
-}
-
-model ExecutiveTerm {
-  id             String @id @default(cuid())
-  organizationId String
-
-  title       String
-  description String?
-
-  startDate DateTime
-  endDate   DateTime
-
-  status TermStatus @default(UPCOMING)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization      @relation(fields: [organizationId], references: [id])
-  members      ExecutiveMember[]
-
-  @@index([organizationId])
-  @@map("executive_terms")
-}
-
-model ExecutiveMember {
-  id     String @id @default(cuid())
-  termId String
-  userId String
-  roleId String
-
-  assignedAt DateTime @default(now())
-
-  term ExecutiveTerm @relation(fields: [termId], references: [id], onDelete: Cascade)
-  user User          @relation(fields: [userId], references: [id])
-  role Role          @relation(fields: [roleId], references: [id])
-
-  @@unique([termId, userId])
-  @@map("executive_members")
-}
-
-model Committee {
-  id             String          @id @default(cuid())
-  organizationId String
-  name           String
-  description    String?
-  purpose        String?
-  status         CommitteeStatus @default(ACTIVE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization Organization @relation(fields: [organizationId], references: [id])
-
-  @@index([organizationId])
-  @@map("committees")
-}
-
-model Event {
-  id             String  @id @default(cuid())
-  organizationId String?
-  createdBy      String
-
-  title       String
-  description String?
-  location    String?
-
-  startDate DateTime
-  endDate   DateTime
-
-  capacity Int?
-  isFree   Boolean @default(true)
-  price    Int?    @default(0)
-
-  isPublic        Boolean   @default(false)
-  isApproved      Boolean   @default(false)
-  approvedBy      String?
-  approvedAt      DateTime?
-  rejectionReason String?
-
-  status EventStatus @default(DRAFT)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  organization  Organization?       @relation(fields: [organizationId], references: [id])
-  creator       User                @relation("EventCreator", fields: [createdBy], references: [id])
-  approver      User?               @relation("EventApprover", fields: [approvedBy], references: [id])
-  registrations EventRegistration[]
-  tickets       Ticket[]
-  files         File[]
-
-  @@index([organizationId])
-  @@index([createdBy])
-  @@index([status])
-  @@index([isPublic])
-  @@map("events")
-}
-
-model Ticket {
-  id      String     @id @default(cuid())
-  eventId String
-  code    String     @unique
-  type    TicketType @default(REGULAR)
-  price   Decimal
-  isUsed  Boolean    @default(false)
-  usedAt  DateTime?
-
-  createdAt DateTime @default(now())
-
-  event    Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  purchase TicketPurchase?
-
-  @@index([eventId])
-  @@index([code])
-  @@map("tickets")
-}
-
-model TicketPurchase {
-  id       String @id @default(cuid())
-  ticketId String @unique
-  userId   String
-
-  amount Decimal
-  status TicketStatus @default(PENDING)
-
-  purchasedAt DateTime @default(now())
-
-  ticket       Ticket             @relation(fields: [ticketId], references: [id])
-  user         User               @relation(fields: [userId], references: [id])
-  registration EventRegistration?
-
-  @@index([userId])
-  @@map("ticket_purchases")
-}
-
-model EventRegistration {
-  id               String  @id @default(cuid())
-  eventId          String
-  userId           String
-  ticketPurchaseId String? @unique
-
-  status RegistrationStatus @default(PENDING)
-
-  registeredAt DateTime  @default(now())
-  attendedAt   DateTime?
-
-  event          Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user           User            @relation(fields: [userId], references: [id])
-  ticketPurchase TicketPurchase? @relation(fields: [ticketPurchaseId], references: [id])
-  attendance     Attendance?
-
-  @@unique([eventId, userId])
-  @@map("event_registrations")
-}
-
-model Attendance {
-  id             String    @id @default(cuid())
-  registrationId String    @unique
-  checkedInAt    DateTime  @default(now())
-  checkedOutAt   DateTime?
-
-  registration EventRegistration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
-
-  @@map("attendances")
-}
-
-// Add this model for pending payments
-model PendingPayment {
-  id              String               @id @default(cuid())
-  userId          String
-  organizationId  String
-  amount          Int // In Kobo
-  paymentMethod   String
-  description     String?
-  dueAssignmentId String?
-  category        String               @default("OTHER")
-  reference       String               @unique
-  status          PendingPaymentStatus @default(PENDING)
-  bachsCheckoutId String?              @unique
-  bachsCustomerId String?
-  bachsChargeId   String?
-  completedAt     DateTime?
-  metadata        Json?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user          User           @relation(fields: [userId], references: [id])
-  organization  Organization   @relation(fields: [organizationId], references: [id])
-  dueAssignment DueAssignment? @relation(fields: [dueAssignmentId], references: [id])
-
-  @@index([userId])
-  @@index([organizationId])
-  @@index([status])
-  @@index([bachsCheckoutId])
-  @@map("pending_payments")
-}
-
 enum PendingPaymentStatus {
   PENDING
   COMPLETED
   FAILED
   CANCELLED
   EXPIRED
-}
-
-model File {
-  id String @id @default(cuid())
-
-  filename     String
-  originalName String
-  mimeType     String
-  size         Int
-  url          String
-  publicId     String @unique
-
-  folder String @default("uploads")
-
-  userId         String?
-  organizationId String?
-
-  purpose  String?
-  metadata Json?
-
-  isDeleted Boolean   @default(false)
-  deletedAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user         User?         @relation(fields: [userId], references: [id])
-  organization Organization? @relation(fields: [organizationId], references: [id])
-
-  receiptId String?
-  receipt   Receipt?        @relation(fields: [receiptId], references: [id])
-  studentId String?
-  student   StudentProfile? @relation(fields: [studentId], references: [id])
-  eventId   String?
-  event     Event?          @relation(fields: [eventId], references: [id])
-
-  @@index([userId])
-  @@index([organizationId])
-  @@index([publicId])
-  @@index([folder])
-  @@index([purpose])
-  @@map("files")
 }
 
 enum UserStatus {
@@ -2002,8 +1837,8 @@ enum Gender {
 
 enum VerificationStatus {
   UNVERIFIED
-  PENDING
   VERIFIED
+  PENDING
   REJECTED
 }
 
@@ -2043,6 +1878,13 @@ enum AcademicSessionStatus {
   ACTIVE
   COMPLETED
   ARCHIVED
+}
+
+enum SessionScope {
+  INSTITUTION
+  FACULTY
+  DEPARTMENT
+  LEVEL
 }
 
 enum PromotionType {

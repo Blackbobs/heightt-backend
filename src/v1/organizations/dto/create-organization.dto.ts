@@ -128,5 +128,13 @@ export class CreateOrganizationDto {
   @IsOptional()
   @IsString()
   parentOrganizationId?: string;
-}
 
+  @ApiProperty({
+    example: 'sess_123',
+    description: 'Academic session ID (optional)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  academicSessionId?: string;
+}

@@ -40,4 +40,3 @@ export class AddMemberDto {
   @IsString()
   sessionId?: string;
 }
-

@@ -230,10 +230,10 @@ export type OrganizationMembershipWhereInput = {
   leftAt?: Prisma.DateTimeNullableFilter<"OrganizationMembership"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OrganizationMembership"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrganizationMembership"> | Date | string
+  roles?: Prisma.MembershipRoleListRelationFilter
+  session?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  session?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
-  roles?: Prisma.MembershipRoleListRelationFilter
 }
 
 export type OrganizationMembershipOrderByWithRelationInput = {
@@ -248,10 +248,10 @@ export type OrganizationMembershipOrderByWithRelationInput = {
   leftAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  roles?: Prisma.MembershipRoleOrderByRelationAggregateInput
+  session?: Prisma.AcademicSessionOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
-  session?: Prisma.AcademicSessionOrderByWithRelationInput
-  roles?: Prisma.MembershipRoleOrderByRelationAggregateInput
 }
 
 export type OrganizationMembershipWhereUniqueInput = Prisma.AtLeast<{
@@ -270,10 +270,10 @@ export type OrganizationMembershipWhereUniqueInput = Prisma.AtLeast<{
   leftAt?: Prisma.DateTimeNullableFilter<"OrganizationMembership"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"OrganizationMembership"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrganizationMembership"> | Date | string
+  roles?: Prisma.MembershipRoleListRelationFilter
+  session?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  session?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
-  roles?: Prisma.MembershipRoleListRelationFilter
 }, "id" | "organizationId_userId">
 
 export type OrganizationMembershipOrderByWithAggregationInput = {
@@ -319,10 +319,10 @@ export type OrganizationMembershipCreateInput = {
   leftAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  roles?: Prisma.MembershipRoleCreateNestedManyWithoutMembershipInput
+  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutMembershipsInput
   user: Prisma.UserCreateNestedOneWithoutOrganizationMembershipsInput
-  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
-  roles?: Prisma.MembershipRoleCreateNestedManyWithoutMembershipInput
 }
 
 export type OrganizationMembershipUncheckedCreateInput = {
@@ -349,10 +349,10 @@ export type OrganizationMembershipUpdateInput = {
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.MembershipRoleUpdateManyWithoutMembershipNestedInput
+  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutMembershipsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
-  roles?: Prisma.MembershipRoleUpdateManyWithoutMembershipNestedInput
 }
 
 export type OrganizationMembershipUncheckedUpdateInput = {
@@ -628,9 +628,9 @@ export type OrganizationMembershipCreateWithoutUserInput = {
   leftAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutMembershipsInput
-  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
   roles?: Prisma.MembershipRoleCreateNestedManyWithoutMembershipInput
+  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutMembershipsInput
 }
 
 export type OrganizationMembershipUncheckedCreateWithoutUserInput = {
@@ -699,9 +699,9 @@ export type OrganizationMembershipCreateWithoutSessionInput = {
   leftAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  roles?: Prisma.MembershipRoleCreateNestedManyWithoutMembershipInput
   organization: Prisma.OrganizationCreateNestedOneWithoutMembershipsInput
   user: Prisma.UserCreateNestedOneWithoutOrganizationMembershipsInput
-  roles?: Prisma.MembershipRoleCreateNestedManyWithoutMembershipInput
 }
 
 export type OrganizationMembershipUncheckedCreateWithoutSessionInput = {
@@ -753,9 +753,9 @@ export type OrganizationMembershipCreateWithoutOrganizationInput = {
   leftAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutOrganizationMembershipsInput
-  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
   roles?: Prisma.MembershipRoleCreateNestedManyWithoutMembershipInput
+  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
+  user: Prisma.UserCreateNestedOneWithoutOrganizationMembershipsInput
 }
 
 export type OrganizationMembershipUncheckedCreateWithoutOrganizationInput = {
@@ -807,9 +807,9 @@ export type OrganizationMembershipCreateWithoutRolesInput = {
   leftAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutMembershipsInput
   user: Prisma.UserCreateNestedOneWithoutOrganizationMembershipsInput
-  session?: Prisma.AcademicSessionCreateNestedOneWithoutMembershipsInput
 }
 
 export type OrganizationMembershipUncheckedCreateWithoutRolesInput = {
@@ -851,9 +851,9 @@ export type OrganizationMembershipUpdateWithoutRolesInput = {
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutMembershipsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
 }
 
 export type OrganizationMembershipUncheckedUpdateWithoutRolesInput = {
@@ -892,9 +892,9 @@ export type OrganizationMembershipUpdateWithoutUserInput = {
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutMembershipsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
   roles?: Prisma.MembershipRoleUpdateManyWithoutMembershipNestedInput
+  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutMembershipsNestedInput
 }
 
 export type OrganizationMembershipUncheckedUpdateWithoutUserInput = {
@@ -946,9 +946,9 @@ export type OrganizationMembershipUpdateWithoutSessionInput = {
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  roles?: Prisma.MembershipRoleUpdateManyWithoutMembershipNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutMembershipsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput
-  roles?: Prisma.MembershipRoleUpdateManyWithoutMembershipNestedInput
 }
 
 export type OrganizationMembershipUncheckedUpdateWithoutSessionInput = {
@@ -1000,9 +1000,9 @@ export type OrganizationMembershipUpdateWithoutOrganizationInput = {
   leftAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
   roles?: Prisma.MembershipRoleUpdateManyWithoutMembershipNestedInput
+  session?: Prisma.AcademicSessionUpdateOneWithoutMembershipsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput
 }
 
 export type OrganizationMembershipUncheckedUpdateWithoutOrganizationInput = {
@@ -1075,10 +1075,10 @@ export type OrganizationMembershipSelect<ExtArgs extends runtime.Types.Extension
   leftAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  roles?: boolean | Prisma.OrganizationMembership$rolesArgs<ExtArgs>
+  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
-  roles?: boolean | Prisma.OrganizationMembership$rolesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationMembershipCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizationMembership"]>
 
@@ -1094,9 +1094,9 @@ export type OrganizationMembershipSelectCreateManyAndReturn<ExtArgs extends runt
   leftAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["organizationMembership"]>
 
 export type OrganizationMembershipSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1111,9 +1111,9 @@ export type OrganizationMembershipSelectUpdateManyAndReturn<ExtArgs extends runt
   leftAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
 }, ExtArgs["result"]["organizationMembership"]>
 
 export type OrganizationMembershipSelectScalar = {
@@ -1132,30 +1132,30 @@ export type OrganizationMembershipSelectScalar = {
 
 export type OrganizationMembershipOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "membershipType" | "status" | "isPrimary" | "joinedAt" | "joinedSessionId" | "leftAt" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationMembership"]>
 export type OrganizationMembershipInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  roles?: boolean | Prisma.OrganizationMembership$rolesArgs<ExtArgs>
+  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
-  roles?: boolean | Prisma.OrganizationMembership$rolesArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationMembershipCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationMembershipIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
 }
 export type OrganizationMembershipIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.OrganizationMembership$sessionArgs<ExtArgs>
 }
 
 export type $OrganizationMembershipPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OrganizationMembership"
   objects: {
+    roles: Prisma.$MembershipRolePayload<ExtArgs>[]
+    session: Prisma.$AcademicSessionPayload<ExtArgs> | null
     organization: Prisma.$OrganizationPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
-    session: Prisma.$AcademicSessionPayload<ExtArgs> | null
-    roles: Prisma.$MembershipRolePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1563,10 +1563,10 @@ readonly fields: OrganizationMembershipFieldRefs;
  */
 export interface Prisma__OrganizationMembershipClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  roles<T extends Prisma.OrganizationMembership$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationMembership$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  session<T extends Prisma.OrganizationMembership$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationMembership$sessionArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  session<T extends Prisma.OrganizationMembership$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationMembership$sessionArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  roles<T extends Prisma.OrganizationMembership$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationMembership$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2008,25 +2008,6 @@ export type OrganizationMembershipDeleteManyArgs<ExtArgs extends runtime.Types.E
 }
 
 /**
- * OrganizationMembership.session
- */
-export type OrganizationMembership$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AcademicSession
-   */
-  select?: Prisma.AcademicSessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AcademicSession
-   */
-  omit?: Prisma.AcademicSessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AcademicSessionInclude<ExtArgs> | null
-  where?: Prisma.AcademicSessionWhereInput
-}
-
-/**
  * OrganizationMembership.roles
  */
 export type OrganizationMembership$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2048,6 +2029,25 @@ export type OrganizationMembership$rolesArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.MembershipRoleScalarFieldEnum | Prisma.MembershipRoleScalarFieldEnum[]
+}
+
+/**
+ * OrganizationMembership.session
+ */
+export type OrganizationMembership$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AcademicSession
+   */
+  select?: Prisma.AcademicSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AcademicSession
+   */
+  omit?: Prisma.AcademicSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AcademicSessionInclude<ExtArgs> | null
+  where?: Prisma.AcademicSessionWhereInput
 }
 
 /**

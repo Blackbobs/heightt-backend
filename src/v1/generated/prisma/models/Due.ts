@@ -284,10 +284,10 @@ export type DueWhereInput = {
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Due"> | Date | string
+  assignments?: Prisma.DueAssignmentListRelationFilter
   institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   session?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
-  assignments?: Prisma.DueAssignmentListRelationFilter
 }
 
 export type DueOrderByWithRelationInput = {
@@ -304,10 +304,10 @@ export type DueOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  assignments?: Prisma.DueAssignmentOrderByRelationAggregateInput
   institution?: Prisma.InstitutionOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   session?: Prisma.AcademicSessionOrderByWithRelationInput
-  assignments?: Prisma.DueAssignmentOrderByRelationAggregateInput
 }
 
 export type DueWhereUniqueInput = Prisma.AtLeast<{
@@ -327,10 +327,10 @@ export type DueWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Due"> | Date | string
+  assignments?: Prisma.DueAssignmentListRelationFilter
   institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   session?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
-  assignments?: Prisma.DueAssignmentListRelationFilter
 }, "id">
 
 export type DueOrderByWithAggregationInput = {
@@ -384,10 +384,10 @@ export type DueCreateInput = {
   status?: $Enums.DueStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
   institution?: Prisma.InstitutionCreateNestedOneWithoutDuesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDuesInput
   session?: Prisma.AcademicSessionCreateNestedOneWithoutDuesInput
-  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
 }
 
 export type DueUncheckedCreateInput = {
@@ -418,10 +418,10 @@ export type DueUpdateInput = {
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
   institution?: Prisma.InstitutionUpdateOneWithoutDuesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDuesNestedInput
   session?: Prisma.AcademicSessionUpdateOneWithoutDuesNestedInput
-  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
 }
 
 export type DueUncheckedUpdateInput = {
@@ -714,9 +714,9 @@ export type DueCreateWithoutInstitutionInput = {
   status?: $Enums.DueStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDuesInput
   session?: Prisma.AcademicSessionCreateNestedOneWithoutDuesInput
-  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
 }
 
 export type DueUncheckedCreateWithoutInstitutionInput = {
@@ -791,9 +791,9 @@ export type DueCreateWithoutSessionInput = {
   status?: $Enums.DueStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
   institution?: Prisma.InstitutionCreateNestedOneWithoutDuesInput
   organization: Prisma.OrganizationCreateNestedOneWithoutDuesInput
-  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
 }
 
 export type DueUncheckedCreateWithoutSessionInput = {
@@ -849,9 +849,9 @@ export type DueCreateWithoutOrganizationInput = {
   status?: $Enums.DueStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
   institution?: Prisma.InstitutionCreateNestedOneWithoutDuesInput
   session?: Prisma.AcademicSessionCreateNestedOneWithoutDuesInput
-  assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
 }
 
 export type DueUncheckedCreateWithoutOrganizationInput = {
@@ -1002,9 +1002,9 @@ export type DueUpdateWithoutInstitutionInput = {
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDuesNestedInput
   session?: Prisma.AcademicSessionUpdateOneWithoutDuesNestedInput
-  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
 }
 
 export type DueUncheckedUpdateWithoutInstitutionInput = {
@@ -1064,9 +1064,9 @@ export type DueUpdateWithoutSessionInput = {
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
   institution?: Prisma.InstitutionUpdateOneWithoutDuesNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutDuesNestedInput
-  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
 }
 
 export type DueUncheckedUpdateWithoutSessionInput = {
@@ -1126,9 +1126,9 @@ export type DueUpdateWithoutOrganizationInput = {
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
   institution?: Prisma.InstitutionUpdateOneWithoutDuesNestedInput
   session?: Prisma.AcademicSessionUpdateOneWithoutDuesNestedInput
-  assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
 }
 
 export type DueUncheckedUpdateWithoutOrganizationInput = {
@@ -1207,10 +1207,10 @@ export type DueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
   institution?: boolean | Prisma.Due$institutionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   session?: boolean | Prisma.Due$sessionArgs<ExtArgs>
-  assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.DueCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["due"]>
 
@@ -1270,10 +1270,10 @@ export type DueSelectScalar = {
 
 export type DueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "sessionId" | "institutionId" | "name" | "description" | "amount" | "dueDate" | "lateFee" | "isRequired" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["due"]>
 export type DueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
   institution?: boolean | Prisma.Due$institutionArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   session?: boolean | Prisma.Due$sessionArgs<ExtArgs>
-  assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.DueCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1290,10 +1290,10 @@ export type DueIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type $DuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Due"
   objects: {
+    assignments: Prisma.$DueAssignmentPayload<ExtArgs>[]
     institution: Prisma.$InstitutionPayload<ExtArgs> | null
     organization: Prisma.$OrganizationPayload<ExtArgs>
     session: Prisma.$AcademicSessionPayload<ExtArgs> | null
-    assignments: Prisma.$DueAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1703,10 +1703,10 @@ readonly fields: DueFieldRefs;
  */
 export interface Prisma__DueClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  assignments<T extends Prisma.Due$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Due$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DueAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   institution<T extends Prisma.Due$institutionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Due$institutionArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   session<T extends Prisma.Due$sessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Due$sessionArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  assignments<T extends Prisma.Due$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Due$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DueAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2150,6 +2150,30 @@ export type DueDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
+ * Due.assignments
+ */
+export type Due$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DueAssignment
+   */
+  select?: Prisma.DueAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DueAssignment
+   */
+  omit?: Prisma.DueAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DueAssignmentInclude<ExtArgs> | null
+  where?: Prisma.DueAssignmentWhereInput
+  orderBy?: Prisma.DueAssignmentOrderByWithRelationInput | Prisma.DueAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.DueAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DueAssignmentScalarFieldEnum | Prisma.DueAssignmentScalarFieldEnum[]
+}
+
+/**
  * Due.institution
  */
 export type Due$institutionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2185,30 +2209,6 @@ export type Due$sessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   include?: Prisma.AcademicSessionInclude<ExtArgs> | null
   where?: Prisma.AcademicSessionWhereInput
-}
-
-/**
- * Due.assignments
- */
-export type Due$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DueAssignment
-   */
-  select?: Prisma.DueAssignmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the DueAssignment
-   */
-  omit?: Prisma.DueAssignmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DueAssignmentInclude<ExtArgs> | null
-  where?: Prisma.DueAssignmentWhereInput
-  orderBy?: Prisma.DueAssignmentOrderByWithRelationInput | Prisma.DueAssignmentOrderByWithRelationInput[]
-  cursor?: Prisma.DueAssignmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DueAssignmentScalarFieldEnum | Prisma.DueAssignmentScalarFieldEnum[]
 }
 
 /**

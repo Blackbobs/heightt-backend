@@ -1,11 +1,11 @@
 // src/v1/organizations/organizations.module.ts
+
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsController } from './organizations.controller';
 import { CacheService } from '../../redis/cache.service';
 import { FinanceModule } from '../finance/finance.module';
-// import { PrismaService } from '../../prisma/prisma.service';
 
 @Module({
   imports: [AuthModule, FinanceModule],

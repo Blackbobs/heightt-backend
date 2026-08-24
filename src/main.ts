@@ -111,12 +111,20 @@ async function bootstrap() {
     }),
   );
 
-  // ============================================
+    // ============================================
   // 5. CORS Configuration (Enhanced)
   // ============================================
-  const allowedOrigins = configService
-    .get('FRONTEND_URL', 'http://localhost:3000,http://localhost:3001')
-    .split(',');
+  // Use dedicated CORS_ORIGIN env var if available; fall back to FRONTEND_URL.
+  // FRONTEND_URL may be a single URL (also used for redirect URLs in Bachs),
+  // while CORS_ORIGIN is a comma-separated list designed for CORS.
+  const rawOrigins =
+    configService.get<string>('CORS_ORIGIN') ||
+    configService.get<string>('FRONTEND_URL', 'http://localhost:3000,http://localhost:3001');
+
+  const allowedOrigins = rawOrigins
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, '')) // strip trailing slashes
+    .filter(Boolean);
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -138,6 +146,7 @@ async function bootstrap() {
       'X-CSRF-Token',
       'Accept',
       'Origin',
+      'Idempotency-Key',
     ],
     exposedHeaders: [
       'Set-Cookie',

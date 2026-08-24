@@ -48,12 +48,12 @@ export type TransactionMinAggregateOutputType = {
   status: $Enums.TransactionStatus | null
   reference: string | null
   description: string | null
-  journalEntryId: string | null
   completedAt: Date | null
   failedAt: Date | null
   failureReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  journalEntryId: string | null
 }
 
 export type TransactionMaxAggregateOutputType = {
@@ -66,12 +66,12 @@ export type TransactionMaxAggregateOutputType = {
   status: $Enums.TransactionStatus | null
   reference: string | null
   description: string | null
-  journalEntryId: string | null
   completedAt: Date | null
   failedAt: Date | null
   failureReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  journalEntryId: string | null
 }
 
 export type TransactionCountAggregateOutputType = {
@@ -85,12 +85,12 @@ export type TransactionCountAggregateOutputType = {
   reference: number
   description: number
   metadata: number
-  journalEntryId: number
   completedAt: number
   failedAt: number
   failureReason: number
   createdAt: number
   updatedAt: number
+  journalEntryId: number
   _all: number
 }
 
@@ -117,12 +117,12 @@ export type TransactionMinAggregateInputType = {
   status?: true
   reference?: true
   description?: true
-  journalEntryId?: true
   completedAt?: true
   failedAt?: true
   failureReason?: true
   createdAt?: true
   updatedAt?: true
+  journalEntryId?: true
 }
 
 export type TransactionMaxAggregateInputType = {
@@ -135,12 +135,12 @@ export type TransactionMaxAggregateInputType = {
   status?: true
   reference?: true
   description?: true
-  journalEntryId?: true
   completedAt?: true
   failedAt?: true
   failureReason?: true
   createdAt?: true
   updatedAt?: true
+  journalEntryId?: true
 }
 
 export type TransactionCountAggregateInputType = {
@@ -154,12 +154,12 @@ export type TransactionCountAggregateInputType = {
   reference?: true
   description?: true
   metadata?: true
-  journalEntryId?: true
   completedAt?: true
   failedAt?: true
   failureReason?: true
   createdAt?: true
   updatedAt?: true
+  journalEntryId?: true
   _all?: true
 }
 
@@ -260,12 +260,12 @@ export type TransactionGroupByOutputType = {
   reference: string
   description: string | null
   metadata: runtime.JsonValue | null
-  journalEntryId: string | null
   completedAt: Date | null
   failedAt: Date | null
   failureReason: string | null
   createdAt: Date
   updatedAt: Date
+  journalEntryId: string | null
   _count: TransactionCountAggregateOutputType | null
   _avg: TransactionAvgAggregateOutputType | null
   _sum: TransactionSumAggregateOutputType | null
@@ -302,19 +302,19 @@ export type TransactionWhereInput = {
   reference?: Prisma.StringFilter<"Transaction"> | string
   description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Transaction">
-  journalEntryId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   failedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   failureReason?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
+  journalEntryId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   entries?: Prisma.LedgerEntryListRelationFilter
-  journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  settlement?: Prisma.XOR<Prisma.SettlementNullableScalarRelationFilter, Prisma.SettlementWhereInput> | null
-  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
+  settlement?: Prisma.XOR<Prisma.SettlementNullableScalarRelationFilter, Prisma.SettlementWhereInput> | null
+  journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
+  wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }
 
 export type TransactionOrderByWithRelationInput = {
@@ -328,19 +328,19 @@ export type TransactionOrderByWithRelationInput = {
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  wallet?: Prisma.WalletOrderByWithRelationInput
+  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   entries?: Prisma.LedgerEntryOrderByRelationAggregateInput
-  journalEntry?: Prisma.JournalEntryOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
-  settlement?: Prisma.SettlementOrderByWithRelationInput
-  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
   refund?: Prisma.RefundOrderByWithRelationInput
+  settlement?: Prisma.SettlementOrderByWithRelationInput
+  journalEntry?: Prisma.JournalEntryOrderByWithRelationInput
+  wallet?: Prisma.WalletOrderByWithRelationInput
+  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
 }
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -363,13 +363,13 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   failureReason?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
   entries?: Prisma.LedgerEntryListRelationFilter
-  journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  settlement?: Prisma.XOR<Prisma.SettlementNullableScalarRelationFilter, Prisma.SettlementWhereInput> | null
-  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
+  settlement?: Prisma.XOR<Prisma.SettlementNullableScalarRelationFilter, Prisma.SettlementWhereInput> | null
+  journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
+  wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }, "id" | "reference" | "journalEntryId">
 
 export type TransactionOrderByWithAggregationInput = {
@@ -383,12 +383,12 @@ export type TransactionOrderByWithAggregationInput = {
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   completedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   failedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TransactionCountOrderByAggregateInput
   _avg?: Prisma.TransactionAvgOrderByAggregateInput
   _max?: Prisma.TransactionMaxOrderByAggregateInput
@@ -410,12 +410,12 @@ export type TransactionScalarWhereWithAggregatesInput = {
   reference?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableWithAggregatesFilter<"Transaction">
-  journalEntryId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   completedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   failedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
   failureReason?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
+  journalEntryId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
 }
 
 export type TransactionCreateInput = {
@@ -433,13 +433,13 @@ export type TransactionCreateInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateInput = {
@@ -453,17 +453,17 @@ export type TransactionUncheckedCreateInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
-  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUpdateInput = {
@@ -481,13 +481,13 @@ export type TransactionUpdateInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateInput = {
@@ -501,17 +501,17 @@ export type TransactionUncheckedUpdateInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
-  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateManyInput = {
@@ -525,12 +525,12 @@ export type TransactionCreateManyInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
 }
 
 export type TransactionUpdateManyMutationInput = {
@@ -561,12 +561,12 @@ export type TransactionUncheckedUpdateManyInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TransactionListRelationFilter = {
@@ -600,12 +600,12 @@ export type TransactionCountOrderByAggregateInput = {
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrder
   metadata?: Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   failedAt?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrder
 }
 
 export type TransactionAvgOrderByAggregateInput = {
@@ -624,12 +624,12 @@ export type TransactionMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   failedAt?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrder
 }
 
 export type TransactionMinOrderByAggregateInput = {
@@ -642,12 +642,12 @@ export type TransactionMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   reference?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrder
   completedAt?: Prisma.SortOrder
   failedAt?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrder
 }
 
 export type TransactionSumOrderByAggregateInput = {
@@ -830,11 +830,11 @@ export type TransactionCreateWithoutWalletInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutWalletInput = {
@@ -847,17 +847,17 @@ export type TransactionUncheckedCreateWithoutWalletInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
-  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutWalletInput = {
@@ -900,12 +900,12 @@ export type TransactionScalarWhereInput = {
   reference?: Prisma.StringFilter<"Transaction"> | string
   description?: Prisma.StringNullableFilter<"Transaction"> | string | null
   metadata?: Prisma.JsonNullableFilter<"Transaction">
-  journalEntryId?: Prisma.StringNullableFilter<"Transaction"> | string | null
   completedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   failedAt?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
   failureReason?: Prisma.StringNullableFilter<"Transaction"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  journalEntryId?: Prisma.StringNullableFilter<"Transaction"> | string | null
 }
 
 export type TransactionCreateWithoutEntriesInput = {
@@ -923,12 +923,12 @@ export type TransactionCreateWithoutEntriesInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutEntriesInput = {
@@ -942,16 +942,16 @@ export type TransactionUncheckedCreateWithoutEntriesInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
-  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutEntriesInput = {
@@ -985,12 +985,12 @@ export type TransactionUpdateWithoutEntriesInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutEntriesInput = {
@@ -1004,16 +1004,16 @@ export type TransactionUncheckedUpdateWithoutEntriesInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
-  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateWithoutJournalEntryInput = {
@@ -1031,12 +1031,12 @@ export type TransactionCreateWithoutJournalEntryInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutJournalEntryInput = {
@@ -1057,9 +1057,9 @@ export type TransactionUncheckedCreateWithoutJournalEntryInput = {
   updatedAt?: Date | string
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
-  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutJournalEntryInput = {
@@ -1093,12 +1093,12 @@ export type TransactionUpdateWithoutJournalEntryInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutJournalEntryInput = {
@@ -1119,9 +1119,9 @@ export type TransactionUncheckedUpdateWithoutJournalEntryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
-  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateWithoutPaymentInput = {
@@ -1139,12 +1139,12 @@ export type TransactionCreateWithoutPaymentInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutPaymentInput = {
@@ -1158,16 +1158,16 @@ export type TransactionUncheckedCreateWithoutPaymentInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
-  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutPaymentInput = {
@@ -1201,12 +1201,12 @@ export type TransactionUpdateWithoutPaymentInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutPaymentInput = {
@@ -1220,16 +1220,16 @@ export type TransactionUncheckedUpdateWithoutPaymentInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
-  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateWithoutWithdrawalInput = {
@@ -1247,12 +1247,12 @@ export type TransactionCreateWithoutWithdrawalInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
 }
 
 export type TransactionUncheckedCreateWithoutWithdrawalInput = {
@@ -1266,16 +1266,16 @@ export type TransactionUncheckedCreateWithoutWithdrawalInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
-  settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
+  settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutWithdrawalInput = {
@@ -1309,12 +1309,12 @@ export type TransactionUpdateWithoutWithdrawalInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutWithdrawalInput = {
@@ -1328,16 +1328,16 @@ export type TransactionUncheckedUpdateWithoutWithdrawalInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateWithoutRefundInput = {
@@ -1355,11 +1355,11 @@ export type TransactionCreateWithoutRefundInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
@@ -1374,12 +1374,12 @@ export type TransactionUncheckedCreateWithoutRefundInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
   settlement?: Prisma.SettlementUncheckedCreateNestedOneWithoutTransactionInput
@@ -1417,11 +1417,11 @@ export type TransactionUpdateWithoutRefundInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
@@ -1436,12 +1436,12 @@ export type TransactionUncheckedUpdateWithoutRefundInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
@@ -1463,12 +1463,12 @@ export type TransactionCreateWithoutSettlementInput = {
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
   entries?: Prisma.LedgerEntryCreateNestedManyWithoutTransactionInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
   payment?: Prisma.PaymentCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundCreateNestedOneWithoutTransactionInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutTransactionInput
+  wallet: Prisma.WalletCreateNestedOneWithoutTransactionsInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionUncheckedCreateWithoutSettlementInput = {
@@ -1482,16 +1482,16 @@ export type TransactionUncheckedCreateWithoutSettlementInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
   entries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutTransactionInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutTransactionInput
-  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutTransactionInput
+  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutTransactionInput
 }
 
 export type TransactionCreateOrConnectWithoutSettlementInput = {
@@ -1525,12 +1525,12 @@ export type TransactionUpdateWithoutSettlementInput = {
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  wallet?: Prisma.WalletUpdateOneRequiredWithoutTransactionsNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutSettlementInput = {
@@ -1544,16 +1544,16 @@ export type TransactionUncheckedUpdateWithoutSettlementInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
+  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionCreateManyWalletInput = {
@@ -1566,12 +1566,12 @@ export type TransactionCreateManyWalletInput = {
   reference: string
   description?: string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: string | null
   completedAt?: Date | string | null
   failedAt?: Date | string | null
   failureReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  journalEntryId?: string | null
 }
 
 export type TransactionUpdateWithoutWalletInput = {
@@ -1590,11 +1590,11 @@ export type TransactionUpdateWithoutWalletInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   entries?: Prisma.LedgerEntryUpdateManyWithoutTransactionNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutTransactionNestedInput
-  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
   refund?: Prisma.RefundUpdateOneWithoutTransactionNestedInput
+  settlement?: Prisma.SettlementUpdateOneWithoutTransactionNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutTransactionNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutWalletInput = {
@@ -1607,17 +1607,17 @@ export type TransactionUncheckedUpdateWithoutWalletInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   entries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutTransactionNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutTransactionNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
   settlement?: Prisma.SettlementUncheckedUpdateOneWithoutTransactionNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutTransactionNestedInput
-  refund?: Prisma.RefundUncheckedUpdateOneWithoutTransactionNestedInput
 }
 
 export type TransactionUncheckedUpdateManyWithoutWalletInput = {
@@ -1630,12 +1630,12 @@ export type TransactionUncheckedUpdateManyWithoutWalletInput = {
   reference?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1680,19 +1680,19 @@ export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   reference?: boolean
   description?: boolean
   metadata?: boolean
-  journalEntryId?: boolean
   completedAt?: boolean
   failedAt?: boolean
   failureReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
+  journalEntryId?: boolean
   entries?: boolean | Prisma.Transaction$entriesArgs<ExtArgs>
-  journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
   payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
-  settlement?: boolean | Prisma.Transaction$settlementArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Transaction$withdrawalArgs<ExtArgs>
   refund?: boolean | Prisma.Transaction$refundArgs<ExtArgs>
+  settlement?: boolean | Prisma.Transaction$settlementArgs<ExtArgs>
+  journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
+  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Transaction$withdrawalArgs<ExtArgs>
   _count?: boolean | Prisma.TransactionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
@@ -1707,14 +1707,14 @@ export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   reference?: boolean
   description?: boolean
   metadata?: boolean
-  journalEntryId?: boolean
   completedAt?: boolean
   failedAt?: boolean
   failureReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
+  journalEntryId?: boolean
   journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
+  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1728,14 +1728,14 @@ export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   reference?: boolean
   description?: boolean
   metadata?: boolean
-  journalEntryId?: boolean
   completedAt?: boolean
   failedAt?: boolean
   failureReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
+  journalEntryId?: boolean
   journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
+  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectScalar = {
@@ -1749,44 +1749,44 @@ export type TransactionSelectScalar = {
   reference?: boolean
   description?: boolean
   metadata?: boolean
-  journalEntryId?: boolean
   completedAt?: boolean
   failedAt?: boolean
   failureReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  journalEntryId?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "walletId" | "type" | "amount" | "fee" | "netAmount" | "status" | "reference" | "description" | "metadata" | "journalEntryId" | "completedAt" | "failedAt" | "failureReason" | "createdAt" | "updatedAt", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "walletId" | "type" | "amount" | "fee" | "netAmount" | "status" | "reference" | "description" | "metadata" | "completedAt" | "failedAt" | "failureReason" | "createdAt" | "updatedAt" | "journalEntryId", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
   entries?: boolean | Prisma.Transaction$entriesArgs<ExtArgs>
-  journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
   payment?: boolean | Prisma.Transaction$paymentArgs<ExtArgs>
-  settlement?: boolean | Prisma.Transaction$settlementArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Transaction$withdrawalArgs<ExtArgs>
   refund?: boolean | Prisma.Transaction$refundArgs<ExtArgs>
+  settlement?: boolean | Prisma.Transaction$settlementArgs<ExtArgs>
+  journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
+  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Transaction$withdrawalArgs<ExtArgs>
   _count?: boolean | Prisma.TransactionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
+  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
 }
 export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Transaction$journalEntryArgs<ExtArgs>
+  wallet?: boolean | Prisma.WalletDefaultArgs<ExtArgs>
 }
 
 export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Transaction"
   objects: {
-    wallet: Prisma.$WalletPayload<ExtArgs>
     entries: Prisma.$LedgerEntryPayload<ExtArgs>[]
-    journalEntry: Prisma.$JournalEntryPayload<ExtArgs> | null
     payment: Prisma.$PaymentPayload<ExtArgs> | null
-    settlement: Prisma.$SettlementPayload<ExtArgs> | null
-    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
     refund: Prisma.$RefundPayload<ExtArgs> | null
+    settlement: Prisma.$SettlementPayload<ExtArgs> | null
+    journalEntry: Prisma.$JournalEntryPayload<ExtArgs> | null
+    wallet: Prisma.$WalletPayload<ExtArgs>
+    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1799,12 +1799,12 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     reference: string
     description: string | null
     metadata: runtime.JsonValue | null
-    journalEntryId: string | null
     completedAt: Date | null
     failedAt: Date | null
     failureReason: string | null
     createdAt: Date
     updatedAt: Date
+    journalEntryId: string | null
   }, ExtArgs["result"]["transaction"]>
   composites: {}
 }
@@ -2199,13 +2199,13 @@ readonly fields: TransactionFieldRefs;
  */
 export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  wallet<T extends Prisma.WalletDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WalletDefaultArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   entries<T extends Prisma.Transaction$entriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$entriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  journalEntry<T extends Prisma.Transaction$journalEntryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$journalEntryArgs<ExtArgs>>): Prisma.Prisma__JournalEntryClient<runtime.Types.Result.GetResult<Prisma.$JournalEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.Transaction$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  settlement<T extends Prisma.Transaction$settlementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$settlementArgs<ExtArgs>>): Prisma.Prisma__SettlementClient<runtime.Types.Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  withdrawal<T extends Prisma.Transaction$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   refund<T extends Prisma.Transaction$refundArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$refundArgs<ExtArgs>>): Prisma.Prisma__RefundClient<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  settlement<T extends Prisma.Transaction$settlementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$settlementArgs<ExtArgs>>): Prisma.Prisma__SettlementClient<runtime.Types.Result.GetResult<Prisma.$SettlementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  journalEntry<T extends Prisma.Transaction$journalEntryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$journalEntryArgs<ExtArgs>>): Prisma.Prisma__JournalEntryClient<runtime.Types.Result.GetResult<Prisma.$JournalEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  wallet<T extends Prisma.WalletDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WalletDefaultArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  withdrawal<T extends Prisma.Transaction$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2245,12 +2245,12 @@ export interface TransactionFieldRefs {
   readonly reference: Prisma.FieldRef<"Transaction", 'String'>
   readonly description: Prisma.FieldRef<"Transaction", 'String'>
   readonly metadata: Prisma.FieldRef<"Transaction", 'Json'>
-  readonly journalEntryId: Prisma.FieldRef<"Transaction", 'String'>
   readonly completedAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly failedAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly failureReason: Prisma.FieldRef<"Transaction", 'String'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly journalEntryId: Prisma.FieldRef<"Transaction", 'String'>
 }
     
 
@@ -2676,25 +2676,6 @@ export type Transaction$entriesArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * Transaction.journalEntry
- */
-export type Transaction$journalEntryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the JournalEntry
-   */
-  select?: Prisma.JournalEntrySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the JournalEntry
-   */
-  omit?: Prisma.JournalEntryOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.JournalEntryInclude<ExtArgs> | null
-  where?: Prisma.JournalEntryWhereInput
-}
-
-/**
  * Transaction.payment
  */
 export type Transaction$paymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2711,6 +2692,25 @@ export type Transaction$paymentArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.PaymentInclude<ExtArgs> | null
   where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * Transaction.refund
+ */
+export type Transaction$refundArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Refund
+   */
+  select?: Prisma.RefundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Refund
+   */
+  omit?: Prisma.RefundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundInclude<ExtArgs> | null
+  where?: Prisma.RefundWhereInput
 }
 
 /**
@@ -2733,6 +2733,25 @@ export type Transaction$settlementArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * Transaction.journalEntry
+ */
+export type Transaction$journalEntryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JournalEntry
+   */
+  select?: Prisma.JournalEntrySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JournalEntry
+   */
+  omit?: Prisma.JournalEntryOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JournalEntryInclude<ExtArgs> | null
+  where?: Prisma.JournalEntryWhereInput
+}
+
+/**
  * Transaction.withdrawal
  */
 export type Transaction$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2749,25 +2768,6 @@ export type Transaction$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.WithdrawalInclude<ExtArgs> | null
   where?: Prisma.WithdrawalWhereInput
-}
-
-/**
- * Transaction.refund
- */
-export type Transaction$refundArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Refund
-   */
-  select?: Prisma.RefundSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Refund
-   */
-  omit?: Prisma.RefundOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RefundInclude<ExtArgs> | null
-  where?: Prisma.RefundWhereInput
 }
 
 /**

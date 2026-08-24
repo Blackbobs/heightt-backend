@@ -1,29 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsUUID,
   IsString,
   IsNumber,
   IsDateString,
   IsOptional,
   IsBoolean,
+  IsNotEmpty,
+  IsEnum,
   Min,
 } from 'class-validator';
 
 export class CreateDueDto {
   @ApiProperty({
-    example: 'org_123',
-    description: 'Organization ID',
+    example: 'cmt0voucd000tljtv2ahkkkap',
+    description: 'Organization ID (cuid)',
   })
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   organizationId: string;
 
   @ApiProperty({
-    example: 'sess_123',
-    description: 'Academic session ID',
+    example: 'cmt0vabc00000ljtv0000000000',
+    description: 'Academic session ID (cuid)',
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   sessionId?: string;
 
   @ApiProperty({
@@ -77,4 +79,14 @@ export class CreateDueDto {
   @IsOptional()
   @IsBoolean()
   isRequired?: boolean;
+
+  @ApiProperty({
+    enum: ['ACTIVE', 'INACTIVE', 'COMPLETED', 'CANCELLED'],
+    description: 'Due status (defaults to ACTIVE)',
+    required: false,
+    default: 'ACTIVE',
+  })
+  @IsOptional()
+  @IsEnum(['ACTIVE', 'INACTIVE', 'COMPLETED', 'CANCELLED'])
+  status?: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'CANCELLED';
 }

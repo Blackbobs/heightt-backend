@@ -16,9 +16,12 @@ import { PermissionService } from '../auth/permission.service';
 import { EmailService } from '../../email/email.service';
 import { LedgerService } from './ledger.service';
 import { ReceiptService } from './receipt.service';
+import { WalletService } from './wallet.service';
 import { EventService, SystemEvents } from '../../events/event.service';
 import { BachsClient } from '../bachs/bachs.client';
 import { ConfigService } from '@nestjs/config';
+import { WithdrawalWebhookService } from './withdrawal-webhook.service';
+import { BankAccountService } from './bank-account.service';
 import {
   CreateWalletDto,
   CreditWalletDto,
@@ -31,6 +34,11 @@ import {
   CreateSavingsGoalDto,
   SavingsDepositDto,
 } from './dto';
+import {
+  UserWithdrawalRequestDto,
+  PlatformWithdrawalRequestDto,
+  WithdrawalFilterDto,
+} from './dto/withdrawal.dto';
 import { randomBytes } from 'crypto';
 
 @Injectable()
@@ -46,13 +54,15 @@ export class FinanceService {
     private readonly emailService: EmailService,
     private readonly ledgerService: LedgerService,
     private readonly receiptService: ReceiptService,
+    private readonly walletService: WalletService,
     private readonly eventService: EventService,
     private readonly bachsClient: BachsClient,
     private readonly configService: ConfigService,
+    private readonly bankAccountService: BankAccountService,
+    private readonly withdrawalWebhookService: WithdrawalWebhookService,
   ) {}
 
   async onModuleInit() {
-    // Listen for the PAYMENT_COMPLETED_VIA_BACHS event
     this.eventService.on(
       SystemEvents.PAYMENT_COMPLETED_VIA_BACHS,
       async (payload) => {
@@ -62,7 +72,6 @@ export class FinanceService {
     this.logger.log('FinanceService initialized, listening for payment events');
   }
 
-  // Handle the payment completed event and generate receipt
   async handlePaymentCompletedViaBachs(payload: {
     paymentId: string;
     userId: string;
@@ -74,306 +83,163 @@ export class FinanceService {
     );
 
     try {
-      // Generate the receipt
       await this.receiptService.generateReceiptFromPayment(
         payload.paymentId,
         payload.userId,
       );
-
       this.logger.log(`Receipt generated for payment ${payload.paymentId}`);
     } catch (error) {
       this.logger.error(
         `Failed to generate receipt for payment ${payload.paymentId}: ${error.message}`,
       );
-      // You might want to log this to a dead letter queue or retry later
     }
   }
 
   // ============================================
-  // WALLET MANAGEMENT
+  // IDEMPOTENCY KEY GENERATION
   // ============================================
 
-  async createWallet(userId: string, dto: CreateWalletDto) {
-    this.logger.log(
-      `Creating wallet for user: ${dto.userId || dto.organizationId}`,
-    );
+  /**
+   * Generate a unique idempotency key for payment processing
+   * This prevents duplicate payments if a request is retried
+   */
+  async generateIdempotencyKey(userId: string): Promise<{
+    idempotencyKey: string;
+    expiresIn: number;
+    message: string;
+  }> {
+    // Generate a unique key
+    const prefix = 'pay';
+    const randomPart = randomBytes(16).toString('hex');
+    const timestamp = Date.now().toString(36);
+    const idempotencyKey = `${prefix}_${randomPart}_${timestamp}`;
 
-    if (!dto.userId && !dto.organizationId) {
-      throw new BadRequestException(
-        'Either userId or organizationId is required',
-      );
-    }
+    // Store in cache with expiration (1 hour)
+    const expiresIn = 3600; // 1 hour in seconds
+    const cacheKey = `idempotency:${idempotencyKey}`;
 
-    if (dto.userId) {
-      const existing = await this.prisma.wallet.findUnique({
-        where: { userId: dto.userId },
-      });
-      if (existing) {
-        throw new ConflictException('User already has a wallet');
-      }
-    }
-
-    if (dto.organizationId) {
-      const existing = await this.prisma.wallet.findUnique({
-        where: { organizationId: dto.organizationId },
-      });
-      if (existing) {
-        throw new ConflictException('Organization already has a wallet');
-      }
-    }
-
-    const wallet = await this.prisma.wallet.create({
-      data: {
-        userId: dto.userId,
-        organizationId: dto.organizationId,
-        currency: dto.currency || 'NGN',
-        balance: 0,
-        heldBalance: 0,
-        status: 'ACTIVE',
-      },
-    });
-
-    const ledgerAccount =
-      await this.ledgerService.getOrCreateWalletLedgerAccount(
-        wallet.id,
-        dto.userId,
-        dto.organizationId,
-      );
-
-    await this.prisma.wallet.update({
-      where: { id: wallet.id },
-      data: { ledgerAccountId: ledgerAccount.id },
-    });
-
-    await this.prisma.activityLog.create({
-      data: {
+    // Store the key with user context to prevent abuse
+    await this.cacheService.set(
+      cacheKey,
+      {
         userId,
-        activity: 'WALLET_CREATED',
-        details: JSON.stringify({
-          walletId: wallet.id,
-          ledgerAccountId: ledgerAccount.id,
-          userId: dto.userId,
-          organizationId: dto.organizationId,
-        }),
+        createdAt: new Date().toISOString(),
+        used: false,
       },
-    });
-
-    this.eventService.emit(SystemEvents.WALLET_CREATED, {
-      walletId: wallet.id,
-      userId: dto.userId || userId,
-      organizationId: dto.organizationId,
-      currency: dto.currency || 'NGN',
-      timestamp: new Date().toISOString(),
-    });
-
-    this.logger.log(
-      `Wallet created: ${wallet.id} with ledger account: ${ledgerAccount.id}`,
+      expiresIn,
     );
-    return wallet;
+
+    this.logger.log(`Generated idempotency key for user ${userId}: ${idempotencyKey}`);
+
+    return {
+      idempotencyKey,
+      expiresIn,
+      message: 'Idempotency key generated successfully',
+    };
   }
+
+  /**
+   * Validate and consume an idempotency key
+   * This is used by the payment processing to prevent duplicates
+   */
+  async validateIdempotencyKey(idempotencyKey: string, userId: string): Promise<boolean> {
+    const cacheKey = `idempotency:${idempotencyKey}`;
+    const data = await this.cacheService.get<{
+      userId: string;
+      createdAt: string;
+      used: boolean;
+    }>(cacheKey);
+
+    if (!data) {
+      // Key doesn't exist or expired
+      return false;
+    }
+
+    if (data.userId !== userId) {
+      // Key was generated by a different user - security check
+      this.logger.warn(
+        `Idempotency key ${idempotencyKey} was generated by user ${data.userId} but used by ${userId}`,
+      );
+      return false;
+    }
+
+    if (data.used) {
+      // Key already used
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Mark an idempotency key as used
+   */
+  async markIdempotencyKeyAsUsed(idempotencyKey: string): Promise<void> {
+    const cacheKey = `idempotency:${idempotencyKey}`;
+    const data = await this.cacheService.get<{
+      userId: string;
+      createdAt: string;
+      used: boolean;
+    }>(cacheKey);
+
+    if (data) {
+      data.used = true;
+      await this.cacheService.set(
+        cacheKey,
+        data,
+        3600, // Keep for 1 hour even after use
+      );
+    }
+  }
+
+  // ============================================
+  // WALLET MANAGEMENT (Using WalletService)
+  // ============================================
 
   async getWalletByUserId(userId: string) {
-    // Ensure wallet exists
-    const wallet = await this.ensureWalletExists(userId);
-
-    // Get fresh wallet with relations
-    const fullWallet = await this.prisma.wallet.findUnique({
-      where: { userId },
-      include: {
-        transactions: {
-          take: 10,
-          orderBy: { createdAt: 'desc' },
-        },
-        holds: {
-          where: { status: 'ACTIVE' },
-        },
-        ledgerAccount: true,
-      },
-    });
-
-    // Cache the wallet
-    const cacheKey = `wallet:user:${userId}`;
-    await this.cacheService.set(cacheKey, fullWallet, 300);
-
-    return fullWallet;
+    return this.walletService.getOrCreateWallet({ type: 'USER', id: userId });
   }
 
   async getWalletByOrganizationId(organizationId: string) {
-    // Ensure organization wallet exists
-    const wallet = await this.ensureOrganizationWalletExists(organizationId);
-
-    // Get fresh wallet with relations
-    const fullWallet = await this.prisma.wallet.findUnique({
-      where: { organizationId },
-      include: {
-        transactions: {
-          take: 10,
-          orderBy: { createdAt: 'desc' },
-        },
-        holds: {
-          where: { status: 'ACTIVE' },
-        },
-        ledgerAccount: true,
-      },
+    return this.walletService.getOrCreateWallet({
+      type: 'ORGANIZATION',
+      id: organizationId,
     });
-
-    return fullWallet;
   }
 
-  /**
-   * Ensure a user has a wallet. Creates one if it doesn't exist.
-   * Returns the wallet with ledgerAccount included.
-   */
-  async ensureWalletExists(userId: string): Promise<any> {
-    let wallet = await this.prisma.wallet.findUnique({
-      where: { userId },
-      include: { ledgerAccount: true },
-    });
-
-    if (!wallet) {
-      this.logger.log(`Creating wallet for user: ${userId}`);
-
-      wallet = await this.prisma.$transaction(async (tx) => {
-        const newWallet = await tx.wallet.create({
-          data: {
-            userId,
-            currency: 'NGN',
-            balance: 0,
-            heldBalance: 0,
-            status: 'ACTIVE',
-          },
-        });
-
-        // Create ledger account for the wallet
-        const ledgerAccount = await tx.ledgerAccount.create({
-          data: {
-            code: `WALLET-${newWallet.id.substring(0, 8)}`,
-            name: `User Wallet - ${newWallet.id.substring(0, 8)}`,
-            type: 'ASSET',
-            category: 'CASH',
-            ownerType: 'USER',
-            ownerId: userId,
-            walletId: newWallet.id,
-            description: `Wallet account for user ${userId}`,
-            isSystem: false,
-            isActive: true,
-            balance: 0,
-            pendingBalance: 0,
-          },
-        });
-
-        await tx.wallet.update({
-          where: { id: newWallet.id },
-          data: { ledgerAccountId: ledgerAccount.id },
-        });
-
-        await tx.activityLog.create({
-          data: {
-            userId,
-            activity: 'WALLET_AUTO_CREATED',
-            details: JSON.stringify({
-              userId,
-              walletId: newWallet.id,
-              ledgerAccountId: ledgerAccount.id,
-              timestamp: new Date().toISOString(),
-            }),
-          },
-        });
-
-        // Return the wallet with ledgerAccount included
-        return tx.wallet.findUnique({
-          where: { id: newWallet.id },
-          include: { ledgerAccount: true },
-        });
-      });
-
-      this.logger.log(`Wallet created for user: ${userId}`);
-    }
-
-    return wallet;
+  async getPlatformWallet() {
+    return this.walletService.getOrCreateWallet({ type: 'PLATFORM' });
   }
 
-  /**
-   * Ensure an organization has a wallet. Creates one if it doesn't exist.
-   * Returns the wallet with ledgerAccount included.
-   */
-  async ensureOrganizationWalletExists(organizationId: string): Promise<any> {
-    let wallet = await this.prisma.wallet.findUnique({
-      where: { organizationId },
-      include: { ledgerAccount: true },
+  // For backward compatibility
+  async createWallet(
+    userId: string,
+    dto: { userId?: string; organizationId?: string },
+  ) {
+    this.logger.log(
+      `Creating wallet via FinanceService (delegated to WalletService)`,
+    );
+    return this.walletService.createWalletForOwner({
+      userId: dto.userId,
+      organizationId: dto.organizationId,
     });
-
-    if (!wallet) {
-      this.logger.log(`Creating wallet for organization: ${organizationId}`);
-
-      wallet = await this.prisma.$transaction(async (tx) => {
-        const newWallet = await tx.wallet.create({
-          data: {
-            organizationId,
-            currency: 'NGN',
-            balance: 0,
-            heldBalance: 0,
-            status: 'ACTIVE',
-          },
-        });
-
-        // Create ledger account for the wallet
-        const ledgerAccount = await tx.ledgerAccount.create({
-          data: {
-            code: `ORG-WALLET-${newWallet.id.substring(0, 8)}`,
-            name: `Organization Wallet - ${newWallet.id.substring(0, 8)}`,
-            type: 'ASSET',
-            category: 'CASH',
-            ownerType: 'ORGANIZATION',
-            ownerId: organizationId,
-            walletId: newWallet.id,
-            description: `Wallet account for organization ${organizationId}`,
-            isSystem: false,
-            isActive: true,
-            balance: 0,
-            pendingBalance: 0,
-          },
-        });
-
-        await tx.wallet.update({
-          where: { id: newWallet.id },
-          data: { ledgerAccountId: ledgerAccount.id },
-        });
-
-        // Return the wallet with ledgerAccount included
-        return tx.wallet.findUnique({
-          where: { id: newWallet.id },
-          include: { ledgerAccount: true },
-        });
-      });
-
-      this.logger.log(`Wallet created for organization: ${organizationId}`);
-    }
-
-    return wallet;
   }
 
   // ============================================
-  // WALLET TRANSACTIONS (WITH ROW LOCKING)
+  // WALLET TRANSACTIONS
   // ============================================
 
   async creditWallet(userId: string, dto: CreditWalletDto) {
     this.logger.log(
-      `Crediting wallet for user: ${userId} - Amount: ${dto.amount} Kobo`,
+      `Crediting wallet for user: ${dto.userId} - Amount: ${dto.amount} Kobo`,
     );
 
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: dto.userId,
+    });
+
     return this.prisma.$transaction(async (tx) => {
-      // Ensure target user has a wallet
-      await this.ensureWalletExists(dto.userId);
-
-      const wallet = await tx.wallet.findUnique({
-        where: { userId: dto.userId },
-      });
-
-      if (!wallet) {
-        throw new NotFoundException('Wallet not found');
-      }
-
       if (wallet.status !== 'ACTIVE') {
         throw new BadRequestException('Wallet is not active');
       }
@@ -442,7 +308,10 @@ export class FinanceService {
         description: dto.description || 'Wallet credit',
       });
 
-      await this.cacheService.delete(`wallet:user:${dto.userId}`);
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: dto.userId,
+      });
 
       this.logger.log(
         `Wallet credited: ${wallet.id}, amount: ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)})`,
@@ -456,21 +325,15 @@ export class FinanceService {
 
   async debitWallet(userId: string, dto: DebitWalletDto) {
     this.logger.log(
-      `Debiting wallet for user: ${userId} - Amount: ${dto.amount} Kobo`,
+      `Debiting wallet for user: ${dto.userId} - Amount: ${dto.amount} Kobo`,
     );
 
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: dto.userId,
+    });
+
     return this.prisma.$transaction(async (tx) => {
-      // Ensure target user has a wallet
-      await this.ensureWalletExists(dto.userId);
-
-      const wallet = await tx.wallet.findUnique({
-        where: { userId: dto.userId },
-      });
-
-      if (!wallet) {
-        throw new NotFoundException('Wallet not found');
-      }
-
       if (wallet.status !== 'ACTIVE') {
         throw new BadRequestException('Wallet is not active');
       }
@@ -543,7 +406,10 @@ export class FinanceService {
         description: dto.description || 'Wallet debit',
       });
 
-      await this.cacheService.delete(`wallet:user:${dto.userId}`);
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: dto.userId,
+      });
 
       this.logger.log(
         `Wallet debited: ${wallet.id}, amount: ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)})`,
@@ -570,8 +436,10 @@ export class FinanceService {
       endDate?: string;
     },
   ) {
-    // Ensure user has a wallet before fetching transactions
-    const wallet = await this.ensureWalletExists(userId);
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: userId,
+    });
 
     const skip = (page - 1) * limit;
     const where: any = { walletId: wallet.id };
@@ -636,8 +504,10 @@ export class FinanceService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Ensure organization has a wallet
-    await this.ensureOrganizationWalletExists(dto.organizationId);
+    await this.walletService.getOrCreateWallet({
+      type: 'ORGANIZATION',
+      id: dto.organizationId,
+    });
 
     const due = await this.prisma.due.create({
       data: {
@@ -649,7 +519,7 @@ export class FinanceService {
         dueDate: new Date(dto.dueDate),
         lateFee: dto.lateFee || 0,
         isRequired: dto.isRequired !== undefined ? dto.isRequired : true,
-        status: 'ACTIVE',
+        status: dto.status ?? 'ACTIVE',
       },
     });
 
@@ -812,6 +682,107 @@ export class FinanceService {
     };
   }
 
+  /**
+   * Get all dues for a user across all organizations they belong to
+   * Returns all active dues for organizations the user is a member of
+   */
+  async getMyDues(userId: string) {
+    this.logger.log(`Getting all dues for user: ${userId}`);
+
+    // Get all organizations the user is a member of
+    const memberships = await this.prisma.organizationMembership.findMany({
+      where: {
+        userId,
+        status: 'ACTIVE',
+      },
+      select: {
+        organizationId: true,
+      },
+    });
+
+    const organizationIds = memberships.map((m) => m.organizationId);
+
+    if (organizationIds.length === 0) {
+      this.logger.log(`User ${userId} is not a member of any organization`);
+      return [];
+    }
+
+    // Get the student profile to check if user is a student
+    const studentProfile = await this.prisma.studentProfile.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+
+    // Get ALL active dues for organizations the user belongs to
+    const allDues = await this.prisma.due.findMany({
+      where: {
+        organizationId: { in: organizationIds },
+        status: 'ACTIVE',
+      },
+      include: {
+        organization: true,
+        session: true,
+      },
+      orderBy: {
+        dueDate: 'asc',
+      },
+    });
+
+    // If user is not a student, return empty array (only students pay dues)
+    if (!studentProfile) {
+      this.logger.log(`User ${userId} does not have a student profile`);
+      return [];
+    }
+
+    // Get existing assignments to know which dues are already assigned to this student
+    const existingAssignments = await this.prisma.dueAssignment.findMany({
+      where: {
+        studentId: studentProfile.id,
+        dueId: { in: allDues.map((d) => d.id) },
+      },
+      select: {
+        dueId: true,
+        isPaid: true,
+        paidAt: true,
+        id: true,
+        amount: true,
+        studentId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    // Create a map of dueId -> assignment
+    const assignmentMap = new Map();
+    for (const assignment of existingAssignments) {
+      assignmentMap.set(assignment.dueId, assignment);
+    }
+
+    // Build the response: combine due data with assignment data if it exists
+    const result = allDues.map((due) => {
+      const assignment = assignmentMap.get(due.id);
+
+      return {
+        id: assignment?.id || `due_${due.id}`,
+        dueId: due.id,
+        studentId: studentProfile.id,
+        amount: due.amount,
+        isPaid: assignment?.isPaid || false,
+        paidAt: assignment?.paidAt || null,
+        createdAt: assignment?.createdAt || due.createdAt,
+        updatedAt: assignment?.updatedAt || due.updatedAt,
+        due: due,
+        isAutoAssigned: !assignment,
+      };
+    });
+
+    this.logger.log(
+      `Found ${result.length} dues for user ${userId} across ${organizationIds.length} organizations`,
+    );
+
+    return result;
+  }
+
   async getStudentDues(studentId: string) {
     const student = await this.prisma.studentProfile.findUnique({
       where: { id: studentId },
@@ -822,8 +793,10 @@ export class FinanceService {
       throw new NotFoundException('Student not found');
     }
 
-    // Ensure user has a wallet
-    await this.ensureWalletExists(student.userId);
+    await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: student.userId,
+    });
 
     const assignments = await this.prisma.dueAssignment.findMany({
       where: { studentId },
@@ -855,142 +828,7 @@ export class FinanceService {
   }
 
   // ============================================
-  // PAYMENT PROCESSING WITH BACHS (External)
-  // ============================================
-
-  async processPayment(
-    userId: string,
-    dto: CreatePaymentDto,
-    idempotencyKey?: string,
-  ) {
-    this.logger.log(
-      `Processing payment via Bachs for user: ${userId} - Amount: ${dto.amount} Kobo`,
-    );
-
-    if (dto.amount <= 0) {
-      throw new BadRequestException('Amount must be greater than 0');
-    }
-
-    // Ensure user has a wallet
-    await this.ensureWalletExists(userId);
-
-    const organization = await this.prisma.organization.findUnique({
-      where: { id: dto.organizationId },
-    });
-
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-
-    // Ensure organization has a wallet
-    await this.ensureOrganizationWalletExists(dto.organizationId);
-
-    if (dto.dueAssignmentId) {
-      const dueAssignment = await this.prisma.dueAssignment.findUnique({
-        where: { id: dto.dueAssignmentId },
-        include: { due: true },
-      });
-
-      if (!dueAssignment) {
-        throw new NotFoundException('Due assignment not found');
-      }
-
-      if (dueAssignment.isPaid) {
-        throw new BadRequestException('This due has already been paid');
-      }
-    }
-
-    return this.idempotencyService.processWithIdempotency(
-      idempotencyKey,
-      userId,
-      async () => {
-        const user = await this.prisma.user.findUnique({
-          where: { id: userId },
-          include: { profile: true },
-        });
-
-        if (!user) {
-          throw new NotFoundException('User not found');
-        }
-
-        const pendingPayment = await this.prisma.pendingPayment.create({
-          data: {
-            userId,
-            organizationId: dto.organizationId,
-            amount: dto.amount,
-            paymentMethod: dto.paymentMethod,
-            description: dto.description || 'Payment',
-            dueAssignmentId: dto.dueAssignmentId,
-            reference: idempotencyKey || `pay_${Date.now()}`,
-            status: 'PENDING',
-            metadata: {
-              idempotencyKey,
-            },
-          },
-        });
-
-        const appUrl =
-          this.configService.get<string>('APP_URL') || 'http://localhost:3000';
-        const bachsAmount = this.bachsClient.toBachsAmount(dto.amount);
-
-        const customerName = user.profile
-          ? `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim()
-          : user.username || 'Customer';
-
-        const bachsCustomer = await this.bachsClient.getOrCreateCustomer(
-          user.email,
-          customerName || 'Customer',
-          user.profile?.phone || undefined,
-        );
-
-        const checkoutPayload = {
-          customer: {
-            customer_id: bachsCustomer.id,
-          },
-          pricing: {
-            currency: 'NGN',
-            amount: bachsAmount,
-            price_type: 'fixed' as const,
-          },
-          reference: `checkout_${pendingPayment.id.substring(0, 8)}`,
-          metadata: {
-            pendingPaymentId: pendingPayment.id,
-            userId,
-            organizationId: dto.organizationId,
-            idempotencyKey,
-          },
-          success_url: dto.successUrl || `${appUrl}/api/v1/payments/success`,
-          cancel_url: dto.cancelUrl || `${appUrl}/api/v1/payments/cancel`,
-          expires_in_minutes: 60,
-        };
-
-        const checkoutSession =
-          await this.bachsClient.createCheckoutSession(checkoutPayload);
-
-        await this.prisma.pendingPayment.update({
-          where: { id: pendingPayment.id },
-          data: {
-            bachsCheckoutId: checkoutSession.checkout_id,
-            bachsCustomerId: bachsCustomer.id,
-          },
-        });
-
-        this.logger.log(
-          `Created checkout session ${checkoutSession.checkout_id} for pending payment ${pendingPayment.id}`,
-        );
-
-        return {
-          checkoutId: checkoutSession.checkout_id,
-          checkoutUrl: checkoutSession.checkout_url,
-          pendingPaymentId: pendingPayment.id,
-          message: 'Please complete the payment on the hosted checkout page',
-        };
-      },
-    );
-  }
-
-  // ============================================
-  // INTERNAL PAYMENT PROCESSING (Wallet to Organization)
+  // INTERNAL PAYMENT PROCESSING
   // ============================================
 
   async processInternalPayment(
@@ -1002,13 +840,140 @@ export class FinanceService {
       `Processing internal payment for user: ${userId} - Amount: ${dto.amount} Kobo`,
     );
 
+    // If idempotency key is provided, validate it
+    if (idempotencyKey) {
+      const isValid = await this.validateIdempotencyKey(idempotencyKey, userId);
+      if (!isValid) {
+        throw new BadRequestException(
+          'Invalid or expired idempotency key. Please generate a new one.',
+        );
+      }
+    }
+
     return this.idempotencyService.processWithIdempotency(
       idempotencyKey,
       userId,
       async () => {
-        return this.executeInternalPayment(userId, dto);
+        const result = await this.executeInternalPayment(userId, dto, idempotencyKey);
+        // Mark the idempotency key as used
+        if (idempotencyKey) {
+          await this.markIdempotencyKeyAsUsed(idempotencyKey);
+        }
+        return result;
       },
     );
+  }
+
+    // ============================================
+  // DUE RESOLUTION (shared between internal and external payments)
+  // ============================================
+
+  /**
+   * Resolves a dueId or dueAssignmentId to a valid dueAssignmentId.
+   * - If dueAssignmentId is provided, verifies it exists and is unpaid.
+   * - If dueId is provided, finds or creates a due assignment for the user.
+   */
+  async resolveDueAssignment(
+    userId: string,
+    dueId?: string,
+    dueAssignmentId?: string,
+  ): Promise<string | null> {
+    if (!dueAssignmentId && !dueId) {
+      return null;
+    }
+
+    // Case 1: Explicit due assignment ID provided
+    if (dueAssignmentId) {
+      const assignment = await this.prisma.dueAssignment.findUnique({
+        where: { id: dueAssignmentId },
+      });
+
+      if (!assignment) {
+        throw new NotFoundException('Due assignment not found');
+      }
+
+      if (assignment.isPaid) {
+        throw new BadRequestException('This due has already been paid');
+      }
+
+      return dueAssignmentId;
+    }
+
+    // Case 2: Due ID provided (auto-assign on payment)
+    const due = await this.prisma.due.findUnique({
+      where: { id: dueId },
+    });
+
+    if (!due) {
+      throw new NotFoundException('Due not found');
+    }
+
+    // Check if user is a student
+    const studentProfile = await this.prisma.studentProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!studentProfile) {
+      throw new NotFoundException(
+        'Student profile not found. Please complete your student profile first.',
+      );
+    }
+
+    // Check if the user is a member of the organization
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: {
+        userId,
+        organizationId: due.organizationId,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException(
+        'You are not a member of this organization. Please join the organization first.',
+      );
+    }
+
+    // Find or create the due assignment
+    const existingAssignment = await this.prisma.dueAssignment.findUnique({
+      where: {
+        dueId_studentId: {
+          dueId: due.id,
+          studentId: studentProfile.id,
+        },
+      },
+    });
+
+    if (existingAssignment) {
+      if (existingAssignment.isPaid) {
+        throw new BadRequestException('This due has already been paid');
+      }
+      return existingAssignment.id;
+    }
+
+    // Auto-assign the due
+    const newAssignment = await this.prisma.dueAssignment.create({
+      data: {
+        dueId: due.id,
+        studentId: studentProfile.id,
+        amount: due.amount,
+        isPaid: false,
+      },
+    });
+
+    this.logger.log(
+      `Auto-assigned due ${due.id} to student ${studentProfile.id}`,
+    );
+
+    this.eventService.emitDuesAssigned({
+      dueId: due.id,
+      organizationId: due.organizationId,
+      studentId: studentProfile.id,
+      amount: due.amount,
+      dueDate: due.dueDate,
+    });
+
+    return newAssignment.id;
   }
 
   private async executeInternalPayment(
@@ -1023,19 +988,21 @@ export class FinanceService {
       throw new NotFoundException('User not found');
     }
 
-    // Ensure user has a wallet
-    await this.ensureWalletExists(userId);
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: userId,
+    });
 
-    return this.prisma.$transaction(async (tx) => {
-      const wallet = await tx.wallet.findUnique({
-        where: { userId },
-        include: { ledgerAccount: true },
-      });
+    const orgWallet = await this.walletService.getOrCreateWallet({
+      type: 'ORGANIZATION',
+      id: dto.organizationId,
+    });
 
-      if (!wallet) {
-        throw new NotFoundException('Wallet not found');
-      }
+    const platformWallet = await this.walletService.getOrCreateWallet({
+      type: 'PLATFORM',
+    });
 
+    const result = await this.prisma.$transaction(async (tx) => {
       if (wallet.status !== 'ACTIVE') {
         throw new BadRequestException('Wallet is not active');
       }
@@ -1044,7 +1011,7 @@ export class FinanceService {
       const totalAmount = charges.totalAmount;
 
       this.logger.log(
-        `Charges breakdown: Amount: ${dto.amount}, Platform Fee: ${charges.platformFee}, Paystack Fee: ${charges.paystackFee}, VAT: ${charges.vat}, Total Charges: ${charges.totalCharges}, Total Student Pays: ${totalAmount}`,
+        `Charges breakdown: Amount: ${dto.amount}, Platform Fee: ${charges.platformFee}, Bachs Fee: ${charges.gatewayFee}, VAT: ${charges.vat}, Total Charges: ${charges.totalCharges}, Total User Pays: ${totalAmount}`,
       );
 
       if (wallet.balance < totalAmount) {
@@ -1053,39 +1020,134 @@ export class FinanceService {
         );
       }
 
-      const escrowAccount = await this.ledgerService.getOrCreateEscrowAccount();
-      const platformFeeAccount =
-        await this.ledgerService.getOrCreatePlatformFeeAccount();
-      const vatPayableAccount =
-        await this.ledgerService.getOrCreateVatPayableAccount();
-      const paystackFeeAccount =
-        await this.ledgerService.getOrCreatePaystackFeeAccount();
-      const paystackSettlementAccount =
-        await this.ledgerService.getOrCreatePaystackSettlementAccount();
+      // ============================================
+      // DUE HANDLING - Supports both assigned and unassigned dues
+      // ============================================
 
       let dueAssignment: any = null;
       let due: any = null;
 
+      // Case 1: User has a due assignment ID (explicitly assigned)
       if (dto.dueAssignmentId) {
         dueAssignment = await tx.dueAssignment.findUnique({
           where: { id: dto.dueAssignmentId },
           include: { due: true },
         });
+        
         if (!dueAssignment) {
           throw new NotFoundException('Due assignment not found');
         }
+        
         if (dueAssignment.isPaid) {
           throw new BadRequestException('This due has already been paid');
         }
+        
+        // Verify the due assignment belongs to this user
+        const studentProfile = await tx.studentProfile.findUnique({
+          where: { userId },
+          select: { id: true },
+        });
+        
+        if (!studentProfile || dueAssignment.studentId !== studentProfile.id) {
+          throw new ForbiddenException('This due assignment does not belong to you');
+        }
+        
         due = dueAssignment.due;
-      } else if (dto.dueId) {
+      } 
+      // Case 2: User has a due ID (auto-assign on payment)
+      else if (dto.dueId) {
+        // Find the due
         due = await tx.due.findUnique({
           where: { id: dto.dueId },
         });
+        
         if (!due) {
           throw new NotFoundException('Due not found');
         }
+        
+        // Check if user is a student
+        const studentProfile = await tx.studentProfile.findUnique({
+          where: { userId },
+        });
+        
+        if (!studentProfile) {
+          throw new NotFoundException('Student profile not found. Please complete your student profile first.');
+        }
+        
+        // Check if the user is a member of the organization
+        const membership = await tx.organizationMembership.findFirst({
+          where: {
+            userId,
+            organizationId: due.organizationId,
+            status: 'ACTIVE',
+          },
+        });
+        
+        if (!membership) {
+          throw new ForbiddenException(
+            'You are not a member of this organization. Please join the organization first.',
+          );
+        }
+        
+        // Check if already assigned to this student
+        const existingAssignment = await tx.dueAssignment.findUnique({
+          where: {
+            dueId_studentId: {
+              dueId: due.id,
+              studentId: studentProfile.id,
+            },
+          },
+        });
+        
+        if (existingAssignment) {
+          if (existingAssignment.isPaid) {
+            throw new BadRequestException('This due has already been paid');
+          }
+          // Use existing assignment
+          dueAssignment = existingAssignment;
+        } else {
+          // Auto-assign the due
+          dueAssignment = await tx.dueAssignment.create({
+            data: {
+              dueId: due.id,
+              studentId: studentProfile.id,
+              amount: due.amount,
+              isPaid: false,
+            },
+            include: { due: true },
+          });
+          
+          this.logger.log(
+            `Auto-assigned due ${due.id} to student ${studentProfile.id}`,
+          );
+          
+          // Emit event for auto-assignment
+          this.eventService.emitDuesAssigned({
+            dueId: due.id,
+            organizationId: due.organizationId,
+            studentId: studentProfile.id,
+            amount: due.amount,
+            dueDate: due.dueDate,
+          });
+        }
       }
+
+      // ============================================
+      // GET SYSTEM ACCOUNTS
+      // ============================================
+
+      const platformFeeAccount =
+        await this.ledgerService.getOrCreatePlatformFeeAccount();
+      const vatPayableAccount =
+        await this.ledgerService.getOrCreateVatPayableAccount();
+      const bachsFeeAccount =
+        await this.ledgerService.getOrCreateBachsFeeAccount();
+      const bachsSettlementAccount =
+        await this.ledgerService.getOrCreateBachsSettlementAccount();
+
+      // ============================================
+      // UPDATE USER WALLET (DEBIT)
+      // ============================================
 
       const walletBalanceBefore = wallet.balance;
       const walletBalanceAfter = walletBalanceBefore - totalAmount;
@@ -1099,6 +1161,43 @@ export class FinanceService {
         where: { id: wallet.ledgerAccountId! },
         data: { balance: walletBalanceAfter },
       });
+
+      // ============================================
+      // UPDATE ORGANIZATION WALLET (CREDIT)
+      // ============================================
+
+      const orgBalanceBefore = orgWallet.balance;
+      const orgBalanceAfter = orgBalanceBefore + dto.amount;
+      await tx.wallet.update({
+        where: { id: orgWallet.id },
+        data: { balance: orgBalanceAfter },
+      });
+
+      await tx.ledgerAccount.update({
+        where: { id: orgWallet.ledgerAccountId! },
+        data: { balance: orgBalanceAfter },
+      });
+
+      // ============================================
+      // UPDATE PLATFORM WALLET (CREDIT for fees)
+      // ============================================
+
+      const platformCredit = charges.platformFee + charges.vat;
+      const platformBalanceBefore = platformWallet.balance;
+      const platformBalanceAfter = platformBalanceBefore + platformCredit;
+      await tx.wallet.update({
+        where: { id: platformWallet.id },
+        data: { balance: platformBalanceAfter },
+      });
+
+      await tx.ledgerAccount.update({
+        where: { id: platformWallet.ledgerAccountId! },
+        data: { balance: platformBalanceAfter },
+      });
+
+      // ============================================
+      // CREATE TRANSACTION RECORD
+      // ============================================
 
       const transaction = await tx.transaction.create({
         data: {
@@ -1116,10 +1215,17 @@ export class FinanceService {
             paymentMethod: dto.paymentMethod,
             organizationId: dto.organizationId,
             dueAmount: dto.amount,
+            dueAssignmentId: dueAssignment?.id,
+            dueId: dto.dueId,
             idempotencyKey: idempotencyKey,
+            autoAssigned: dueAssignment && dto.dueId && !dto.dueAssignmentId,
           },
         },
       });
+
+      // ============================================
+      // CREATE PAYMENT RECORD
+      // ============================================
 
       const payment = await tx.payment.create({
         data: {
@@ -1135,85 +1241,64 @@ export class FinanceService {
           paidAt: new Date(),
           metadata: {
             charges,
-            paystackFee: charges.paystackFee,
+            bachsFee: charges.gatewayFee,
             platformFee: charges.platformFee,
             vat: charges.vat,
             totalPaid: totalAmount,
+            dueAssignmentId: dueAssignment?.id,
+            dueId: dto.dueId,
             idempotencyKey: idempotencyKey,
+            autoAssigned: dueAssignment && dto.dueId && !dto.dueAssignmentId,
           },
         },
       });
 
-      const escrowLines = [
+      // ============================================
+      // CREATE JOURNAL ENTRY
+      // ============================================
+
+      const journalLines = [
         {
           accountId: wallet.ledgerAccountId!,
           type: 'DEBIT' as const,
           amount: totalAmount,
-          description: `Payment from user ${userId} (including charges)`,
+          description: `Payment from user ${userId}`,
         },
         {
-          accountId: escrowAccount.id,
-          type: 'CREDIT' as const,
-          amount: totalAmount,
-          description: `Funds held in escrow for payment ${payment.id}`,
-        },
-      ];
-
-      const escrowJournal = await this.ledgerService.createJournalEntry({
-        lines: escrowLines,
-        description: `Payment escrow: ${dto.description || 'Payment'}`,
-        paymentId: payment.id,
-        transactionId: transaction.id,
-        createdBy: userId,
-      });
-
-      const settlementLines = [
-        {
-          accountId: escrowAccount.id,
-          type: 'DEBIT' as const,
-          amount: totalAmount,
-          description: `Release funds from escrow for payment ${payment.id}`,
-        },
-        {
-          accountId: (
-            await this.getOrganizationWalletLedgerAccount(
-              dto.organizationId,
-              tx,
-            )
-          ).id,
+          accountId: orgWallet.ledgerAccountId!,
           type: 'CREDIT' as const,
           amount: dto.amount,
-          description: `Payment settlement to organization (full amount)`,
+          description: `Payment to organization ${dto.organizationId}`,
         },
         {
-          accountId: platformFeeAccount.id,
+          accountId: platformWallet.ledgerAccountId!,
           type: 'CREDIT' as const,
           amount: charges.platformFee,
-          description: `Platform service fee (${charges.platformFee} Kobo)`,
+          description: 'Platform service fee',
         },
         {
-          accountId: vatPayableAccount.id,
+          accountId: platformWallet.ledgerAccountId!,
           type: 'CREDIT' as const,
           amount: charges.vat,
-          description: `VAT on platform fee (${charges.vat} Kobo)`,
+          description: 'VAT on platform fee',
         },
         {
-          accountId: paystackFeeAccount.id,
+          accountId: bachsFeeAccount.id,
           type: 'DEBIT' as const,
-          amount: charges.paystackFee,
-          description: `Paystack transaction fee (${charges.paystackFee} Kobo)`,
+          amount: charges.gatewayFee,
+          description: 'Bachs transaction fee',
         },
         {
-          accountId: paystackSettlementAccount.id,
+          accountId: bachsSettlementAccount.id,
           type: 'CREDIT' as const,
-          amount: charges.paystackFee,
-          description: `Paystack fee payable to Paystack`,
+          amount: charges.gatewayFee,
+          description: 'Bachs fee payable',
         },
       ];
 
-      const settlementJournal = await this.ledgerService.createJournalEntry({
-        lines: settlementLines,
-        description: `Payment settlement: ${dto.description || 'Payment'}`,
+      const journalEntry = await this.ledgerService.createJournalEntry({
+        lines: journalLines,
+        description: `Payment: ${dto.description || 'Payment'}`,
         paymentId: payment.id,
         transactionId: transaction.id,
         createdBy: userId,
@@ -1221,35 +1306,12 @@ export class FinanceService {
 
       await tx.payment.update({
         where: { id: payment.id },
-        data: { journalEntryId: escrowJournal.id },
+        data: { journalEntryId: journalEntry.id },
       });
 
-      // Ensure organization has a wallet
-      const orgWallet = await this.ensureOrganizationWalletExists(
-        dto.organizationId,
-      );
-
-      if (orgWallet) {
-        const orgLedgerAccount = await tx.ledgerAccount.findUnique({
-          where: { id: orgWallet.ledgerAccountId! },
-        });
-
-        if (orgLedgerAccount) {
-          await tx.ledgerAccount.update({
-            where: { id: orgWallet.ledgerAccountId! },
-            data: {
-              balance: orgLedgerAccount.balance + dto.amount,
-            },
-          });
-
-          await tx.wallet.update({
-            where: { id: orgWallet.id },
-            data: {
-              balance: orgWallet.balance + dto.amount,
-            },
-          });
-        }
-      }
+      // ============================================
+      // UPDATE DUE ASSIGNMENT (if applicable)
+      // ============================================
 
       if (dueAssignment) {
         await this.handleDuePayment(
@@ -1260,7 +1322,9 @@ export class FinanceService {
         );
       }
 
-      await this.receiptService.generateReceiptFromPayment(payment.id, userId);
+      // ============================================
+      // LOG ACTIVITY
+      // ============================================
 
       await tx.activityLog.create({
         data: {
@@ -1273,12 +1337,18 @@ export class FinanceService {
             charges,
             reference: transaction.reference,
             organizationId: dto.organizationId,
-            escrowJournalId: escrowJournal.id,
-            settlementJournalId: settlementJournal.id,
+            dueAssignmentId: dueAssignment?.id,
+            dueId: dto.dueId,
+            autoAssigned: dueAssignment && dto.dueId && !dto.dueAssignmentId,
+            journalEntryId: journalEntry.id,
             idempotencyKey: idempotencyKey,
           }),
         },
       });
+
+      // ============================================
+      // EMIT EVENTS
+      // ============================================
 
       this.eventService.emitPaymentReceived({
         paymentId: payment.id,
@@ -1289,6 +1359,9 @@ export class FinanceService {
         metadata: {
           charges,
           paymentMethod: dto.paymentMethod,
+          dueAssignmentId: dueAssignment?.id,
+          dueId: dto.dueId,
+          autoAssigned: dueAssignment && dto.dueId && !dto.dueAssignmentId,
           idempotencyKey: idempotencyKey,
         },
       });
@@ -1313,18 +1386,21 @@ export class FinanceService {
         });
       }
 
-      this.eventService.emitWalletBalanceUpdated({
-        walletId: wallet.id,
-        userId: userId,
-        balance: walletBalanceAfter,
-        previousBalance: walletBalanceBefore,
-        currency: 'NGN',
-      });
+      // ============================================
+      // INVALIDATE CACHE
+      // ============================================
 
-      await this.cacheService.delete(`wallet:user:${userId}`);
-      await this.cacheService.delete(
-        `wallet:organization:${dto.organizationId}`,
-      );
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: userId,
+      });
+      await this.walletService.invalidateWalletCache({
+        type: 'ORGANIZATION',
+        id: dto.organizationId,
+      });
+      await this.walletService.invalidateWalletCache({
+        type: 'PLATFORM',
+      });
 
       this.logger.log(
         `Payment processed: ${payment.id} - Amount: ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)}), Total Paid: ${totalAmount} Kobo (₦${(totalAmount / this.KOBO_PER_NAIRA).toFixed(2)})`,
@@ -1333,28 +1409,38 @@ export class FinanceService {
       return {
         payment,
         transaction,
-        escrowJournal,
-        settlementJournal,
+        journalEntry,
         charges,
         totalPaid: totalAmount,
-        balance: walletBalanceAfter,
+        balances: {
+          user: walletBalanceAfter,
+          organization: orgBalanceAfter,
+          platform: platformBalanceAfter,
+        },
         idempotencyKey: idempotencyKey,
+        dueAssignmentId: dueAssignment?.id,
+        dueId: dto.dueId,
+        autoAssigned: dueAssignment && dto.dueId && !dto.dueAssignmentId,
       };
     });
-  }
 
-  // ============================================
-  // HELPER METHODS
-  // ============================================
+    // ============================================
+    // GENERATE RECEIPT (outside transaction)
+    // ============================================
 
-  private async getOrganizationWalletLedgerAccount(
-    organizationId: string,
-    tx: any,
-  ) {
-    // Ensure organization has a wallet
-    const orgWallet = await this.ensureOrganizationWalletExists(organizationId);
+    try {
+      await this.receiptService.generateReceiptFromPayment(
+        result.payment.id,
+        userId,
+      );
+      this.logger.log(`Receipt generated for payment ${result.payment.id}`);
+    } catch (error: any) {
+      this.logger.error(
+        `Failed to generate receipt for payment ${result.payment.id}: ${error.message}`,
+      );
+    }
 
-    return orgWallet.ledgerAccount;
+    return result;
   }
 
   private async handleDuePayment(
@@ -1401,7 +1487,7 @@ export class FinanceService {
   }
 
   // ============================================
-  // MANUAL PAYMENTS (Admin only - can use Bachs or Internal)
+  // MANUAL PAYMENTS
   // ============================================
 
   async processManualPayment(
@@ -1413,11 +1499,26 @@ export class FinanceService {
       `Processing manual payment for user: ${userId} - Amount: ${dto.amount} Kobo`,
     );
 
+    // If idempotency key is provided, validate it
+    if (idempotencyKey) {
+      const isValid = await this.validateIdempotencyKey(idempotencyKey, userId);
+      if (!isValid) {
+        throw new BadRequestException(
+          'Invalid or expired idempotency key. Please generate a new one.',
+        );
+      }
+    }
+
     return this.idempotencyService.processWithIdempotency(
       idempotencyKey,
       userId,
       async () => {
-        return this.executeManualPayment(userId, dto, idempotencyKey);
+        const result = await this.executeManualPayment(userId, dto, idempotencyKey);
+        // Mark the idempotency key as used
+        if (idempotencyKey) {
+          await this.markIdempotencyKeyAsUsed(idempotencyKey);
+        }
+        return result;
       },
     );
   }
@@ -1435,19 +1536,17 @@ export class FinanceService {
       throw new NotFoundException('User not found');
     }
 
-    // Ensure user has a wallet
-    await this.ensureWalletExists(userId);
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: userId,
+    });
 
-    return this.prisma.$transaction(async (tx) => {
-      const wallet = await tx.wallet.findUnique({
-        where: { userId },
-        include: { ledgerAccount: true },
-      });
+    const orgWallet = await this.walletService.getOrCreateWallet({
+      type: 'ORGANIZATION',
+      id: dto.organizationId,
+    });
 
-      if (!wallet) {
-        throw new NotFoundException('Wallet not found');
-      }
-
+    const result = await this.prisma.$transaction(async (tx) => {
       if (wallet.status !== 'ACTIVE') {
         throw new BadRequestException('Wallet is not active');
       }
@@ -1455,11 +1554,6 @@ export class FinanceService {
       if (wallet.balance < dto.amount) {
         throw new BadRequestException('Insufficient balance');
       }
-
-      // Ensure organization has a wallet
-      const orgWallet = await this.ensureOrganizationWalletExists(
-        dto.organizationId,
-      );
 
       const walletBalanceBefore = wallet.balance;
       const walletBalanceAfter = walletBalanceBefore - dto.amount;
@@ -1599,43 +1693,13 @@ export class FinanceService {
       });
 
       if (dto.dueAssignmentId) {
-        const dueAssignment = await tx.dueAssignment.findUnique({
-          where: { id: dto.dueAssignmentId },
-          include: { due: true },
-        });
-
-        if (dueAssignment && !dueAssignment.isPaid) {
-          const totalPaid = await tx.duePayment.aggregate({
-            where: { assignmentId: dueAssignment.id },
-            _sum: { amount: true },
-          });
-
-          const totalPaidAmount = totalPaid._sum.amount || 0;
-          const isFullyPaid =
-            totalPaidAmount + dto.amount >= dueAssignment.amount;
-
-          await tx.duePayment.create({
-            data: {
-              assignmentId: dueAssignment.id,
-              paymentId: payment.id,
-              amount: dto.amount,
-              paidAt: new Date(),
-            },
-          });
-
-          if (isFullyPaid) {
-            await tx.dueAssignment.update({
-              where: { id: dueAssignment.id },
-              data: {
-                isPaid: true,
-                paidAt: new Date(),
-              },
-            });
-          }
-        }
+        await this.handleDuePayment(
+          tx,
+          dto.dueAssignmentId,
+          payment.id,
+          dto.amount,
+        );
       }
-
-      await this.receiptService.generateReceiptFromPayment(payment.id, userId);
 
       await tx.activityLog.create({
         data: {
@@ -1666,17 +1730,14 @@ export class FinanceService {
         },
       });
 
-      this.eventService.emitWalletDebited({
-        walletId: wallet.id,
-        userId: userId,
-        amount: dto.amount,
-        balance: walletBalanceAfter,
-        previousBalance: walletBalanceBefore,
-        reference: reference,
-        description: dto.description || 'Manual payment',
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: userId,
       });
-
-      await this.cacheService.delete(`wallet:user:${userId}`);
+      await this.walletService.invalidateWalletCache({
+        type: 'ORGANIZATION',
+        id: dto.organizationId,
+      });
 
       this.logger.log(
         `Manual payment processed: ${payment.id} - ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)})`,
@@ -1690,517 +1751,20 @@ export class FinanceService {
         idempotencyKey: idempotencyKey,
       };
     });
-  }
 
-  // ============================================
-  // PENDING PAYMENT STATUS
-  // ============================================
-
-  async getPendingPaymentStatus(pendingPaymentId: string, userId: string) {
-    const pendingPayment = await this.prisma.pendingPayment.findUnique({
-      where: { id: pendingPaymentId },
-    });
-
-    if (!pendingPayment) {
-      throw new NotFoundException('Pending payment not found');
-    }
-
-    if (pendingPayment.userId !== userId) {
-      throw new ForbiddenException('You do not have access to this payment');
-    }
-
-    // If still pending, check with Bachs for updated status
-    if (pendingPayment.status === 'PENDING' && pendingPayment.bachsCheckoutId) {
-      try {
-        const checkout = await this.bachsClient.getCheckoutSession(
-          pendingPayment.bachsCheckoutId,
-        );
-        if (checkout.status === 'COMPLETED') {
-          // Checkout is completed but webhook may not have processed yet
-          this.logger.warn(
-            `Checkout ${pendingPayment.bachsCheckoutId} is completed but pending payment ${pendingPaymentId} is still pending`,
-          );
-        } else if (
-          checkout.status === 'EXPIRED' ||
-          checkout.status === 'CANCELLED'
-        ) {
-          await this.prisma.pendingPayment.update({
-            where: { id: pendingPaymentId },
-            data: {
-              status: checkout.status === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED',
-            },
-          });
-          pendingPayment.status =
-            checkout.status === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED';
-        }
-      } catch (error) {
-        this.logger.error(`Failed to check checkout status: ${error.message}`);
-      }
-    }
-
-    return {
-      id: pendingPayment.id,
-      status: pendingPayment.status,
-      amount: pendingPayment.amount,
-      reference: pendingPayment.reference,
-      checkoutId: pendingPayment.bachsCheckoutId,
-      completedAt: pendingPayment.completedAt,
-      createdAt: pendingPayment.createdAt,
-    };
-  }
-
-  async cancelPendingPayment(pendingPaymentId: string, userId: string) {
-    const pendingPayment = await this.prisma.pendingPayment.findUnique({
-      where: { id: pendingPaymentId },
-    });
-
-    if (!pendingPayment) {
-      throw new NotFoundException('Pending payment not found');
-    }
-
-    if (pendingPayment.userId !== userId) {
-      throw new ForbiddenException('You do not have access to this payment');
-    }
-
-    if (pendingPayment.status !== 'PENDING') {
-      throw new BadRequestException('Payment is not pending');
-    }
-
-    await this.prisma.pendingPayment.update({
-      where: { id: pendingPaymentId },
-      data: {
-        status: 'CANCELLED',
-        metadata: {
-          ...((pendingPayment.metadata as any) || {}),
-          cancelledAt: new Date().toISOString(),
-        },
-      },
-    });
-
-    return { message: 'Payment cancelled successfully' };
-  }
-
-  // ============================================
-  // ORGANIZATION WITHDRAWALS (Admin Only)
-  // ============================================
-
-  async requestOrganizationWithdrawal(
-    userId: string,
-    dto: WithdrawalRequestDto,
-  ) {
-    this.logger.log(
-      `Requesting organization withdrawal for user: ${userId} - Amount: ${dto.amount} Kobo`,
-    );
-
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
+    try {
+      await this.receiptService.generateReceiptFromPayment(
+        result.payment.id,
         userId,
-        organizationId: dto.organizationId,
-        membershipType: 'ADMIN',
-        status: 'ACTIVE',
-      },
-    });
-
-    if (!membership) {
-      throw new ForbiddenException(
-        'You must be an admin of this organization to request withdrawal',
+      );
+      this.logger.log(`Receipt generated for payment ${result.payment.id}`);
+    } catch (error: any) {
+      this.logger.error(
+        `Failed to generate receipt for payment ${result.payment.id}: ${error.message}`,
       );
     }
 
-    const organization = await this.prisma.organization.findUnique({
-      where: { id: dto.organizationId },
-    });
-
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-
-    // Ensure organization has a wallet
-    await this.ensureOrganizationWalletExists(dto.organizationId);
-
-    return this.prisma.$transaction(async (tx) => {
-      const wallet = await tx.wallet.findUnique({
-        where: { organizationId: dto.organizationId },
-        include: { ledgerAccount: true },
-      });
-
-      if (!wallet) {
-        throw new NotFoundException('Organization wallet not found');
-      }
-
-      if (wallet.status !== 'ACTIVE') {
-        throw new BadRequestException('Wallet is not active');
-      }
-
-      if (wallet.balance < dto.amount) {
-        throw new BadRequestException(
-          `Insufficient balance. Available: ₦${(wallet.balance / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        );
-      }
-
-      const balanceBefore = wallet.balance;
-      const balanceAfter = balanceBefore - dto.amount;
-
-      const transaction = await tx.transaction.create({
-        data: {
-          walletId: wallet.id,
-          type: 'DEBIT',
-          amount: dto.amount,
-          fee: 0,
-          netAmount: dto.amount,
-          status: 'PENDING',
-          reference: `WTH_${randomBytes(16).toString('hex').toUpperCase()}`,
-          description: `Withdrawal request by ${userId}`,
-        },
-      });
-
-      await tx.ledgerEntry.create({
-        data: {
-          accountId: wallet.ledgerAccountId!,
-          transactionId: transaction.id,
-          amount: dto.amount,
-          type: 'DEBIT',
-          balanceBefore,
-          balanceAfter,
-          description: `Withdrawal request by ${userId}`,
-        },
-      });
-
-      await tx.wallet.update({
-        where: { id: wallet.id },
-        data: { balance: balanceAfter },
-      });
-
-      await tx.ledgerAccount.update({
-        where: { id: wallet.ledgerAccountId! },
-        data: { balance: balanceAfter },
-      });
-
-      const withdrawal = await tx.withdrawal.create({
-        data: {
-          userId,
-          walletId: wallet.id,
-          transactionId: transaction.id,
-          amount: dto.amount,
-          status: 'PENDING',
-          bankName: dto.bankName,
-          accountNumber: dto.accountNumber,
-          accountName: dto.accountName,
-          reference: transaction.reference,
-          requestedAt: new Date(),
-          metadata: {
-            organizationId: dto.organizationId,
-            organizationName: organization.name,
-            reason: dto.reason,
-          },
-        },
-      });
-
-      await tx.walletHold.create({
-        data: {
-          walletId: wallet.id,
-          amount: dto.amount,
-          reason: `Withdrawal request #${withdrawal.id}`,
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          status: 'ACTIVE',
-        },
-      });
-
-      await tx.activityLog.create({
-        data: {
-          userId,
-          activity: 'ORGANIZATION_WITHDRAWAL_REQUESTED',
-          details: JSON.stringify({
-            withdrawalId: withdrawal.id,
-            organizationId: dto.organizationId,
-            amount: dto.amount,
-            bankName: dto.bankName,
-          }),
-        },
-      });
-
-      await this.cacheService.delete(
-        `wallet:organization:${dto.organizationId}`,
-      );
-
-      this.eventService.emitWithdrawalRequested({
-        withdrawalId: withdrawal.id,
-        userId: userId,
-        organizationId: dto.organizationId,
-        amount: dto.amount,
-        reference: transaction.reference,
-        bankName: dto.bankName,
-      });
-
-      await this.notifyPlatformAdmins('WITHDRAWAL_REQUEST', {
-        organizationId: dto.organizationId,
-        organizationName: organization.name,
-        amount: dto.amount,
-        amountFormatted: `₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        requesterId: userId,
-        withdrawalId: withdrawal.id,
-      });
-
-      this.logger.log(
-        `Organization withdrawal requested: ${withdrawal.id} - ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)})`,
-      );
-      return withdrawal;
-    });
-  }
-
-  async approveOrganizationWithdrawal(
-    withdrawalId: string,
-    adminUserId: string,
-  ) {
-    this.logger.log(`Approving withdrawal ${withdrawalId}`);
-
-    return this.prisma.$transaction(async (tx) => {
-      const withdrawal = await tx.withdrawal.findUnique({
-        where: { id: withdrawalId },
-        include: { wallet: { include: { ledgerAccount: true } } },
-      });
-
-      if (!withdrawal) {
-        throw new NotFoundException('Withdrawal not found');
-      }
-
-      if (withdrawal.status !== 'PENDING') {
-        throw new BadRequestException('Withdrawal is not pending');
-      }
-
-      const admin = await tx.admin.findFirst({
-        where: {
-          userId: adminUserId,
-          status: 'ACTIVE',
-          adminType: 'PLATFORM_ADMIN',
-        },
-      });
-
-      if (!admin) {
-        throw new ForbiddenException(
-          'Only platform admins can approve withdrawals',
-        );
-      }
-
-      const updatedWithdrawal = await tx.withdrawal.update({
-        where: { id: withdrawalId },
-        data: {
-          status: 'COMPLETED',
-          processedAt: new Date(),
-          completedAt: new Date(),
-        },
-      });
-
-      const wallet = withdrawal.wallet;
-      const journalEntry = await this.ledgerService.createJournalEntry({
-        lines: [
-          {
-            accountId: wallet.ledgerAccountId!,
-            type: 'CREDIT' as const,
-            amount: withdrawal.amount,
-            description: `Reversal of withdrawal hold - approved`,
-          },
-          {
-            accountId: wallet.ledgerAccountId!,
-            type: 'DEBIT' as const,
-            amount: withdrawal.amount,
-            description: `Withdrawal completed - ${withdrawal.bankName}`,
-          },
-        ],
-        description: `Withdrawal approved and completed #${withdrawalId}`,
-        withdrawalId: withdrawal.id,
-        transactionId: withdrawal.transactionId!,
-        createdBy: adminUserId,
-      });
-
-      await tx.withdrawal.update({
-        where: { id: withdrawalId },
-        data: { journalEntryId: journalEntry.id },
-      });
-
-      await tx.transaction.update({
-        where: { id: withdrawal.transactionId! },
-        data: { journalEntryId: journalEntry.id, status: 'COMPLETED' },
-      });
-
-      await tx.walletHold.updateMany({
-        where: {
-          walletId: withdrawal.walletId,
-          reason: { contains: `Withdrawal request #${withdrawalId}` },
-          status: 'ACTIVE',
-        },
-        data: {
-          status: 'RELEASED',
-          releasedAt: new Date(),
-        },
-      });
-
-      await tx.activityLog.create({
-        data: {
-          userId: adminUserId,
-          activity: 'ORGANIZATION_WITHDRAWAL_APPROVED',
-          details: JSON.stringify({
-            withdrawalId,
-            organizationId: withdrawal.wallet?.organizationId,
-            amount: withdrawal.amount,
-            journalEntryId: journalEntry.id,
-          }),
-        },
-      });
-
-      this.eventService.emitWithdrawalApproved({
-        withdrawalId: withdrawal.id,
-        userId: withdrawal.userId,
-        amount: withdrawal.amount,
-        reference: withdrawal.reference,
-        processedAt: new Date(),
-      });
-
-      await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_APPROVED', {
-        withdrawalId,
-        amount: withdrawal.amount,
-        amountFormatted: `₦${(withdrawal.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        bankName: withdrawal.bankName,
-      });
-
-      this.logger.log(`Withdrawal approved: ${withdrawalId}`);
-      return updatedWithdrawal;
-    });
-  }
-
-  async rejectOrganizationWithdrawal(
-    withdrawalId: string,
-    adminUserId: string,
-    reason?: string,
-  ) {
-    this.logger.log(`Rejecting withdrawal ${withdrawalId}`);
-
-    return this.prisma.$transaction(async (tx) => {
-      const withdrawal = await tx.withdrawal.findUnique({
-        where: { id: withdrawalId },
-        include: { wallet: { include: { ledgerAccount: true } } },
-      });
-
-      if (!withdrawal) {
-        throw new NotFoundException('Withdrawal not found');
-      }
-
-      if (withdrawal.status !== 'PENDING') {
-        throw new BadRequestException('Withdrawal is not pending');
-      }
-
-      const admin = await tx.admin.findFirst({
-        where: {
-          userId: adminUserId,
-          status: 'ACTIVE',
-          adminType: 'PLATFORM_ADMIN',
-        },
-      });
-
-      if (!admin) {
-        throw new ForbiddenException(
-          'Only platform admins can reject withdrawals',
-        );
-      }
-
-      const updatedWithdrawal = await tx.withdrawal.update({
-        where: { id: withdrawalId },
-        data: {
-          status: 'FAILED',
-          processedAt: new Date(),
-          failedAt: new Date(),
-          failureReason: reason || 'Withdrawal rejected by admin',
-        },
-      });
-
-      const wallet = withdrawal.wallet;
-      const refundBalance = wallet.balance + withdrawal.amount;
-
-      const journalEntry = await this.ledgerService.createJournalEntry({
-        lines: [
-          {
-            accountId: wallet.ledgerAccountId!,
-            type: 'CREDIT' as const,
-            amount: withdrawal.amount,
-            description: `Refund for rejected withdrawal #${withdrawalId}`,
-          },
-          {
-            accountId: wallet.ledgerAccountId!,
-            type: 'DEBIT' as const,
-            amount: withdrawal.amount,
-            description: `Reversal of withdrawal hold - rejected`,
-          },
-        ],
-        description: `Withdrawal rejected and refunded #${withdrawalId}`,
-        withdrawalId: withdrawal.id,
-        transactionId: withdrawal.transactionId!,
-        createdBy: adminUserId,
-      });
-
-      await tx.withdrawal.update({
-        where: { id: withdrawalId },
-        data: { journalEntryId: journalEntry.id },
-      });
-
-      await tx.wallet.update({
-        where: { id: withdrawal.walletId },
-        data: { balance: refundBalance },
-      });
-
-      await tx.ledgerAccount.update({
-        where: { id: wallet.ledgerAccountId! },
-        data: { balance: refundBalance },
-      });
-
-      await tx.transaction.update({
-        where: { id: withdrawal.transactionId! },
-        data: { status: 'FAILED', journalEntryId: journalEntry.id },
-      });
-
-      await tx.walletHold.updateMany({
-        where: {
-          walletId: withdrawal.walletId,
-          reason: { contains: `Withdrawal request #${withdrawalId}` },
-          status: 'ACTIVE',
-        },
-        data: {
-          status: 'RELEASED',
-          releasedAt: new Date(),
-        },
-      });
-
-      await tx.activityLog.create({
-        data: {
-          userId: adminUserId,
-          activity: 'ORGANIZATION_WITHDRAWAL_REJECTED',
-          details: JSON.stringify({
-            withdrawalId,
-            organizationId: withdrawal.wallet?.organizationId,
-            amount: withdrawal.amount,
-            reason,
-            journalEntryId: journalEntry.id,
-          }),
-        },
-      });
-
-      this.eventService.emitWithdrawalRejected({
-        withdrawalId: withdrawal.id,
-        userId: withdrawal.userId,
-        amount: withdrawal.amount,
-        reference: withdrawal.reference,
-        reason: reason || 'Withdrawal rejected by admin',
-      });
-
-      await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_REJECTED', {
-        withdrawalId,
-        amount: withdrawal.amount,
-        amountFormatted: `₦${(withdrawal.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        reason: reason || 'Withdrawal rejected by admin',
-      });
-
-      this.logger.log(`Withdrawal rejected: ${withdrawalId}`);
-      return updatedWithdrawal;
-    });
+    return result;
   }
 
   // ============================================
@@ -2212,8 +1776,10 @@ export class FinanceService {
       `Creating savings goal for user: ${userId} - Target: ${dto.targetAmount} Kobo`,
     );
 
-    // Ensure user has a wallet
-    await this.ensureWalletExists(userId);
+    await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: userId,
+    });
 
     const goal = await this.prisma.savingsGoal.create({
       data: {
@@ -2258,17 +1824,10 @@ export class FinanceService {
     );
 
     return this.prisma.$transaction(async (tx) => {
-      // Ensure user has a wallet
-      await this.ensureWalletExists(userId);
-
-      const wallet = await tx.wallet.findUnique({
-        where: { userId },
-        include: { ledgerAccount: true },
+      const wallet = await this.walletService.getOrCreateWallet({
+        type: 'USER',
+        id: userId,
       });
-
-      if (!wallet) {
-        throw new NotFoundException('Wallet not found');
-      }
 
       if (wallet.status !== 'ACTIVE') {
         throw new BadRequestException('Wallet is not active');
@@ -2369,17 +1928,10 @@ export class FinanceService {
         reference: transaction.reference,
       });
 
-      this.eventService.emitWalletDebited({
-        walletId: wallet.id,
-        userId: userId,
-        amount: dto.amount,
-        balance: walletBalanceAfter,
-        previousBalance: walletBalanceBefore,
-        reference: transaction.reference,
-        description: `Savings deposit: ${goal.title}`,
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: userId,
       });
-
-      await this.cacheService.delete(`wallet:user:${userId}`);
 
       this.logger.log(
         `Savings deposit completed: ${dto.goalId} - ${dto.amount} Kobo (₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)})`,
@@ -2389,8 +1941,10 @@ export class FinanceService {
   }
 
   async getSavingsGoals(userId: string) {
-    // Ensure user has a wallet
-    await this.ensureWalletExists(userId);
+    await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: userId,
+    });
 
     const goals = await this.prisma.savingsGoal.findMany({
       where: { userId },
@@ -2404,10 +1958,6 @@ export class FinanceService {
 
     return goals;
   }
-
-  // ============================================
-  // FINANCIAL REPORTS
-  // ============================================
 
   async getFinancialOverview(institutionId?: string) {
     const where: any = {};
@@ -2513,668 +2063,790 @@ export class FinanceService {
   }
 
   // ============================================
-  // ORGANIZATION FINANCIAL OVERVIEW
+  // USER WITHDRAWAL WITH FEE
   // ============================================
 
-  async getOrganizationFinancialOverview(
-    organizationId: string,
-    userId: string,
-  ) {
+  async requestUserWithdrawal(userId: string, dto: UserWithdrawalRequestDto) {
     this.logger.log(
-      `Getting financial overview for organization: ${organizationId}`,
+      `Requesting user withdrawal for user: ${userId} - Amount: ${dto.amount} Kobo`,
     );
 
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId,
-        status: 'ACTIVE',
-        membershipType: { in: ['ADMIN', 'STAFF'] },
-      },
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: userId,
     });
 
-    if (!membership) {
-      throw new ForbiddenException(
-        "You do not have access to this organization's financial data",
-      );
-    }
-
-    // Ensure organization has a wallet
-    await this.ensureOrganizationWalletExists(organizationId);
-
-    const organization = await this.prisma.organization.findUnique({
-      where: { id: organizationId },
-      include: {
-        institution: true,
-        wallet: {
-          include: {
-            ledgerAccount: true,
-          },
-        },
-      },
-    });
-
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-
-    const wallet = organization.wallet;
-
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    const recentTransactions = await this.prisma.transaction.findMany({
-      where: {
-        walletId: wallet?.id,
-        createdAt: { gte: thirtyDaysAgo },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
-      include: {
-        journalEntry: {
-          include: {
-            lines: true,
-          },
-        },
-      },
-    });
-
-    const [totalDues, paidDues, pendingDues, overdueDues] = await Promise.all([
-      this.prisma.due.count({
-        where: {
-          organizationId,
-          status: 'ACTIVE',
-        },
-      }),
-      this.prisma.dueAssignment.count({
-        where: {
-          due: { organizationId },
-          isPaid: true,
-        },
-      }),
-      this.prisma.dueAssignment.count({
-        where: {
-          due: { organizationId, status: 'ACTIVE' },
-          isPaid: false,
-        },
-      }),
-      this.prisma.dueAssignment.count({
-        where: {
-          due: {
-            organizationId,
-            status: 'ACTIVE',
-            dueDate: { lt: new Date() },
-          },
-          isPaid: false,
-        },
-      }),
-    ]);
-
-    const recentPayments = await this.prisma.payment.findMany({
-      where: {
-        organizationId,
-        status: 'COMPLETED',
-      },
-      take: 10,
-      orderBy: { createdAt: 'desc' },
-      include: {
-        payer: {
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            profile: true,
-          },
-        },
-        journalEntry: {
-          include: {
-            lines: true,
-          },
-        },
-      },
-    });
-
-    const totalRevenue = await this.prisma.payment.aggregate({
-      where: {
-        organizationId,
-        status: 'COMPLETED',
-      },
-      _sum: { amount: true },
-    });
-
-    const revenueLast30Days = await this.prisma.payment.aggregate({
-      where: {
-        organizationId,
-        status: 'COMPLETED',
-        createdAt: { gte: thirtyDaysAgo },
-      },
-      _sum: { amount: true },
-    });
-
-    const thirtyDaysFromNow = new Date();
-    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-
-    const upcomingDues = await this.prisma.due.findMany({
-      where: {
-        organizationId,
-        status: 'ACTIVE',
-        dueDate: { gte: new Date(), lte: thirtyDaysFromNow },
-      },
-      orderBy: { dueDate: 'asc' },
-      take: 10,
-    });
-
-    const upcomingDuesWithPending = await Promise.all(
-      upcomingDues.map(async (due) => {
-        const pendingCount = await this.prisma.dueAssignment.count({
-          where: {
-            dueId: due.id,
-            isPaid: false,
-          },
-        });
-        return {
-          ...due,
-          pendingCount,
-        };
-      }),
+    const bankAccount = await this.bankAccountService.getBankAccountById(
+      dto.bankAccountId,
+      userId,
     );
 
-    const memberCount = await this.prisma.organizationMembership.count({
-      where: {
-        organizationId,
-        status: 'ACTIVE',
-      },
-    });
+    const charges = this.ledgerService.calculateWithdrawalCharges(dto.amount);
+    const totalAmount = dto.amount + charges.fee;
+    const netAmount = dto.amount;
 
-    const studentMemberCount = await this.prisma.organizationMembership.count({
-      where: {
-        organizationId,
-        status: 'ACTIVE',
-        membershipType: 'STUDENT',
-      },
-    });
-
-    const activeDuesAssignments = await this.prisma.dueAssignment.count({
-      where: {
-        due: { organizationId, status: 'ACTIVE' },
-        isPaid: false,
-      },
-    });
-
-    const totalDueAmount = await this.prisma.due.aggregate({
-      where: {
-        organizationId,
-        status: 'ACTIVE',
-      },
-      _sum: { amount: true },
-    });
-
-    const totalCollected = await this.prisma.duePayment.aggregate({
-      where: {
-        assignment: {
-          due: { organizationId },
-        },
-      },
-      _sum: { amount: true },
-    });
-
-    const monthlyRevenue = await this.getMonthlyRevenue(organizationId);
-
-    const totalDueAmountValue = totalDueAmount._sum.amount || 0;
-    const totalCollectedValue = totalCollected._sum.amount || 0;
-
-    return {
-      organization: {
-        id: organization.id,
-        name: organization.name,
-        slug: organization.slug,
-        institution: organization.institution?.name,
-      },
-      wallet: {
-        balance: wallet?.balance || 0,
-        balanceFormatted: `₦${((wallet?.balance || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        heldBalance: wallet?.heldBalance || 0,
-        heldBalanceFormatted: `₦${((wallet?.heldBalance || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        ledgerAccountId: wallet?.ledgerAccountId,
-      },
-      memberStats: {
-        total: memberCount,
-        students: studentMemberCount,
-        admins: memberCount - studentMemberCount,
-      },
-      dueStats: {
-        total: totalDues,
-        paid: paidDues,
-        pending: pendingDues,
-        overdue: overdueDues,
-        activeAssignments: activeDuesAssignments,
-        totalAmount: totalDueAmountValue,
-        totalAmountFormatted: `₦${(totalDueAmountValue / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        totalCollected: totalCollectedValue,
-        totalCollectedFormatted: `₦${(totalCollectedValue / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        collectionRate:
-          totalDueAmountValue > 0
-            ? Math.round((totalCollectedValue / totalDueAmountValue) * 100)
-            : 0,
-      },
-      revenue: {
-        total: totalRevenue._sum.amount || 0,
-        totalFormatted: `₦${((totalRevenue._sum.amount || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        last30Days: revenueLast30Days._sum.amount || 0,
-        last30DaysFormatted: `₦${((revenueLast30Days._sum.amount || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        monthly: monthlyRevenue,
-      },
-      recentTransactions: recentTransactions.map((t) => ({
-        id: t.id,
-        type: t.type,
-        amount: Number(t.amount),
-        amountFormatted: `₦${(Number(t.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        description: t.description,
-        status: t.status,
-        createdAt: t.createdAt,
-        journalEntryId: t.journalEntryId,
-      })),
-      recentPayments: recentPayments.map((p) => ({
-        id: p.id,
-        amount: Number(p.amount),
-        amountFormatted: `₦${(Number(p.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        payer: p.payer?.username || 'Unknown',
-        payerName: p.payer?.profile?.firstName
-          ? `${p.payer.profile.firstName} ${p.payer.profile.lastName || ''}`
-          : p.payer?.username || 'Unknown',
-        description: p.description,
-        createdAt: p.createdAt,
-        journalEntryId: p.journalEntryId,
-      })),
-      upcomingDues: upcomingDuesWithPending.map((d) => ({
-        id: d.id,
-        name: d.name,
-        amount: Number(d.amount),
-        amountFormatted: `₦${(Number(d.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        dueDate: d.dueDate,
-        pendingCount: d.pendingCount,
-      })),
-    };
-  }
-
-  private async getMonthlyRevenue(organizationId: string) {
-    const months: Array<{
-      month: string;
-      year: number;
-      amount: number;
-      amountFormatted: string;
-    }> = [];
-    const currentDate = new Date();
-
-    for (let i = 0; i < 6; i++) {
-      const date = new Date(currentDate);
-      date.setMonth(date.getMonth() - i);
-      const month = date.getMonth();
-      const year = date.getFullYear();
-
-      const startDate = new Date(year, month, 1);
-      const endDate = new Date(year, month + 1, 0);
-
-      const revenue = await this.prisma.payment.aggregate({
-        where: {
-          organizationId,
-          status: 'COMPLETED',
-          paidAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-        },
-        _sum: { amount: true },
-      });
-
-      months.push({
-        month: startDate.toLocaleString('default', { month: 'short' }),
-        year,
-        amount: Number(revenue._sum.amount || 0),
-        amountFormatted: `₦${((revenue._sum.amount || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-      });
-    }
-
-    return months.reverse();
-  }
-
-  // ============================================
-  // ORGANIZATION FINANCE DASHBOARD
-  // ============================================
-
-  async getOrganizationFinanceDashboard(
-    organizationId: string,
-    userId: string,
-  ) {
-    this.logger.log(
-      `Getting finance dashboard for organization: ${organizationId}`,
-    );
-
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId,
-        status: 'ACTIVE',
-        membershipType: { in: ['ADMIN', 'STAFF'] },
-      },
-    });
-
-    if (!membership) {
-      throw new ForbiddenException(
-        "You do not have access to this organization's financial data",
-      );
-    }
-
-    // Ensure organization has a wallet
-    await this.ensureOrganizationWalletExists(organizationId);
-
-    const organization = await this.prisma.organization.findUnique({
-      where: { id: organizationId },
-      include: {
-        wallet: {
-          include: {
-            ledgerAccount: true,
-          },
-        },
-      },
-    });
-
-    if (!organization) {
-      throw new NotFoundException('Organization not found');
-    }
-
-    const transactions = await this.prisma.transaction.findMany({
-      where: {
-        walletId: organization.wallet?.id,
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-      include: {
-        journalEntry: {
-          include: {
-            lines: true,
-          },
-        },
-      },
-    });
-
-    const payments = await this.prisma.payment.findMany({
-      where: {
-        organizationId,
-      },
-      include: {
-        payer: {
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            profile: true,
-          },
-        },
-        journalEntry: {
-          include: {
-            lines: true,
-          },
-        },
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
-    });
-
-    const dueAssignments = await this.prisma.dueAssignment.findMany({
-      where: {
-        due: { organizationId },
-      },
-      include: {
-        student: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                email: true,
-                username: true,
-                profile: true,
-              },
-            },
-          },
-        },
-        due: true,
-        duePayments: {
-          include: {
-            payment: {
-              include: {
-                journalEntry: {
-                  include: {
-                    lines: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      orderBy: { due: { dueDate: 'asc' } },
-      take: 20,
-    });
-
-    const topContributors = await this.prisma.payment.groupBy({
-      by: ['payerId'],
-      where: {
-        organizationId,
-        status: 'COMPLETED',
-      },
-      _sum: { amount: true },
-      orderBy: { _sum: { amount: 'desc' } },
-      take: 10,
-    });
-
-    const contributorDetails = await Promise.all(
-      topContributors.map(async (contrib) => {
-        const user = await this.prisma.user.findUnique({
-          where: { id: contrib.payerId },
-          select: {
-            id: true,
-            email: true,
-            username: true,
-            profile: true,
-          },
-        });
-        return {
-          userId: contrib.payerId,
-          totalAmount: Number(contrib._sum.amount || 0),
-          totalAmountFormatted: `₦${((contrib._sum.amount || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-          user,
-        };
-      }),
-    );
-
-    const overdueDues = await this.prisma.dueAssignment.findMany({
-      where: {
-        due: {
-          organizationId,
-          status: 'ACTIVE',
-          dueDate: { lt: new Date() },
-        },
-        isPaid: false,
-      },
-      include: {
-        student: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                email: true,
-                username: true,
-                profile: true,
-              },
-            },
-          },
-        },
-        due: true,
-      },
-      take: 20,
-      orderBy: { due: { dueDate: 'asc' } },
-    });
-
-    const sevenDaysFromNow = new Date();
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
-
-    const duesDueSoon = await this.prisma.dueAssignment.findMany({
-      where: {
-        due: {
-          organizationId,
-          status: 'ACTIVE',
-          dueDate: { gte: new Date(), lte: sevenDaysFromNow },
-        },
-        isPaid: false,
-      },
-      include: {
-        student: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                email: true,
-                username: true,
-                profile: true,
-              },
-            },
-          },
-        },
-        due: true,
-      },
-      take: 20,
-      orderBy: { due: { dueDate: 'asc' } },
-    });
-
-    return {
-      organization: {
-        id: organization.id,
-        name: organization.name,
-        slug: organization.slug,
-      },
-      wallet: {
-        balance: organization.wallet?.balance || 0,
-        balanceFormatted: `₦${((organization.wallet?.balance || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        heldBalance: organization.wallet?.heldBalance || 0,
-        heldBalanceFormatted: `₦${((organization.wallet?.heldBalance || 0) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        ledgerAccountId: organization.wallet?.ledgerAccountId,
-      },
-      recentTransactions: transactions.map((t) => ({
-        id: t.id,
-        type: t.type,
-        amount: Number(t.amount),
-        amountFormatted: `₦${(Number(t.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        description: t.description,
-        status: t.status,
-        createdAt: t.createdAt,
-        journalEntryId: t.journalEntryId,
-      })),
-      recentPayments: payments.map((p) => ({
-        id: p.id,
-        amount: Number(p.amount),
-        amountFormatted: `₦${(Number(p.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        payer: p.payer?.username || 'Unknown',
-        payerName: p.payer?.profile?.firstName
-          ? `${p.payer.profile.firstName} ${p.payer.profile.lastName || ''}`
-          : p.payer?.username || 'Unknown',
-        description: p.description,
-        createdAt: p.createdAt,
-        journalEntryId: p.journalEntryId,
-      })),
-      dueAssignments: dueAssignments.map((da) => ({
-        id: da.id,
-        student: da.student?.user?.username || 'Unknown',
-        studentName: da.student?.user?.profile?.firstName
-          ? `${da.student.user.profile.firstName} ${da.student.user.profile.lastName || ''}`
-          : da.student?.user?.username || 'Unknown',
-        amount: Number(da.amount),
-        amountFormatted: `₦${(Number(da.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        dueName: da.due?.name,
-        dueDate: da.due?.dueDate,
-        isPaid: da.isPaid,
-        paidAt: da.paidAt,
-        payments: da.duePayments.map((dp) => ({
-          amount: Number(dp.amount),
-          amountFormatted: `₦${(Number(dp.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-          paidAt: dp.paidAt,
-          journalEntryId: dp.payment?.journalEntryId,
-        })),
-      })),
-      topContributors: contributorDetails,
-      overdueDues: overdueDues.map((da) => ({
-        id: da.id,
-        student: da.student?.user?.username || 'Unknown',
-        studentName: da.student?.user?.profile?.firstName
-          ? `${da.student.user.profile.firstName} ${da.student.user.profile.lastName || ''}`
-          : da.student?.user?.username || 'Unknown',
-        amount: Number(da.amount),
-        amountFormatted: `₦${(Number(da.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        dueName: da.due?.name,
-        dueDate: da.due?.dueDate,
-        daysOverdue: Math.floor(
-          (new Date().getTime() -
-            new Date(da.due?.dueDate || new Date()).getTime()) /
-            (1000 * 60 * 60 * 24),
-        ),
-      })),
-      duesDueSoon: duesDueSoon.map((da) => ({
-        id: da.id,
-        student: da.student?.user?.username || 'Unknown',
-        studentName: da.student?.user?.profile?.firstName
-          ? `${da.student.user.profile.firstName} ${da.student.user.profile.lastName || ''}`
-          : da.student?.user?.username || 'Unknown',
-        amount: Number(da.amount),
-        amountFormatted: `₦${(Number(da.amount) / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        dueName: da.due?.name,
-        dueDate: da.due?.dueDate,
-        daysUntilDue: Math.floor(
-          (new Date(da.due?.dueDate || new Date()).getTime() -
-            new Date().getTime()) /
-            (1000 * 60 * 60 * 24),
-        ),
-      })),
-    };
-  }
-
-  // ============================================
-  // CACHE INVALIDATION HELPERS
-  // ============================================
-
-  async invalidateFinanceCache(userId?: string): Promise<void> {
-    try {
-      await this.cacheService.invalidateByTag('finance');
-      await this.cacheService.invalidateByTag('wallet');
-      await this.cacheService.invalidateByTag('transactions');
-      await this.cacheService.invalidateByTag('dues');
-      await this.cacheService.invalidateByTag('savings');
-      await this.cacheService.invalidateByTag('receipts');
-      await this.cacheService.invalidateByTag('ledger');
-      await this.cacheService.invalidateByTag('reports');
-
-      if (userId) {
-        await this.cacheService.invalidateByTag(`user:${userId}`);
-        await this.cacheService.delete(`wallet:user:${userId}`);
-        await this.cacheService.delete(`transactions:user:${userId}`);
-        await this.cacheService.delete(`savings:user:${userId}`);
-        await this.cacheService.delete(`receipts:user:${userId}`);
-        await this.cacheService.invalidatePattern(`wallet:user:${userId}:*`);
-        await this.cacheService.invalidatePattern(
-          `transactions:user:${userId}:*`,
+    return this.prisma.$transaction(async (tx) => {
+      if (wallet.balance < totalAmount) {
+        throw new BadRequestException(
+          `Insufficient balance. Need: ₦${(totalAmount / this.KOBO_PER_NAIRA).toFixed(2)}, Available: ₦${(wallet.balance / this.KOBO_PER_NAIRA).toFixed(2)}`,
         );
       }
 
-      this.logger.log(
-        `Finance cache invalidated${userId ? ` for user: ${userId}` : ''}`,
+      const withdrawal = await tx.withdrawal.create({
+        data: {
+          userId,
+          walletId: wallet.id,
+          amount: dto.amount,
+          fee: charges.fee,
+          netAmount: netAmount,
+          status: 'PENDING',
+          bankName: bankAccount.bankName,
+          accountNumber: bankAccount.accountNumber,
+          accountName: bankAccount.accountName,
+          reference: `WTH_${randomBytes(16).toString('hex').toUpperCase()}`,
+          requestedAt: new Date(),
+          metadata: {
+            type: 'USER_WITHDRAWAL',
+            bankAccountId: bankAccount.id,
+            reason: dto.reason,
+            charges,
+          },
+        },
+      });
+
+      await tx.walletHold.create({
+        data: {
+          walletId: wallet.id,
+          amount: totalAmount,
+          reason: `Withdrawal request #${withdrawal.id}`,
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          status: 'ACTIVE',
+        },
+      });
+
+      await tx.wallet.update({
+        where: { id: wallet.id },
+        data: {
+          heldBalance: wallet.heldBalance + totalAmount,
+        },
+      });
+
+      await tx.activityLog.create({
+        data: {
+          userId,
+          activity: 'USER_WITHDRAWAL_REQUESTED',
+          details: JSON.stringify({
+            withdrawalId: withdrawal.id,
+            amount: dto.amount,
+            fee: charges.fee,
+            totalAmount,
+            bankAccountId: bankAccount.id,
+          }),
+        },
+      });
+
+      await this.notifyPlatformAdmins('USER_WITHDRAWAL_REQUEST', {
+        userId,
+        amount: dto.amount,
+        fee: charges.fee,
+        totalAmount,
+        amountFormatted: `₦${(dto.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        bankName: bankAccount.bankName,
+        accountNumber: bankAccount.accountNumber,
+        withdrawalId: withdrawal.id,
+      });
+
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: userId,
+      });
+
+      return withdrawal;
+    });
+  }
+
+  // ============================================
+  // PLATFORM WITHDRAWAL
+  // ============================================
+
+  async requestPlatformWithdrawal(
+    userId: string,
+    dto: PlatformWithdrawalRequestDto,
+  ) {
+    this.logger.log(
+      `Requesting platform withdrawal by admin: ${userId} - Amount: ${dto.amount} Kobo`,
+    );
+
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (!isPlatformAdmin) {
+      throw new ForbiddenException(
+        'Only platform admins can request platform withdrawals',
       );
+    }
+
+    const wallet = await this.walletService.getOrCreateWallet({
+      type: 'PLATFORM',
+    });
+
+    const bankAccount = await this.bankAccountService.getBankAccountById(
+      dto.bankAccountId,
+      userId,
+    );
+
+    const charges = this.ledgerService.calculateWithdrawalCharges(dto.amount);
+    const totalAmount = dto.amount + charges.fee;
+
+    return this.prisma.$transaction(async (tx) => {
+      if (wallet.balance < totalAmount) {
+        throw new BadRequestException(
+          `Insufficient platform balance. Available: ₦${(wallet.balance / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        );
+      }
+
+      const withdrawal = await tx.withdrawal.create({
+        data: {
+          userId,
+          walletId: wallet.id,
+          amount: dto.amount,
+          fee: charges.fee,
+          netAmount: dto.amount,
+          status: 'PENDING',
+          bankName: bankAccount.bankName,
+          accountNumber: bankAccount.accountNumber,
+          accountName: bankAccount.accountName,
+          reference: `PLATFORM_WTH_${randomBytes(16).toString('hex').toUpperCase()}`,
+          requestedAt: new Date(),
+          metadata: {
+            type: 'PLATFORM_WITHDRAWAL',
+            bankAccountId: bankAccount.id,
+            reason: dto.reason,
+            requestedBy: userId,
+            charges,
+          },
+        },
+      });
+
+      await tx.walletHold.create({
+        data: {
+          walletId: wallet.id,
+          amount: totalAmount,
+          reason: `Platform withdrawal request #${withdrawal.id}`,
+          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+          status: 'ACTIVE',
+        },
+      });
+
+      await tx.wallet.update({
+        where: { id: wallet.id },
+        data: {
+          heldBalance: wallet.heldBalance + totalAmount,
+        },
+      });
+
+      await tx.activityLog.create({
+        data: {
+          userId,
+          activity: 'PLATFORM_WITHDRAWAL_REQUESTED',
+          details: JSON.stringify({
+            withdrawalId: withdrawal.id,
+            amount: dto.amount,
+            fee: charges.fee,
+            totalAmount,
+            bankAccountId: bankAccount.id,
+          }),
+        },
+      });
+
+      await this.walletService.invalidateWalletCache({
+        type: 'PLATFORM',
+      });
+
+      return withdrawal;
+    });
+  }
+
+  // ============================================
+  // APPROVE USER WITHDRAWAL
+  // ============================================
+
+  async approveUserWithdrawal(withdrawalId: string, adminUserId: string) {
+    this.logger.log(`Approving user withdrawal: ${withdrawalId}`);
+
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId: adminUserId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (!isPlatformAdmin) {
+      throw new ForbiddenException(
+        'Only platform admins can approve withdrawals',
+      );
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const withdrawal = await tx.withdrawal.findUnique({
+        where: { id: withdrawalId },
+        include: { wallet: { include: { ledgerAccount: true } } },
+      });
+
+      if (!withdrawal) {
+        throw new NotFoundException('Withdrawal not found');
+      }
+
+      if (withdrawal.status !== 'PENDING') {
+        throw new BadRequestException('Withdrawal is not pending');
+      }
+
+      const totalAmount = withdrawal.amount + (withdrawal.fee || 0);
+
+      const updatedWithdrawal = await tx.withdrawal.update({
+        where: { id: withdrawalId },
+        data: {
+          status: 'PROCESSING',
+          processedAt: new Date(),
+        },
+      });
+
+      const journalLines = [
+        {
+          accountId: withdrawal.wallet.ledgerAccountId!,
+          type: 'DEBIT' as const,
+          amount: totalAmount,
+          description: `Withdrawal to ${withdrawal.bankName} - ${withdrawal.accountNumber}`,
+        },
+      ];
+
+      const journalEntry = await this.ledgerService.createJournalEntry({
+        lines: journalLines,
+        description: `Withdrawal #${withdrawalId}`,
+        withdrawalId: withdrawal.id,
+        createdBy: adminUserId,
+      });
+
+      await tx.withdrawal.update({
+        where: { id: withdrawalId },
+        data: { journalEntryId: journalEntry.id },
+      });
+
+      if (withdrawal.fee > 0) {
+        const platformWallet = await this.walletService.getOrCreateWallet({
+          type: 'PLATFORM',
+        });
+
+        if (platformWallet) {
+          await tx.wallet.update({
+            where: { id: platformWallet.id },
+            data: {
+              balance: platformWallet.balance + withdrawal.fee,
+            },
+          });
+
+          if (platformWallet.ledgerAccount) {
+            await tx.ledgerAccount.update({
+              where: { id: platformWallet.ledgerAccountId! },
+              data: {
+                balance: platformWallet.ledgerAccount.balance + withdrawal.fee,
+              },
+            });
+          }
+        }
+      }
+
+      await tx.walletHold.updateMany({
+        where: {
+          walletId: withdrawal.walletId,
+          reason: { contains: `Withdrawal request #${withdrawalId}` },
+          status: 'ACTIVE',
+        },
+        data: {
+          status: 'RELEASED',
+          releasedAt: new Date(),
+        },
+      });
+
+      await tx.wallet.update({
+        where: { id: withdrawal.walletId },
+        data: {
+          balance: withdrawal.wallet.balance - totalAmount,
+          heldBalance: Math.max(
+            0,
+            (withdrawal.wallet.heldBalance || 0) - totalAmount,
+          ),
+        },
+      });
+
+      if (withdrawal.wallet.ledgerAccount) {
+        await tx.ledgerAccount.update({
+          where: { id: withdrawal.wallet.ledgerAccountId! },
+          data: {
+            balance: withdrawal.wallet.ledgerAccount.balance - totalAmount,
+          },
+        });
+      }
+
+      await tx.activityLog.create({
+        data: {
+          userId: adminUserId,
+          activity: 'USER_WITHDRAWAL_APPROVED',
+          details: JSON.stringify({
+            withdrawalId,
+            amount: withdrawal.amount,
+            fee: withdrawal.fee || 0,
+            journalEntryId: journalEntry.id,
+          }),
+        },
+      });
+
+      await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_APPROVED', {
+        withdrawalId,
+        amount: withdrawal.amount,
+        fee: withdrawal.fee || 0,
+        totalAmount,
+        amountFormatted: `₦${(withdrawal.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        bankName: withdrawal.bankName,
+      });
+
+      await this.triggerWithdrawalTransfer(withdrawalId);
+
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: withdrawal.userId,
+      });
+
+      return updatedWithdrawal;
+    });
+  }
+
+  // ============================================
+  // APPROVE PLATFORM WITHDRAWAL
+  // ============================================
+
+  async approvePlatformWithdrawal(withdrawalId: string, adminUserId: string) {
+    this.logger.log(`Approving platform withdrawal: ${withdrawalId}`);
+
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId: adminUserId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (!isPlatformAdmin) {
+      throw new ForbiddenException(
+        'Only platform admins can approve platform withdrawals',
+      );
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const withdrawal = await tx.withdrawal.findUnique({
+        where: { id: withdrawalId },
+        include: { wallet: { include: { ledgerAccount: true } } },
+      });
+
+      if (!withdrawal) {
+        throw new NotFoundException('Withdrawal not found');
+      }
+
+      if (withdrawal.status !== 'PENDING') {
+        throw new BadRequestException('Withdrawal is not pending');
+      }
+
+      const metadata = withdrawal.metadata as any;
+      const withdrawalType = metadata?.type;
+
+      if (
+        withdrawal.userId === adminUserId &&
+        withdrawalType === 'PLATFORM_WITHDRAWAL'
+      ) {
+        throw new BadRequestException(
+          'You cannot approve your own withdrawal request',
+        );
+      }
+
+      const totalAmount = withdrawal.amount + (withdrawal.fee || 0);
+
+      const updatedWithdrawal = await tx.withdrawal.update({
+        where: { id: withdrawalId },
+        data: {
+          status: 'PROCESSING',
+          processedAt: new Date(),
+        },
+      });
+
+      const journalLines = [
+        {
+          accountId: withdrawal.wallet.ledgerAccountId!,
+          type: 'DEBIT' as const,
+          amount: totalAmount,
+          description: `Platform withdrawal to ${withdrawal.bankName} - ${withdrawal.accountNumber}`,
+        },
+      ];
+
+      const journalEntry = await this.ledgerService.createJournalEntry({
+        lines: journalLines,
+        description: `Platform withdrawal #${withdrawalId}`,
+        withdrawalId: withdrawal.id,
+        createdBy: adminUserId,
+      });
+
+      await tx.withdrawal.update({
+        where: { id: withdrawalId },
+        data: { journalEntryId: journalEntry.id },
+      });
+
+      await tx.walletHold.updateMany({
+        where: {
+          walletId: withdrawal.walletId,
+          reason: { contains: `Platform withdrawal request #${withdrawalId}` },
+          status: 'ACTIVE',
+        },
+        data: {
+          status: 'RELEASED',
+          releasedAt: new Date(),
+        },
+      });
+
+      await tx.wallet.update({
+        where: { id: withdrawal.walletId },
+        data: {
+          balance: withdrawal.wallet.balance - totalAmount,
+          heldBalance: Math.max(
+            0,
+            (withdrawal.wallet.heldBalance || 0) - totalAmount,
+          ),
+        },
+      });
+
+      if (withdrawal.wallet.ledgerAccount) {
+        await tx.ledgerAccount.update({
+          where: { id: withdrawal.wallet.ledgerAccountId! },
+          data: {
+            balance: withdrawal.wallet.ledgerAccount.balance - totalAmount,
+          },
+        });
+      }
+
+      await tx.activityLog.create({
+        data: {
+          userId: adminUserId,
+          activity: 'PLATFORM_WITHDRAWAL_APPROVED',
+          details: JSON.stringify({
+            withdrawalId,
+            amount: withdrawal.amount,
+            fee: withdrawal.fee || 0,
+            journalEntryId: journalEntry.id,
+          }),
+        },
+      });
+
+      await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_APPROVED', {
+        withdrawalId,
+        amount: withdrawal.amount,
+        fee: withdrawal.fee || 0,
+        totalAmount,
+        amountFormatted: `₦${(withdrawal.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        bankName: withdrawal.bankName,
+        type: 'PLATFORM',
+      });
+
+      await this.triggerWithdrawalTransfer(withdrawalId);
+
+      await this.walletService.invalidateWalletCache({
+        type: 'PLATFORM',
+      });
+
+      return updatedWithdrawal;
+    });
+  }
+
+  // ============================================
+  // TRIGGER WITHDRAWAL TRANSFER
+  // ============================================
+
+  private async triggerWithdrawalTransfer(withdrawalId: string) {
+    try {
+      const withdrawal = await this.prisma.withdrawal.findUnique({
+        where: { id: withdrawalId },
+      });
+
+      if (!withdrawal) {
+        throw new NotFoundException('Withdrawal not found');
+      }
+
+      this.logger.log(`Triggering withdrawal transfer for: ${withdrawalId}`);
+
+      await this.prisma.withdrawal.update({
+        where: { id: withdrawalId },
+        data: {
+          webhookStatus: 'PENDING',
+          webhookAttempts: 0,
+        },
+      });
     } catch (error) {
-      this.logger.error(`Failed to invalidate finance cache: ${error.message}`);
+      this.logger.error(
+        `Failed to trigger withdrawal transfer: ${error.message}`,
+      );
     }
   }
 
   // ============================================
-  // NOTIFICATION HELPERS
+  // REJECT USER WITHDRAWAL
   // ============================================
+
+  async rejectUserWithdrawal(
+    withdrawalId: string,
+    adminUserId: string,
+    reason?: string,
+  ) {
+    this.logger.log(`Rejecting user withdrawal: ${withdrawalId}`);
+
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId: adminUserId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (!isPlatformAdmin) {
+      throw new ForbiddenException(
+        'Only platform admins can reject withdrawals',
+      );
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const withdrawal = await tx.withdrawal.findUnique({
+        where: { id: withdrawalId },
+        include: { wallet: { include: { ledgerAccount: true } } },
+      });
+
+      if (!withdrawal) {
+        throw new NotFoundException('Withdrawal not found');
+      }
+
+      if (withdrawal.status !== 'PENDING') {
+        throw new BadRequestException('Withdrawal is not pending');
+      }
+
+      const totalAmount = withdrawal.amount + (withdrawal.fee || 0);
+
+      const updatedWithdrawal = await tx.withdrawal.update({
+        where: { id: withdrawalId },
+        data: {
+          status: 'FAILED',
+          failedAt: new Date(),
+          failureReason: reason || 'Withdrawal rejected by admin',
+        },
+      });
+
+      await tx.walletHold.updateMany({
+        where: {
+          walletId: withdrawal.walletId,
+          reason: { contains: `Withdrawal request #${withdrawalId}` },
+          status: 'ACTIVE',
+        },
+        data: {
+          status: 'RELEASED',
+          releasedAt: new Date(),
+        },
+      });
+
+      await tx.wallet.update({
+        where: { id: withdrawal.walletId },
+        data: {
+          balance: (withdrawal.wallet?.balance || 0) + totalAmount,
+          heldBalance: Math.max(
+            0,
+            (withdrawal.wallet?.heldBalance || 0) - totalAmount,
+          ),
+        },
+      });
+
+      if (withdrawal.wallet?.ledgerAccount) {
+        await tx.ledgerAccount.update({
+          where: { id: withdrawal.wallet.ledgerAccountId! },
+          data: {
+            balance: withdrawal.wallet.ledgerAccount.balance + totalAmount,
+          },
+        });
+      } else {
+        this.logger.warn(
+          `No ledger account found for wallet ${withdrawal.walletId}`,
+        );
+      }
+
+      await tx.activityLog.create({
+        data: {
+          userId: adminUserId,
+          activity: 'USER_WITHDRAWAL_REJECTED',
+          details: JSON.stringify({
+            withdrawalId,
+            amount: withdrawal.amount,
+            fee: withdrawal.fee || 0,
+            reason,
+          }),
+        },
+      });
+
+      await this.notifyUser(withdrawal.userId, 'WITHDRAWAL_REJECTED', {
+        withdrawalId,
+        amount: withdrawal.amount,
+        fee: withdrawal.fee || 0,
+        amountFormatted: `₦${(withdrawal.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        reason: reason || 'Withdrawal rejected by admin',
+      });
+
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: withdrawal.userId,
+      });
+
+      return updatedWithdrawal;
+    });
+  }
+
+  // ============================================
+  // GET WITHDRAWAL HISTORY
+  // ============================================
+
+  async getWithdrawalHistory(userId: string, filters: WithdrawalFilterDto) {
+    const where: any = { userId };
+
+    if (filters.status) {
+      where.status = filters.status;
+    }
+
+    if (filters.type) {
+      where.metadata = {
+        path: ['type'],
+        equals:
+          filters.type === 'USER'
+            ? 'USER_WITHDRAWAL'
+            : filters.type === 'PLATFORM'
+              ? 'PLATFORM_WITHDRAWAL'
+              : 'ORGANIZATION_WITHDRAWAL',
+      };
+    }
+
+    if (filters.startDate) {
+      where.requestedAt = {
+        ...where.requestedAt,
+        gte: new Date(filters.startDate),
+      };
+    }
+
+    if (filters.endDate) {
+      where.requestedAt = {
+        ...where.requestedAt,
+        lte: new Date(filters.endDate),
+      };
+    }
+
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const [withdrawals, total] = await Promise.all([
+      this.prisma.withdrawal.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          wallet: {
+            select: {
+              id: true,
+              userId: true,
+              organizationId: true,
+              isPlatformWallet: true,
+            },
+          },
+          journalEntry: {
+            include: {
+              lines: true,
+            },
+          },
+        },
+        orderBy: { requestedAt: 'desc' },
+      }),
+      this.prisma.withdrawal.count({ where }),
+    ]);
+
+    return {
+      data: withdrawals,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  // ============================================
+  // GET WITHDRAWAL BY ID
+  // ============================================
+
+  async getWithdrawalById(withdrawalId: string, userId: string) {
+    const withdrawal = await this.prisma.withdrawal.findUnique({
+      where: { id: withdrawalId },
+      include: {
+        wallet: {
+          select: {
+            id: true,
+            userId: true,
+            organizationId: true,
+            isPlatformWallet: true,
+          },
+        },
+        journalEntry: {
+          include: {
+            lines: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true,
+            profile: true,
+          },
+        },
+      },
+    });
+
+    if (!withdrawal) {
+      throw new NotFoundException('Withdrawal not found');
+    }
+
+    if (withdrawal.userId !== userId) {
+      const isAdmin = await this.prisma.admin.findFirst({
+        where: {
+          userId,
+          status: 'ACTIVE',
+          adminType: 'PLATFORM_ADMIN',
+        },
+      });
+
+      if (!isAdmin) {
+        throw new ForbiddenException(
+          'You do not have permission to view this withdrawal',
+        );
+      }
+    }
+
+    return withdrawal;
+  }
 
   private async notifyPlatformAdmins(event: string, data: any) {
     const admins = await this.prisma.admin.findMany({
@@ -3189,8 +2861,8 @@ export class FinanceService {
       await this.prisma.notification.create({
         data: {
           userId: admin.userId,
-          title: `Withdrawal Request: ${data.organizationName}`,
-          body: `${data.organizationName} has requested a withdrawal of ${data.amountFormatted}`,
+          title: `Withdrawal Request: ${data.amountFormatted}`,
+          body: `A withdrawal of ${data.amountFormatted} has been requested.`,
           type: 'FINANCIAL',
           priority: 'HIGH',
           data: data,
@@ -3200,9 +2872,12 @@ export class FinanceService {
       await this.emailService.sendEmail(
         admin.user.email,
         'Withdrawal Request - Heightt',
-        `<p>${data.organizationName} has requested a withdrawal of ${data.amountFormatted}</p>
-         <p>Please log in to the admin dashboard to approve or reject this request.</p>
-         <p>Request ID: ${data.withdrawalId}</p>`,
+        `<p>A withdrawal request requires your attention.</p>
+       <p>Amount: ${data.amountFormatted}</p>
+       <p>Bank: ${data.bankName}</p>
+       <p>Account: ${data.accountNumber}</p>
+       <p>Request ID: ${data.withdrawalId}</p>
+       <p>Please log in to the admin dashboard to approve or reject this request.</p>`,
       );
     }
   }
@@ -3241,5 +2916,35 @@ export class FinanceService {
       title,
       `<p>${body}</p><p>Reference: ${data.withdrawalId}</p>`,
     );
+  }
+
+  // ============================================
+  // CACHE INVALIDATION HELPERS
+  // ============================================
+
+  async invalidateFinanceCache(userId?: string): Promise<void> {
+    try {
+      await this.cacheService.invalidateByTag('finance');
+      await this.cacheService.invalidateByTag('wallet');
+      await this.cacheService.invalidateByTag('transactions');
+      await this.cacheService.invalidateByTag('dues');
+      await this.cacheService.invalidateByTag('savings');
+      await this.cacheService.invalidateByTag('receipts');
+      await this.cacheService.invalidateByTag('ledger');
+      await this.cacheService.invalidateByTag('reports');
+
+      if (userId) {
+        await this.walletService.invalidateWalletCache({
+          type: 'USER',
+          id: userId,
+        });
+      }
+
+      this.logger.log(
+        `Finance cache invalidated${userId ? ` for user: ${userId}` : ''}`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to invalidate finance cache: ${error.message}`);
+    }
   }
 }

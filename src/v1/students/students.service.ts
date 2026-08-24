@@ -1,4 +1,5 @@
 // src/v1/students/students.service.ts
+
 import {
   Injectable,
   NotFoundException,
@@ -10,6 +11,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
 import { PermissionService } from '../auth/permission.service';
+import { WalletService } from '../finance/wallet.service';
 import {
   CreateStudentDto,
   UpdateStudentDto,
@@ -25,6 +27,7 @@ export class StudentsService {
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
     private readonly permissionService: PermissionService,
+    private readonly walletService: WalletService,
   ) {}
 
   // ============================================
@@ -180,6 +183,12 @@ export class StudentsService {
         department: true,
         currentAcademicLevel: true,
       },
+    });
+
+    // Create wallet for the student
+    await this.walletService.getOrCreateWallet({
+      type: 'USER',
+      id: dto.userId,
     });
 
     // Invalidate cache

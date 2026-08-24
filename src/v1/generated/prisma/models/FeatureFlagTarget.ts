@@ -215,9 +215,9 @@ export type FeatureFlagTargetWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"FeatureFlagTarget"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FeatureFlagTarget"> | Date | string
   feature?: Prisma.XOR<Prisma.FeatureFlagScalarRelationFilter, Prisma.FeatureFlagWhereInput>
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   role?: Prisma.XOR<Prisma.RoleNullableScalarRelationFilter, Prisma.RoleWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type FeatureFlagTargetOrderByWithRelationInput = {
@@ -231,9 +231,9 @@ export type FeatureFlagTargetOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   feature?: Prisma.FeatureFlagOrderByWithRelationInput
-  user?: Prisma.UserOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   role?: Prisma.RoleOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type FeatureFlagTargetWhereUniqueInput = Prisma.AtLeast<{
@@ -253,9 +253,9 @@ export type FeatureFlagTargetWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"FeatureFlagTarget"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FeatureFlagTarget"> | Date | string
   feature?: Prisma.XOR<Prisma.FeatureFlagScalarRelationFilter, Prisma.FeatureFlagWhereInput>
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   role?: Prisma.XOR<Prisma.RoleNullableScalarRelationFilter, Prisma.RoleWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "featureId_targetType_userId" | "featureId_targetType_organizationId" | "featureId_targetType_roleId">
 
 export type FeatureFlagTargetOrderByWithAggregationInput = {
@@ -295,9 +295,9 @@ export type FeatureFlagTargetCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   feature: Prisma.FeatureFlagCreateNestedOneWithoutTargetsInput
-  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFeatureFlagTargetsInput
   role?: Prisma.RoleCreateNestedOneWithoutFeatureFlagTargetsInput
+  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
 }
 
 export type FeatureFlagTargetUncheckedCreateInput = {
@@ -319,9 +319,9 @@ export type FeatureFlagTargetUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   feature?: Prisma.FeatureFlagUpdateOneRequiredWithoutTargetsNestedInput
-  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFeatureFlagTargetsNestedInput
   role?: Prisma.RoleUpdateOneWithoutFeatureFlagTargetsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
 }
 
 export type FeatureFlagTargetUncheckedUpdateInput = {
@@ -674,8 +674,8 @@ export type FeatureFlagTargetCreateWithoutOrganizationInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   feature: Prisma.FeatureFlagCreateNestedOneWithoutTargetsInput
-  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
   role?: Prisma.RoleCreateNestedOneWithoutFeatureFlagTargetsInput
+  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
 }
 
 export type FeatureFlagTargetUncheckedCreateWithoutOrganizationInput = {
@@ -722,8 +722,8 @@ export type FeatureFlagTargetCreateWithoutRoleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   feature: Prisma.FeatureFlagCreateNestedOneWithoutTargetsInput
-  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFeatureFlagTargetsInput
+  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
 }
 
 export type FeatureFlagTargetUncheckedCreateWithoutRoleInput = {
@@ -769,9 +769,9 @@ export type FeatureFlagTargetCreateWithoutFeatureInput = {
   enabled?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFeatureFlagTargetsInput
   role?: Prisma.RoleCreateNestedOneWithoutFeatureFlagTargetsInput
+  user?: Prisma.UserCreateNestedOneWithoutFeatureFlagTargetsInput
 }
 
 export type FeatureFlagTargetUncheckedCreateWithoutFeatureInput = {
@@ -873,8 +873,8 @@ export type FeatureFlagTargetUpdateWithoutOrganizationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   feature?: Prisma.FeatureFlagUpdateOneRequiredWithoutTargetsNestedInput
-  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
   role?: Prisma.RoleUpdateOneWithoutFeatureFlagTargetsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
 }
 
 export type FeatureFlagTargetUncheckedUpdateWithoutOrganizationInput = {
@@ -917,8 +917,8 @@ export type FeatureFlagTargetUpdateWithoutRoleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   feature?: Prisma.FeatureFlagUpdateOneRequiredWithoutTargetsNestedInput
-  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFeatureFlagTargetsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
 }
 
 export type FeatureFlagTargetUncheckedUpdateWithoutRoleInput = {
@@ -960,9 +960,9 @@ export type FeatureFlagTargetUpdateWithoutFeatureInput = {
   enabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFeatureFlagTargetsNestedInput
   role?: Prisma.RoleUpdateOneWithoutFeatureFlagTargetsNestedInput
+  user?: Prisma.UserUpdateOneWithoutFeatureFlagTargetsNestedInput
 }
 
 export type FeatureFlagTargetUncheckedUpdateWithoutFeatureInput = {
@@ -1000,9 +1000,9 @@ export type FeatureFlagTargetSelect<ExtArgs extends runtime.Types.Extensions.Int
   createdAt?: boolean
   updatedAt?: boolean
   feature?: boolean | Prisma.FeatureFlagDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
   organization?: boolean | Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>
   role?: boolean | Prisma.FeatureFlagTarget$roleArgs<ExtArgs>
+  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
 }, ExtArgs["result"]["featureFlagTarget"]>
 
 export type FeatureFlagTargetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1016,9 +1016,9 @@ export type FeatureFlagTargetSelectCreateManyAndReturn<ExtArgs extends runtime.T
   createdAt?: boolean
   updatedAt?: boolean
   feature?: boolean | Prisma.FeatureFlagDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
   organization?: boolean | Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>
   role?: boolean | Prisma.FeatureFlagTarget$roleArgs<ExtArgs>
+  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
 }, ExtArgs["result"]["featureFlagTarget"]>
 
 export type FeatureFlagTargetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1032,9 +1032,9 @@ export type FeatureFlagTargetSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   createdAt?: boolean
   updatedAt?: boolean
   feature?: boolean | Prisma.FeatureFlagDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
   organization?: boolean | Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>
   role?: boolean | Prisma.FeatureFlagTarget$roleArgs<ExtArgs>
+  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
 }, ExtArgs["result"]["featureFlagTarget"]>
 
 export type FeatureFlagTargetSelectScalar = {
@@ -1052,30 +1052,30 @@ export type FeatureFlagTargetSelectScalar = {
 export type FeatureFlagTargetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "featureId" | "targetType" | "userId" | "organizationId" | "roleId" | "enabled" | "createdAt" | "updatedAt", ExtArgs["result"]["featureFlagTarget"]>
 export type FeatureFlagTargetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   feature?: boolean | Prisma.FeatureFlagDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
   organization?: boolean | Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>
   role?: boolean | Prisma.FeatureFlagTarget$roleArgs<ExtArgs>
+  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
 }
 export type FeatureFlagTargetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   feature?: boolean | Prisma.FeatureFlagDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
   organization?: boolean | Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>
   role?: boolean | Prisma.FeatureFlagTarget$roleArgs<ExtArgs>
+  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
 }
 export type FeatureFlagTargetIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   feature?: boolean | Prisma.FeatureFlagDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
   organization?: boolean | Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>
   role?: boolean | Prisma.FeatureFlagTarget$roleArgs<ExtArgs>
+  user?: boolean | Prisma.FeatureFlagTarget$userArgs<ExtArgs>
 }
 
 export type $FeatureFlagTargetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FeatureFlagTarget"
   objects: {
     feature: Prisma.$FeatureFlagPayload<ExtArgs>
-    user: Prisma.$UserPayload<ExtArgs> | null
     organization: Prisma.$OrganizationPayload<ExtArgs> | null
     role: Prisma.$RolePayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1482,9 +1482,9 @@ readonly fields: FeatureFlagTargetFieldRefs;
 export interface Prisma__FeatureFlagTargetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   feature<T extends Prisma.FeatureFlagDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeatureFlagDefaultArgs<ExtArgs>>): Prisma.Prisma__FeatureFlagClient<runtime.Types.Result.GetResult<Prisma.$FeatureFlagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  user<T extends Prisma.FeatureFlagTarget$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeatureFlagTarget$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.FeatureFlagTarget$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeatureFlagTarget$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   role<T extends Prisma.FeatureFlagTarget$roleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeatureFlagTarget$roleArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.FeatureFlagTarget$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FeatureFlagTarget$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1924,25 +1924,6 @@ export type FeatureFlagTargetDeleteManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * FeatureFlagTarget.user
- */
-export type FeatureFlagTarget$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the User
-   */
-  select?: Prisma.UserSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the User
-   */
-  omit?: Prisma.UserOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
-}
-
-/**
  * FeatureFlagTarget.organization
  */
 export type FeatureFlagTarget$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1978,6 +1959,25 @@ export type FeatureFlagTarget$roleArgs<ExtArgs extends runtime.Types.Extensions.
    */
   include?: Prisma.RoleInclude<ExtArgs> | null
   where?: Prisma.RoleWhereInput
+}
+
+/**
+ * FeatureFlagTarget.user
+ */
+export type FeatureFlagTarget$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

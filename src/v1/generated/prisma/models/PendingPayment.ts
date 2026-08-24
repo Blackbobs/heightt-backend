@@ -308,9 +308,9 @@ export type PendingPaymentWhereInput = {
   metadata?: Prisma.JsonNullableFilter<"PendingPayment">
   createdAt?: Prisma.DateTimeFilter<"PendingPayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PendingPayment"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   dueAssignment?: Prisma.XOR<Prisma.DueAssignmentNullableScalarRelationFilter, Prisma.DueAssignmentWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PendingPaymentOrderByWithRelationInput = {
@@ -331,9 +331,9 @@ export type PendingPaymentOrderByWithRelationInput = {
   metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  organization?: Prisma.OrganizationOrderByWithRelationInput
   dueAssignment?: Prisma.DueAssignmentOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PendingPaymentWhereUniqueInput = Prisma.AtLeast<{
@@ -357,9 +357,9 @@ export type PendingPaymentWhereUniqueInput = Prisma.AtLeast<{
   metadata?: Prisma.JsonNullableFilter<"PendingPayment">
   createdAt?: Prisma.DateTimeFilter<"PendingPayment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PendingPayment"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   dueAssignment?: Prisma.XOR<Prisma.DueAssignmentNullableScalarRelationFilter, Prisma.DueAssignmentWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "reference" | "bachsCheckoutId">
 
 export type PendingPaymentOrderByWithAggregationInput = {
@@ -425,9 +425,9 @@ export type PendingPaymentCreateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPendingPaymentsInput
-  organization: Prisma.OrganizationCreateNestedOneWithoutPendingPaymentsInput
   dueAssignment?: Prisma.DueAssignmentCreateNestedOneWithoutPendingPaymentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutPendingPaymentsInput
+  user: Prisma.UserCreateNestedOneWithoutPendingPaymentsInput
 }
 
 export type PendingPaymentUncheckedCreateInput = {
@@ -465,9 +465,9 @@ export type PendingPaymentUpdateInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPendingPaymentsNestedInput
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPendingPaymentsNestedInput
   dueAssignment?: Prisma.DueAssignmentUpdateOneWithoutPendingPaymentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPendingPaymentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPendingPaymentsNestedInput
 }
 
 export type PendingPaymentUncheckedUpdateInput = {
@@ -768,8 +768,8 @@ export type PendingPaymentCreateWithoutUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutPendingPaymentsInput
   dueAssignment?: Prisma.DueAssignmentCreateNestedOneWithoutPendingPaymentsInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutPendingPaymentsInput
 }
 
 export type PendingPaymentUncheckedCreateWithoutUserInput = {
@@ -855,8 +855,8 @@ export type PendingPaymentCreateWithoutOrganizationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPendingPaymentsInput
   dueAssignment?: Prisma.DueAssignmentCreateNestedOneWithoutPendingPaymentsInput
+  user: Prisma.UserCreateNestedOneWithoutPendingPaymentsInput
 }
 
 export type PendingPaymentUncheckedCreateWithoutOrganizationInput = {
@@ -919,8 +919,8 @@ export type PendingPaymentCreateWithoutDueAssignmentInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPendingPaymentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPendingPaymentsInput
+  user: Prisma.UserCreateNestedOneWithoutPendingPaymentsInput
 }
 
 export type PendingPaymentUncheckedCreateWithoutDueAssignmentInput = {
@@ -1002,8 +1002,8 @@ export type PendingPaymentUpdateWithoutUserInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPendingPaymentsNestedInput
   dueAssignment?: Prisma.DueAssignmentUpdateOneWithoutPendingPaymentsNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPendingPaymentsNestedInput
 }
 
 export type PendingPaymentUncheckedUpdateWithoutUserInput = {
@@ -1078,8 +1078,8 @@ export type PendingPaymentUpdateWithoutOrganizationInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPendingPaymentsNestedInput
   dueAssignment?: Prisma.DueAssignmentUpdateOneWithoutPendingPaymentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPendingPaymentsNestedInput
 }
 
 export type PendingPaymentUncheckedUpdateWithoutOrganizationInput = {
@@ -1154,8 +1154,8 @@ export type PendingPaymentUpdateWithoutDueAssignmentInput = {
   metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPendingPaymentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPendingPaymentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPendingPaymentsNestedInput
 }
 
 export type PendingPaymentUncheckedUpdateWithoutDueAssignmentInput = {
@@ -1216,9 +1216,9 @@ export type PendingPaymentSelect<ExtArgs extends runtime.Types.Extensions.Intern
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   dueAssignment?: boolean | Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pendingPayment"]>
 
 export type PendingPaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1239,9 +1239,9 @@ export type PendingPaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   dueAssignment?: boolean | Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pendingPayment"]>
 
 export type PendingPaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1262,9 +1262,9 @@ export type PendingPaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   dueAssignment?: boolean | Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["pendingPayment"]>
 
 export type PendingPaymentSelectScalar = {
@@ -1289,27 +1289,27 @@ export type PendingPaymentSelectScalar = {
 
 export type PendingPaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "organizationId" | "amount" | "paymentMethod" | "description" | "dueAssignmentId" | "category" | "reference" | "status" | "bachsCheckoutId" | "bachsCustomerId" | "bachsChargeId" | "completedAt" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["pendingPayment"]>
 export type PendingPaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   dueAssignment?: boolean | Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PendingPaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   dueAssignment?: boolean | Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PendingPaymentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   dueAssignment?: boolean | Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PendingPaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PendingPayment"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    organization: Prisma.$OrganizationPayload<ExtArgs>
     dueAssignment: Prisma.$DueAssignmentPayload<ExtArgs> | null
+    organization: Prisma.$OrganizationPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1723,9 +1723,9 @@ readonly fields: PendingPaymentFieldRefs;
  */
 export interface Prisma__PendingPaymentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   dueAssignment<T extends Prisma.PendingPayment$dueAssignmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PendingPayment$dueAssignmentArgs<ExtArgs>>): Prisma.Prisma__DueAssignmentClient<runtime.Types.Result.GetResult<Prisma.$DueAssignmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -324,11 +324,11 @@ export type FileWhereInput = {
   receiptId?: Prisma.StringNullableFilter<"File"> | string | null
   studentId?: Prisma.StringNullableFilter<"File"> | string | null
   eventId?: Prisma.StringNullableFilter<"File"> | string | null
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
   student?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
-  event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type FileOrderByWithRelationInput = {
@@ -351,11 +351,11 @@ export type FileOrderByWithRelationInput = {
   receiptId?: Prisma.SortOrderInput | Prisma.SortOrder
   studentId?: Prisma.SortOrderInput | Prisma.SortOrder
   eventId?: Prisma.SortOrderInput | Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  event?: Prisma.EventOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   receipt?: Prisma.ReceiptOrderByWithRelationInput
   student?: Prisma.StudentProfileOrderByWithRelationInput
-  event?: Prisma.EventOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type FileWhereUniqueInput = Prisma.AtLeast<{
@@ -381,11 +381,11 @@ export type FileWhereUniqueInput = Prisma.AtLeast<{
   receiptId?: Prisma.StringNullableFilter<"File"> | string | null
   studentId?: Prisma.StringNullableFilter<"File"> | string | null
   eventId?: Prisma.StringNullableFilter<"File"> | string | null
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
   student?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
-  event?: Prisma.XOR<Prisma.EventNullableScalarRelationFilter, Prisma.EventWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "publicId">
 
 export type FileOrderByWithAggregationInput = {
@@ -455,11 +455,11 @@ export type FileCreateInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutFilesInput
+  event?: Prisma.EventCreateNestedOneWithoutFilesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFilesInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutFilesInput
   student?: Prisma.StudentProfileCreateNestedOneWithoutFilesInput
-  event?: Prisma.EventCreateNestedOneWithoutFilesInput
+  user?: Prisma.UserCreateNestedOneWithoutFilesInput
 }
 
 export type FileUncheckedCreateInput = {
@@ -499,11 +499,11 @@ export type FileUpdateInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
+  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFilesNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutFilesNestedInput
   student?: Prisma.StudentProfileUpdateOneWithoutFilesNestedInput
-  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
+  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
 }
 
 export type FileUncheckedUpdateInput = {
@@ -896,10 +896,10 @@ export type FileCreateWithoutUserInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  event?: Prisma.EventCreateNestedOneWithoutFilesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFilesInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutFilesInput
   student?: Prisma.StudentProfileCreateNestedOneWithoutFilesInput
-  event?: Prisma.EventCreateNestedOneWithoutFilesInput
 }
 
 export type FileUncheckedCreateWithoutUserInput = {
@@ -989,10 +989,10 @@ export type FileCreateWithoutStudentInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutFilesInput
+  event?: Prisma.EventCreateNestedOneWithoutFilesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFilesInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutFilesInput
-  event?: Prisma.EventCreateNestedOneWithoutFilesInput
+  user?: Prisma.UserCreateNestedOneWithoutFilesInput
 }
 
 export type FileUncheckedCreateWithoutStudentInput = {
@@ -1057,10 +1057,10 @@ export type FileCreateWithoutOrganizationInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutFilesInput
+  event?: Prisma.EventCreateNestedOneWithoutFilesInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutFilesInput
   student?: Prisma.StudentProfileCreateNestedOneWithoutFilesInput
-  event?: Prisma.EventCreateNestedOneWithoutFilesInput
+  user?: Prisma.UserCreateNestedOneWithoutFilesInput
 }
 
 export type FileUncheckedCreateWithoutOrganizationInput = {
@@ -1125,10 +1125,10 @@ export type FileCreateWithoutReceiptInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutFilesInput
+  event?: Prisma.EventCreateNestedOneWithoutFilesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFilesInput
   student?: Prisma.StudentProfileCreateNestedOneWithoutFilesInput
-  event?: Prisma.EventCreateNestedOneWithoutFilesInput
+  user?: Prisma.UserCreateNestedOneWithoutFilesInput
 }
 
 export type FileUncheckedCreateWithoutReceiptInput = {
@@ -1193,10 +1193,10 @@ export type FileCreateWithoutEventInput = {
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutFilesInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutFilesInput
   receipt?: Prisma.ReceiptCreateNestedOneWithoutFilesInput
   student?: Prisma.StudentProfileCreateNestedOneWithoutFilesInput
+  user?: Prisma.UserCreateNestedOneWithoutFilesInput
 }
 
 export type FileUncheckedCreateWithoutEventInput = {
@@ -1282,10 +1282,10 @@ export type FileUpdateWithoutUserInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFilesNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutFilesNestedInput
   student?: Prisma.StudentProfileUpdateOneWithoutFilesNestedInput
-  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
 }
 
 export type FileUncheckedUpdateWithoutUserInput = {
@@ -1366,10 +1366,10 @@ export type FileUpdateWithoutStudentInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
+  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFilesNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutFilesNestedInput
-  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
+  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
 }
 
 export type FileUncheckedUpdateWithoutStudentInput = {
@@ -1450,10 +1450,10 @@ export type FileUpdateWithoutOrganizationInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
+  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutFilesNestedInput
   student?: Prisma.StudentProfileUpdateOneWithoutFilesNestedInput
-  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
+  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
 }
 
 export type FileUncheckedUpdateWithoutOrganizationInput = {
@@ -1534,10 +1534,10 @@ export type FileUpdateWithoutReceiptInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
+  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFilesNestedInput
   student?: Prisma.StudentProfileUpdateOneWithoutFilesNestedInput
-  event?: Prisma.EventUpdateOneWithoutFilesNestedInput
+  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
 }
 
 export type FileUncheckedUpdateWithoutReceiptInput = {
@@ -1618,10 +1618,10 @@ export type FileUpdateWithoutEventInput = {
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutFilesNestedInput
   receipt?: Prisma.ReceiptUpdateOneWithoutFilesNestedInput
   student?: Prisma.StudentProfileUpdateOneWithoutFilesNestedInput
+  user?: Prisma.UserUpdateOneWithoutFilesNestedInput
 }
 
 export type FileUncheckedUpdateWithoutEventInput = {
@@ -1688,11 +1688,11 @@ export type FileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   receiptId?: boolean
   studentId?: boolean
   eventId?: boolean
-  user?: boolean | Prisma.File$userArgs<ExtArgs>
+  event?: boolean | Prisma.File$eventArgs<ExtArgs>
   organization?: boolean | Prisma.File$organizationArgs<ExtArgs>
   receipt?: boolean | Prisma.File$receiptArgs<ExtArgs>
   student?: boolean | Prisma.File$studentArgs<ExtArgs>
-  event?: boolean | Prisma.File$eventArgs<ExtArgs>
+  user?: boolean | Prisma.File$userArgs<ExtArgs>
 }, ExtArgs["result"]["file"]>
 
 export type FileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1715,11 +1715,11 @@ export type FileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   receiptId?: boolean
   studentId?: boolean
   eventId?: boolean
-  user?: boolean | Prisma.File$userArgs<ExtArgs>
+  event?: boolean | Prisma.File$eventArgs<ExtArgs>
   organization?: boolean | Prisma.File$organizationArgs<ExtArgs>
   receipt?: boolean | Prisma.File$receiptArgs<ExtArgs>
   student?: boolean | Prisma.File$studentArgs<ExtArgs>
-  event?: boolean | Prisma.File$eventArgs<ExtArgs>
+  user?: boolean | Prisma.File$userArgs<ExtArgs>
 }, ExtArgs["result"]["file"]>
 
 export type FileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1742,11 +1742,11 @@ export type FileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   receiptId?: boolean
   studentId?: boolean
   eventId?: boolean
-  user?: boolean | Prisma.File$userArgs<ExtArgs>
+  event?: boolean | Prisma.File$eventArgs<ExtArgs>
   organization?: boolean | Prisma.File$organizationArgs<ExtArgs>
   receipt?: boolean | Prisma.File$receiptArgs<ExtArgs>
   student?: boolean | Prisma.File$studentArgs<ExtArgs>
-  event?: boolean | Prisma.File$eventArgs<ExtArgs>
+  user?: boolean | Prisma.File$userArgs<ExtArgs>
 }, ExtArgs["result"]["file"]>
 
 export type FileSelectScalar = {
@@ -1773,35 +1773,35 @@ export type FileSelectScalar = {
 
 export type FileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "filename" | "originalName" | "mimeType" | "size" | "url" | "publicId" | "folder" | "userId" | "organizationId" | "purpose" | "metadata" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt" | "receiptId" | "studentId" | "eventId", ExtArgs["result"]["file"]>
 export type FileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.File$userArgs<ExtArgs>
+  event?: boolean | Prisma.File$eventArgs<ExtArgs>
   organization?: boolean | Prisma.File$organizationArgs<ExtArgs>
   receipt?: boolean | Prisma.File$receiptArgs<ExtArgs>
   student?: boolean | Prisma.File$studentArgs<ExtArgs>
-  event?: boolean | Prisma.File$eventArgs<ExtArgs>
+  user?: boolean | Prisma.File$userArgs<ExtArgs>
 }
 export type FileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.File$userArgs<ExtArgs>
+  event?: boolean | Prisma.File$eventArgs<ExtArgs>
   organization?: boolean | Prisma.File$organizationArgs<ExtArgs>
   receipt?: boolean | Prisma.File$receiptArgs<ExtArgs>
   student?: boolean | Prisma.File$studentArgs<ExtArgs>
-  event?: boolean | Prisma.File$eventArgs<ExtArgs>
+  user?: boolean | Prisma.File$userArgs<ExtArgs>
 }
 export type FileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.File$userArgs<ExtArgs>
+  event?: boolean | Prisma.File$eventArgs<ExtArgs>
   organization?: boolean | Prisma.File$organizationArgs<ExtArgs>
   receipt?: boolean | Prisma.File$receiptArgs<ExtArgs>
   student?: boolean | Prisma.File$studentArgs<ExtArgs>
-  event?: boolean | Prisma.File$eventArgs<ExtArgs>
+  user?: boolean | Prisma.File$userArgs<ExtArgs>
 }
 
 export type $FilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "File"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs> | null
+    event: Prisma.$EventPayload<ExtArgs> | null
     organization: Prisma.$OrganizationPayload<ExtArgs> | null
     receipt: Prisma.$ReceiptPayload<ExtArgs> | null
     student: Prisma.$StudentProfilePayload<ExtArgs> | null
-    event: Prisma.$EventPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2217,11 +2217,11 @@ readonly fields: FileFieldRefs;
  */
 export interface Prisma__FileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.File$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  event<T extends Prisma.File$eventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$eventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.File$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   receipt<T extends Prisma.File$receiptArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$receiptArgs<ExtArgs>>): Prisma.Prisma__ReceiptClient<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   student<T extends Prisma.File$studentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$studentArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  event<T extends Prisma.File$eventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$eventArgs<ExtArgs>>): Prisma.Prisma__EventClient<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.File$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.File$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2671,22 +2671,22 @@ export type FileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * File.user
+ * File.event
  */
-export type File$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type File$eventArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the Event
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.EventSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the Event
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.EventOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
+  include?: Prisma.EventInclude<ExtArgs> | null
+  where?: Prisma.EventWhereInput
 }
 
 /**
@@ -2747,22 +2747,22 @@ export type File$studentArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 /**
- * File.event
+ * File.user
  */
-export type File$eventArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type File$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Event
+   * Select specific fields to fetch from the User
    */
-  select?: Prisma.EventSelect<ExtArgs> | null
+  select?: Prisma.UserSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Event
+   * Omit specific fields from the User
    */
-  omit?: Prisma.EventOmit<ExtArgs> | null
+  omit?: Prisma.UserOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EventInclude<ExtArgs> | null
-  where?: Prisma.EventWhereInput
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

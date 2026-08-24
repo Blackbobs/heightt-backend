@@ -1,145 +1,168 @@
+// src/v1/onboarding/dto/onboarding.dto.ts
+
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  MinLength,
-  MaxLength,
   IsOptional,
+  IsEmail,
   IsEnum,
   IsDateString,
-  IsPhoneNumber,
   IsUUID,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class OnboardingPersonalInfoDto {
-  @ApiProperty({ description: 'First name', minLength: 2, maxLength: 50 })
+  @ApiProperty({ example: 'John', description: 'First name' })
   @IsString()
-  @MinLength(2, { message: 'First name must be at least 2 characters' })
-  @MaxLength(50)
   firstName: string;
 
-  @ApiProperty({ description: 'Last name', minLength: 2, maxLength: 50 })
+  @ApiProperty({ example: 'Doe', description: 'Last name' })
   @IsString()
-  @MinLength(2, { message: 'Last name must be at least 2 characters' })
-  @MaxLength(50)
   lastName: string;
 
-  @ApiProperty({ description: 'Middle name', required: false, maxLength: 50 })
+  @ApiProperty({
+    example: 'Michael',
+    description: 'Middle name',
+    required: false,
+  })
   @IsOptional()
   @IsString()
-  @MaxLength(50)
   middleName?: string;
 
-  @ApiProperty({ description: 'Phone number', required: false })
-  @IsOptional()
-  @IsPhoneNumber(undefined, { message: 'Please provide a valid phone number' })
-  phone?: string;
+  @ApiProperty({ example: '+2348012345678', description: 'Phone number' })
+  @IsString()
+  phone: string;
 
-  @ApiProperty({ description: 'Avatar URL', required: false })
+  @ApiProperty({ example: 'https://example.com/avatar.jpg', required: false })
   @IsOptional()
   @IsString()
   avatar?: string;
 
-  @ApiProperty({
-    description: 'Gender',
-    enum: ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'],
-    required: false,
-  })
-  @IsOptional()
+  @ApiProperty({ enum: ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'] })
   @IsEnum(['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'])
-  gender?: string;
+  gender: string;
 
-  @ApiProperty({ description: 'Date of birth (YYYY-MM-DD)', required: false })
-  @IsOptional()
+  @ApiProperty({ example: '2000-01-01' })
   @IsDateString()
-  dateOfBirth?: string;
+  dateOfBirth: string;
 
-  @ApiProperty({ description: 'Country', required: false })
+  @ApiProperty({ example: 'Nigeria', required: false })
   @IsOptional()
   @IsString()
   country?: string;
 
-  @ApiProperty({ description: 'State/Province', required: false })
+  @ApiProperty({ example: 'Lagos', required: false })
   @IsOptional()
   @IsString()
   state?: string;
 
-  @ApiProperty({ description: 'City', required: false })
+  @ApiProperty({ example: 'Lagos', required: false })
   @IsOptional()
   @IsString()
   city?: string;
 
-  @ApiProperty({ description: 'Address', required: false })
+  @ApiProperty({ example: '123 Main Street', required: false })
   @IsOptional()
   @IsString()
   address?: string;
 
-  @ApiProperty({ description: 'Bio/About me', required: false })
+  @ApiProperty({ example: 'Software Engineer', required: false })
   @IsOptional()
   @IsString()
   bio?: string;
 }
 
 export class OnboardingInstitutionDto {
-  @ApiProperty({ description: 'Institution ID' })
+  @ApiProperty({ example: 'inst_123' })
   @IsUUID()
   institutionId: string;
 
-  @ApiProperty({ description: 'Faculty ID' })
+  @ApiProperty({ example: 'fac_123' })
   @IsUUID()
   facultyId: string;
 
-  @ApiProperty({ description: 'Department ID' })
+  @ApiProperty({ example: 'dept_123' })
   @IsUUID()
   departmentId: string;
 
-  @ApiProperty({ description: 'Academic level ID' })
+  @ApiProperty({ example: 'lvl_123' })
   @IsUUID()
   levelId: string;
 
-  @ApiProperty({ description: 'Matric number', required: false })
+  @ApiProperty({ example: 'MAT/2024/001', required: false })
   @IsOptional()
   @IsString()
   matricNumber?: string;
 }
 
-export class OnboardingStatusResponseDto {
-  @ApiProperty({ description: 'Current onboarding step' })
-  onboardingStep: string;
+export class CompleteOnboardingDto {
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  firstName?: string;
 
-  @ApiProperty({ description: 'Whether onboarding is completed' })
-  onboardingCompleted: boolean;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  lastName?: string;
 
-  @ApiProperty({ description: 'Progress details' })
-  progress: {
-    personalInfo: {
-      completed: boolean;
-      required: string[];
-      missing: string[];
-    };
-    institutionInfo: {
-      completed: boolean;
-      required: string[];
-      missing: string[];
-    };
-  };
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  phone?: string;
 
-  @ApiProperty({ description: 'Whether user has a student profile' })
-  hasStudentProfile: boolean;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  studentId?: string;
 
-  @ApiProperty({ description: 'When onboarding was completed', nullable: true })
-  completedAt: Date | null;
-}
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  gender?: string;
 
-export class CheckOnboardingResponseDto {
-  @ApiProperty({ description: 'Whether user needs to complete onboarding' })
-  needsOnboarding: boolean;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsDateString()
+  dateOfBirth?: string;
 
-  @ApiProperty({ description: 'Whether onboarding is completed' })
-  onboardingCompleted: boolean;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  country?: string;
 
-  @ApiProperty({ description: 'Current onboarding step' })
-  onboardingStep: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  state?: string;
 
-  @ApiProperty({ description: 'Where to redirect the user' })
-  redirectTo: string;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  bio?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  institution?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  faculty?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  department?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  academicLevelId?: string;
+
+  // NEW: Session ID
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  sessionId?: string;
 }

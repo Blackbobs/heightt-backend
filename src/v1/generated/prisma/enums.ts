@@ -313,8 +313,8 @@ export type Gender = (typeof Gender)[keyof typeof Gender]
 
 export const VerificationStatus = {
   UNVERIFIED: 'UNVERIFIED',
-  PENDING: 'PENDING',
   VERIFIED: 'VERIFIED',
+  PENDING: 'PENDING',
   REJECTED: 'REJECTED'
 } as const
 
@@ -375,6 +375,16 @@ export const AcademicSessionStatus = {
 } as const
 
 export type AcademicSessionStatus = (typeof AcademicSessionStatus)[keyof typeof AcademicSessionStatus]
+
+
+export const SessionScope = {
+  INSTITUTION: 'INSTITUTION',
+  FACULTY: 'FACULTY',
+  DEPARTMENT: 'DEPARTMENT',
+  LEVEL: 'LEVEL'
+} as const
+
+export type SessionScope = (typeof SessionScope)[keyof typeof SessionScope]
 
 
 export const PromotionType = {

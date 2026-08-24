@@ -1,3 +1,5 @@
+// src/v1/finance/ledger.service.ts
+
 import {
   Injectable,
   Logger,
@@ -5,33 +7,42 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LedgerService {
   private readonly logger = new Logger(LedgerService.name);
+  private readonly VAT_RATE: number;
+  private readonly PLATFORM_FEE_PERCENTAGE: number;
+  private readonly PAYMENT_GATEWAY_FEE_PERCENTAGE: number;
+  private readonly PAYMENT_GATEWAY_FIXED_FEE: number = 0; // Bachs has no fixed fee
 
   // System Account Codes
   private readonly SYSTEM_ACCOUNTS = {
-    // Asset Accounts
     PLATFORM_FEE_ACCOUNT: { code: '4100', name: 'Platform Service Fees' },
     PLATFORM_REVENUE_ACCOUNT: { code: '4000', name: 'Platform Revenue' },
     ESCROW_ACCOUNT: { code: '2100', name: 'Platform Escrow Account' },
     BANK_CLEARING_ACCOUNT: { code: '1100', name: 'Bank Clearing Account' },
     VAT_PAYABLE_ACCOUNT: { code: '2200', name: 'VAT Payable' },
-    PAYSTACK_SETTLEMENT_ACCOUNT: {
+    BACHES_SETTLEMENT_ACCOUNT: {
       code: '1200',
-      name: 'Paystack Settlement Account',
+      name: 'Bachs Settlement Account',
     },
-    PAYSTACK_FEE_ACCOUNT: { code: '4200', name: 'Paystack Transaction Fees' },
-    // Liability Accounts
+    BACHES_FEE_ACCOUNT: { code: '4200', name: 'Bachs Transaction Fees' },
     SETTLEMENT_PAYABLE_ACCOUNT: { code: '2300', name: 'Settlement Payable' },
   };
 
-  // VAT Rate (Nigeria)
-  private readonly VAT_RATE = 0.075; // 7.5%
-
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {
+    this.VAT_RATE = this.configService.get('fees.vat.rate', 7.5) / 100;
+    this.PLATFORM_FEE_PERCENTAGE =
+      this.configService.get('fees.platform.percentage', 2) / 100;
+    this.PAYMENT_GATEWAY_FEE_PERCENTAGE =
+      this.configService.get('fees.paymentGateway.percentage', 1.5) / 100;
+  }
 
   // ============================================
   // LEDGER ACCOUNT MANAGEMENT
@@ -240,23 +251,23 @@ export class LedgerService {
     });
   }
 
-  async getOrCreatePaystackSettlementAccount() {
+  async getOrCreateBachsSettlementAccount() {
     return this.getOrCreateSystemAccount({
-      code: this.SYSTEM_ACCOUNTS.PAYSTACK_SETTLEMENT_ACCOUNT.code,
-      name: this.SYSTEM_ACCOUNTS.PAYSTACK_SETTLEMENT_ACCOUNT.name,
+      code: this.SYSTEM_ACCOUNTS.BACHES_SETTLEMENT_ACCOUNT.code,
+      name: this.SYSTEM_ACCOUNTS.BACHES_SETTLEMENT_ACCOUNT.name,
       type: 'ASSET',
       category: 'BANK',
-      description: 'Paystack settlement account',
+      description: 'Bachs settlement account',
     });
   }
 
-  async getOrCreatePaystackFeeAccount() {
+  async getOrCreateBachsFeeAccount() {
     return this.getOrCreateSystemAccount({
-      code: this.SYSTEM_ACCOUNTS.PAYSTACK_FEE_ACCOUNT.code,
-      name: this.SYSTEM_ACCOUNTS.PAYSTACK_FEE_ACCOUNT.name,
+      code: this.SYSTEM_ACCOUNTS.BACHES_FEE_ACCOUNT.code,
+      name: this.SYSTEM_ACCOUNTS.BACHES_FEE_ACCOUNT.name,
       type: 'EXPENSE',
       category: 'EXPENSE',
-      description: 'Paystack transaction fees',
+      description: 'Bachs transaction fees',
     });
   }
 
@@ -296,7 +307,7 @@ export class LedgerService {
         ? 'USER'
         : organizationId
           ? 'ORGANIZATION'
-          : 'SYSTEM';
+          : 'PLATFORM';
       const ownerId = userId || organizationId;
       const name = `${ownerType} Wallet - ${walletId.substring(0, 8)}`;
 
@@ -327,39 +338,88 @@ export class LedgerService {
     return account;
   }
 
+  /**
+   * Calculate withdrawal charges
+   * Withdrawal fee is applied to the withdrawal amount
+   * The fee is deducted from the wallet balance
+   * The user receives the net amount
+   */
+  calculateWithdrawalCharges(amount: number): {
+    fee: number;
+    netAmount: number;
+    totalCharges: number;
+  } {
+    const config = this.configService.get('fees.withdrawal');
+
+    if (!config?.enabled) {
+      return {
+        fee: 0,
+        netAmount: amount,
+        totalCharges: 0,
+      };
+    }
+
+    // Calculate percentage fee
+    let fee = Math.round(amount * (config.percentage / 100));
+
+    // Apply min fee
+    if (config.minFee && fee < config.minFee) {
+      fee = config.minFee;
+    }
+
+    // Apply max fee
+    if (config.maxFee && fee > config.maxFee) {
+      fee = config.maxFee;
+    }
+
+    // Add flat fee if any
+    if (config.flatFee) {
+      fee += config.flatFee;
+    }
+
+    const netAmount = amount;
+    const totalCharges = fee;
+
+    return {
+      fee,
+      netAmount,
+      totalCharges,
+    };
+  }
+
   // ============================================
-  // CALCULATE PAYMENT CHARGES (CHARGES ADDED ON TOP)
+  // CALCULATE PAYMENT CHARGES (UPDATED FOR BACHS)
   // ============================================
 
   calculatePaymentCharges(amount: number): {
     platformFee: number;
-    paystackFee: number;
+    gatewayFee: number;
     vat: number;
     totalCharges: number;
     totalAmount: number;
     netToOrganization: number;
   } {
-    // Organization gets the full amount (₦5,000)
+    // Organization gets the full amount
     const netToOrganization = amount;
 
-    // Platform fee: 2% of amount (₦100)
-    const platformFee = Math.round(amount * 0.02);
+    // Platform fee: 2% of amount
+    const platformFee = Math.round(amount * this.PLATFORM_FEE_PERCENTAGE);
 
-    // Paystack fee: 1.5% + ₦100 (₦175)
-    const paystackFee = Math.round(amount * 0.015) + 100;
+    // Payment gateway (Bachs) fee: 1.5% of amount (no fixed fee)
+    const gatewayFee = Math.round(amount * this.PAYMENT_GATEWAY_FEE_PERCENTAGE);
 
-    // VAT: 7.5% of platform fee (₦7.50)
+    // VAT: 7.5% of platform fee
     const vat = Math.round(platformFee * this.VAT_RATE);
 
     // Total charges added on top
-    const totalCharges = platformFee + paystackFee + vat;
+    const totalCharges = platformFee + gatewayFee + vat;
 
-    // Student pays: amount + charges (₦5,000 + ₦282.50 = ₦5,282.50)
+    // User pays: amount + charges
     const totalAmount = amount + totalCharges;
 
     return {
       platformFee,
-      paystackFee,
+      gatewayFee,
       vat,
       totalCharges,
       totalAmount,

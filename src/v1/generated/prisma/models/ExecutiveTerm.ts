@@ -214,8 +214,8 @@ export type ExecutiveTermWhereInput = {
   status?: Prisma.EnumTermStatusFilter<"ExecutiveTerm"> | $Enums.TermStatus
   createdAt?: Prisma.DateTimeFilter<"ExecutiveTerm"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ExecutiveTerm"> | Date | string
-  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   members?: Prisma.ExecutiveMemberListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }
 
 export type ExecutiveTermOrderByWithRelationInput = {
@@ -228,8 +228,8 @@ export type ExecutiveTermOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  organization?: Prisma.OrganizationOrderByWithRelationInput
   members?: Prisma.ExecutiveMemberOrderByRelationAggregateInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
 }
 
 export type ExecutiveTermWhereUniqueInput = Prisma.AtLeast<{
@@ -245,8 +245,8 @@ export type ExecutiveTermWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumTermStatusFilter<"ExecutiveTerm"> | $Enums.TermStatus
   createdAt?: Prisma.DateTimeFilter<"ExecutiveTerm"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ExecutiveTerm"> | Date | string
-  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   members?: Prisma.ExecutiveMemberListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
 }, "id">
 
 export type ExecutiveTermOrderByWithAggregationInput = {
@@ -288,8 +288,8 @@ export type ExecutiveTermCreateInput = {
   status?: $Enums.TermStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutExecutiveTermsInput
   members?: Prisma.ExecutiveMemberCreateNestedManyWithoutTermInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutExecutiveTermsInput
 }
 
 export type ExecutiveTermUncheckedCreateInput = {
@@ -314,8 +314,8 @@ export type ExecutiveTermUpdateInput = {
   status?: Prisma.EnumTermStatusFieldUpdateOperationsInput | $Enums.TermStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutExecutiveTermsNestedInput
   members?: Prisma.ExecutiveMemberUpdateManyWithoutTermNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutExecutiveTermsNestedInput
 }
 
 export type ExecutiveTermUncheckedUpdateInput = {
@@ -693,8 +693,8 @@ export type ExecutiveTermSelect<ExtArgs extends runtime.Types.Extensions.Interna
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   members?: boolean | Prisma.ExecutiveTerm$membersArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ExecutiveTermCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["executiveTerm"]>
 
@@ -738,8 +738,8 @@ export type ExecutiveTermSelectScalar = {
 
 export type ExecutiveTermOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "title" | "description" | "startDate" | "endDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["executiveTerm"]>
 export type ExecutiveTermInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   members?: boolean | Prisma.ExecutiveTerm$membersArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ExecutiveTermCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExecutiveTermIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -752,8 +752,8 @@ export type ExecutiveTermIncludeUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type $ExecutiveTermPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ExecutiveTerm"
   objects: {
-    organization: Prisma.$OrganizationPayload<ExtArgs>
     members: Prisma.$ExecutiveMemberPayload<ExtArgs>[]
+    organization: Prisma.$OrganizationPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1159,8 +1159,8 @@ readonly fields: ExecutiveTermFieldRefs;
  */
 export interface Prisma__ExecutiveTermClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   members<T extends Prisma.ExecutiveTerm$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExecutiveTerm$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExecutiveMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

@@ -22,11 +22,22 @@ interface AuthenticatedSocket extends Socket {
 }
 
 @WebSocketGateway({
-  cors: {
-    origin: process.env.FRONTEND_URL?.split(',') || [
-      'http://localhost:3000',
-      'http://localhost:3001',
-    ],
+    cors: {
+    origin: (origin: string, callback: (err: Error | null, allow: boolean) => void) => {
+      const rawOrigins =
+        process.env.CORS_ORIGIN ||
+        process.env.FRONTEND_URL ||
+        'http://localhost:3000,http://localhost:3001';
+      const allowedOrigins = rawOrigins
+        .split(',')
+        .map((o) => o.trim().replace(/\/+$/, ''))
+        .filter(Boolean);
+      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'), false);
+      }
+    },
     credentials: true,
   },
   namespace: 'notifications',

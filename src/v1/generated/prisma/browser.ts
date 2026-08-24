@@ -203,6 +203,16 @@ export type DuePayment = Prisma.DuePaymentModel
  */
 export type Withdrawal = Prisma.WithdrawalModel
 /**
+ * Model WithdrawalWebhook
+ * 
+ */
+export type WithdrawalWebhook = Prisma.WithdrawalWebhookModel
+/**
+ * Model BankAccount
+ * 
+ */
+export type BankAccount = Prisma.BankAccountModel
+/**
  * Model Refund
  * 
  */

@@ -434,6 +434,8 @@ export const ModelName = {
   DueAssignment: 'DueAssignment',
   DuePayment: 'DuePayment',
   Withdrawal: 'Withdrawal',
+  WithdrawalWebhook: 'WithdrawalWebhook',
+  BankAccount: 'BankAccount',
   Refund: 'Refund',
   Settlement: 'Settlement',
   SavingsGoal: 'SavingsGoal',
@@ -485,7 +487,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
+    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "withdrawalWebhook" | "bankAccount" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3227,6 +3229,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WithdrawalWebhook: {
+      payload: Prisma.$WithdrawalWebhookPayload<ExtArgs>
+      fields: Prisma.WithdrawalWebhookFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WithdrawalWebhookFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WithdrawalWebhookFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>
+        }
+        findFirst: {
+          args: Prisma.WithdrawalWebhookFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WithdrawalWebhookFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>
+        }
+        findMany: {
+          args: Prisma.WithdrawalWebhookFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>[]
+        }
+        create: {
+          args: Prisma.WithdrawalWebhookCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>
+        }
+        createMany: {
+          args: Prisma.WithdrawalWebhookCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WithdrawalWebhookCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>[]
+        }
+        delete: {
+          args: Prisma.WithdrawalWebhookDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>
+        }
+        update: {
+          args: Prisma.WithdrawalWebhookUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>
+        }
+        deleteMany: {
+          args: Prisma.WithdrawalWebhookDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WithdrawalWebhookUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WithdrawalWebhookUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>[]
+        }
+        upsert: {
+          args: Prisma.WithdrawalWebhookUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WithdrawalWebhookPayload>
+        }
+        aggregate: {
+          args: Prisma.WithdrawalWebhookAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWithdrawalWebhook>
+        }
+        groupBy: {
+          args: Prisma.WithdrawalWebhookGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WithdrawalWebhookGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WithdrawalWebhookCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WithdrawalWebhookCountAggregateOutputType> | number
+        }
+      }
+    }
+    BankAccount: {
+      payload: Prisma.$BankAccountPayload<ExtArgs>
+      fields: Prisma.BankAccountFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BankAccountFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BankAccountFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>
+        }
+        findFirst: {
+          args: Prisma.BankAccountFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BankAccountFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>
+        }
+        findMany: {
+          args: Prisma.BankAccountFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>[]
+        }
+        create: {
+          args: Prisma.BankAccountCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>
+        }
+        createMany: {
+          args: Prisma.BankAccountCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BankAccountCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>[]
+        }
+        delete: {
+          args: Prisma.BankAccountDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>
+        }
+        update: {
+          args: Prisma.BankAccountUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>
+        }
+        deleteMany: {
+          args: Prisma.BankAccountDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BankAccountUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BankAccountUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>[]
+        }
+        upsert: {
+          args: Prisma.BankAccountUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BankAccountPayload>
+        }
+        aggregate: {
+          args: Prisma.BankAccountAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBankAccount>
+        }
+        groupBy: {
+          args: Prisma.BankAccountGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankAccountGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BankAccountCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BankAccountCountAggregateOutputType> | number
+        }
+      }
+    }
     Refund: {
       payload: Prisma.$RefundPayload<ExtArgs>
       fields: Prisma.RefundFieldRefs
@@ -5933,15 +6083,15 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  username: 'username',
   passwordHash: 'passwordHash',
   emailVerified: 'emailVerified',
-  status: 'status',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  username: 'username',
   deletedAt: 'deletedAt',
-  deletedBy: 'deletedBy'
+  deletedBy: 'deletedBy',
+  status: 'status'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -5950,18 +6100,18 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  refreshTokenHash: 'refreshTokenHash',
-  deviceName: 'deviceName',
-  browser: 'browser',
-  operatingSystem: 'operatingSystem',
+  expiresAt: 'expiresAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  revokedReason: 'revokedReason',
   createdAt: 'createdAt',
-  expiresAt: 'expiresAt',
+  browser: 'browser',
+  deviceName: 'deviceName',
+  isActive: 'isActive',
   lastUsedAt: 'lastUsedAt',
+  operatingSystem: 'operatingSystem',
+  refreshTokenHash: 'refreshTokenHash',
   revokedAt: 'revokedAt',
-  isActive: 'isActive'
+  revokedReason: 'revokedReason'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -6049,6 +6199,7 @@ export const FacultyScalarFieldEnum = {
   institutionId: 'institutionId',
   name: 'name',
   code: 'code',
+  logo: 'logo',
   status: 'status',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
@@ -6064,6 +6215,7 @@ export const DepartmentScalarFieldEnum = {
   facultyId: 'facultyId',
   name: 'name',
   code: 'code',
+  logo: 'logo',
   promotionType: 'promotionType',
   status: 'status',
   createdBy: 'createdBy',
@@ -6092,10 +6244,14 @@ export type AcademicLevelScalarFieldEnum = (typeof AcademicLevelScalarFieldEnum)
 export const AcademicSessionScalarFieldEnum = {
   id: 'id',
   institutionId: 'institutionId',
+  facultyId: 'facultyId',
+  departmentId: 'departmentId',
+  academicLevelId: 'academicLevelId',
   name: 'name',
   startDate: 'startDate',
   endDate: 'endDate',
   status: 'status',
+  scope: 'scope',
   isCurrent: 'isCurrent',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
@@ -6207,7 +6363,8 @@ export const OrganizationScalarFieldEnum = {
   deletedAt: 'deletedAt',
   deletedBy: 'deletedBy',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  academicSessionId: 'academicSessionId'
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
@@ -6304,7 +6461,8 @@ export const AdminScalarFieldEnum = {
   updatedAt: 'updatedAt',
   status: 'status',
   revokedAt: 'revokedAt',
-  revokedReason: 'revokedReason'
+  revokedReason: 'revokedReason',
+  academicSessionId: 'academicSessionId'
 } as const
 
 export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
@@ -6342,13 +6500,15 @@ export const WalletScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   organizationId: 'organizationId',
+  isPlatformWallet: 'isPlatformWallet',
   balance: 'balance',
   heldBalance: 'heldBalance',
   currency: 'currency',
   status: 'status',
+  ledgerAccountId: 'ledgerAccountId',
+  metadata: 'metadata',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  ledgerAccountId: 'ledgerAccountId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type WalletScalarFieldEnum = (typeof WalletScalarFieldEnum)[keyof typeof WalletScalarFieldEnum]
@@ -6371,24 +6531,24 @@ export type WalletHoldScalarFieldEnum = (typeof WalletHoldScalarFieldEnum)[keyof
 export const LedgerAccountScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
-  walletId: 'walletId',
-  code: 'code',
   name: 'name',
-  description: 'description',
+  code: 'code',
   type: 'type',
-  category: 'category',
-  ownerType: 'ownerType',
-  ownerId: 'ownerId',
   balance: 'balance',
-  pendingBalance: 'pendingBalance',
   currency: 'currency',
   isActive: 'isActive',
-  isSystem: 'isSystem',
-  parentId: 'parentId',
-  createdBy: 'createdBy',
-  metadata: 'metadata',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  category: 'category',
+  description: 'description',
+  isSystem: 'isSystem',
+  ownerId: 'ownerId',
+  ownerType: 'ownerType',
+  parentId: 'parentId',
+  pendingBalance: 'pendingBalance',
+  walletId: 'walletId',
+  createdBy: 'createdBy',
+  metadata: 'metadata'
 } as const
 
 export type LedgerAccountScalarFieldEnum = (typeof LedgerAccountScalarFieldEnum)[keyof typeof LedgerAccountScalarFieldEnum]
@@ -6455,12 +6615,12 @@ export const TransactionScalarFieldEnum = {
   reference: 'reference',
   description: 'description',
   metadata: 'metadata',
-  journalEntryId: 'journalEntryId',
   completedAt: 'completedAt',
   failedAt: 'failedAt',
   failureReason: 'failureReason',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  journalEntryId: 'journalEntryId'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -6478,13 +6638,13 @@ export const PaymentScalarFieldEnum = {
   reference: 'reference',
   description: 'description',
   metadata: 'metadata',
-  bachsChargeId: 'bachsChargeId',
-  bachsCheckoutId: 'bachsCheckoutId',
-  bachsCustomerId: 'bachsCustomerId',
-  journalEntryId: 'journalEntryId',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  journalEntryId: 'journalEntryId',
+  bachsChargeId: 'bachsChargeId',
+  bachsCheckoutId: 'bachsCheckoutId',
+  bachsCustomerId: 'bachsCustomerId'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -6540,21 +6700,60 @@ export const WithdrawalScalarFieldEnum = {
   walletId: 'walletId',
   transactionId: 'transactionId',
   amount: 'amount',
+  fee: 'fee',
+  netAmount: 'netAmount',
   status: 'status',
   bankName: 'bankName',
   accountNumber: 'accountNumber',
   accountName: 'accountName',
   reference: 'reference',
   metadata: 'metadata',
-  journalEntryId: 'journalEntryId',
   requestedAt: 'requestedAt',
   processedAt: 'processedAt',
   completedAt: 'completedAt',
   failedAt: 'failedAt',
-  failureReason: 'failureReason'
+  failureReason: 'failureReason',
+  journalEntryId: 'journalEntryId',
+  webhookId: 'webhookId',
+  webhookStatus: 'webhookStatus',
+  webhookAttempts: 'webhookAttempts',
+  webhookResponse: 'webhookResponse',
+  webhookCompletedAt: 'webhookCompletedAt'
 } as const
 
 export type WithdrawalScalarFieldEnum = (typeof WithdrawalScalarFieldEnum)[keyof typeof WithdrawalScalarFieldEnum]
+
+
+export const WithdrawalWebhookScalarFieldEnum = {
+  id: 'id',
+  withdrawalId: 'withdrawalId',
+  event: 'event',
+  status: 'status',
+  amount: 'amount',
+  reference: 'reference',
+  provider: 'provider',
+  providerReference: 'providerReference',
+  response: 'response',
+  receivedAt: 'receivedAt',
+  processedAt: 'processedAt'
+} as const
+
+export type WithdrawalWebhookScalarFieldEnum = (typeof WithdrawalWebhookScalarFieldEnum)[keyof typeof WithdrawalWebhookScalarFieldEnum]
+
+
+export const BankAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  accountName: 'accountName',
+  bankCode: 'bankCode',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankAccountScalarFieldEnum = (typeof BankAccountScalarFieldEnum)[keyof typeof BankAccountScalarFieldEnum]
 
 
 export const RefundScalarFieldEnum = {
@@ -6565,9 +6764,9 @@ export const RefundScalarFieldEnum = {
   reason: 'reason',
   status: 'status',
   transactionId: 'transactionId',
-  journalEntryId: 'journalEntryId',
   createdAt: 'createdAt',
-  processedAt: 'processedAt'
+  processedAt: 'processedAt',
+  journalEntryId: 'journalEntryId'
 } as const
 
 export type RefundScalarFieldEnum = (typeof RefundScalarFieldEnum)[keyof typeof RefundScalarFieldEnum]
@@ -6998,7 +7197,6 @@ export type CommitteeScalarFieldEnum = (typeof CommitteeScalarFieldEnum)[keyof t
 export const EventScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
-  createdBy: 'createdBy',
   title: 'title',
   description: 'description',
   location: 'location',
@@ -7007,14 +7205,15 @@ export const EventScalarFieldEnum = {
   capacity: 'capacity',
   isFree: 'isFree',
   price: 'price',
-  isPublic: 'isPublic',
-  isApproved: 'isApproved',
-  approvedBy: 'approvedBy',
-  approvedAt: 'approvedAt',
-  rejectionReason: 'rejectionReason',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  approvedAt: 'approvedAt',
+  approvedBy: 'approvedBy',
+  createdBy: 'createdBy',
+  isApproved: 'isApproved',
+  isPublic: 'isPublic',
+  rejectionReason: 'rejectionReason'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
@@ -7186,20 +7385,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'UserStatus'
- */
-export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
-    
-
-
-/**
- * Reference to a field of type 'UserStatus[]'
- */
-export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -7210,6 +7395,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserStatus'
+ */
+export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'UserStatus[]'
+ */
+export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
     
 
 
@@ -7350,6 +7549,20 @@ export type EnumAcademicSessionStatusFieldRefInput<$PrismaModel> = FieldRefInput
  * Reference to a field of type 'AcademicSessionStatus[]'
  */
 export type ListEnumAcademicSessionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AcademicSessionStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SessionScope'
+ */
+export type EnumSessionScopeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionScope'>
+    
+
+
+/**
+ * Reference to a field of type 'SessionScope[]'
+ */
+export type ListEnumSessionScopeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SessionScope[]'>
     
 
 
@@ -7564,6 +7777,20 @@ export type ListEnumWalletStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'HoldStatus'
  */
 export type EnumHoldStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HoldStatus'>
@@ -7616,20 +7843,6 @@ export type EnumLedgerAccountOwnerTypeFieldRefInput<$PrismaModel> = FieldRefInpu
  * Reference to a field of type 'LedgerAccountOwnerType[]'
  */
 export type ListEnumLedgerAccountOwnerTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LedgerAccountOwnerType[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -8254,6 +8467,8 @@ export type GlobalOmitConfig = {
   dueAssignment?: Prisma.DueAssignmentOmit
   duePayment?: Prisma.DuePaymentOmit
   withdrawal?: Prisma.WithdrawalOmit
+  withdrawalWebhook?: Prisma.WithdrawalWebhookOmit
+  bankAccount?: Prisma.BankAccountOmit
   refund?: Prisma.RefundOmit
   settlement?: Prisma.SettlementOmit
   savingsGoal?: Prisma.SavingsGoalOmit

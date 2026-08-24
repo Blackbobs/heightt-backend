@@ -9,6 +9,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { BachsClient } from './bachs.client';
 import { ConfigService } from '@nestjs/config';
 import { EventService, SystemEvents } from '../../events/event.service';
+import { CurrencyUtil } from '../../common/utils/currency.util';
 
 export interface PendingPaymentData {
   userId: string;
@@ -21,6 +22,13 @@ export interface PendingPaymentData {
   reference?: string;
   metadata?: Record<string, any>;
 }
+
+/**
+ * Minimum amount (in Kobo) accepted by the Bachs payment provider
+ * per checkout session. Bachs rejects smaller amounts with:
+ * "amount must be at least 100.00 NGN"
+ */
+export const MIN_BACHS_CHECKOUT_AMOUNT_KOBO = 10_000; // ₦100
 
 @Injectable()
 export class BachsService {
@@ -46,6 +54,16 @@ export class BachsService {
     checkoutUrl: string;
     pendingPaymentId: string;
   }> {
+    // 0. Validate amount against the Bachs provider minimum before any
+    //    DB writes or external calls (Bachs rejects amounts below ₦100)
+    if (paymentData.amount < MIN_BACHS_CHECKOUT_AMOUNT_KOBO) {
+      throw new BadRequestException(
+        `Amount must be at least ${CurrencyUtil.formatNaira(
+          MIN_BACHS_CHECKOUT_AMOUNT_KOBO,
+        )} (${MIN_BACHS_CHECKOUT_AMOUNT_KOBO} Kobo)`,
+      );
+    }
+
     // 1. Get user details
     const user = await this.prisma.user.findUnique({
       where: { id: userId },

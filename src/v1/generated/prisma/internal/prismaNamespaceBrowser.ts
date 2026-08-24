@@ -88,6 +88,8 @@ export const ModelName = {
   DueAssignment: 'DueAssignment',
   DuePayment: 'DuePayment',
   Withdrawal: 'Withdrawal',
+  WithdrawalWebhook: 'WithdrawalWebhook',
+  BankAccount: 'BankAccount',
   Refund: 'Refund',
   Settlement: 'Settlement',
   SavingsGoal: 'SavingsGoal',
@@ -145,15 +147,15 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
-  username: 'username',
   passwordHash: 'passwordHash',
   emailVerified: 'emailVerified',
-  status: 'status',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  username: 'username',
   deletedAt: 'deletedAt',
-  deletedBy: 'deletedBy'
+  deletedBy: 'deletedBy',
+  status: 'status'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -162,18 +164,18 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  refreshTokenHash: 'refreshTokenHash',
-  deviceName: 'deviceName',
-  browser: 'browser',
-  operatingSystem: 'operatingSystem',
+  expiresAt: 'expiresAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  revokedReason: 'revokedReason',
   createdAt: 'createdAt',
-  expiresAt: 'expiresAt',
+  browser: 'browser',
+  deviceName: 'deviceName',
+  isActive: 'isActive',
   lastUsedAt: 'lastUsedAt',
+  operatingSystem: 'operatingSystem',
+  refreshTokenHash: 'refreshTokenHash',
   revokedAt: 'revokedAt',
-  isActive: 'isActive'
+  revokedReason: 'revokedReason'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -261,6 +263,7 @@ export const FacultyScalarFieldEnum = {
   institutionId: 'institutionId',
   name: 'name',
   code: 'code',
+  logo: 'logo',
   status: 'status',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
@@ -276,6 +279,7 @@ export const DepartmentScalarFieldEnum = {
   facultyId: 'facultyId',
   name: 'name',
   code: 'code',
+  logo: 'logo',
   promotionType: 'promotionType',
   status: 'status',
   createdBy: 'createdBy',
@@ -304,10 +308,14 @@ export type AcademicLevelScalarFieldEnum = (typeof AcademicLevelScalarFieldEnum)
 export const AcademicSessionScalarFieldEnum = {
   id: 'id',
   institutionId: 'institutionId',
+  facultyId: 'facultyId',
+  departmentId: 'departmentId',
+  academicLevelId: 'academicLevelId',
   name: 'name',
   startDate: 'startDate',
   endDate: 'endDate',
   status: 'status',
+  scope: 'scope',
   isCurrent: 'isCurrent',
   createdBy: 'createdBy',
   updatedBy: 'updatedBy',
@@ -419,7 +427,8 @@ export const OrganizationScalarFieldEnum = {
   deletedAt: 'deletedAt',
   deletedBy: 'deletedBy',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  academicSessionId: 'academicSessionId'
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
@@ -516,7 +525,8 @@ export const AdminScalarFieldEnum = {
   updatedAt: 'updatedAt',
   status: 'status',
   revokedAt: 'revokedAt',
-  revokedReason: 'revokedReason'
+  revokedReason: 'revokedReason',
+  academicSessionId: 'academicSessionId'
 } as const
 
 export type AdminScalarFieldEnum = (typeof AdminScalarFieldEnum)[keyof typeof AdminScalarFieldEnum]
@@ -554,13 +564,15 @@ export const WalletScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   organizationId: 'organizationId',
+  isPlatformWallet: 'isPlatformWallet',
   balance: 'balance',
   heldBalance: 'heldBalance',
   currency: 'currency',
   status: 'status',
+  ledgerAccountId: 'ledgerAccountId',
+  metadata: 'metadata',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  ledgerAccountId: 'ledgerAccountId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type WalletScalarFieldEnum = (typeof WalletScalarFieldEnum)[keyof typeof WalletScalarFieldEnum]
@@ -583,24 +595,24 @@ export type WalletHoldScalarFieldEnum = (typeof WalletHoldScalarFieldEnum)[keyof
 export const LedgerAccountScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
-  walletId: 'walletId',
-  code: 'code',
   name: 'name',
-  description: 'description',
+  code: 'code',
   type: 'type',
-  category: 'category',
-  ownerType: 'ownerType',
-  ownerId: 'ownerId',
   balance: 'balance',
-  pendingBalance: 'pendingBalance',
   currency: 'currency',
   isActive: 'isActive',
-  isSystem: 'isSystem',
-  parentId: 'parentId',
-  createdBy: 'createdBy',
-  metadata: 'metadata',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  category: 'category',
+  description: 'description',
+  isSystem: 'isSystem',
+  ownerId: 'ownerId',
+  ownerType: 'ownerType',
+  parentId: 'parentId',
+  pendingBalance: 'pendingBalance',
+  walletId: 'walletId',
+  createdBy: 'createdBy',
+  metadata: 'metadata'
 } as const
 
 export type LedgerAccountScalarFieldEnum = (typeof LedgerAccountScalarFieldEnum)[keyof typeof LedgerAccountScalarFieldEnum]
@@ -667,12 +679,12 @@ export const TransactionScalarFieldEnum = {
   reference: 'reference',
   description: 'description',
   metadata: 'metadata',
-  journalEntryId: 'journalEntryId',
   completedAt: 'completedAt',
   failedAt: 'failedAt',
   failureReason: 'failureReason',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  journalEntryId: 'journalEntryId'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -690,13 +702,13 @@ export const PaymentScalarFieldEnum = {
   reference: 'reference',
   description: 'description',
   metadata: 'metadata',
-  bachsChargeId: 'bachsChargeId',
-  bachsCheckoutId: 'bachsCheckoutId',
-  bachsCustomerId: 'bachsCustomerId',
-  journalEntryId: 'journalEntryId',
   paidAt: 'paidAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  journalEntryId: 'journalEntryId',
+  bachsChargeId: 'bachsChargeId',
+  bachsCheckoutId: 'bachsCheckoutId',
+  bachsCustomerId: 'bachsCustomerId'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -752,21 +764,60 @@ export const WithdrawalScalarFieldEnum = {
   walletId: 'walletId',
   transactionId: 'transactionId',
   amount: 'amount',
+  fee: 'fee',
+  netAmount: 'netAmount',
   status: 'status',
   bankName: 'bankName',
   accountNumber: 'accountNumber',
   accountName: 'accountName',
   reference: 'reference',
   metadata: 'metadata',
-  journalEntryId: 'journalEntryId',
   requestedAt: 'requestedAt',
   processedAt: 'processedAt',
   completedAt: 'completedAt',
   failedAt: 'failedAt',
-  failureReason: 'failureReason'
+  failureReason: 'failureReason',
+  journalEntryId: 'journalEntryId',
+  webhookId: 'webhookId',
+  webhookStatus: 'webhookStatus',
+  webhookAttempts: 'webhookAttempts',
+  webhookResponse: 'webhookResponse',
+  webhookCompletedAt: 'webhookCompletedAt'
 } as const
 
 export type WithdrawalScalarFieldEnum = (typeof WithdrawalScalarFieldEnum)[keyof typeof WithdrawalScalarFieldEnum]
+
+
+export const WithdrawalWebhookScalarFieldEnum = {
+  id: 'id',
+  withdrawalId: 'withdrawalId',
+  event: 'event',
+  status: 'status',
+  amount: 'amount',
+  reference: 'reference',
+  provider: 'provider',
+  providerReference: 'providerReference',
+  response: 'response',
+  receivedAt: 'receivedAt',
+  processedAt: 'processedAt'
+} as const
+
+export type WithdrawalWebhookScalarFieldEnum = (typeof WithdrawalWebhookScalarFieldEnum)[keyof typeof WithdrawalWebhookScalarFieldEnum]
+
+
+export const BankAccountScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  accountName: 'accountName',
+  bankCode: 'bankCode',
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BankAccountScalarFieldEnum = (typeof BankAccountScalarFieldEnum)[keyof typeof BankAccountScalarFieldEnum]
 
 
 export const RefundScalarFieldEnum = {
@@ -777,9 +828,9 @@ export const RefundScalarFieldEnum = {
   reason: 'reason',
   status: 'status',
   transactionId: 'transactionId',
-  journalEntryId: 'journalEntryId',
   createdAt: 'createdAt',
-  processedAt: 'processedAt'
+  processedAt: 'processedAt',
+  journalEntryId: 'journalEntryId'
 } as const
 
 export type RefundScalarFieldEnum = (typeof RefundScalarFieldEnum)[keyof typeof RefundScalarFieldEnum]
@@ -1210,7 +1261,6 @@ export type CommitteeScalarFieldEnum = (typeof CommitteeScalarFieldEnum)[keyof t
 export const EventScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
-  createdBy: 'createdBy',
   title: 'title',
   description: 'description',
   location: 'location',
@@ -1219,14 +1269,15 @@ export const EventScalarFieldEnum = {
   capacity: 'capacity',
   isFree: 'isFree',
   price: 'price',
-  isPublic: 'isPublic',
-  isApproved: 'isApproved',
-  approvedBy: 'approvedBy',
-  approvedAt: 'approvedAt',
-  rejectionReason: 'rejectionReason',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  approvedAt: 'approvedAt',
+  approvedBy: 'approvedBy',
+  createdBy: 'createdBy',
+  isApproved: 'isApproved',
+  isPublic: 'isPublic',
+  rejectionReason: 'rejectionReason'
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]

@@ -1,3 +1,5 @@
+// src/v1/auth/auth.controller.ts
+
 import {
   Controller,
   Post,
@@ -27,7 +29,7 @@ import {
   ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto } from './dto';
+import { RegisterDto, LoginDto, AdminLoginResponseDto } from './dto';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
@@ -58,7 +60,19 @@ export class AuthController {
   @ApiBody({ type: RegisterDto })
   @ApiCreatedResponse({
     description: 'User registered successfully',
-    type: AuthResponseDto,
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', example: 'usr_abc123' },
+        email: { type: 'string', example: 'john@example.com' },
+        username: { type: 'string', example: 'john_doe' },
+        message: {
+          type: 'string',
+          example:
+            'Registration successful. Please check your email for verification.',
+        },
+      },
+    },
   })
   @ApiConflictResponse({ description: 'Email or username already exists' })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
@@ -79,7 +93,18 @@ export class AuthController {
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
     description: 'Login successful',
-    type: AuthResponseDto,
+    schema: {
+      type: 'object',
+      properties: {
+        id: { type: 'string', example: 'usr_abc123' },
+        email: { type: 'string', example: 'john@example.com' },
+        username: { type: 'string', example: 'john_doe' },
+        emailVerified: { type: 'boolean', example: true },
+        hasCompletedOnboarding: { type: 'boolean', example: false },
+        onboardingStep: { type: 'string', example: 'PERSONAL_INFO' },
+        sessionId: { type: 'string', example: 'sess_abc123' },
+      },
+    },
   })
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @ApiBadRequestResponse({ description: 'Invalid input data' })
@@ -106,8 +131,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        message: { type: 'string' },
-        accessToken: { type: 'string' },
+        message: { type: 'string', example: 'Tokens refreshed successfully' },
       },
     },
   })
@@ -303,6 +327,35 @@ export class AuthController {
       message:
         'Include this token in X-CSRF-Token header for subsequent requests',
     };
+  }
+
+  @Post('admin/login')
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth'])
+  @ApiOperation({
+    summary: 'Admin Login',
+    description:
+      'Authenticates a user with admin privileges. Supports PLATFORM_ADMIN, INSTITUTION_ADMIN, FACULTY_ADMIN, DEPARTMENT_ADMIN, ORGANIZATION_ADMIN, and CLUB_ADMIN.',
+  })
+  @ApiBody({ type: LoginDto })
+  @ApiOkResponse({
+    description: 'Admin login successful',
+    type: AdminLoginResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid credentials or not an admin',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  async adminLogin(
+    @Body() dto: LoginDto,
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    this.logger.log(
+      `Admin login endpoint called for identifier: ${dto.identifier}`,
+    );
+    return this.authService.adminLogin(dto, req, res);
   }
 
   @Post('cache/invalidate')

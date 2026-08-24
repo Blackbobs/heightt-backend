@@ -26,14 +26,10 @@ export class OnboardingService {
 
   async invalidateOnboardingCache(userId: string): Promise<void> {
     try {
-      // Invalidate onboarding tags
       await this.cacheService.invalidateByTag('onboarding');
       await this.cacheService.invalidateByTag('user');
-      // Delete specific user onboarding cache
       await this.cacheService.delete(`onboarding:status:${userId}`);
-      // Also invalidate user profile cache
       await this.cacheService.invalidateUserCache(userId);
-
       this.logger.debug(`Onboarding cache invalidated for user: ${userId}`);
     } catch (error) {
       this.logger.error(
@@ -43,216 +39,285 @@ export class OnboardingService {
   }
 
   // ============================================
-  // COMPLETE ONBOARDING (with simple text inputs)
+  // COMPLETE ONBOARDING (with Transaction)
   // ============================================
 
   async completeOnboarding(
     userId: string,
     body: {
+      firstName?: string;
+      lastName?: string;
       phone?: string;
       studentId?: string;
+      gender?: string;
+      dateOfBirth?: string;
+      country?: string;
+      state?: string;
+      bio?: string;
       institution?: string;
       faculty?: string;
       department?: string;
-      organizationId?: string;
-      membershipType?: string;
+      academicLevelId?: string;
+      sessionId?: string; // NEW
     },
   ) {
     this.logger.log(`Completing onboarding for user: ${userId}`);
 
-    // Update user profile with onboarding data
-    await this.prisma.userProfile.update({
-      where: { userId },
-      data: {
-        phone: body.phone,
-        onboardingStep: 'COMPLETED',
-        onboardingCompleted: true,
-        onboardingCompletedAt: new Date(),
-      },
-    });
-
-    // If institution info is provided, update student profile
-    if (body.institution && body.faculty && body.department) {
-      // Find or create institution
-      let institution = await this.prisma.institution.findFirst({
-        where: { name: body.institution },
-      });
-
-      if (!institution) {
-        institution = await this.prisma.institution.create({
-          data: {
-            name: body.institution,
-            shortName: body.institution.substring(0, 10),
-            code: body.institution.substring(0, 10).toUpperCase(),
-            status: 'ACTIVE',
-          },
-        });
+    // Validate date of birth
+    if (body.dateOfBirth) {
+      const dob = new Date(body.dateOfBirth);
+      if (isNaN(dob.getTime())) {
+        throw new BadRequestException('Invalid date of birth format');
       }
-
-      // Find or create faculty
-      let faculty = await this.prisma.faculty.findFirst({
-        where: {
-          name: body.faculty,
-          institutionId: institution.id,
-        },
-      });
-
-      if (!faculty) {
-        faculty = await this.prisma.faculty.create({
-          data: {
-            name: body.faculty,
-            code: body.faculty.substring(0, 10).toUpperCase(),
-            institutionId: institution.id,
-            status: 'ACTIVE',
-          },
-        });
+      const age = new Date().getFullYear() - dob.getFullYear();
+      if (age < 16) {
+        throw new BadRequestException('You must be at least 16 years old');
       }
-
-      // Find or create department
-      let department = await this.prisma.department.findFirst({
-        where: {
-          name: body.department,
-          facultyId: faculty.id,
-        },
-      });
-
-      if (!department) {
-        department = await this.prisma.department.create({
-          data: {
-            name: body.department,
-            code: body.department.substring(0, 10).toUpperCase(),
-            facultyId: faculty.id,
-            promotionType: 'AUTOMATIC',
-            status: 'ACTIVE',
-          },
-        });
-      }
-
-      // Update or create student profile
-      await this.prisma.studentProfile.upsert({
-        where: { userId },
-        update: {
-          institutionId: institution.id,
-          facultyId: faculty.id,
-          departmentId: department.id,
-          onboardingStep: 'COMPLETED',
-          onboardingCompleted: true,
-          onboardingCompletedAt: new Date(),
-        },
-        create: {
-          userId,
-          institutionId: institution.id,
-          facultyId: faculty.id,
-          departmentId: department.id,
-          matricNumber: body.studentId || '',
-          onboardingStep: 'COMPLETED',
-          onboardingCompleted: true,
-          onboardingCompletedAt: new Date(),
-        },
-      });
-      // Auto-join matching institutional organizations
-      await this.autoJoinInstitutionalOrganizations(
-        userId,
-        institution.id,
-        faculty.id,
-        department.id,
-      );
     }
 
-    // If explicit organization is provided, directly join
-    if (body.organizationId) {
-      // Check if organization exists and is active
-      const organization = await this.prisma.organization.findUnique({
-        where: { id: body.organizationId },
+    // NEW: Validate session if provided
+    let session: any = null;
+    if (body.sessionId) {
+      session = await this.prisma.academicSession.findUnique({
+        where: { id: body.sessionId },
       });
-
-      if (!organization) {
-        throw new NotFoundException('Organization not found');
+      if (!session) {
+        throw new BadRequestException('Academic session not found');
       }
+    }
 
-      if (organization.status !== 'ACTIVE') {
-        throw new BadRequestException(
-          'Organization is not active and cannot accept new members',
-        );
-      }
-
-      // Check if user is already a member
-      const existingMembership = await this.prisma.organizationMembership.findUnique({
-        where: {
-          organizationId_userId: {
-            organizationId: body.organizationId,
-            userId,
-          },
+    const result = await this.prisma.$transaction(async (tx) => {
+      // 1. Update user profile
+      const updatedProfile = await tx.userProfile.update({
+        where: { userId },
+        data: {
+          firstName: body.firstName,
+          lastName: body.lastName,
+          phone: body.phone,
+          gender: body.gender as any,
+          dateOfBirth: body.dateOfBirth
+            ? new Date(body.dateOfBirth)
+            : undefined,
+          country: body.country,
+          state: body.state,
+          bio: body.bio,
+          onboardingStep: 'INSTITUTION',
         },
       });
 
-      if (!existingMembership) {
-        // Directly create active membership (No pending request needed)
-        await this.prisma.organizationMembership.create({
-          data: {
-            organizationId: body.organizationId,
-            userId,
-            membershipType: (body.membershipType as any) || 'STUDENT',
-            status: 'ACTIVE',
-            joinedAt: new Date(),
-            isPrimary: true,
+      let studentProfile = null as any;
+      let academicLevelId = body.academicLevelId;
+      let institution: any = null;
+      let faculty: any = null;
+      let department: any = null;
+
+      if (body.institution && body.faculty && body.department) {
+        // Find or create institution
+        institution = await tx.institution.findFirst({
+          where: { name: body.institution },
+        });
+
+        if (!institution) {
+          institution = await tx.institution.create({
+            data: {
+              name: body.institution,
+              shortName: body.institution.substring(0, 10),
+              code: body.institution.substring(0, 10).toUpperCase(),
+              status: 'ACTIVE',
+            },
+          });
+        }
+
+        // NEW: Validate session belongs to institution
+        if (session && session.institutionId !== institution.id) {
+          throw new BadRequestException(
+            'Session does not belong to the selected institution',
+          );
+        }
+
+        // Find or create faculty
+        faculty = await tx.faculty.findFirst({
+          where: {
+            name: body.faculty,
+            institutionId: institution.id,
           },
         });
 
-        // Record approved join request for history
-        await this.prisma.organizationJoinRequest.upsert({
-          where: {
-            organizationId_userId: {
-              organizationId: body.organizationId,
-              userId,
+        if (!faculty) {
+          faculty = await tx.faculty.create({
+            data: {
+              name: body.faculty,
+              code: body.faculty.substring(0, 10).toUpperCase(),
+              institutionId: institution.id,
+              status: 'ACTIVE',
             },
+          });
+        }
+
+        // Find or create department
+        department = await tx.department.findFirst({
+          where: {
+            name: body.department,
+            facultyId: faculty.id,
           },
+        });
+
+        if (!department) {
+          department = await tx.department.create({
+            data: {
+              name: body.department,
+              code: body.department.substring(0, 10).toUpperCase(),
+              facultyId: faculty.id,
+              promotionType: 'AUTOMATIC',
+              status: 'ACTIVE',
+            },
+          });
+        }
+
+        // Find or create academic level
+        if (body.academicLevelId) {
+          let level = await tx.academicLevel.findUnique({
+            where: { id: body.academicLevelId },
+          });
+
+          if (!level) {
+            const numericLevel = parseInt(body.academicLevelId) || 100;
+            const levelName = `${numericLevel} Level`;
+
+            level = await tx.academicLevel.findFirst({
+              where: {
+                departmentId: department.id,
+                name: levelName,
+              },
+            });
+
+            if (!level) {
+              const createdLevel = await tx.academicLevel.create({
+                data: {
+                  name: levelName,
+                  numericLevel,
+                  order: numericLevel / 100,
+                  departmentId: department.id,
+                  status: 'ACTIVE',
+                },
+              });
+              academicLevelId = createdLevel.id;
+            } else {
+              academicLevelId = level.id;
+            }
+          } else {
+            academicLevelId = level.id;
+          }
+        } else {
+          const defaultLevel = await tx.academicLevel.findFirst({
+            where: {
+              departmentId: department.id,
+              numericLevel: 100,
+            },
+          });
+          if (defaultLevel) {
+            academicLevelId = defaultLevel.id;
+          }
+        }
+
+        // Create or update student profile
+        studentProfile = await tx.studentProfile.upsert({
+          where: { userId },
           update: {
-            status: 'APPROVED',
-            reviewedAt: new Date(),
+            institutionId: institution.id,
+            facultyId: faculty.id,
+            departmentId: department.id,
+            currentAcademicLevelId: academicLevelId,
+            matricNumber: body.studentId || '',
+            onboardingStep: 'COMPLETED',
+            onboardingCompleted: true,
+            onboardingCompletedAt: new Date(),
           },
           create: {
-            organizationId: body.organizationId,
             userId,
-            membershipType: (body.membershipType as any) || 'STUDENT',
-            status: 'APPROVED',
-            reviewedAt: new Date(),
-            message: 'Direct join during onboarding',
+            institutionId: institution.id,
+            facultyId: faculty.id,
+            departmentId: department.id,
+            currentAcademicLevelId: academicLevelId,
+            matricNumber: body.studentId || '',
+            onboardingStep: 'COMPLETED',
+            onboardingCompleted: true,
+            onboardingCompletedAt: new Date(),
           },
         });
 
-        this.logger.log(
-          `User ${userId} directly joined organization ${body.organizationId} during onboarding`,
-        );
-      } else {
-        this.logger.log(
-          `User ${userId} is already a member of organization ${body.organizationId}`,
+        // NEW: Create academic record for the session
+        if (session && academicLevelId) {
+          await tx.studentAcademicRecord.create({
+            data: {
+              studentId: studentProfile.id,
+              sessionId: session.id,
+              departmentId: department.id,
+              academicLevelId: academicLevelId,
+              status: 'ACTIVE',
+            },
+          });
+          this.logger.log(
+            `Academic record created for student ${studentProfile.id} in session ${session.id}`,
+          );
+        }
+
+        // Auto-join institutional organizations
+        await this.autoJoinInstitutionalOrganizationsInTransaction(
+          tx,
+          userId,
+          institution.id,
+          faculty.id,
+          department.id,
+          academicLevelId,
+          session?.id, // NEW: Pass session ID
         );
       }
-    }
 
-    // Log activity
-    await this.prisma.activityLog.create({
-      data: {
-        userId,
-        activity: 'ONBOARDING_COMPLETED',
-        details: JSON.stringify({
-          phone: body.phone,
-          institution: body.institution,
-          faculty: body.faculty,
-          department: body.department,
-          organizationId: body.organizationId,
-        }),
-      },
+      // Mark onboarding as completed
+      const finalProfile = await tx.userProfile.update({
+        where: { userId },
+        data: {
+          onboardingStep: 'COMPLETED',
+          onboardingCompleted: true,
+          onboardingCompletedAt: new Date(),
+        },
+      });
+
+      await tx.activityLog.create({
+        data: {
+          userId,
+          activity: 'ONBOARDING_COMPLETED',
+          details: JSON.stringify({
+            firstName: body.firstName,
+            lastName: body.lastName,
+            phone: body.phone,
+            gender: body.gender,
+            dateOfBirth: body.dateOfBirth,
+            country: body.country,
+            state: body.state,
+            institution: body.institution,
+            faculty: body.faculty,
+            department: body.department,
+            academicLevelId: body.academicLevelId,
+            sessionId: body.sessionId,
+          }),
+        },
+      });
+
+      return {
+        profile: finalProfile,
+        studentProfile,
+      };
     });
 
-    // Invalidate cache
     await this.invalidateOnboardingCache(userId);
+
+    this.logger.log(`Onboarding completed successfully for user: ${userId}`);
 
     return {
       message: 'Onboarding completed successfully',
       onboardingCompleted: true,
-      hasJoinRequest: !!body.organizationId,
     };
   }
 
@@ -285,7 +350,6 @@ export class OnboardingService {
       if (isNaN(dob.getTime())) {
         throw new BadRequestException('Invalid date of birth format');
       }
-      // Check if user is at least 16 years old
       const age = new Date().getFullYear() - dob.getFullYear();
       if (age < 16) {
         throw new BadRequestException('You must be at least 16 years old');
@@ -312,7 +376,6 @@ export class OnboardingService {
       },
     });
 
-    // Update student profile onboarding step if it exists
     if (user.studentProfile) {
       await this.prisma.studentProfile.update({
         where: { userId },
@@ -322,7 +385,6 @@ export class OnboardingService {
       });
     }
 
-    // Log onboarding progress
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -336,7 +398,6 @@ export class OnboardingService {
       },
     });
 
-    // Invalidate cache
     await this.invalidateOnboardingCache(userId);
 
     this.logger.log(`User ${userId} updated personal info successfully`);
@@ -367,7 +428,6 @@ export class OnboardingService {
       throw new NotFoundException('User not found');
     }
 
-    // Validate all references exist
     const [institution, faculty, department, level] = await Promise.all([
       this.prisma.institution.findUnique({
         where: { id: dto.institutionId },
@@ -386,7 +446,6 @@ export class OnboardingService {
       }),
     ]);
 
-    // Validate each entity exists
     if (!institution) {
       throw new NotFoundException('Institution not found');
     }
@@ -400,7 +459,6 @@ export class OnboardingService {
       throw new NotFoundException('Academic level not found');
     }
 
-    // Validate relationships
     if (faculty.institutionId !== institution.id) {
       throw new BadRequestException(
         'Faculty does not belong to the selected institution',
@@ -417,7 +475,6 @@ export class OnboardingService {
       );
     }
 
-    // Check if matric number is already taken (if provided)
     if (dto.matricNumber) {
       const existing = await this.prisma.studentProfile.findFirst({
         where: {
@@ -430,7 +487,6 @@ export class OnboardingService {
       }
     }
 
-    // Update or create StudentProfile
     const studentProfile = await this.prisma.studentProfile.upsert({
       where: { userId },
       update: {
@@ -456,16 +512,6 @@ export class OnboardingService {
       },
     });
 
-    // Auto-join matching institutional organizations directly
-    await this.autoJoinInstitutionalOrganizations(
-      userId,
-      dto.institutionId,
-      dto.facultyId,
-      dto.departmentId,
-      dto.levelId,
-    );
-
-    // Update UserProfile to COMPLETED
     const updatedProfile = await this.prisma.userProfile.update({
       where: { userId },
       data: {
@@ -475,7 +521,6 @@ export class OnboardingService {
       },
     });
 
-    // Log onboarding completion
     await this.prisma.activityLog.create({
       data: {
         userId,
@@ -492,7 +537,6 @@ export class OnboardingService {
       },
     });
 
-    // Invalidate cache
     await this.invalidateOnboardingCache(userId);
 
     this.logger.log(`User ${userId} completed onboarding successfully`);
@@ -507,11 +551,10 @@ export class OnboardingService {
   }
 
   // ============================================
-  // GET ONBOARDING STATUS (with caching)
+  // GET ONBOARDING STATUS (with consistency fix)
   // ============================================
 
   async getOnboardingStatus(userId: string) {
-    // Check cache first
     const cacheKey = `onboarding:status:${userId}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
@@ -535,7 +578,8 @@ export class OnboardingService {
       user.profile.firstName &&
       user.profile.lastName &&
       user.profile.phone &&
-      user.profile.dateOfBirth
+      user.profile.dateOfBirth &&
+      user.profile.gender
     );
 
     const institutionInfoCompleted = !!(
@@ -545,13 +589,44 @@ export class OnboardingService {
       user.studentProfile?.currentAcademicLevelId
     );
 
+    // ============================================
+    // CRITICAL: Fix inconsistency if profile says completed but student profile doesn't exist
+    // ============================================
+    if (user.profile.onboardingCompleted && !institutionInfoCompleted) {
+      this.logger.warn(
+        `Onboarding inconsistency detected for user ${userId}. Profile says completed but student profile is incomplete. Fixing...`,
+      );
+
+      // Fix the inconsistency by updating the profile
+      await this.prisma.userProfile.update({
+        where: { userId },
+        data: {
+          onboardingCompleted: false,
+          onboardingStep: 'INSTITUTION',
+        },
+      });
+
+      // Invalidate cache since we fixed the inconsistency
+      await this.cacheService.delete(cacheKey);
+
+      // Update the user object for the response
+      user.profile.onboardingCompleted = false;
+      user.profile.onboardingStep = 'INSTITUTION';
+    }
+
+    // ============================================
+    // Onboarding is ONLY completed if BOTH are true
+    // ============================================
+    const onboardingCompleted =
+      personalInfoCompleted && institutionInfoCompleted;
+
     const status = {
       onboardingStep: user.profile.onboardingStep,
-      onboardingCompleted: user.profile.onboardingCompleted,
+      onboardingCompleted: onboardingCompleted,
       progress: {
         personalInfo: {
           completed: personalInfoCompleted,
-          required: ['firstName', 'lastName', 'phone', 'dateOfBirth'],
+          required: ['firstName', 'lastName', 'phone', 'dateOfBirth', 'gender'],
           missing: this.getMissingPersonalFields(user.profile),
         },
         institutionInfo: {
@@ -564,7 +639,6 @@ export class OnboardingService {
       completedAt: user.profile.onboardingCompletedAt,
     };
 
-    // Cache for 1 minute
     await this.cacheService.setWithTag(
       cacheKey,
       status,
@@ -579,29 +653,38 @@ export class OnboardingService {
   // HELPER METHODS
   // ============================================
 
-  private async autoJoinInstitutionalOrganizations(
+  /**
+   * Auto-join institutional organizations within a transaction
+   */
+  private async autoJoinInstitutionalOrganizationsInTransaction(
+    tx: any,
     userId: string,
     institutionId: string,
     facultyId?: string,
     departmentId?: string,
     levelId?: string,
+    sessionId?: string, // NEW
   ) {
     try {
       const orConditions: any[] = [{ scope: 'INSTITUTION' }];
       if (facultyId) orConditions.push({ scope: 'FACULTY', facultyId });
-      if (departmentId) orConditions.push({ scope: 'DEPARTMENT', departmentId });
-      if (levelId) orConditions.push({ scope: 'LEVEL', academicLevelId: levelId });
+      if (departmentId)
+        orConditions.push({ scope: 'DEPARTMENT', departmentId });
+      if (levelId)
+        orConditions.push({ scope: 'LEVEL', academicLevelId: levelId });
 
-      const matchingOrgs = await this.prisma.organization.findMany({
+      const matchingOrgs = await tx.organization.findMany({
         where: {
           institutionId,
           OR: orConditions,
           status: 'ACTIVE',
+          // NEW: Filter by session if provided
+          ...(sessionId ? { academicSessionId: sessionId } : {}),
         },
       });
 
       for (const org of matchingOrgs) {
-        const existing = await this.prisma.organizationMembership.findUnique({
+        const existing = await tx.organizationMembership.findUnique({
           where: {
             organizationId_userId: {
               organizationId: org.id,
@@ -611,17 +694,18 @@ export class OnboardingService {
         });
 
         if (!existing) {
-          await this.prisma.organizationMembership.create({
+          await tx.organizationMembership.create({
             data: {
               organizationId: org.id,
               userId,
               membershipType: 'STUDENT',
               status: 'ACTIVE',
               joinedAt: new Date(),
+              joinedSessionId: sessionId, // NEW
             },
           });
 
-          await this.prisma.organizationJoinRequest.upsert({
+          await tx.organizationJoinRequest.upsert({
             where: {
               organizationId_userId: {
                 organizationId: org.id,

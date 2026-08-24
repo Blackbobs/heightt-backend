@@ -271,10 +271,10 @@ export type JournalEntryWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"JournalEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JournalEntry"> | Date | string
   lines?: Prisma.JournalLineListRelationFilter
-  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
+  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }
 
 export type JournalEntryOrderByWithRelationInput = {
@@ -295,10 +295,10 @@ export type JournalEntryOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lines?: Prisma.JournalLineOrderByRelationAggregateInput
-  transaction?: Prisma.TransactionOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
-  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
   refund?: Prisma.RefundOrderByWithRelationInput
+  transaction?: Prisma.TransactionOrderByWithRelationInput
+  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
 }
 
 export type JournalEntryWhereUniqueInput = Prisma.AtLeast<{
@@ -322,10 +322,10 @@ export type JournalEntryWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"JournalEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"JournalEntry"> | Date | string
   lines?: Prisma.JournalLineListRelationFilter
-  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
-  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
+  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }, "id" | "reference" | "transactionId" | "paymentId" | "withdrawalId" | "refundId">
 
 export type JournalEntryOrderByWithAggregationInput = {
@@ -390,10 +390,10 @@ export type JournalEntryCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineCreateNestedManyWithoutJournalEntryInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentCreateNestedOneWithoutJournalEntryInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryUncheckedCreateInput = {
@@ -414,10 +414,10 @@ export type JournalEntryUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutJournalEntryInput
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutJournalEntryInput
-  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
+  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryUpdateInput = {
@@ -438,10 +438,10 @@ export type JournalEntryUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUpdateManyWithoutJournalEntryNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutJournalEntryNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryUncheckedUpdateInput = {
@@ -462,10 +462,10 @@ export type JournalEntryUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUncheckedUpdateManyWithoutJournalEntryNestedInput
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutJournalEntryNestedInput
-  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUncheckedUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
+  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryCreateManyInput = {
@@ -691,10 +691,10 @@ export type JournalEntryCreateWithoutLinesInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentCreateNestedOneWithoutJournalEntryInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryUncheckedCreateWithoutLinesInput = {
@@ -714,10 +714,10 @@ export type JournalEntryUncheckedCreateWithoutLinesInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutJournalEntryInput
-  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
+  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryCreateOrConnectWithoutLinesInput = {
@@ -753,10 +753,10 @@ export type JournalEntryUpdateWithoutLinesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutJournalEntryNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryUncheckedUpdateWithoutLinesInput = {
@@ -776,10 +776,10 @@ export type JournalEntryUncheckedUpdateWithoutLinesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutJournalEntryNestedInput
-  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUncheckedUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
+  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryCreateWithoutTransactionInput = {
@@ -801,8 +801,8 @@ export type JournalEntryCreateWithoutTransactionInput = {
   updatedAt?: Date | string
   lines?: Prisma.JournalLineCreateNestedManyWithoutJournalEntryInput
   payment?: Prisma.PaymentCreateNestedOneWithoutJournalEntryInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundCreateNestedOneWithoutJournalEntryInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryUncheckedCreateWithoutTransactionInput = {
@@ -824,8 +824,8 @@ export type JournalEntryUncheckedCreateWithoutTransactionInput = {
   updatedAt?: Date | string
   lines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutJournalEntryInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutJournalEntryInput
-  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutJournalEntryInput
+  withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryCreateOrConnectWithoutTransactionInput = {
@@ -863,8 +863,8 @@ export type JournalEntryUpdateWithoutTransactionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUpdateManyWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutJournalEntryNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUpdateOneWithoutJournalEntryNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryUncheckedUpdateWithoutTransactionInput = {
@@ -886,8 +886,8 @@ export type JournalEntryUncheckedUpdateWithoutTransactionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUncheckedUpdateManyWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutJournalEntryNestedInput
-  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUncheckedUpdateOneWithoutJournalEntryNestedInput
+  withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryCreateWithoutPaymentInput = {
@@ -908,9 +908,9 @@ export type JournalEntryCreateWithoutPaymentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineCreateNestedManyWithoutJournalEntryInput
+  refund?: Prisma.RefundCreateNestedOneWithoutJournalEntryInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
   withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
-  refund?: Prisma.RefundCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryUncheckedCreateWithoutPaymentInput = {
@@ -931,9 +931,9 @@ export type JournalEntryUncheckedCreateWithoutPaymentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutJournalEntryInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutJournalEntryInput
   transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
-  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryCreateOrConnectWithoutPaymentInput = {
@@ -970,9 +970,9 @@ export type JournalEntryUpdateWithoutPaymentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUpdateManyWithoutJournalEntryNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutJournalEntryNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
   withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
-  refund?: Prisma.RefundUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryUncheckedUpdateWithoutPaymentInput = {
@@ -993,9 +993,9 @@ export type JournalEntryUncheckedUpdateWithoutPaymentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUncheckedUpdateManyWithoutJournalEntryNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutJournalEntryNestedInput
   transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
-  refund?: Prisma.RefundUncheckedUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryCreateWithoutWithdrawalInput = {
@@ -1016,9 +1016,9 @@ export type JournalEntryCreateWithoutWithdrawalInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineCreateNestedManyWithoutJournalEntryInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryUncheckedCreateWithoutWithdrawalInput = {
@@ -1039,9 +1039,9 @@ export type JournalEntryUncheckedCreateWithoutWithdrawalInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutJournalEntryInput
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutJournalEntryInput
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
 }
 
 export type JournalEntryCreateOrConnectWithoutWithdrawalInput = {
@@ -1078,9 +1078,9 @@ export type JournalEntryUpdateWithoutWithdrawalInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUpdateManyWithoutJournalEntryNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryUncheckedUpdateWithoutWithdrawalInput = {
@@ -1101,9 +1101,9 @@ export type JournalEntryUncheckedUpdateWithoutWithdrawalInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUncheckedUpdateManyWithoutJournalEntryNestedInput
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutJournalEntryNestedInput
   refund?: Prisma.RefundUncheckedUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
 }
 
 export type JournalEntryCreateWithoutRefundInput = {
@@ -1124,8 +1124,8 @@ export type JournalEntryCreateWithoutRefundInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineCreateNestedManyWithoutJournalEntryInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutJournalEntryInput
   withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutJournalEntryInput
 }
 
@@ -1147,8 +1147,8 @@ export type JournalEntryUncheckedCreateWithoutRefundInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutJournalEntryInput
-  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutJournalEntryInput
+  transaction?: Prisma.TransactionUncheckedCreateNestedOneWithoutJournalEntryInput
   withdrawal?: Prisma.WithdrawalUncheckedCreateNestedOneWithoutJournalEntryInput
 }
 
@@ -1186,8 +1186,8 @@ export type JournalEntryUpdateWithoutRefundInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUpdateManyWithoutJournalEntryNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutJournalEntryNestedInput
   withdrawal?: Prisma.WithdrawalUpdateOneWithoutJournalEntryNestedInput
 }
 
@@ -1209,8 +1209,8 @@ export type JournalEntryUncheckedUpdateWithoutRefundInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.JournalLineUncheckedUpdateManyWithoutJournalEntryNestedInput
-  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutJournalEntryNestedInput
+  transaction?: Prisma.TransactionUncheckedUpdateOneWithoutJournalEntryNestedInput
   withdrawal?: Prisma.WithdrawalUncheckedUpdateOneWithoutJournalEntryNestedInput
 }
 
@@ -1263,10 +1263,10 @@ export type JournalEntrySelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   lines?: boolean | Prisma.JournalEntry$linesArgs<ExtArgs>
-  transaction?: boolean | Prisma.JournalEntry$transactionArgs<ExtArgs>
   payment?: boolean | Prisma.JournalEntry$paymentArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.JournalEntry$withdrawalArgs<ExtArgs>
   refund?: boolean | Prisma.JournalEntry$refundArgs<ExtArgs>
+  transaction?: boolean | Prisma.JournalEntry$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.JournalEntry$withdrawalArgs<ExtArgs>
   _count?: boolean | Prisma.JournalEntryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["journalEntry"]>
 
@@ -1330,10 +1330,10 @@ export type JournalEntrySelectScalar = {
 export type JournalEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "description" | "transactionId" | "paymentId" | "withdrawalId" | "refundId" | "entryDate" | "status" | "isBalanced" | "verifiedBy" | "verifiedAt" | "createdBy" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["journalEntry"]>
 export type JournalEntryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lines?: boolean | Prisma.JournalEntry$linesArgs<ExtArgs>
-  transaction?: boolean | Prisma.JournalEntry$transactionArgs<ExtArgs>
   payment?: boolean | Prisma.JournalEntry$paymentArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.JournalEntry$withdrawalArgs<ExtArgs>
   refund?: boolean | Prisma.JournalEntry$refundArgs<ExtArgs>
+  transaction?: boolean | Prisma.JournalEntry$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.JournalEntry$withdrawalArgs<ExtArgs>
   _count?: boolean | Prisma.JournalEntryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type JournalEntryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1343,10 +1343,10 @@ export type $JournalEntryPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "JournalEntry"
   objects: {
     lines: Prisma.$JournalLinePayload<ExtArgs>[]
-    transaction: Prisma.$TransactionPayload<ExtArgs> | null
     payment: Prisma.$PaymentPayload<ExtArgs> | null
-    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
     refund: Prisma.$RefundPayload<ExtArgs> | null
+    transaction: Prisma.$TransactionPayload<ExtArgs> | null
+    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1760,10 +1760,10 @@ readonly fields: JournalEntryFieldRefs;
 export interface Prisma__JournalEntryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   lines<T extends Prisma.JournalEntry$linesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$linesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JournalLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  transaction<T extends Prisma.JournalEntry$transactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$transactionArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.JournalEntry$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  withdrawal<T extends Prisma.JournalEntry$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   refund<T extends Prisma.JournalEntry$refundArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$refundArgs<ExtArgs>>): Prisma.Prisma__RefundClient<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  transaction<T extends Prisma.JournalEntry$transactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$transactionArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  withdrawal<T extends Prisma.JournalEntry$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.JournalEntry$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2226,25 +2226,6 @@ export type JournalEntry$linesArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * JournalEntry.transaction
- */
-export type JournalEntry$transactionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Transaction
-   */
-  select?: Prisma.TransactionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Transaction
-   */
-  omit?: Prisma.TransactionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TransactionInclude<ExtArgs> | null
-  where?: Prisma.TransactionWhereInput
-}
-
-/**
  * JournalEntry.payment
  */
 export type JournalEntry$paymentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2264,25 +2245,6 @@ export type JournalEntry$paymentArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * JournalEntry.withdrawal
- */
-export type JournalEntry$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Withdrawal
-   */
-  select?: Prisma.WithdrawalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Withdrawal
-   */
-  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.WithdrawalInclude<ExtArgs> | null
-  where?: Prisma.WithdrawalWhereInput
-}
-
-/**
  * JournalEntry.refund
  */
 export type JournalEntry$refundArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2299,6 +2261,44 @@ export type JournalEntry$refundArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.RefundInclude<ExtArgs> | null
   where?: Prisma.RefundWhereInput
+}
+
+/**
+ * JournalEntry.transaction
+ */
+export type JournalEntry$transactionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Transaction
+   */
+  select?: Prisma.TransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Transaction
+   */
+  omit?: Prisma.TransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TransactionInclude<ExtArgs> | null
+  where?: Prisma.TransactionWhereInput
+}
+
+/**
+ * JournalEntry.withdrawal
+ */
+export type JournalEntry$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Withdrawal
+   */
+  select?: Prisma.WithdrawalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Withdrawal
+   */
+  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WithdrawalInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalWhereInput
 }
 
 /**

@@ -20,6 +20,7 @@ export enum FilePurpose {
   VERIFICATION = 'verification',
   STUDENT_DOCUMENT = 'student_document',
   PROMOTION_DOCUMENT = 'promotion_document',
+  LOGO = 'logo',
 }
 
 export class UploadFileDto {

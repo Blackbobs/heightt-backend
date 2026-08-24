@@ -1,4 +1,5 @@
 // src/v1/rbac/rbac.service.ts
+
 import {
   Injectable,
   NotFoundException,
@@ -16,6 +17,36 @@ import {
   AssignAdminRoleDto,
 } from './dto/role.dto';
 
+// Define the PermissionCategory enum to match Prisma schema
+enum PermissionCategory {
+  USER = 'USER',
+  INSTITUTION = 'INSTITUTION',
+  ORGANIZATION = 'ORGANIZATION',
+  FINANCE = 'FINANCE',
+  STUDENT = 'STUDENT',
+  ACADEMIC = 'ACADEMIC',
+  COMMUNICATION = 'COMMUNICATION',
+  EVENT = 'EVENT',
+  GOVERNANCE = 'GOVERNANCE',
+  SYSTEM = 'SYSTEM',
+  ANALYTICS = 'ANALYTICS',
+}
+
+enum PermissionAction {
+  CREATE = 'CREATE',
+  READ = 'READ',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  APPROVE = 'APPROVE',
+  REJECT = 'REJECT',
+  REVIEW = 'REVIEW',
+  EXPORT = 'EXPORT',
+  IMPORT = 'IMPORT',
+  MANAGE = 'MANAGE',
+  ASSIGN = 'ASSIGN',
+  REVOKE = 'REVOKE',
+}
+
 @Injectable()
 export class RbacService {
   private readonly logger = new Logger(RbacService.name);
@@ -31,22 +62,20 @@ export class RbacService {
 
   async invalidateRbacCache(): Promise<void> {
     try {
-      // Invalidate all RBAC tags
       await this.cacheService.invalidateByTag('rbac');
       await this.cacheService.invalidateByTag('permissions');
       await this.cacheService.invalidateByTag('roles');
       await this.cacheService.invalidateByTag('admins');
       await this.cacheService.invalidateByTag('user');
 
-      // Invalidate specific cache keys
       await this.cacheService.delete('permissions:all');
       await this.cacheService.delete('admins:all');
 
-      // Invalidate all patterns
       await this.cacheService.invalidatePattern('permission:*');
       await this.cacheService.invalidatePattern('roles:organization:*');
       await this.cacheService.invalidatePattern('role:*');
       await this.cacheService.invalidatePattern('user:permissions:*');
+      await this.cacheService.invalidatePattern('admin:permissions:*');
 
       this.logger.log('RBAC cache invalidated');
     } catch (error) {
@@ -105,6 +134,255 @@ export class RbacService {
   }
 
   // ============================================
+  // ADMIN PERMISSIONS (NEW METHODS)
+  // ============================================
+
+  async getAdminPermissions(adminId: string) {
+    const cacheKey = `admin:permissions:${adminId}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const admin = await this.prisma.admin.findUnique({
+      where: { id: adminId },
+      include: {
+        permissions: true,
+        user: {
+          select: {
+            id: true,
+            email: true,
+            username: true,
+            profile: true,
+          },
+        },
+        institution: true,
+        faculty: true,
+        department: true,
+        organization: true,
+        academicSession: true,
+      },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    // Get all available permissions for reference
+    const allPermissions = await this.prisma.permission.findMany();
+
+    const result = {
+      ...admin,
+      allPermissions,
+    };
+
+    await this.cacheService.setWithTag(
+      cacheKey,
+      result,
+      ['rbac', 'admins', 'permissions'],
+      300,
+    );
+
+    return result;
+  }
+
+  async updateAdminPermissions(
+    adminId: string,
+    permissions: string[],
+    action: 'ADD' | 'REMOVE' | 'SET',
+    userId: string,
+  ) {
+    this.logger.log(`Updating admin permissions for: ${adminId}`);
+
+    const admin = await this.prisma.admin.findUnique({
+      where: { id: adminId },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    // Check if the user has permission to update admin permissions
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (!isPlatformAdmin) {
+      throw new ForbiddenException(
+        'Only platform admins can update admin permissions',
+      );
+    }
+
+    // Get existing permissions
+    const existingPermissions = await this.prisma.adminPermission.findMany({
+      where: { adminId },
+    });
+
+    const existingKeys = existingPermissions.map((p) => p.permissionKey);
+
+    let newKeys: string[] = [];
+
+    switch (action) {
+      case 'ADD':
+        newKeys = [...new Set([...existingKeys, ...permissions])];
+        break;
+      case 'REMOVE':
+        newKeys = existingKeys.filter((key) => !permissions.includes(key));
+        break;
+      case 'SET':
+        newKeys = permissions;
+        break;
+      default:
+        throw new BadRequestException('Invalid action');
+    }
+
+    // Delete all existing permissions
+    await this.prisma.adminPermission.deleteMany({
+      where: { adminId },
+    });
+
+    // Create new permissions
+    if (newKeys.length > 0) {
+      const permissionData = newKeys.map((key) => ({
+        adminId,
+        permissionKey: key,
+        permissionCategory: PermissionCategory.SYSTEM as any,
+        permissionAction: PermissionAction.MANAGE as any,
+        grantedBy: userId,
+        grantedAt: new Date(),
+      }));
+
+      await this.prisma.adminPermission.createMany({
+        data: permissionData,
+      });
+    }
+
+    // Invalidate cache
+    await this.invalidateRbacCache();
+
+    this.logger.log(`Admin permissions updated for: ${adminId}`);
+    return this.getAdminPermissions(adminId);
+  }
+
+  async assignAdminWithPermissions(
+    assignerId: string,
+    userId: string,
+    adminType: string,
+    scope: {
+      institutionId?: string;
+      facultyId?: string;
+      departmentId?: string;
+      organizationId?: string;
+      academicSessionId?: string;
+    },
+    permissions?: string[],
+  ) {
+    this.logger.log(`Assigning admin with permissions to user: ${userId}`);
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId: assignerId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (!isPlatformAdmin) {
+      throw new ForbiddenException(
+        'Only platform admins can assign admin roles',
+      );
+    }
+
+    // Validate scope based on admin type
+    if (adminType === 'INSTITUTION_ADMIN' && !scope.institutionId) {
+      throw new BadRequestException(
+        'Institution ID required for INSTITUTION_ADMIN',
+      );
+    }
+    if (adminType === 'FACULTY_ADMIN' && !scope.facultyId) {
+      throw new BadRequestException('Faculty ID required for FACULTY_ADMIN');
+    }
+    if (adminType === 'DEPARTMENT_ADMIN' && !scope.departmentId) {
+      throw new BadRequestException(
+        'Department ID required for DEPARTMENT_ADMIN',
+      );
+    }
+    if (adminType === 'ORGANIZATION_ADMIN' && !scope.organizationId) {
+      throw new BadRequestException(
+        'Organization ID required for ORGANIZATION_ADMIN',
+      );
+    }
+
+    // Check if admin already exists
+    const existing = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        adminType: adminType as any,
+        institutionId: scope.institutionId,
+        facultyId: scope.facultyId,
+        departmentId: scope.departmentId,
+        organizationId: scope.organizationId,
+        academicSessionId: scope.academicSessionId || null,
+      },
+    });
+
+    if (existing) {
+      throw new ConflictException('User already has this admin role');
+    }
+
+    // Create admin
+    const admin = await this.prisma.admin.create({
+      data: {
+        userId,
+        adminType: adminType as any,
+        institutionId: scope.institutionId,
+        facultyId: scope.facultyId,
+        departmentId: scope.departmentId,
+        organizationId: scope.organizationId,
+        academicSessionId: scope.academicSessionId,
+        assignedBy: assignerId,
+        status: 'ACTIVE',
+      },
+    });
+
+    // Assign permissions if provided
+    if (permissions && permissions.length > 0) {
+      const permissionData = permissions.map((key) => ({
+        adminId: admin.id,
+        permissionKey: key,
+        permissionCategory: PermissionCategory.SYSTEM as any,
+        permissionAction: PermissionAction.MANAGE as any,
+        grantedBy: assignerId,
+        grantedAt: new Date(),
+      }));
+
+      await this.prisma.adminPermission.createMany({
+        data: permissionData,
+      });
+    } else {
+      // Assign default permissions based on admin type
+      await this.assignDefaultPermissions(admin.id, adminType);
+    }
+
+    await this.invalidateRbacCache();
+
+    this.logger.log(`Admin assigned with permissions to user: ${userId}`);
+    return admin;
+  }
+
+  // ============================================
   // ROLES
   // ============================================
 
@@ -119,7 +397,6 @@ export class RbacService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Check if user has permission to create roles
     const membership = await this.prisma.organizationMembership.findFirst({
       where: {
         userId,
@@ -166,7 +443,6 @@ export class RbacService {
         },
       });
 
-      // Assign permissions
       if (dto.permissions && dto.permissions.length > 0) {
         for (const permissionKey of dto.permissions) {
           const permission = await tx.permission.findUnique({
@@ -187,7 +463,6 @@ export class RbacService {
       return newRole;
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Role created: ${role.id}`);
@@ -258,7 +533,6 @@ export class RbacService {
       throw new NotFoundException('Role not found');
     }
 
-    // Check if user has permission
     const membership = await this.prisma.organizationMembership.findFirst({
       where: {
         userId,
@@ -282,7 +556,6 @@ export class RbacService {
       );
     }
 
-    // Don't allow updating system roles
     if (role.isSystem) {
       throw new ForbiddenException('Cannot update system roles');
     }
@@ -296,14 +569,11 @@ export class RbacService {
         },
       });
 
-      // Update permissions if provided
       if (dto.permissions) {
-        // Remove existing permissions
         await tx.rolePermission.deleteMany({
           where: { roleId },
         });
 
-        // Add new permissions
         for (const permissionKey of dto.permissions) {
           const permission = await tx.permission.findUnique({
             where: { key: permissionKey },
@@ -323,7 +593,6 @@ export class RbacService {
       return updatedRole;
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Role updated: ${roleId}`);
@@ -342,7 +611,6 @@ export class RbacService {
       throw new NotFoundException('Role not found');
     }
 
-    // Check if user has permission
     const membership = await this.prisma.organizationMembership.findFirst({
       where: {
         userId,
@@ -374,7 +642,6 @@ export class RbacService {
       where: { id: roleId },
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Role deleted: ${roleId}`);
@@ -404,7 +671,6 @@ export class RbacService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if user is a member of the organization
     const membership = await this.prisma.organizationMembership.findFirst({
       where: {
         userId: dto.userId,
@@ -419,7 +685,6 @@ export class RbacService {
       );
     }
 
-    // Check if assigner has permission
     const isPlatformAdmin = await this.prisma.admin.findFirst({
       where: {
         userId: assignerId,
@@ -443,7 +708,6 @@ export class RbacService {
       );
     }
 
-    // Check if already assigned
     const existing = await this.prisma.membershipRole.findFirst({
       where: {
         membershipId: membership.id,
@@ -464,7 +728,6 @@ export class RbacService {
       },
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
     await this.cacheService.delete(`user:permissions:${dto.userId}`);
 
@@ -490,7 +753,6 @@ export class RbacService {
       throw new NotFoundException('Role assignment not found');
     }
 
-    // Check if user has permission
     const isPlatformAdmin = await this.prisma.admin.findFirst({
       where: {
         userId,
@@ -518,7 +780,6 @@ export class RbacService {
       where: { id: membershipRoleId },
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Role removed from user`);
@@ -540,7 +801,6 @@ export class RbacService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if assigner is platform admin
     const isPlatformAdmin = await this.prisma.admin.findFirst({
       where: {
         userId: assignerId,
@@ -555,7 +815,6 @@ export class RbacService {
       );
     }
 
-    // Validate scope based on admin type
     if (dto.adminType === 'INSTITUTION_ADMIN' && !dto.institutionId) {
       throw new BadRequestException(
         'Institution ID required for INSTITUTION_ADMIN',
@@ -575,7 +834,27 @@ export class RbacService {
       );
     }
 
-    // Check if already an admin
+    if (dto.academicSessionId) {
+      const session = await this.prisma.academicSession.findUnique({
+        where: { id: dto.academicSessionId },
+      });
+      if (!session) {
+        throw new NotFoundException('Academic session not found');
+      }
+
+      if (dto.organizationId) {
+        const org = await this.prisma.organization.findUnique({
+          where: { id: dto.organizationId },
+          include: { institution: true },
+        });
+        if (org && session.institutionId !== org.institutionId) {
+          throw new BadRequestException(
+            'Academic session must belong to the same institution as the organization',
+          );
+        }
+      }
+    }
+
     const existing = await this.prisma.admin.findFirst({
       where: {
         userId: dto.userId,
@@ -584,6 +863,7 @@ export class RbacService {
         facultyId: dto.facultyId,
         departmentId: dto.departmentId,
         organizationId: dto.organizationId,
+        academicSessionId: dto.academicSessionId || null,
       },
     });
 
@@ -599,12 +879,15 @@ export class RbacService {
         facultyId: dto.facultyId,
         departmentId: dto.departmentId,
         organizationId: dto.organizationId,
+        academicSessionId: dto.academicSessionId,
         assignedBy: assignerId,
         status: 'ACTIVE',
       },
     });
 
-    // Invalidate cache
+    // Assign default permissions
+    await this.assignDefaultPermissions(admin.id, dto.adminType);
+
     await this.invalidateRbacCache();
 
     this.logger.log(`Admin role assigned to user: ${dto.userId}`);
@@ -622,7 +905,6 @@ export class RbacService {
       throw new NotFoundException('Admin role not found');
     }
 
-    // Check if revoker is platform admin
     const isPlatformAdmin = await this.prisma.admin.findFirst({
       where: {
         userId,
@@ -646,7 +928,6 @@ export class RbacService {
       },
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Admin role revoked`);
@@ -674,6 +955,7 @@ export class RbacService {
         faculty: true,
         department: true,
         organization: true,
+        academicSession: true,
         permissions: true,
       },
       orderBy: { assignedAt: 'desc' },
@@ -728,17 +1010,11 @@ export class RbacService {
   // ADDITIONAL HELPER METHODS
   // ============================================
 
-  /**
-   * Check if a user has a specific permission
-   */
   async hasPermission(userId: string, permissionKey: string): Promise<boolean> {
     const permissions = await this.getUserPermissions(userId);
     return permissions.some((p: any) => p.key === permissionKey);
   }
 
-  /**
-   * Check if a user has any of the given permissions
-   */
   async hasAnyPermission(
     userId: string,
     permissionKeys: string[],
@@ -747,9 +1023,6 @@ export class RbacService {
     return permissions.some((p: any) => permissionKeys.includes(p.key));
   }
 
-  /**
-   * Check if a user has all of the given permissions
-   */
   async hasAllPermissions(
     userId: string,
     permissionKeys: string[],
@@ -759,9 +1032,6 @@ export class RbacService {
     return permissionKeys.every((key) => userPermissionKeys.includes(key));
   }
 
-  /**
-   * Get users with a specific permission
-   */
   async getUsersWithPermission(permissionKey: string) {
     const users = await this.prisma.$queryRaw`
       SELECT DISTINCT u.id, u.email, u.username
@@ -785,9 +1055,6 @@ export class RbacService {
     return users;
   }
 
-  /**
-   * Get all system roles
-   */
   async getSystemRoles() {
     return this.prisma.role.findMany({
       where: { isSystem: true },
@@ -801,9 +1068,6 @@ export class RbacService {
     });
   }
 
-  /**
-   * Get all roles with their permissions
-   */
   async getRolesWithPermissions(organizationId?: string) {
     const where: any = {};
     if (organizationId) {
@@ -830,9 +1094,6 @@ export class RbacService {
     });
   }
 
-  /**
-   * Get user's admin status
-   */
   async getUserAdminStatus(userId: string) {
     const admin = await this.prisma.admin.findFirst({
       where: {
@@ -844,6 +1105,7 @@ export class RbacService {
         faculty: true,
         department: true,
         organization: true,
+        academicSession: true,
         permissions: true,
       },
     });
@@ -851,9 +1113,6 @@ export class RbacService {
     return admin;
   }
 
-  /**
-   * Get user's roles across all organizations
-   */
   async getUserRoles(userId: string) {
     const memberships = await this.prisma.organizationMembership.findMany({
       where: {
@@ -887,9 +1146,6 @@ export class RbacService {
     return memberships;
   }
 
-  /**
-   * Clone a role with its permissions
-   */
   async cloneRole(roleId: string, newName: string, organizationId?: string) {
     this.logger.log(`Cloning role: ${roleId}`);
 
@@ -910,7 +1166,6 @@ export class RbacService {
 
     const targetOrgId = organizationId || role.organizationId;
 
-    // Check if role already exists in target organization
     const existing = await this.prisma.role.findFirst({
       where: {
         organizationId: targetOrgId,
@@ -932,7 +1187,6 @@ export class RbacService {
         },
       });
 
-      // Clone permissions
       for (const rp of role.permissions) {
         await tx.rolePermission.create({
           data: {
@@ -945,16 +1199,12 @@ export class RbacService {
       return clonedRole;
     });
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Role cloned: ${newRole.id}`);
     return newRole;
   }
 
-  /**
-   * Bulk assign roles to users
-   */
   async bulkAssignRoles(
     assignerId: string,
     assignments: Array<{
@@ -984,10 +1234,164 @@ export class RbacService {
       }
     }
 
-    // Invalidate cache
     await this.invalidateRbacCache();
 
     this.logger.log(`Bulk role assignment completed`);
     return results;
+  }
+
+  // ============================================
+  // PRIVATE HELPERS
+  // ============================================
+
+  private async assignDefaultPermissions(
+    adminId: string,
+    adminType: string,
+  ): Promise<void> {
+    let defaultPermissions: string[] = [];
+
+    switch (adminType) {
+      case 'PLATFORM_ADMIN':
+        defaultPermissions = [
+          'users:create',
+          'users:read',
+          'users:update',
+          'users:delete',
+          'users:manage',
+          'institution:create',
+          'institution:read',
+          'institution:update',
+          'institution:delete',
+          'institution:manage',
+          'organization:create',
+          'organization:read',
+          'organization:update',
+          'organization:delete',
+          'organization:manage',
+          'finance:read',
+          'finance:create',
+          'finance:update',
+          'finance:delete',
+          'finance:approve',
+          'finance:export',
+          'finance:due:create',
+          'finance:due:assign',
+          'finance:due:view',
+          'finance:due:delete',
+          'student:create',
+          'student:read',
+          'student:update',
+          'student:delete',
+          'student:verify',
+          'student:promote',
+          'academic:read',
+          'academic:create',
+          'academic:update',
+          'academic:delete',
+          'communication:create',
+          'communication:read',
+          'communication:update',
+          'communication:delete',
+          'admin:assign',
+          'admin:revoke',
+          'admin:view',
+          'admin:manage',
+          'analytics:read',
+          'analytics:export',
+          'system:read',
+          'system:update',
+          'system:manage',
+          'system:maintenance',
+          'system:feature_flag',
+        ];
+        break;
+      case 'INSTITUTION_ADMIN':
+        defaultPermissions = [
+          'users:read',
+          'institution:read',
+          'institution:update',
+          'organization:read',
+          'organization:create',
+          'organization:update',
+          'finance:read',
+          'finance:due:create',
+          'finance:due:assign',
+          'finance:due:view',
+          'student:read',
+          'student:update',
+          'academic:read',
+          'communication:create',
+        ];
+        break;
+      case 'FACULTY_ADMIN':
+        defaultPermissions = [
+          'users:read',
+          'student:read',
+          'student:update',
+          'academic:read',
+          'organization:read',
+          'communication:create',
+          'finance:read',
+          'finance:due:create',
+          'finance:due:assign',
+          'finance:due:view',
+        ];
+        break;
+      case 'DEPARTMENT_ADMIN':
+        defaultPermissions = [
+          'users:read',
+          'student:read',
+          'academic:read',
+          'communication:create',
+          'finance:read',
+          'finance:due:create',
+          'finance:due:assign',
+          'finance:due:view',
+        ];
+        break;
+      case 'ORGANIZATION_ADMIN':
+        defaultPermissions = [
+          'users:read',
+          'organization:read',
+          'organization:update',
+          'organization:manage',
+          'finance:read',
+          'finance:due:create',
+          'finance:due:assign',
+          'finance:due:view',
+          'finance:due:delete',
+          'communication:create',
+          'student:read',
+        ];
+        break;
+      case 'CLUB_ADMIN':
+        defaultPermissions = [
+          'users:read',
+          'organization:read',
+          'organization:update',
+          'communication:create',
+          'finance:read',
+          'finance:due:create',
+          'finance:due:assign',
+          'finance:due:view',
+        ];
+        break;
+      default:
+        defaultPermissions = ['users:read'];
+    }
+
+    // Create permission records with proper enum types
+    const permissionData = defaultPermissions.map((permissionKey) => ({
+      adminId,
+      permissionKey,
+      permissionCategory: PermissionCategory.SYSTEM as any,
+      permissionAction: PermissionAction.MANAGE as any,
+      grantedBy: 'system',
+      grantedAt: new Date(),
+    }));
+
+    await this.prisma.adminPermission.createMany({
+      data: permissionData,
+    });
   }
 }

@@ -36,94 +36,118 @@ export class OrganizationMemberResponseDto {
 }
 
 export class OrganizationResponseDto {
-  @ApiProperty({ example: 'org_123', description: 'Organization ID' })
+  @ApiProperty()
   id: string;
 
-  @ApiProperty({
-    example: 'Computer Science Association',
-    description: 'Organization name',
-  })
+  @ApiProperty()
   name: string;
 
-  @ApiProperty({ example: 'csa', description: 'Organization slug' })
+  @ApiProperty()
   slug: string;
 
-  @ApiProperty({
-    example: 'The official Computer Science Association',
-    description: 'Organization description',
-  })
+  @ApiProperty({ required: false })
   description?: string;
 
-  @ApiProperty({ example: 'ASSOCIATION', description: 'Organization type' })
+  @ApiProperty({
+    enum: [
+      'INSTITUTION',
+      'FACULTY',
+      'DEPARTMENT',
+      'LEVEL',
+      'ASSOCIATION',
+      'CLUB',
+      'RELIGIOUS',
+      'SPORTS',
+      'SPECIAL',
+    ],
+  })
   type: string;
 
-  @ApiProperty({ example: 'DEPARTMENT', description: 'Organization scope' })
+  @ApiProperty({
+    enum: [
+      'INSTITUTION',
+      'FACULTY',
+      'DEPARTMENT',
+      'LEVEL',
+      'CROSS_DEPARTMENT',
+      'CROSS_LEVEL',
+      'CUSTOM',
+    ],
+  })
   scope: string;
 
-  @ApiProperty({ example: 'ACTIVE', description: 'Organization status' })
+  @ApiProperty({
+    enum: [
+      'DRAFT',
+      'PENDING_ACTIVATION',
+      'ACTIVE',
+      'INACTIVE',
+      'SUSPENDED',
+      'ARCHIVED',
+    ],
+  })
   status: string;
 
-  @ApiProperty({ example: 'inst_123', description: 'Institution ID' })
+  @ApiProperty()
   institutionId: string;
 
-  @ApiProperty({ example: 'fac_123', description: 'Faculty ID' })
+  @ApiProperty({ required: false })
   facultyId?: string;
 
-  @ApiProperty({ example: 'dept_123', description: 'Department ID' })
+  @ApiProperty({ required: false })
   departmentId?: string;
 
-  @ApiProperty({ example: 'lvl_123', description: 'Academic Level ID' })
+  @ApiProperty({ required: false })
   academicLevelId?: string;
 
-  @ApiProperty({
-    example: 'org_parent_123',
-    description: 'Parent organization ID',
-  })
+  @ApiProperty({ required: false })
   parentOrganizationId?: string;
 
-  @ApiProperty({
-    type: [OrganizationResponseDto],
-    description: 'Child organizations',
-  })
-  children?: OrganizationResponseDto[];
+  @ApiProperty({ required: false })
+  academicSessionId?: string;
 
-  @ApiProperty({
-    type: [OrganizationMemberResponseDto],
-    description: 'Organization members',
-  })
-  members?: OrganizationMemberResponseDto[];
-
-  @ApiProperty({
-    example: '2024-01-01T00:00:00.000Z',
-    description: 'Activation date',
-  })
+  @ApiProperty({ required: false })
   activatedAt?: Date;
 
-  @ApiProperty({
-    example: '2024-01-01T00:00:00.000Z',
-    description: 'Creation date',
-  })
+  @ApiProperty()
   createdAt: Date;
 
-  @ApiProperty({
-    example: '2024-01-01T00:00:00.000Z',
-    description: 'Last update date',
-  })
+  @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty({ required: false })
+  institution?: any;
+
+  @ApiProperty({ required: false })
+  faculty?: any;
+
+  @ApiProperty({ required: false })
+  department?: any;
+
+  @ApiProperty({ required: false })
+  academicLevel?: any;
+
+  @ApiProperty({ required: false })
+  academicSession?: any;
+
+  @ApiProperty({ required: false })
+  parent?: any;
+
+  @ApiProperty({ type: [Object], required: false })
+  children?: any[];
+
+  @ApiProperty({ type: [Object], required: false })
+  memberships?: any[];
+
+  @ApiProperty({ required: false })
+  wallet?: any;
 }
 
 export class OrganizationListResponseDto {
   @ApiProperty({ type: [OrganizationResponseDto] })
   data: OrganizationResponseDto[];
 
-  @ApiProperty({
-    example: {
-      page: 1,
-      limit: 10,
-      total: 100,
-      totalPages: 10,
-    },
-  })
+  @ApiProperty()
   meta: {
     page: number;
     limit: number;

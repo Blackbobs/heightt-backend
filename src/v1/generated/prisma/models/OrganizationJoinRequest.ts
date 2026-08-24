@@ -223,8 +223,8 @@ export type OrganizationJoinRequestWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type OrganizationJoinRequestOrderByWithRelationInput = {
@@ -239,8 +239,8 @@ export type OrganizationJoinRequestOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   organization?: Prisma.OrganizationOrderByWithRelationInput
-  user?: Prisma.UserOrderByWithRelationInput
   reviewer?: Prisma.UserOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type OrganizationJoinRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -259,8 +259,8 @@ export type OrganizationJoinRequestWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviewer?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "organizationId_userId">
 
 export type OrganizationJoinRequestOrderByWithAggregationInput = {
@@ -304,8 +304,8 @@ export type OrganizationJoinRequestCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutJoinRequestsInput
-  user: Prisma.UserCreateNestedOneWithoutJoinRequestsInput
   reviewer?: Prisma.UserCreateNestedOneWithoutReviewedJoinRequestsInput
+  user: Prisma.UserCreateNestedOneWithoutJoinRequestsInput
 }
 
 export type OrganizationJoinRequestUncheckedCreateInput = {
@@ -330,8 +330,8 @@ export type OrganizationJoinRequestUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutJoinRequestsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutJoinRequestsNestedInput
   reviewer?: Prisma.UserUpdateOneWithoutReviewedJoinRequestsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutJoinRequestsNestedInput
 }
 
 export type OrganizationJoinRequestUncheckedUpdateInput = {
@@ -437,13 +437,6 @@ export type OrganizationJoinRequestMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type OrganizationJoinRequestCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput> | Prisma.OrganizationJoinRequestCreateWithoutUserInput[] | Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput | Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.OrganizationJoinRequestCreateManyUserInputEnvelope
-  connect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
-}
-
 export type OrganizationJoinRequestCreateNestedManyWithoutReviewerInput = {
   create?: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutReviewerInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutReviewerInput> | Prisma.OrganizationJoinRequestCreateWithoutReviewerInput[] | Prisma.OrganizationJoinRequestUncheckedCreateWithoutReviewerInput[]
   connectOrCreate?: Prisma.OrganizationJoinRequestCreateOrConnectWithoutReviewerInput | Prisma.OrganizationJoinRequestCreateOrConnectWithoutReviewerInput[]
@@ -451,7 +444,7 @@ export type OrganizationJoinRequestCreateNestedManyWithoutReviewerInput = {
   connect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
 }
 
-export type OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput = {
+export type OrganizationJoinRequestCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput> | Prisma.OrganizationJoinRequestCreateWithoutUserInput[] | Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput | Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.OrganizationJoinRequestCreateManyUserInputEnvelope
@@ -465,18 +458,11 @@ export type OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
   connect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
 }
 
-export type OrganizationJoinRequestUpdateManyWithoutUserNestedInput = {
+export type OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput> | Prisma.OrganizationJoinRequestCreateWithoutUserInput[] | Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput | Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput | Prisma.OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput[]
   createMany?: Prisma.OrganizationJoinRequestCreateManyUserInputEnvelope
-  set?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
-  disconnect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
-  delete?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
   connect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
-  update?: Prisma.OrganizationJoinRequestUpdateWithWhereUniqueWithoutUserInput | Prisma.OrganizationJoinRequestUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.OrganizationJoinRequestUpdateManyWithWhereWithoutUserInput | Prisma.OrganizationJoinRequestUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
 }
 
 export type OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput = {
@@ -493,7 +479,7 @@ export type OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput = {
   deleteMany?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
 }
 
-export type OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput = {
+export type OrganizationJoinRequestUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput> | Prisma.OrganizationJoinRequestCreateWithoutUserInput[] | Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput | Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput[]
   upsert?: Prisma.OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput | Prisma.OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput[]
@@ -518,6 +504,20 @@ export type OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
   connect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
   update?: Prisma.OrganizationJoinRequestUpdateWithWhereUniqueWithoutReviewerInput | Prisma.OrganizationJoinRequestUpdateWithWhereUniqueWithoutReviewerInput[]
   updateMany?: Prisma.OrganizationJoinRequestUpdateManyWithWhereWithoutReviewerInput | Prisma.OrganizationJoinRequestUpdateManyWithWhereWithoutReviewerInput[]
+  deleteMany?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
+}
+
+export type OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput> | Prisma.OrganizationJoinRequestCreateWithoutUserInput[] | Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput | Prisma.OrganizationJoinRequestCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput | Prisma.OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.OrganizationJoinRequestCreateManyUserInputEnvelope
+  set?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
+  disconnect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
+  delete?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
+  connect?: Prisma.OrganizationJoinRequestWhereUniqueInput | Prisma.OrganizationJoinRequestWhereUniqueInput[]
+  update?: Prisma.OrganizationJoinRequestUpdateWithWhereUniqueWithoutUserInput | Prisma.OrganizationJoinRequestUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.OrganizationJoinRequestUpdateManyWithWhereWithoutUserInput | Prisma.OrganizationJoinRequestUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
 }
 
@@ -567,40 +567,6 @@ export type EnumJoinRequestStatusFieldUpdateOperationsInput = {
   set?: $Enums.JoinRequestStatus
 }
 
-export type OrganizationJoinRequestCreateWithoutUserInput = {
-  id?: string
-  status?: $Enums.JoinRequestStatus
-  membershipType?: $Enums.MembershipType
-  message?: string | null
-  reviewedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutJoinRequestsInput
-  reviewer?: Prisma.UserCreateNestedOneWithoutReviewedJoinRequestsInput
-}
-
-export type OrganizationJoinRequestUncheckedCreateWithoutUserInput = {
-  id?: string
-  organizationId: string
-  status?: $Enums.JoinRequestStatus
-  membershipType?: $Enums.MembershipType
-  message?: string | null
-  reviewedBy?: string | null
-  reviewedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type OrganizationJoinRequestCreateOrConnectWithoutUserInput = {
-  where: Prisma.OrganizationJoinRequestWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput>
-}
-
-export type OrganizationJoinRequestCreateManyUserInputEnvelope = {
-  data: Prisma.OrganizationJoinRequestCreateManyUserInput | Prisma.OrganizationJoinRequestCreateManyUserInput[]
-  skipDuplicates?: boolean
-}
-
 export type OrganizationJoinRequestCreateWithoutReviewerInput = {
   id?: string
   status?: $Enums.JoinRequestStatus
@@ -635,36 +601,38 @@ export type OrganizationJoinRequestCreateManyReviewerInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput = {
+export type OrganizationJoinRequestCreateWithoutUserInput = {
+  id?: string
+  status?: $Enums.JoinRequestStatus
+  membershipType?: $Enums.MembershipType
+  message?: string | null
+  reviewedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutJoinRequestsInput
+  reviewer?: Prisma.UserCreateNestedOneWithoutReviewedJoinRequestsInput
+}
+
+export type OrganizationJoinRequestUncheckedCreateWithoutUserInput = {
+  id?: string
+  organizationId: string
+  status?: $Enums.JoinRequestStatus
+  membershipType?: $Enums.MembershipType
+  message?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OrganizationJoinRequestCreateOrConnectWithoutUserInput = {
   where: Prisma.OrganizationJoinRequestWhereUniqueInput
-  update: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedUpdateWithoutUserInput>
   create: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput>
 }
 
-export type OrganizationJoinRequestUpdateWithWhereUniqueWithoutUserInput = {
-  where: Prisma.OrganizationJoinRequestWhereUniqueInput
-  data: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedUpdateWithoutUserInput>
-}
-
-export type OrganizationJoinRequestUpdateManyWithWhereWithoutUserInput = {
-  where: Prisma.OrganizationJoinRequestScalarWhereInput
-  data: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateManyMutationInput, Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserInput>
-}
-
-export type OrganizationJoinRequestScalarWhereInput = {
-  AND?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
-  OR?: Prisma.OrganizationJoinRequestScalarWhereInput[]
-  NOT?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
-  id?: Prisma.StringFilter<"OrganizationJoinRequest"> | string
-  organizationId?: Prisma.StringFilter<"OrganizationJoinRequest"> | string
-  userId?: Prisma.StringFilter<"OrganizationJoinRequest"> | string
-  status?: Prisma.EnumJoinRequestStatusFilter<"OrganizationJoinRequest"> | $Enums.JoinRequestStatus
-  membershipType?: Prisma.EnumMembershipTypeFilter<"OrganizationJoinRequest"> | $Enums.MembershipType
-  message?: Prisma.StringNullableFilter<"OrganizationJoinRequest"> | string | null
-  reviewedBy?: Prisma.StringNullableFilter<"OrganizationJoinRequest"> | string | null
-  reviewedAt?: Prisma.DateTimeNullableFilter<"OrganizationJoinRequest"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
+export type OrganizationJoinRequestCreateManyUserInputEnvelope = {
+  data: Prisma.OrganizationJoinRequestCreateManyUserInput | Prisma.OrganizationJoinRequestCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type OrganizationJoinRequestUpsertWithWhereUniqueWithoutReviewerInput = {
@@ -683,6 +651,38 @@ export type OrganizationJoinRequestUpdateManyWithWhereWithoutReviewerInput = {
   data: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateManyMutationInput, Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerInput>
 }
 
+export type OrganizationJoinRequestScalarWhereInput = {
+  AND?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
+  OR?: Prisma.OrganizationJoinRequestScalarWhereInput[]
+  NOT?: Prisma.OrganizationJoinRequestScalarWhereInput | Prisma.OrganizationJoinRequestScalarWhereInput[]
+  id?: Prisma.StringFilter<"OrganizationJoinRequest"> | string
+  organizationId?: Prisma.StringFilter<"OrganizationJoinRequest"> | string
+  userId?: Prisma.StringFilter<"OrganizationJoinRequest"> | string
+  status?: Prisma.EnumJoinRequestStatusFilter<"OrganizationJoinRequest"> | $Enums.JoinRequestStatus
+  membershipType?: Prisma.EnumMembershipTypeFilter<"OrganizationJoinRequest"> | $Enums.MembershipType
+  message?: Prisma.StringNullableFilter<"OrganizationJoinRequest"> | string | null
+  reviewedBy?: Prisma.StringNullableFilter<"OrganizationJoinRequest"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"OrganizationJoinRequest"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"OrganizationJoinRequest"> | Date | string
+}
+
+export type OrganizationJoinRequestUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.OrganizationJoinRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.OrganizationJoinRequestCreateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedCreateWithoutUserInput>
+}
+
+export type OrganizationJoinRequestUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.OrganizationJoinRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateWithoutUserInput, Prisma.OrganizationJoinRequestUncheckedUpdateWithoutUserInput>
+}
+
+export type OrganizationJoinRequestUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.OrganizationJoinRequestScalarWhereInput
+  data: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateManyMutationInput, Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserInput>
+}
+
 export type OrganizationJoinRequestCreateWithoutOrganizationInput = {
   id?: string
   status?: $Enums.JoinRequestStatus
@@ -691,8 +691,8 @@ export type OrganizationJoinRequestCreateWithoutOrganizationInput = {
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutJoinRequestsInput
   reviewer?: Prisma.UserCreateNestedOneWithoutReviewedJoinRequestsInput
+  user: Prisma.UserCreateNestedOneWithoutJoinRequestsInput
 }
 
 export type OrganizationJoinRequestUncheckedCreateWithoutOrganizationInput = {
@@ -733,18 +733,6 @@ export type OrganizationJoinRequestUpdateManyWithWhereWithoutOrganizationInput =
   data: Prisma.XOR<Prisma.OrganizationJoinRequestUpdateManyMutationInput, Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutOrganizationInput>
 }
 
-export type OrganizationJoinRequestCreateManyUserInput = {
-  id?: string
-  organizationId: string
-  status?: $Enums.JoinRequestStatus
-  membershipType?: $Enums.MembershipType
-  message?: string | null
-  reviewedBy?: string | null
-  reviewedAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
 export type OrganizationJoinRequestCreateManyReviewerInput = {
   id?: string
   organizationId: string
@@ -757,40 +745,16 @@ export type OrganizationJoinRequestCreateManyReviewerInput = {
   updatedAt?: Date | string
 }
 
-export type OrganizationJoinRequestUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumJoinRequestStatusFieldUpdateOperationsInput | $Enums.JoinRequestStatus
-  membershipType?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutJoinRequestsNestedInput
-  reviewer?: Prisma.UserUpdateOneWithoutReviewedJoinRequestsNestedInput
-}
-
-export type OrganizationJoinRequestUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumJoinRequestStatusFieldUpdateOperationsInput | $Enums.JoinRequestStatus
-  membershipType?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type OrganizationJoinRequestUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.EnumJoinRequestStatusFieldUpdateOperationsInput | $Enums.JoinRequestStatus
-  membershipType?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
-  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type OrganizationJoinRequestCreateManyUserInput = {
+  id?: string
+  organizationId: string
+  status?: $Enums.JoinRequestStatus
+  membershipType?: $Enums.MembershipType
+  message?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrganizationJoinRequestUpdateWithoutReviewerInput = {
@@ -829,6 +793,42 @@ export type OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type OrganizationJoinRequestUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumJoinRequestStatusFieldUpdateOperationsInput | $Enums.JoinRequestStatus
+  membershipType?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutJoinRequestsNestedInput
+  reviewer?: Prisma.UserUpdateOneWithoutReviewedJoinRequestsNestedInput
+}
+
+export type OrganizationJoinRequestUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumJoinRequestStatusFieldUpdateOperationsInput | $Enums.JoinRequestStatus
+  membershipType?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OrganizationJoinRequestUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumJoinRequestStatusFieldUpdateOperationsInput | $Enums.JoinRequestStatus
+  membershipType?: Prisma.EnumMembershipTypeFieldUpdateOperationsInput | $Enums.MembershipType
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type OrganizationJoinRequestCreateManyOrganizationInput = {
   id?: string
   userId: string
@@ -849,8 +849,8 @@ export type OrganizationJoinRequestUpdateWithoutOrganizationInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutJoinRequestsNestedInput
   reviewer?: Prisma.UserUpdateOneWithoutReviewedJoinRequestsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutJoinRequestsNestedInput
 }
 
 export type OrganizationJoinRequestUncheckedUpdateWithoutOrganizationInput = {
@@ -891,8 +891,8 @@ export type OrganizationJoinRequestSelect<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizationJoinRequest"]>
 
 export type OrganizationJoinRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -907,8 +907,8 @@ export type OrganizationJoinRequestSelectCreateManyAndReturn<ExtArgs extends run
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizationJoinRequest"]>
 
 export type OrganizationJoinRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -923,8 +923,8 @@ export type OrganizationJoinRequestSelectUpdateManyAndReturn<ExtArgs extends run
   createdAt?: boolean
   updatedAt?: boolean
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organizationJoinRequest"]>
 
 export type OrganizationJoinRequestSelectScalar = {
@@ -943,26 +943,26 @@ export type OrganizationJoinRequestSelectScalar = {
 export type OrganizationJoinRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "userId" | "status" | "membershipType" | "message" | "reviewedBy" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["organizationJoinRequest"]>
 export type OrganizationJoinRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type OrganizationJoinRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type OrganizationJoinRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $OrganizationJoinRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "OrganizationJoinRequest"
   objects: {
     organization: Prisma.$OrganizationPayload<ExtArgs>
-    user: Prisma.$UserPayload<ExtArgs>
     reviewer: Prisma.$UserPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1370,8 +1370,8 @@ readonly fields: OrganizationJoinRequestFieldRefs;
 export interface Prisma__OrganizationJoinRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviewer<T extends Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationJoinRequest$reviewerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

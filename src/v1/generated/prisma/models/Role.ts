@@ -198,12 +198,12 @@ export type RoleWhereInput = {
   isSystem?: Prisma.BoolFilter<"Role"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Role"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Role"> | Date | string
-  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  permissions?: Prisma.RolePermissionListRelationFilter
-  members?: Prisma.MembershipRoleListRelationFilter
-  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
-  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
   executiveMembers?: Prisma.ExecutiveMemberListRelationFilter
+  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
+  members?: Prisma.MembershipRoleListRelationFilter
+  permissions?: Prisma.RolePermissionListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
 }
 
 export type RoleOrderByWithRelationInput = {
@@ -214,12 +214,12 @@ export type RoleOrderByWithRelationInput = {
   isSystem?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  organization?: Prisma.OrganizationOrderByWithRelationInput
-  permissions?: Prisma.RolePermissionOrderByRelationAggregateInput
-  members?: Prisma.MembershipRoleOrderByRelationAggregateInput
-  studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetOrderByRelationAggregateInput
   executiveMembers?: Prisma.ExecutiveMemberOrderByRelationAggregateInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetOrderByRelationAggregateInput
+  members?: Prisma.MembershipRoleOrderByRelationAggregateInput
+  permissions?: Prisma.RolePermissionOrderByRelationAggregateInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
+  studentEnrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
 }
 
 export type RoleWhereUniqueInput = Prisma.AtLeast<{
@@ -234,12 +234,12 @@ export type RoleWhereUniqueInput = Prisma.AtLeast<{
   isSystem?: Prisma.BoolFilter<"Role"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Role"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Role"> | Date | string
-  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
-  permissions?: Prisma.RolePermissionListRelationFilter
-  members?: Prisma.MembershipRoleListRelationFilter
-  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
-  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
   executiveMembers?: Prisma.ExecutiveMemberListRelationFilter
+  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
+  members?: Prisma.MembershipRoleListRelationFilter
+  permissions?: Prisma.RolePermissionListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
+  studentEnrollments?: Prisma.StudentEnrollmentListRelationFilter
 }, "id" | "organizationId_name">
 
 export type RoleOrderByWithAggregationInput = {
@@ -275,12 +275,12 @@ export type RoleCreateInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateInput = {
@@ -291,11 +291,11 @@ export type RoleUncheckedCreateInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUpdateInput = {
@@ -305,12 +305,12 @@ export type RoleUpdateInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateInput = {
@@ -321,11 +321,11 @@ export type RoleUncheckedUpdateInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateManyInput = {
@@ -535,11 +535,11 @@ export type RoleCreateWithoutStudentEnrollmentsInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
 }
 
 export type RoleUncheckedCreateWithoutStudentEnrollmentsInput = {
@@ -550,10 +550,10 @@ export type RoleUncheckedCreateWithoutStudentEnrollmentsInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutStudentEnrollmentsInput = {
@@ -579,11 +579,11 @@ export type RoleUpdateWithoutStudentEnrollmentsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutStudentEnrollmentsInput = {
@@ -594,10 +594,10 @@ export type RoleUncheckedUpdateWithoutStudentEnrollmentsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateWithoutOrganizationInput = {
@@ -607,11 +607,11 @@ export type RoleCreateWithoutOrganizationInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutOrganizationInput = {
@@ -621,11 +621,11 @@ export type RoleUncheckedCreateWithoutOrganizationInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutOrganizationInput = {
@@ -674,11 +674,11 @@ export type RoleCreateWithoutPermissionsInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
-  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutPermissionsInput = {
@@ -689,10 +689,10 @@ export type RoleUncheckedCreateWithoutPermissionsInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
   members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutPermissionsInput = {
@@ -718,11 +718,11 @@ export type RoleUpdateWithoutPermissionsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
-  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutPermissionsInput = {
@@ -733,10 +733,10 @@ export type RoleUncheckedUpdateWithoutPermissionsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
   members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateWithoutMembersInput = {
@@ -746,11 +746,11 @@ export type RoleCreateWithoutMembersInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutMembersInput = {
@@ -761,10 +761,10 @@ export type RoleUncheckedCreateWithoutMembersInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
   permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutMembersInput = {
@@ -790,11 +790,11 @@ export type RoleUpdateWithoutMembersInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutMembersInput = {
@@ -805,10 +805,10 @@ export type RoleUncheckedUpdateWithoutMembersInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
   permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
   studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateWithoutFeatureFlagTargetsInput = {
@@ -818,11 +818,11 @@ export type RoleCreateWithoutFeatureFlagTargetsInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutFeatureFlagTargetsInput = {
@@ -833,10 +833,10 @@ export type RoleUncheckedCreateWithoutFeatureFlagTargetsInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutFeatureFlagTargetsInput = {
@@ -862,11 +862,11 @@ export type RoleUpdateWithoutFeatureFlagTargetsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutFeatureFlagTargetsInput = {
@@ -877,10 +877,10 @@ export type RoleUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateWithoutExecutiveMembersInput = {
@@ -890,11 +890,11 @@ export type RoleCreateWithoutExecutiveMembersInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
-  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
   featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionCreateNestedManyWithoutRoleInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutRolesInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutRoleInput
 }
 
 export type RoleUncheckedCreateWithoutExecutiveMembersInput = {
@@ -905,10 +905,10 @@ export type RoleUncheckedCreateWithoutExecutiveMembersInput = {
   isSystem?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
-  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutRoleInput
+  members?: Prisma.MembershipRoleUncheckedCreateNestedManyWithoutRoleInput
+  permissions?: Prisma.RolePermissionUncheckedCreateNestedManyWithoutRoleInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutRoleInput
 }
 
 export type RoleCreateOrConnectWithoutExecutiveMembersInput = {
@@ -934,11 +934,11 @@ export type RoleUpdateWithoutExecutiveMembersInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutRolesNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutExecutiveMembersInput = {
@@ -949,10 +949,10 @@ export type RoleUncheckedUpdateWithoutExecutiveMembersInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleCreateManyOrganizationInput = {
@@ -971,11 +971,11 @@ export type RoleUpdateWithoutOrganizationInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUpdateManyWithoutRoleNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateWithoutOrganizationInput = {
@@ -985,11 +985,11 @@ export type RoleUncheckedUpdateWithoutOrganizationInput = {
   isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
-  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
-  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
   executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutRoleNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutRoleNestedInput
+  members?: Prisma.MembershipRoleUncheckedUpdateManyWithoutRoleNestedInput
+  permissions?: Prisma.RolePermissionUncheckedUpdateManyWithoutRoleNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutRoleNestedInput
 }
 
 export type RoleUncheckedUpdateManyWithoutOrganizationInput = {
@@ -1007,19 +1007,19 @@ export type RoleUncheckedUpdateManyWithoutOrganizationInput = {
  */
 
 export type RoleCountOutputType = {
-  permissions: number
-  members: number
-  studentEnrollments: number
-  featureFlagTargets: number
   executiveMembers: number
+  featureFlagTargets: number
+  members: number
+  permissions: number
+  studentEnrollments: number
 }
 
 export type RoleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  permissions?: boolean | RoleCountOutputTypeCountPermissionsArgs
-  members?: boolean | RoleCountOutputTypeCountMembersArgs
-  studentEnrollments?: boolean | RoleCountOutputTypeCountStudentEnrollmentsArgs
-  featureFlagTargets?: boolean | RoleCountOutputTypeCountFeatureFlagTargetsArgs
   executiveMembers?: boolean | RoleCountOutputTypeCountExecutiveMembersArgs
+  featureFlagTargets?: boolean | RoleCountOutputTypeCountFeatureFlagTargetsArgs
+  members?: boolean | RoleCountOutputTypeCountMembersArgs
+  permissions?: boolean | RoleCountOutputTypeCountPermissionsArgs
+  studentEnrollments?: boolean | RoleCountOutputTypeCountStudentEnrollmentsArgs
 }
 
 /**
@@ -1035,22 +1035,8 @@ export type RoleCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * RoleCountOutputType without action
  */
-export type RoleCountOutputTypeCountPermissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.RolePermissionWhereInput
-}
-
-/**
- * RoleCountOutputType without action
- */
-export type RoleCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MembershipRoleWhereInput
-}
-
-/**
- * RoleCountOutputType without action
- */
-export type RoleCountOutputTypeCountStudentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StudentEnrollmentWhereInput
+export type RoleCountOutputTypeCountExecutiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExecutiveMemberWhereInput
 }
 
 /**
@@ -1063,8 +1049,22 @@ export type RoleCountOutputTypeCountFeatureFlagTargetsArgs<ExtArgs extends runti
 /**
  * RoleCountOutputType without action
  */
-export type RoleCountOutputTypeCountExecutiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ExecutiveMemberWhereInput
+export type RoleCountOutputTypeCountMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MembershipRoleWhereInput
+}
+
+/**
+ * RoleCountOutputType without action
+ */
+export type RoleCountOutputTypeCountPermissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RolePermissionWhereInput
+}
+
+/**
+ * RoleCountOutputType without action
+ */
+export type RoleCountOutputTypeCountStudentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentEnrollmentWhereInput
 }
 
 
@@ -1076,12 +1076,12 @@ export type RoleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isSystem?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>
-  members?: boolean | Prisma.Role$membersArgs<ExtArgs>
-  studentEnrollments?: boolean | Prisma.Role$studentEnrollmentsArgs<ExtArgs>
-  featureFlagTargets?: boolean | Prisma.Role$featureFlagTargetsArgs<ExtArgs>
   executiveMembers?: boolean | Prisma.Role$executiveMembersArgs<ExtArgs>
+  featureFlagTargets?: boolean | Prisma.Role$featureFlagTargetsArgs<ExtArgs>
+  members?: boolean | Prisma.Role$membersArgs<ExtArgs>
+  permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.Role$studentEnrollmentsArgs<ExtArgs>
   _count?: boolean | Prisma.RoleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["role"]>
 
@@ -1119,12 +1119,12 @@ export type RoleSelectScalar = {
 
 export type RoleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "name" | "description" | "isSystem" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
 export type RoleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
-  permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>
-  members?: boolean | Prisma.Role$membersArgs<ExtArgs>
-  studentEnrollments?: boolean | Prisma.Role$studentEnrollmentsArgs<ExtArgs>
-  featureFlagTargets?: boolean | Prisma.Role$featureFlagTargetsArgs<ExtArgs>
   executiveMembers?: boolean | Prisma.Role$executiveMembersArgs<ExtArgs>
+  featureFlagTargets?: boolean | Prisma.Role$featureFlagTargetsArgs<ExtArgs>
+  members?: boolean | Prisma.Role$membersArgs<ExtArgs>
+  permissions?: boolean | Prisma.Role$permissionsArgs<ExtArgs>
+  organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
+  studentEnrollments?: boolean | Prisma.Role$studentEnrollmentsArgs<ExtArgs>
   _count?: boolean | Prisma.RoleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RoleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1137,12 +1137,12 @@ export type RoleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $RolePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Role"
   objects: {
-    organization: Prisma.$OrganizationPayload<ExtArgs>
-    permissions: Prisma.$RolePermissionPayload<ExtArgs>[]
-    members: Prisma.$MembershipRolePayload<ExtArgs>[]
-    studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
-    featureFlagTargets: Prisma.$FeatureFlagTargetPayload<ExtArgs>[]
     executiveMembers: Prisma.$ExecutiveMemberPayload<ExtArgs>[]
+    featureFlagTargets: Prisma.$FeatureFlagTargetPayload<ExtArgs>[]
+    members: Prisma.$MembershipRolePayload<ExtArgs>[]
+    permissions: Prisma.$RolePermissionPayload<ExtArgs>[]
+    organization: Prisma.$OrganizationPayload<ExtArgs>
+    studentEnrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1546,12 +1546,12 @@ readonly fields: RoleFieldRefs;
  */
 export interface Prisma__RoleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  permissions<T extends Prisma.Role$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  members<T extends Prisma.Role$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  studentEnrollments<T extends Prisma.Role$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  featureFlagTargets<T extends Prisma.Role$featureFlagTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$featureFlagTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeatureFlagTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   executiveMembers<T extends Prisma.Role$executiveMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$executiveMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExecutiveMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  featureFlagTargets<T extends Prisma.Role$featureFlagTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$featureFlagTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeatureFlagTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  members<T extends Prisma.Role$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MembershipRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  permissions<T extends Prisma.Role$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RolePermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  studentEnrollments<T extends Prisma.Role$studentEnrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Role$studentEnrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1989,75 +1989,27 @@ export type RoleDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Role.permissions
+ * Role.executiveMembers
  */
-export type Role$permissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Role$executiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the RolePermission
+   * Select specific fields to fetch from the ExecutiveMember
    */
-  select?: Prisma.RolePermissionSelect<ExtArgs> | null
+  select?: Prisma.ExecutiveMemberSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the RolePermission
+   * Omit specific fields from the ExecutiveMember
    */
-  omit?: Prisma.RolePermissionOmit<ExtArgs> | null
+  omit?: Prisma.ExecutiveMemberOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.RolePermissionInclude<ExtArgs> | null
-  where?: Prisma.RolePermissionWhereInput
-  orderBy?: Prisma.RolePermissionOrderByWithRelationInput | Prisma.RolePermissionOrderByWithRelationInput[]
-  cursor?: Prisma.RolePermissionWhereUniqueInput
+  include?: Prisma.ExecutiveMemberInclude<ExtArgs> | null
+  where?: Prisma.ExecutiveMemberWhereInput
+  orderBy?: Prisma.ExecutiveMemberOrderByWithRelationInput | Prisma.ExecutiveMemberOrderByWithRelationInput[]
+  cursor?: Prisma.ExecutiveMemberWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.RolePermissionScalarFieldEnum | Prisma.RolePermissionScalarFieldEnum[]
-}
-
-/**
- * Role.members
- */
-export type Role$membersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MembershipRole
-   */
-  select?: Prisma.MembershipRoleSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MembershipRole
-   */
-  omit?: Prisma.MembershipRoleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MembershipRoleInclude<ExtArgs> | null
-  where?: Prisma.MembershipRoleWhereInput
-  orderBy?: Prisma.MembershipRoleOrderByWithRelationInput | Prisma.MembershipRoleOrderByWithRelationInput[]
-  cursor?: Prisma.MembershipRoleWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MembershipRoleScalarFieldEnum | Prisma.MembershipRoleScalarFieldEnum[]
-}
-
-/**
- * Role.studentEnrollments
- */
-export type Role$studentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentEnrollment
-   */
-  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentEnrollment
-   */
-  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
-  where?: Prisma.StudentEnrollmentWhereInput
-  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
-  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
+  distinct?: Prisma.ExecutiveMemberScalarFieldEnum | Prisma.ExecutiveMemberScalarFieldEnum[]
 }
 
 /**
@@ -2085,27 +2037,75 @@ export type Role$featureFlagTargetsArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * Role.executiveMembers
+ * Role.members
  */
-export type Role$executiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Role$membersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the ExecutiveMember
+   * Select specific fields to fetch from the MembershipRole
    */
-  select?: Prisma.ExecutiveMemberSelect<ExtArgs> | null
+  select?: Prisma.MembershipRoleSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the ExecutiveMember
+   * Omit specific fields from the MembershipRole
    */
-  omit?: Prisma.ExecutiveMemberOmit<ExtArgs> | null
+  omit?: Prisma.MembershipRoleOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ExecutiveMemberInclude<ExtArgs> | null
-  where?: Prisma.ExecutiveMemberWhereInput
-  orderBy?: Prisma.ExecutiveMemberOrderByWithRelationInput | Prisma.ExecutiveMemberOrderByWithRelationInput[]
-  cursor?: Prisma.ExecutiveMemberWhereUniqueInput
+  include?: Prisma.MembershipRoleInclude<ExtArgs> | null
+  where?: Prisma.MembershipRoleWhereInput
+  orderBy?: Prisma.MembershipRoleOrderByWithRelationInput | Prisma.MembershipRoleOrderByWithRelationInput[]
+  cursor?: Prisma.MembershipRoleWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ExecutiveMemberScalarFieldEnum | Prisma.ExecutiveMemberScalarFieldEnum[]
+  distinct?: Prisma.MembershipRoleScalarFieldEnum | Prisma.MembershipRoleScalarFieldEnum[]
+}
+
+/**
+ * Role.permissions
+ */
+export type Role$permissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RolePermission
+   */
+  select?: Prisma.RolePermissionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RolePermission
+   */
+  omit?: Prisma.RolePermissionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RolePermissionInclude<ExtArgs> | null
+  where?: Prisma.RolePermissionWhereInput
+  orderBy?: Prisma.RolePermissionOrderByWithRelationInput | Prisma.RolePermissionOrderByWithRelationInput[]
+  cursor?: Prisma.RolePermissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RolePermissionScalarFieldEnum | Prisma.RolePermissionScalarFieldEnum[]
+}
+
+/**
+ * Role.studentEnrollments
+ */
+export type Role$studentEnrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentEnrollment
+   */
+  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentEnrollment
+   */
+  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
+  where?: Prisma.StudentEnrollmentWhereInput
+  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
 }
 
 /**

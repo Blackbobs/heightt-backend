@@ -11,7 +11,39 @@ export class EmailService {
   /**
    * Send an email using SendLib service
    */
-  async sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+  async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+    attachments?: Array<{
+      filename: string;
+      contentType?: string;
+      base64Content: string;
+    }>,
+  ): Promise<boolean> {
+    if (attachments && attachments.length > 0) {
+      const sent = await this.trySend(to, subject, html, attachments);
+      if (sent) {
+        return true;
+      }
+      this.logger.warn(
+        `Retrying email to ${to} without attachments after failure`,
+      );
+      return this.trySend(to, subject, html);
+    }
+    return this.trySend(to, subject, html);
+  }
+
+  private async trySend(
+    to: string,
+    subject: string,
+    html: string,
+    attachments?: Array<{
+      filename: string;
+      contentType?: string;
+      base64Content: string;
+    }>,
+  ): Promise<boolean> {
     try {
       const apiKey = this.configService.get<string>('SENDLIB_API_KEY');
       const fromEmail = this.configService.get<string>('SENDLIB_FROM_EMAIL');
@@ -36,12 +68,20 @@ export class EmailService {
 
       const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
 
-      const requestBody = {
+      const requestBody: Record<string, any> = {
         from: fromEmail?.trim() || 'noreply@heightt.com',
         to: to.trim(),
         subject: subject.trim(),
         html: html,
       };
+
+      if (attachments && attachments.length > 0) {
+        requestBody.attachments = attachments.map((a) => ({
+          filename: a.filename,
+          content_type: a.contentType || 'application/pdf',
+          content: a.base64Content,
+        }));
+      }
 
       this.logger.debug(`Sending to SendLib with from: ${requestBody.from}`);
 
@@ -54,7 +94,7 @@ export class EmailService {
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
-          timeout: 15000,
+          timeout: 30000,
         },
       );
 

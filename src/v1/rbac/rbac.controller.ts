@@ -1,4 +1,5 @@
 // src/v1/rbac/rbac.controller.ts
+
 import {
   Controller,
   Get,
@@ -33,11 +34,8 @@ import {
   RoleResponseDto,
   PermissionResponseDto,
 } from './dto/role.dto';
-// Import cache decorators
 import {
   Cache,
-  Cacheable,
-  CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
 
@@ -58,7 +56,7 @@ export class RbacController {
   @RequirePermission('admin:view')
   @Cache({
     key: () => 'permissions:all',
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['rbac', 'permissions'],
   })
   @ApiOperation({ summary: 'Get all permissions' })
@@ -79,7 +77,7 @@ export class RbacController {
       const request = context.switchToHttp().getRequest();
       return `permission:${request.params.key}`;
     },
-    ttl: 600, // 10 minutes
+    ttl: 600,
     tags: ['rbac', 'permissions'],
   })
   @ApiOperation({ summary: 'Get permission by key' })
@@ -92,6 +90,138 @@ export class RbacController {
   async getPermissionByKey(@Param('key') key: string) {
     this.logger.log(`Get permission by key endpoint called: ${key}`);
     return this.rbacService.getPermissionByKey(key);
+  }
+
+  // ============================================
+  // ADMIN PERMISSIONS (NEW ENDPOINTS)
+  // ============================================
+
+  @Get('admins/:adminId/permissions')
+  @RequirePermission('admin:view')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `admin:permissions:${request.params.adminId}`;
+    },
+    ttl: 300,
+    tags: ['rbac', 'admins', 'permissions'],
+  })
+  @ApiOperation({ summary: 'Get admin permissions' })
+  @ApiParam({ name: 'adminId', description: 'Admin ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Admin permissions retrieved',
+  })
+  async getAdminPermissions(@Param('adminId') adminId: string) {
+    this.logger.log(`Get admin permissions endpoint called: ${adminId}`);
+    return this.rbacService.getAdminPermissions(adminId);
+  }
+
+  @Patch('admins/:adminId/permissions')
+  @RequirePermission('admin:assign')
+  @InvalidateCache(['rbac', 'admins', 'permissions'])
+  @ApiOperation({ summary: 'Update admin permissions' })
+  @ApiParam({ name: 'adminId', description: 'Admin ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        permissions: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Array of permission keys',
+        },
+        action: {
+          type: 'string',
+          enum: ['ADD', 'REMOVE', 'SET'],
+          description: 'Action to perform on permissions',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Admin permissions updated',
+  })
+  async updateAdminPermissions(
+    @Param('adminId') adminId: string,
+    @Body() body: { permissions: string[]; action: 'ADD' | 'REMOVE' | 'SET' },
+    @Request() req: any,
+  ) {
+    this.logger.log(`Update admin permissions endpoint called: ${adminId}`);
+    return this.rbacService.updateAdminPermissions(
+      adminId,
+      body.permissions,
+      body.action,
+      req.user.id,
+    );
+  }
+
+  @Post('admins/assign-with-permissions')
+  @RequirePermission('admin:assign')
+  @InvalidateCache(['rbac', 'admins', 'permissions'])
+  @ApiOperation({ summary: 'Assign admin with permissions' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: { type: 'string' },
+        adminType: {
+          type: 'string',
+          enum: [
+            'PLATFORM_ADMIN',
+            'INSTITUTION_ADMIN',
+            'FACULTY_ADMIN',
+            'DEPARTMENT_ADMIN',
+            'ORGANIZATION_ADMIN',
+            'CLUB_ADMIN',
+          ],
+        },
+        institutionId: { type: 'string', nullable: true },
+        facultyId: { type: 'string', nullable: true },
+        departmentId: { type: 'string', nullable: true },
+        organizationId: { type: 'string', nullable: true },
+        academicSessionId: { type: 'string', nullable: true },
+        permissions: {
+          type: 'array',
+          items: { type: 'string' },
+          nullable: true,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Admin assigned with permissions',
+  })
+  async assignAdminWithPermissions(
+    @Body()
+    dto: {
+      userId: string;
+      adminType: string;
+      institutionId?: string;
+      facultyId?: string;
+      departmentId?: string;
+      organizationId?: string;
+      academicSessionId?: string;
+      permissions?: string[];
+    },
+    @Request() req: any,
+  ) {
+    this.logger.log(`Assign admin with permissions endpoint called`);
+    return this.rbacService.assignAdminWithPermissions(
+      req.user.id,
+      dto.userId,
+      dto.adminType,
+      {
+        institutionId: dto.institutionId,
+        facultyId: dto.facultyId,
+        departmentId: dto.departmentId,
+        organizationId: dto.organizationId,
+        academicSessionId: dto.academicSessionId,
+      },
+      dto.permissions,
+    );
   }
 
   // ============================================
@@ -120,7 +250,7 @@ export class RbacController {
       const request = context.switchToHttp().getRequest();
       return `roles:organization:${request.query.organizationId}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['rbac', 'roles'],
   })
   @ApiOperation({ summary: 'Get roles by organization' })
@@ -146,7 +276,7 @@ export class RbacController {
       const request = context.switchToHttp().getRequest();
       return `role:${request.params.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['rbac', 'roles'],
   })
   @ApiOperation({ summary: 'Get role by ID' })
@@ -274,7 +404,7 @@ export class RbacController {
   @RequirePermission('admin:view')
   @Cache({
     key: () => 'admins:all',
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['rbac', 'admins'],
   })
   @ApiOperation({ summary: 'Get all admins' })
@@ -294,7 +424,7 @@ export class RbacController {
       const request = context.switchToHttp().getRequest();
       return `user:permissions:${request.params.userId}`;
     },
-    ttl: 120, // 2 minutes
+    ttl: 120,
     tags: ['rbac', 'permissions', 'user'],
   })
   @ApiOperation({ summary: 'Get user permissions' })
