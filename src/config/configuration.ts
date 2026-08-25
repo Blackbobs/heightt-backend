@@ -5,7 +5,7 @@ export default () => ({
 
   fees: {
     platform: {
-      percentage: 2, // 2% platform fee
+      percentage: Number(process.env.PLATFORM_FEE_PERCENTAGE || 2),
       enabled: true,
     },
     paymentGateway: {

@@ -24,11 +24,13 @@ import { CacheModule } from './redis/cache.module';
 import { BachsModule } from './v1/bachs/bachs.module';
 import { CommonModule } from './common/common.module';
 import { HealthModule } from './v1/health/health.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [configuration],
       // Only load the environment-specific file that matches NODE_ENV.
       // Previously, all files were loaded with later files overriding earlier ones,
       // which meant .env.production would override .env even in development,

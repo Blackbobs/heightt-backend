@@ -90,6 +90,9 @@ export class BachsService {
     checkoutId: string;
     checkoutUrl: string;
     pendingPaymentId: string;
+    baseAmount: number;
+    platformFee: number;
+    totalBeforeGatewayFee: number;
   }> {
     // 0. Validate amount against the Bachs provider minimum before any
     //    DB writes or external calls (Bachs rejects amounts below ₦100)
@@ -100,6 +103,19 @@ export class BachsService {
         )} (${MIN_BACHS_CHECKOUT_AMOUNT_KOBO} Kobo)`,
       );
     }
+
+    const platformFeePercentage = this.configService.get<number>(
+      'fees.platform.percentage',
+      2,
+    );
+    const platformFeeEnabled = this.configService.get<boolean>(
+      'fees.platform.enabled',
+      true,
+    );
+    const platformFee = platformFeeEnabled
+      ? Math.round(paymentData.amount * (platformFeePercentage / 100))
+      : 0;
+    const settlementAmount = paymentData.amount + platformFee;
 
     // 1. Get user details
     const user = await this.prisma.user.findUnique({
@@ -171,7 +187,13 @@ export class BachsService {
           dueAssignmentId: paymentData.dueAssignmentId,
           category: paymentData.category || 'OTHER',
           reference,
-          metadata: paymentData.metadata || {},
+          metadata: {
+            ...(paymentData.metadata || {}),
+            baseAmount: paymentData.amount,
+            platformFee,
+            platformFeePercentage,
+            expectedSettlementAmount: settlementAmount,
+          },
           status: 'PENDING',
         },
       });
@@ -182,6 +204,14 @@ export class BachsService {
         checkoutId: pendingPayment.bachsCheckoutId!,
         checkoutUrl: (pendingPayment as any).checkoutUrl,
         pendingPaymentId: pendingPayment.id,
+        baseAmount: Number(
+          (pendingPayment.metadata as any)?.baseAmount || pendingPayment.amount,
+        ),
+        platformFee: Number((pendingPayment.metadata as any)?.platformFee || 0),
+        totalBeforeGatewayFee: Number(
+          (pendingPayment.metadata as any)?.expectedSettlementAmount ||
+            pendingPayment.amount,
+        ),
       };
     }
 
@@ -190,7 +220,7 @@ export class BachsService {
       this.configService.get<string>('FRONTEND_URL') ||
       this.configService.get<string>('APP_URL') ||
       'http://localhost:3001';
-    const bachsAmount = this.bachsClient.toBachsAmount(paymentData.amount);
+    const bachsAmount = this.bachsClient.toBachsAmount(settlementAmount);
 
     const defaultSuccessUrl = `${frontendUrl}/payment/callback`;
     const defaultCancelUrl = `${frontendUrl}/payment/cancelled`;
@@ -224,6 +254,9 @@ export class BachsService {
         userId: userId,
         organizationId: paymentData.organizationId,
         internalReference: pendingPayment.reference,
+        baseAmount: paymentData.amount,
+        platformFee,
+        expectedSettlementAmount: settlementAmount,
       },
       success_url: callbackUrl.toString(),
       cancel_url: cancellationUrl.toString(),
@@ -242,6 +275,10 @@ export class BachsService {
         bachsCustomerId: bachsCustomer.id,
         metadata: {
           ...((pendingPayment.metadata as any) || {}),
+          baseAmount: paymentData.amount,
+          platformFee,
+          platformFeePercentage,
+          expectedSettlementAmount: settlementAmount,
           checkoutSession,
         },
       },
@@ -255,6 +292,9 @@ export class BachsService {
       checkoutId: checkoutSession.checkout_id,
       checkoutUrl: checkoutSession.checkout_url,
       pendingPaymentId: pendingPayment.id,
+      baseAmount: paymentData.amount,
+      platformFee,
+      totalBeforeGatewayFee: settlementAmount,
     };
   }
 
@@ -333,9 +373,14 @@ export class BachsService {
       if (!Number.isSafeInteger(amountInKobo) || amountInKobo <= 0) {
         throw new BadRequestException('Provider returned an invalid amount');
       }
-      if (amountInKobo !== pendingPayment.amount) {
+      const pendingMetadata = (pendingPayment.metadata as any) || {};
+      const platformFee = Number(pendingMetadata.platformFee || 0);
+      const expectedSettlementAmount =
+        pendingMetadata.expectedSettlementAmount ||
+        pendingPayment.amount + platformFee;
+      if (amountInKobo !== expectedSettlementAmount) {
         throw new BadRequestException(
-          `Payment amount mismatch: expected ${pendingPayment.amount} Kobo, received ${amountInKobo} Kobo`,
+          `Payment settlement mismatch: expected ${expectedSettlementAmount} Kobo, received ${amountInKobo} Kobo`,
         );
       }
       if (
@@ -359,6 +404,21 @@ export class BachsService {
         );
       }
 
+      const platformWallet = await tx.wallet.findFirst({
+        where: { isPlatformWallet: true },
+        include: { ledgerAccount: true },
+      });
+      if (
+        platformFee > 0 &&
+        (!platformWallet ||
+          platformWallet.status !== 'ACTIVE' ||
+          !platformWallet.ledgerAccountId)
+      ) {
+        throw new BadRequestException(
+          'Platform wallet or ledger account is not active',
+        );
+      }
+
       // An external collection is funded by Bachs, not by the student's
       // pre-existing Heightt wallet. Record the provider clearing asset as the
       // debit side and the organization wallet as the credit side.
@@ -378,7 +438,10 @@ export class BachsService {
       });
 
       const orgWalletBalanceBefore = orgWallet.balance;
-      const orgWalletBalanceAfter = orgWalletBalanceBefore + amountInKobo;
+      const orgWalletBalanceAfter =
+        orgWalletBalanceBefore + pendingPayment.amount;
+      const platformBalanceBefore = platformWallet?.balance || 0;
+      const platformBalanceAfter = platformBalanceBefore + platformFee;
       const clearingBalanceBefore = clearingAccount.balance;
       const clearingBalanceAfter = clearingBalanceBefore + amountInKobo;
 
@@ -387,8 +450,8 @@ export class BachsService {
           walletId: orgWallet.id,
           type: 'CREDIT',
           amount: amountInKobo,
-          fee: 0,
-          netAmount: amountInKobo,
+          fee: platformFee,
+          netAmount: pendingPayment.amount,
           status: 'COMPLETED',
           reference: pendingPayment.reference,
           description: pendingPayment.description || 'Payment via Bachs',
@@ -397,6 +460,9 @@ export class BachsService {
             bachsChargeId: chargeId,
             bachsCheckoutId: checkoutId,
             bachsCustomerId: customerId,
+            baseAmount: pendingPayment.amount,
+            platformFee,
+            settledAmount: amountInKobo,
             ...paymentData,
           },
         },
@@ -416,12 +482,25 @@ export class BachsService {
           {
             accountId: orgWallet.ledgerAccountId!,
             transactionId: transaction.id,
-            amount: amountInKobo,
+            amount: pendingPayment.amount,
             type: 'CREDIT',
             balanceBefore: orgWalletBalanceBefore,
             balanceAfter: orgWalletBalanceAfter,
             description: `Payment from ${pendingPayment.user.email} via Bachs`,
           },
+          ...(platformFee > 0
+            ? [
+                {
+                  accountId: platformWallet!.ledgerAccountId!,
+                  transactionId: transaction.id,
+                  amount: platformFee,
+                  type: 'CREDIT' as const,
+                  balanceBefore: platformBalanceBefore,
+                  balanceAfter: platformBalanceAfter,
+                  description: 'Heightt platform service fee',
+                },
+              ]
+            : []),
         ],
       });
 
@@ -434,6 +513,16 @@ export class BachsService {
         where: { id: orgWallet.ledgerAccountId! },
         data: { balance: orgWalletBalanceAfter },
       });
+      if (platformFee > 0) {
+        await tx.wallet.update({
+          where: { id: platformWallet!.id },
+          data: { balance: platformBalanceAfter },
+        });
+        await tx.ledgerAccount.update({
+          where: { id: platformWallet!.ledgerAccountId! },
+          data: { balance: platformBalanceAfter },
+        });
+      }
       await tx.ledgerAccount.update({
         where: { id: clearingAccount.id },
         data: { balance: clearingBalanceAfter },
@@ -444,8 +533,8 @@ export class BachsService {
           payerId: pendingPayment.userId,
           organizationId: pendingPayment.organizationId,
           transactionId: transaction.id,
-          amount: amountInKobo,
-          serviceFee: 0,
+          amount: pendingPayment.amount,
+          serviceFee: platformFee,
           status: 'COMPLETED',
           paymentMethod: pendingPayment.paymentMethod as any,
           reference: pendingPayment.reference,
@@ -456,6 +545,9 @@ export class BachsService {
           bachsCustomerId: customerId,
           metadata: {
             pendingPaymentId: pendingPayment.id,
+            baseAmount: pendingPayment.amount,
+            platformFee,
+            totalBeforeGatewayFee: amountInKobo,
             ...paymentData,
           },
         },
@@ -482,9 +574,19 @@ export class BachsService {
               {
                 ledgerAccountId: orgWallet.ledgerAccountId!,
                 type: 'CREDIT',
-                amount: amountInKobo,
+                amount: pendingPayment.amount,
                 description: `Payment to ${pendingPayment.organization.name}`,
               },
+              ...(platformFee > 0
+                ? [
+                    {
+                      ledgerAccountId: platformWallet!.ledgerAccountId!,
+                      type: 'CREDIT' as const,
+                      amount: platformFee,
+                      description: 'Heightt platform service fee',
+                    },
+                  ]
+                : []),
             ],
           },
         },
@@ -512,13 +614,13 @@ export class BachsService {
 
           const totalPaidAmount = totalPaid._sum.amount || 0;
           const isFullyPaid =
-            totalPaidAmount + amountInKobo >= dueAssignment.amount;
+            totalPaidAmount + pendingPayment.amount >= dueAssignment.amount;
 
           await tx.duePayment.create({
             data: {
               assignmentId: dueAssignment.id,
               paymentId: payment.id,
-              amount: amountInKobo,
+              amount: pendingPayment.amount,
               paidAt: new Date(),
             },
           });
@@ -550,7 +652,9 @@ export class BachsService {
           activity: 'PAYMENT_COMPLETED_VIA_BACHS',
           details: JSON.stringify({
             paymentId: payment.id,
-            amount: amountInKobo,
+            amount: pendingPayment.amount,
+            platformFee,
+            settledAmount: amountInKobo,
             reference: transaction.reference,
             organizationId: pendingPayment.organizationId,
             bachsChargeId: chargeId,
@@ -674,6 +778,7 @@ export class BachsService {
             providerPayment.charge_id ||
             providerPayment.id;
           const amount =
+            providerPayment.settlement_amount ||
             providerPayment.amount_paid ||
             providerPayment.amount ||
             checkout.pricing?.amount;

@@ -38,19 +38,21 @@ describe('BachsService payment callbacks', () => {
     };
     const client = {
       getOrCreateCustomer: jest.fn().mockResolvedValue({ id: 'customer-1' }),
-      toBachsAmount: jest.fn().mockReturnValue('100.00'),
+      toBachsAmount: jest
+        .fn()
+        .mockImplementation((amount: number) => (amount / 100).toFixed(2)),
       createCheckoutSession: jest.fn().mockResolvedValue({
         checkout_id: 'checkout-1',
         checkout_url: 'https://checkout.bachs.example/1',
       }),
     };
     const config = {
-      get: jest.fn((key: string) => {
+      get: jest.fn((key: string, fallback?: unknown) => {
         const values: Record<string, string> = {
           FRONTEND_URL: 'https://app.heightt.test',
           PAYMENT_REDIRECT_ORIGINS: 'https://app.heightt.test',
         };
-        return values[key];
+        return values[key] ?? fallback;
       }),
     };
     const events = {};
@@ -80,6 +82,7 @@ describe('BachsService payment callbacks', () => {
 
     expect(client.createCheckoutSession).toHaveBeenCalledWith(
       expect.objectContaining({
+        pricing: expect.objectContaining({ amount: '102.00' }),
         success_url:
           'https://app.heightt.test/payment/callback?source=checkout&payment=pending-1',
         cancel_url:

@@ -406,6 +406,18 @@ export class FinanceController {
             checkoutId: { type: 'string' },
             checkoutUrl: { type: 'string' },
             pendingPaymentId: { type: 'string' },
+            baseAmount: {
+              type: 'number',
+              description: 'Organization payment in Kobo',
+            },
+            platformFee: {
+              type: 'number',
+              description: 'Heightt platform fee in Kobo',
+            },
+            totalBeforeGatewayFee: {
+              type: 'number',
+              description: 'Checkout subtotal before any Bachs processing fee',
+            },
           },
         },
       },
