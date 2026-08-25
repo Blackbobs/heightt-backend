@@ -77,28 +77,68 @@ async function bootstrap() {
 
   if (isProduction) {
     // Create CSRF protection middleware
+    // const csrfProtection = csurf({
+    //   cookie: {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: 'strict',
+    //   },
+    //   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+    // });
+
+    // app.use((req: any, res: any, next: any) => {
+    //   const path = req.path;
+
+    //   // Payment-provider webhooks are authenticated
+    //   // using their own cryptographic signatures.
+    //   if (
+    //     req.method === 'POST' &&
+    //     (path === '/api/webhooks/bachs' || path === '/api/v1/webhooks/bachs')
+    //   ) {
+    //     logger.debug(`Skipping CSRF for Bachs webhook: ${path}`);
+    //     return next();
+    //   }
+
+    //   return csrfProtection(req, res, next);
+    // });
+
     const csrfProtection = csurf({
       cookie: {
         httpOnly: true,
-        secure: true,
+        secure: isProduction,
         sameSite: 'strict',
       },
       ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
     });
 
+    // Apply CSRF protection with proper exclusions
     app.use((req: any, res: any, next: any) => {
       const path = req.path;
+      const method = req.method;
 
-      // Payment-provider webhooks are authenticated
-      // using their own cryptographic signatures.
-      if (
-        req.method === 'POST' &&
-        (path === '/api/webhooks/bachs' || path === '/api/v1/webhooks/bachs')
-      ) {
-        logger.debug(`Skipping CSRF for Bachs webhook: ${path}`);
+      // Log for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        logger.debug(`CSRF Check - Path: ${path}, Method: ${method}`);
+      }
+
+      // Exclude webhooks
+      if (method === 'POST' && path.includes('/api/v1/webhooks/bachs')) {
+        logger.debug(`Skipping CSRF for webhook: ${path}`);
         return next();
       }
 
+      // Exclude the CSRF token endpoint itself (GET)
+      if (path.includes('/auth/csrf-token')) {
+        logger.debug(`Skipping CSRF for CSRF token endpoint: ${path}`);
+        return next();
+      }
+
+      // Exclude health checks
+      if (path.includes('/health')) {
+        return next();
+      }
+
+      // Apply CSRF protection for all other routes
       return csrfProtection(req, res, next);
     });
 
