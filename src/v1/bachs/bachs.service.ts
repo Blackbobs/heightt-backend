@@ -662,7 +662,8 @@ export class BachsService {
         const checkout = await this.bachsClient.getCheckoutSession(
           pendingPayment.bachsCheckoutId,
         );
-        if (checkout.status === 'COMPLETED') {
+        const checkoutStatus = String(checkout.status || '').toUpperCase();
+        if (checkoutStatus === 'COMPLETED' || checkoutStatus === 'SUCCEEDED') {
           const providerPayment =
             checkout.payment ||
             checkout.charge ||
@@ -706,17 +707,17 @@ export class BachsService {
             );
           }
         } else if (
-          checkout.status === 'EXPIRED' ||
-          checkout.status === 'CANCELLED'
+          checkoutStatus === 'EXPIRED' ||
+          checkoutStatus === 'CANCELLED'
         ) {
           await this.prisma.pendingPayment.update({
             where: { id: pendingPaymentId },
             data: {
-              status: checkout.status === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED',
+              status: checkoutStatus === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED',
             },
           });
           pendingPayment.status =
-            checkout.status === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED';
+            checkoutStatus === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED';
         }
       } catch (error) {
         this.logger.error(`Failed to check checkout status: ${error.message}`);

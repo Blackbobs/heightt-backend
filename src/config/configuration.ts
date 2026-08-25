@@ -21,7 +21,7 @@ export default () => ({
   // Bachs Configuration
   bachs: {
     apiKey: process.env.BACHS_API_KEY,
-    baseUrl: process.env.BACHS_BASE_URL || 'https://api.bachs.co',
+    baseUrl: process.env.BACHS_BASE_URL || 'https://api.bachs.io',
     webhookSecret: process.env.BACHS_WEBHOOK_SECRET,
   },
 });

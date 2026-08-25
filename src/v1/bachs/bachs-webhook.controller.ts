@@ -31,6 +31,7 @@ export class BachsWebhookController {
     @Headers('x-signature') sig2: string,
     @Headers('signature') sig3: string,
     @Headers('x-bachs-signature-256') sig4: string,
+    @Headers('x-bachs-timestamp') timestamp: string,
     @Headers('x-request-id') requestId: string,
     @Body() payload: any,
     @Req() request: RawBodyRequest<Request>,
@@ -45,7 +46,11 @@ export class BachsWebhookController {
     // 1. Verify signature
     if (
       !request.rawBody ||
-      !this.bachsClient.verifyWebhookSignature(request.rawBody, signature)
+      !this.bachsClient.verifyWebhookSignature(
+        request.rawBody,
+        signature,
+        timestamp,
+      )
     ) {
       this.logger.warn('Invalid webhook signature');
       throw new BadRequestException('Invalid signature');
@@ -80,7 +85,7 @@ export class BachsWebhookController {
         break;
     }
 
-    // Always return 200 OK to acknowledge receipt
+    // Return 200 only after successful or idempotent processing.
     return { received: true, event: eventType };
   }
 
@@ -99,8 +104,14 @@ export class BachsWebhookController {
       metadata.checkoutId ||
       metadata.bachsCheckoutId ||
       payload.checkout_id;
+    // Bachs may add a customer-borne processing fee to `amount`. Heightt's
+    // payment and organization credit are based on the settled checkout amount.
     const rawAmount =
-      data.amount_paid ?? data.amount ?? data.pricing?.amount ?? payload.amount;
+      data.settlement_amount ??
+      data.amount_paid ??
+      data.amount ??
+      data.pricing?.amount ??
+      payload.amount;
     const amount =
       typeof rawAmount === 'object'
         ? (rawAmount?.value ?? rawAmount?.amount)
@@ -119,7 +130,10 @@ export class BachsWebhookController {
     }
 
     const currency =
-      data.currency || data.pricing?.currency || rawAmount?.currency;
+      data.settlement_currency ||
+      data.currency ||
+      data.pricing?.currency ||
+      rawAmount?.currency;
     if (currency && String(currency).toUpperCase() !== 'NGN') {
       throw new BadRequestException('Unexpected payment currency');
     }
@@ -130,7 +144,15 @@ export class BachsWebhookController {
         chargeId,
         String(amount),
         customerId,
-        metadata,
+        {
+          ...metadata,
+          providerEventId: payload.id,
+          providerStatus: data.status,
+          grossAmount: data.amount,
+          settlementAmount: data.settlement_amount,
+          processingFee: data.processing_fee,
+          feeBearer: data.fee_bearer,
+        },
       );
 
       this.logger.log(`Payment completed: ${result.payment?.id || result.id}`);

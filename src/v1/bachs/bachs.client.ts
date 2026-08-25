@@ -1,6 +1,7 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance, AxiosError } from 'axios';
+import { createHmac, timingSafeEqual } from 'crypto';
 
 export interface BachsCustomer {
   id: string;
@@ -302,7 +303,11 @@ export class BachsClient {
   // WEBHOOK VERIFICATION
   // ============================================
 
-  verifyWebhookSignature(payload: Buffer | string, signature: string): boolean {
+  verifyWebhookSignature(
+    payload: Buffer | string,
+    signature: string,
+    timestamp: string,
+  ): boolean {
     try {
       const secret = this.configService.get<string>('BACHS_WEBHOOK_SECRET');
       const isDev = process.env.NODE_ENV !== 'production';
@@ -318,35 +323,73 @@ export class BachsClient {
         return false;
       }
 
-      if (!signature) {
+      if (!signature || !timestamp) {
         if (isDev) return true;
         return false;
       }
 
-      // Clean signature header (strip sha256= or v1= prefixes)
-      const cleanSig = signature.replace(/^(sha256=|v1=)/i, '').trim();
-      if (isDev && (cleanSig === 'test_signature' || cleanSig === 'skip')) {
-        return true;
-      }
-
-      const crypto = require('crypto');
-      const expectedSignature = crypto
-        .createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
-
-      const sigBuf = Buffer.from(cleanSig, 'utf8');
-      const expectedBuf = Buffer.from(expectedSignature, 'utf8');
-
-      if (sigBuf.length !== expectedBuf.length) {
+      const timestampSeconds = Number(timestamp);
+      const toleranceSeconds = this.configService.get<number>(
+        'BACHS_WEBHOOK_TOLERANCE',
+        300,
+      );
+      if (
+        !Number.isFinite(timestampSeconds) ||
+        Math.abs(Date.now() / 1000 - timestampSeconds) > toleranceSeconds
+      ) {
         this.logger.warn(
-          `Webhook signature length mismatch: got ${sigBuf.length}, expected ${expectedBuf.length}`,
+          'Bachs webhook timestamp is missing, invalid, or stale',
         );
         return false;
       }
 
-      // Use timing-safe comparison
-      const isMatch = crypto.timingSafeEqual(sigBuf, expectedBuf);
+      if (isDev && (signature === 'test_signature' || signature === 'skip')) {
+        return true;
+      }
+
+      const rawBody = Buffer.isBuffer(payload)
+        ? payload
+        : Buffer.from(payload, 'utf8');
+      const signedPayload = Buffer.concat([
+        Buffer.from(`${timestamp}.`, 'utf8'),
+        rawBody,
+      ]);
+      const secretCandidates = [Buffer.from(secret, 'utf8')];
+      if (secret.startsWith('whsec_')) {
+        try {
+          secretCandidates.push(Buffer.from(secret.slice(6), 'base64'));
+        } catch {
+          // Some Bachs environments use the whsec_ prefix with an opaque key.
+          // The original UTF-8 secret remains the first candidate.
+        }
+      }
+
+      const suppliedSignatures = signature
+        .split(/[ ,]+/)
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .filter((part) => !/^v\d+$/i.test(part))
+        .map((part) => part.replace(/^(sha256=|v\d+=|v\d+,)/i, ''));
+
+      const isMatch = secretCandidates.some((key) => {
+        const digest = createHmac('sha256', key).update(signedPayload).digest();
+        return suppliedSignatures.some((supplied) => {
+          const encodings: Buffer[] = [];
+          if (/^[a-f0-9]{64}$/i.test(supplied)) {
+            encodings.push(Buffer.from(supplied, 'hex'));
+          }
+          try {
+            encodings.push(Buffer.from(supplied, 'base64'));
+          } catch {
+            return false;
+          }
+          return encodings.some(
+            (candidate) =>
+              candidate.length === digest.length &&
+              timingSafeEqual(candidate, digest),
+          );
+        });
+      });
 
       if (!isMatch) {
         this.logger.warn('Webhook signature verification failed');
