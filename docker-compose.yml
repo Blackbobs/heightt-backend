@@ -48,7 +48,7 @@ services:
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-secret-key}
       FRONTEND_URL: ${FRONTEND_URL:-https://heightt-frontend.vercel.app}
       CORS_ORIGIN: ${CORS_ORIGIN:-https://heightt-frontend.vercel.app,https://your-frontend-production-url.onrender.com}
-      APP_URL: ${APP_URL:-https://api.heightt.com}
+      APP_URL: ${APP_URL:-https://heightt-backend.onrender.com}
     ports:
       - '3000:3000'
     depends_on:
