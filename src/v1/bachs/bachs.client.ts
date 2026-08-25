@@ -302,7 +302,7 @@ export class BachsClient {
   // WEBHOOK VERIFICATION
   // ============================================
 
-  verifyWebhookSignature(payload: any, signature: string): boolean {
+  verifyWebhookSignature(payload: Buffer | string, signature: string): boolean {
     try {
       const secret = this.configService.get<string>('BACHS_WEBHOOK_SECRET');
       const isDev = process.env.NODE_ENV !== 'production';
@@ -332,7 +332,7 @@ export class BachsClient {
       const crypto = require('crypto');
       const expectedSignature = crypto
         .createHmac('sha256', secret)
-        .update(typeof payload === 'string' ? payload : JSON.stringify(payload))
+        .update(payload)
         .digest('hex');
 
       const sigBuf = Buffer.from(cleanSig, 'utf8');

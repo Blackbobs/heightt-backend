@@ -7,7 +7,11 @@ import {
   HttpStatus,
   Logger,
   BadRequestException,
+  InternalServerErrorException,
+  Req,
 } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
+import type { Request } from 'express';
 import { BachsClient } from './bachs.client';
 import { BachsService } from './bachs.service';
 
@@ -29,6 +33,7 @@ export class BachsWebhookController {
     @Headers('x-bachs-signature-256') sig4: string,
     @Headers('x-request-id') requestId: string,
     @Body() payload: any,
+    @Req() request: RawBodyRequest<Request>,
   ) {
     const signature = sig1 || sig2 || sig3 || sig4;
     const eventType = payload.type || payload.event || payload.event_type;
@@ -38,7 +43,10 @@ export class BachsWebhookController {
     );
 
     // 1. Verify signature
-    if (!this.bachsClient.verifyWebhookSignature(payload, signature)) {
+    if (
+      !request.rawBody ||
+      !this.bachsClient.verifyWebhookSignature(request.rawBody, signature)
+    ) {
       this.logger.warn('Invalid webhook signature');
       throw new BadRequestException('Invalid signature');
     }
@@ -49,6 +57,7 @@ export class BachsWebhookController {
       case 'payment.succeeded':
       case 'charge.succeeded':
       case 'checkout.session.completed':
+      case 'checkout.completed':
         await this.handleCollectionSucceeded(payload);
         break;
 
@@ -60,10 +69,6 @@ export class BachsWebhookController {
 
       case 'collection.underpaid':
         await this.handleCollectionUnderpaid(payload);
-        break;
-
-      case 'checkout.completed':
-        await this.handleCheckoutCompleted(payload);
         break;
 
       case 'checkout.expired':
@@ -83,7 +88,7 @@ export class BachsWebhookController {
    * Handle successful payment collection
    */
   private async handleCollectionSucceeded(payload: any) {
-    const data = payload.data || payload;
+    const data = payload.data?.object || payload.data || payload;
     const metadata = data.metadata || payload.metadata || {};
     const chargeId =
       data.charge_id || data.id || payload.id || `charge_${Date.now()}`;
@@ -94,14 +99,30 @@ export class BachsWebhookController {
       metadata.checkoutId ||
       metadata.bachsCheckoutId ||
       payload.checkout_id;
+    const rawAmount =
+      data.amount_paid ?? data.amount ?? data.pricing?.amount ?? payload.amount;
     const amount =
-      data.amount || data.amount_paid || data.pricing?.amount || payload.amount;
+      typeof rawAmount === 'object'
+        ? (rawAmount?.value ?? rawAmount?.amount)
+        : rawAmount;
     const customerId =
       data.customer?.id || data.customer_id || metadata.bachsCustomerId;
 
     this.logger.log(
       `Processing successful collection: charge ${chargeId}, checkout ${checkoutId}`,
     );
+
+    if (!checkoutId || amount === undefined || amount === null) {
+      throw new BadRequestException(
+        'Successful payment webhook is missing checkout ID or amount',
+      );
+    }
+
+    const currency =
+      data.currency || data.pricing?.currency || rawAmount?.currency;
+    if (currency && String(currency).toUpperCase() !== 'NGN') {
+      throw new BadRequestException('Unexpected payment currency');
+    }
 
     try {
       const result = await this.bachsService.completePayment(
@@ -115,6 +136,10 @@ export class BachsWebhookController {
       this.logger.log(`Payment completed: ${result.payment?.id || result.id}`);
     } catch (error: any) {
       this.logger.error(`Failed to complete payment: ${error.message}`);
+      // Acknowledge only successful/idempotent processing. Non-2xx tells the
+      // provider to retry transient failures and keeps reconciliation possible.
+      if (error instanceof BadRequestException) throw error;
+      throw new InternalServerErrorException('Payment processing failed');
     }
   }
 
@@ -198,17 +223,6 @@ export class BachsWebhookController {
     } catch (error) {
       this.logger.error(`Failed to handle underpayment: ${error.message}`);
     }
-  }
-
-  /**
-   * Handle checkout completion
-   */
-  private async handleCheckoutCompleted(payload: any) {
-    const data = payload.data;
-    const checkoutId = data.checkout_id;
-    const status = data.status;
-
-    this.logger.log(`Checkout completed: ${checkoutId}, status: ${status}`);
   }
 
   /**

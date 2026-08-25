@@ -10,13 +10,19 @@ import {
 import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import csurf from 'csurf';
 import { ConfigService } from '@nestjs/config';
+import {
+  createCsrfMiddleware,
+  CSRF_HEADER,
+} from './common/middleware/csrf.middleware';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
   const app = await NestFactory.create(AppModule, {
+    // Payment providers sign the exact bytes sent over HTTP. Keep those bytes
+    // available so webhook verification does not depend on JSON re-serialization.
+    rawBody: true,
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
 
@@ -229,6 +235,13 @@ async function bootstrap() {
     maxAge: 86400, // 24 hours
   });
 
+  // CORS runs first so an allowed browser origin can read CSRF failures.
+  // This remains enabled locally so development reproduces production.
+  app.use(createCsrfMiddleware(isProduction));
+  logger.log(
+    `🔒 CSRF protection enabled in ${isProduction ? 'production' : 'development'} (${CSRF_HEADER})`,
+  );
+
   // ============================================
   // 6. Global Prefix & Versioning
   // ============================================
@@ -257,7 +270,7 @@ async function bootstrap() {
         '- Auth endpoints: 5 requests per minute\n\n' +
         '## Security\n' +
         '- All endpoints are protected with Helmet.js\n' +
-        '- CSRF protection enabled in production\n' +
+        '- CSRF protection enabled in all environments\n' +
         '- Input validation and sanitization applied globally',
     )
     .setVersion('1.0')

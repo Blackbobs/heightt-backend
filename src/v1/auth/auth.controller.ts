@@ -34,6 +34,7 @@ import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
 import type { Response } from 'express';
+import { getCsrfToken } from '../../common/middleware/csrf.middleware';
 import {
   Cache,
   Cacheable,
@@ -314,28 +315,8 @@ export class AuthController {
     },
   })
   async getCsrfToken(@Request() req: any) {
-    // IMPORTANT: The csurf middleware has already set the cookie and generated the token
-    // We need to read the token from the cookie, not generate a new one
-    let token = '';
-
-    // Read the token from the cookie that csurf set
-    if (req.cookies && req.cookies._csrf) {
-      token = req.cookies._csrf;
-      this.logger.debug(`CSRF token from cookie: ${token.substring(0, 10)}...`);
-    } else {
-      // If no cookie, generate one using csurf
-      if (req.csrfToken) {
-        token = req.csrfToken();
-        this.logger.debug(`CSRF token generated: ${token.substring(0, 10)}...`);
-      } else {
-        // Fallback for development
-        token = 'test-token-for-development';
-        this.logger.warn('Using fallback CSRF token');
-      }
-    }
-
     return {
-      csrfToken: token,
+      csrfToken: getCsrfToken(req),
       message:
         'Include this token in X-CSRF-Token header for subsequent requests',
     };

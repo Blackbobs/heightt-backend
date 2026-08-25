@@ -43,6 +43,41 @@ export class BachsService {
     private readonly eventService: EventService,
   ) {}
 
+  private getAllowedRedirectOrigins(): Set<string> {
+    const configured =
+      this.configService.get<string>('PAYMENT_REDIRECT_ORIGINS') ||
+      this.configService.get<string>('CORS_ORIGIN') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'http://localhost:3001';
+
+    return new Set(
+      configured
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean)
+        .map((value) => new URL(value).origin),
+    );
+  }
+
+  private validateRedirectUrl(url: string, field: string): string {
+    let parsed: URL;
+    try {
+      parsed = new URL(url);
+    } catch {
+      throw new BadRequestException(`${field} must be a valid URL`);
+    }
+
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      throw new BadRequestException(`${field} must use HTTP or HTTPS`);
+    }
+
+    if (!this.getAllowedRedirectOrigins().has(parsed.origin)) {
+      throw new BadRequestException(`${field} origin is not allowed`);
+    }
+
+    return parsed.toString();
+  }
+
   /**
    * Create a checkout session for a payment
    */
@@ -142,12 +177,35 @@ export class BachsService {
       });
     });
 
+    if ((pendingPayment as any).checkoutUrl) {
+      return {
+        checkoutId: pendingPayment.bachsCheckoutId!,
+        checkoutUrl: (pendingPayment as any).checkoutUrl,
+        pendingPaymentId: pendingPayment.id,
+      };
+    }
+
     // 4. Prepare Bachs checkout payload
     const frontendUrl =
       this.configService.get<string>('FRONTEND_URL') ||
       this.configService.get<string>('APP_URL') ||
       'http://localhost:3001';
     const bachsAmount = this.bachsClient.toBachsAmount(paymentData.amount);
+
+    const defaultSuccessUrl = `${frontendUrl}/payment/callback`;
+    const defaultCancelUrl = `${frontendUrl}/payment/cancelled`;
+    const requestedSuccessUrl = this.validateRedirectUrl(
+      successUrl || defaultSuccessUrl,
+      'successUrl',
+    );
+    const requestedCancelUrl = this.validateRedirectUrl(
+      cancelUrl || defaultCancelUrl,
+      'cancelUrl',
+    );
+    const callbackUrl = new URL(requestedSuccessUrl);
+    callbackUrl.searchParams.set('payment', pendingPayment.id);
+    const cancellationUrl = new URL(requestedCancelUrl);
+    cancellationUrl.searchParams.set('payment', pendingPayment.id);
 
     const checkoutPayload = {
       customer: {
@@ -167,8 +225,8 @@ export class BachsService {
         organizationId: paymentData.organizationId,
         internalReference: pendingPayment.reference,
       },
-      success_url: successUrl || `${frontendUrl}/dashboard/payments/success`,
-      cancel_url: cancelUrl || `${frontendUrl}/dashboard/payments/cancel`,
+      success_url: callbackUrl.toString(),
+      cancel_url: cancellationUrl.toString(),
       expires_in_minutes: 60,
     };
 
@@ -214,21 +272,25 @@ export class BachsService {
       `Completing payment for checkout ${checkoutId} with charge ${chargeId}`,
     );
 
-    return this.prisma.$transaction(async (tx) => {
-      // 1. Find the pending payment
+    const result = await this.prisma.$transaction(async (tx) => {
       const pendingPaymentIdFromMeta =
-        paymentData?.pendingPaymentId || paymentData?.metadata?.pendingPaymentId;
+        paymentData?.pendingPaymentId ||
+        paymentData?.metadata?.pendingPaymentId;
       const internalRefFromMeta =
-        paymentData?.internalReference || paymentData?.metadata?.internalReference;
+        paymentData?.internalReference ||
+        paymentData?.metadata?.internalReference;
 
       const pendingPayment = await tx.pendingPayment.findFirst({
         where: {
           OR: [
             ...(checkoutId ? [{ bachsCheckoutId: checkoutId }] : []),
-            ...(pendingPaymentIdFromMeta ? [{ id: pendingPaymentIdFromMeta }] : []),
-            ...(internalRefFromMeta ? [{ reference: internalRefFromMeta }] : []),
+            ...(pendingPaymentIdFromMeta
+              ? [{ id: pendingPaymentIdFromMeta }]
+              : []),
+            ...(internalRefFromMeta
+              ? [{ reference: internalRefFromMeta }]
+              : []),
           ],
-          status: 'PENDING',
         },
         include: {
           user: true,
@@ -242,38 +304,47 @@ export class BachsService {
         );
       }
 
-      // 2. Check if already processed (idempotency)
       const existingPayment = await tx.payment.findFirst({
-        where: {
-          reference: pendingPayment.reference,
-        },
+        where: { reference: pendingPayment.reference },
+        include: { receipt: true },
       });
 
       if (existingPayment) {
         this.logger.log(
           `Payment ${pendingPayment.reference} already processed`,
         );
-        return existingPayment;
+        return {
+          payment: existingPayment,
+          transaction: null,
+          organizationBalance: null,
+          pendingPaymentId: pendingPayment.id,
+          alreadyProcessed: true,
+          shouldGenerateReceipt: !existingPayment.receipt,
+        };
       }
 
-      // 3. Convert amount from Bachs to Kobo
+      if (pendingPayment.status !== 'PENDING') {
+        throw new BadRequestException(
+          `Payment cannot be completed from ${pendingPayment.status} status`,
+        );
+      }
+
       const amountInKobo = this.bachsClient.fromBachsAmount(amountInBachs);
-
-      // 4. Get the user's wallet
-      const wallet = await tx.wallet.findUnique({
-        where: { userId: pendingPayment.userId },
-        include: { ledgerAccount: true },
-      });
-
-      if (!wallet) {
-        throw new NotFoundException('Wallet not found');
+      if (!Number.isSafeInteger(amountInKobo) || amountInKobo <= 0) {
+        throw new BadRequestException('Provider returned an invalid amount');
+      }
+      if (amountInKobo !== pendingPayment.amount) {
+        throw new BadRequestException(
+          `Payment amount mismatch: expected ${pendingPayment.amount} Kobo, received ${amountInKobo} Kobo`,
+        );
+      }
+      if (
+        pendingPayment.bachsCheckoutId &&
+        checkoutId !== pendingPayment.bachsCheckoutId
+      ) {
+        throw new BadRequestException('Checkout ID does not match payment');
       }
 
-      if (wallet.status !== 'ACTIVE') {
-        throw new BadRequestException('Wallet is not active');
-      }
-
-      // 5. Get organization wallet
       const orgWallet = await tx.wallet.findUnique({
         where: { organizationId: pendingPayment.organizationId },
         include: { ledgerAccount: true },
@@ -282,25 +353,39 @@ export class BachsService {
       if (!orgWallet) {
         throw new NotFoundException('Organization wallet not found');
       }
-
-      // 6. Process the payment internally
-      const walletBalanceBefore = wallet.balance;
-      const walletBalanceAfter = walletBalanceBefore - amountInKobo;
-
-      if (walletBalanceAfter < 0) {
-        this.logger.warn(
-          `Wallet balance insufficient for payment ${pendingPayment.id}`,
-        );
+      if (orgWallet.status !== 'ACTIVE' || !orgWallet.ledgerAccountId) {
         throw new BadRequestException(
-          'Insufficient balance after Bachs payment',
+          'Organization wallet or ledger account is not active',
         );
       }
 
-      // 7. Create transaction record
+      // An external collection is funded by Bachs, not by the student's
+      // pre-existing Heightt wallet. Record the provider clearing asset as the
+      // debit side and the organization wallet as the credit side.
+      const clearingAccount = await tx.ledgerAccount.upsert({
+        where: { code: '1200' },
+        create: {
+          code: '1200',
+          name: 'Bachs Settlement Account',
+          type: 'ASSET',
+          category: 'SETTLEMENT',
+          ownerType: 'SYSTEM',
+          description: 'Funds collected externally and awaiting settlement',
+          isSystem: true,
+          isActive: true,
+        },
+        update: {},
+      });
+
+      const orgWalletBalanceBefore = orgWallet.balance;
+      const orgWalletBalanceAfter = orgWalletBalanceBefore + amountInKobo;
+      const clearingBalanceBefore = clearingAccount.balance;
+      const clearingBalanceAfter = clearingBalanceBefore + amountInKobo;
+
       const transaction = await tx.transaction.create({
         data: {
-          walletId: wallet.id,
-          type: 'DEBIT',
+          walletId: orgWallet.id,
+          type: 'CREDIT',
           amount: amountInKobo,
           fee: 0,
           netAmount: amountInKobo,
@@ -317,44 +402,27 @@ export class BachsService {
         },
       });
 
-      // 8. Create ledger entry for user
-      await tx.ledgerEntry.create({
-        data: {
-          accountId: wallet.ledgerAccountId!,
-          transactionId: transaction.id,
-          amount: amountInKobo,
-          type: 'DEBIT',
-          balanceBefore: walletBalanceBefore,
-          balanceAfter: walletBalanceAfter,
-          description: pendingPayment.description || 'Payment via Bachs',
-        },
-      });
-
-      // 9. Update wallet balance
-      await tx.wallet.update({
-        where: { id: wallet.id },
-        data: { balance: walletBalanceAfter },
-      });
-
-      await tx.ledgerAccount.update({
-        where: { id: wallet.ledgerAccountId! },
-        data: { balance: walletBalanceAfter },
-      });
-
-      // 10. Credit organization wallet
-      const orgWalletBalanceBefore = orgWallet.balance;
-      const orgWalletBalanceAfter = orgWalletBalanceBefore + amountInKobo;
-
-      await tx.ledgerEntry.create({
-        data: {
-          accountId: orgWallet.ledgerAccountId!,
-          transactionId: transaction.id,
-          amount: amountInKobo,
-          type: 'CREDIT',
-          balanceBefore: orgWalletBalanceBefore,
-          balanceAfter: orgWalletBalanceAfter,
-          description: `Payment from ${pendingPayment.user.email} via Bachs`,
-        },
+      await tx.ledgerEntry.createMany({
+        data: [
+          {
+            accountId: clearingAccount.id,
+            transactionId: transaction.id,
+            amount: amountInKobo,
+            type: 'DEBIT',
+            balanceBefore: clearingBalanceBefore,
+            balanceAfter: clearingBalanceAfter,
+            description: `Bachs collection ${chargeId}`,
+          },
+          {
+            accountId: orgWallet.ledgerAccountId!,
+            transactionId: transaction.id,
+            amount: amountInKobo,
+            type: 'CREDIT',
+            balanceBefore: orgWalletBalanceBefore,
+            balanceAfter: orgWalletBalanceAfter,
+            description: `Payment from ${pendingPayment.user.email} via Bachs`,
+          },
+        ],
       });
 
       await tx.wallet.update({
@@ -366,8 +434,11 @@ export class BachsService {
         where: { id: orgWallet.ledgerAccountId! },
         data: { balance: orgWalletBalanceAfter },
       });
+      await tx.ledgerAccount.update({
+        where: { id: clearingAccount.id },
+        data: { balance: clearingBalanceAfter },
+      });
 
-      // 11. Create payment record
       const payment = await tx.payment.create({
         data: {
           payerId: pendingPayment.userId,
@@ -390,7 +461,43 @@ export class BachsService {
         },
       });
 
-      // 12. Handle due payment if applicable
+      const journalEntry = await tx.journalEntry.create({
+        data: {
+          reference: `JE-BACHS-${chargeId}`,
+          description:
+            pendingPayment.description || 'External payment via Bachs',
+          transactionId: transaction.id,
+          paymentId: payment.id,
+          status: 'POSTED',
+          isBalanced: true,
+          createdBy: pendingPayment.userId,
+          lines: {
+            create: [
+              {
+                ledgerAccountId: clearingAccount.id,
+                type: 'DEBIT',
+                amount: amountInKobo,
+                description: `Bachs collection ${chargeId}`,
+              },
+              {
+                ledgerAccountId: orgWallet.ledgerAccountId!,
+                type: 'CREDIT',
+                amount: amountInKobo,
+                description: `Payment to ${pendingPayment.organization.name}`,
+              },
+            ],
+          },
+        },
+      });
+      await tx.transaction.update({
+        where: { id: transaction.id },
+        data: { journalEntryId: journalEntry.id },
+      });
+      await tx.payment.update({
+        where: { id: payment.id },
+        data: { journalEntryId: journalEntry.id },
+      });
+
       if (pendingPayment.dueAssignmentId) {
         const dueAssignment = await tx.dueAssignment.findUnique({
           where: { id: pendingPayment.dueAssignmentId },
@@ -428,7 +535,6 @@ export class BachsService {
         }
       }
 
-      // 13. Update pending payment status
       await tx.pendingPayment.update({
         where: { id: pendingPayment.id },
         data: {
@@ -438,7 +544,6 @@ export class BachsService {
         },
       });
 
-      // 14. Log activity
       await tx.activityLog.create({
         data: {
           userId: pendingPayment.userId,
@@ -454,61 +559,63 @@ export class BachsService {
         },
       });
 
-      // 15. Emit payment received event
-      this.eventService.emitPaymentReceived({
-        paymentId: payment.id,
-        userId: pendingPayment.userId,
-        organizationId: pendingPayment.organizationId,
-        amount: amountInKobo,
-        reference: transaction.reference,
-        metadata: {
-          bachsChargeId: chargeId,
-          bachsCheckoutId: checkoutId,
-        },
-      });
-
-      // 16. Emit specific event for receipt generation
-      this.eventService.emit(SystemEvents.PAYMENT_COMPLETED_VIA_BACHS, {
-        paymentId: payment.id,
-        userId: pendingPayment.userId,
-        chargeId: chargeId,
-        checkoutId: checkoutId,
-      });
-
-      // 17. Emit wallet debited event
-      this.eventService.emitWalletDebited({
-        walletId: wallet.id,
-        userId: pendingPayment.userId,
-        amount: amountInKobo,
-        balance: walletBalanceAfter,
-        previousBalance: walletBalanceBefore,
-        reference: transaction.reference,
-        description: pendingPayment.description || 'Payment via Bachs',
-      });
-
-      this.logger.log(
-        `Payment completed: ${payment.id} via Bachs charge ${chargeId}`,
-      );
-
       return {
         payment,
         transaction,
-        balance: walletBalanceAfter,
+        organizationBalance: orgWalletBalanceAfter,
         pendingPaymentId: pendingPayment.id,
+        alreadyProcessed: false,
+        shouldGenerateReceipt: true,
       };
     });
+
+    // Consumers query Payment/Receipt using their own connection, so events
+    // must only run after the transaction above has committed.
+    if (!result.alreadyProcessed) {
+      this.eventService.emitPaymentReceived({
+        paymentId: result.payment.id,
+        userId: result.payment.payerId,
+        organizationId: result.payment.organizationId,
+        amount: result.payment.amount,
+        reference: result.payment.reference,
+        metadata: { bachsChargeId: chargeId, bachsCheckoutId: checkoutId },
+      });
+    }
+    if (result.shouldGenerateReceipt) {
+      await this.eventService.emitAsync(
+        SystemEvents.PAYMENT_COMPLETED_VIA_BACHS,
+        {
+          paymentId: result.payment.id,
+          userId: result.payment.payerId,
+          chargeId,
+          checkoutId,
+        },
+      );
+    }
+
+    this.logger.log(
+      `Payment completed: ${result.payment.id} via Bachs charge ${chargeId}`,
+    );
+    return result;
   }
 
   /**
    * Cancel a pending payment
    */
-  async cancelPendingPayment(pendingPaymentId: string): Promise<void> {
+  async cancelPendingPayment(
+    pendingPaymentId: string,
+    userId?: string,
+  ): Promise<void> {
     const pendingPayment = await this.prisma.pendingPayment.findUnique({
       where: { id: pendingPaymentId },
     });
 
     if (!pendingPayment) {
       throw new NotFoundException('Pending payment not found');
+    }
+
+    if (userId && pendingPayment.userId !== userId) {
+      throw new ForbiddenException('You do not have access to this payment');
     }
 
     if (pendingPayment.status !== 'PENDING') {
@@ -534,8 +641,11 @@ export class BachsService {
     pendingPaymentId: string,
     userId: string,
   ): Promise<any> {
-    const pendingPayment = await this.prisma.pendingPayment.findUnique({
+    let pendingPayment = await this.prisma.pendingPayment.findUnique({
       where: { id: pendingPaymentId },
+      include: {
+        user: { select: { id: true } },
+      },
     });
 
     if (!pendingPayment) {
@@ -553,9 +663,48 @@ export class BachsService {
           pendingPayment.bachsCheckoutId,
         );
         if (checkout.status === 'COMPLETED') {
-          this.logger.warn(
-            `Checkout ${pendingPayment.bachsCheckoutId} is completed but pending payment ${pendingPaymentId} is still pending`,
-          );
+          const providerPayment =
+            checkout.payment ||
+            checkout.charge ||
+            checkout.collection ||
+            checkout;
+          const chargeId =
+            providerPayment.payment_id ||
+            providerPayment.charge_id ||
+            providerPayment.id;
+          const amount =
+            providerPayment.amount_paid ||
+            providerPayment.amount ||
+            checkout.pricing?.amount;
+          const customerId =
+            providerPayment.customer?.id ||
+            providerPayment.customer_id ||
+            checkout.customer?.id;
+
+          // Reconcile only when the provider lookup supplies independently
+          // verifiable payment details. Otherwise the signed webhook remains
+          // authoritative and the client sees PROCESSING rather than success.
+          if (chargeId && amount !== undefined && amount !== null) {
+            await this.completePayment(
+              pendingPayment.bachsCheckoutId,
+              String(chargeId),
+              String(
+                typeof amount === 'object'
+                  ? amount.value || amount.amount
+                  : amount,
+              ),
+              customerId ? String(customerId) : '',
+              checkout.metadata || providerPayment.metadata,
+            );
+            pendingPayment = (await this.prisma.pendingPayment.findUnique({
+              where: { id: pendingPaymentId },
+              include: { user: { select: { id: true } } },
+            }))!;
+          } else {
+            this.logger.warn(
+              `Checkout ${pendingPayment.bachsCheckoutId} is completed but lacks charge details; awaiting webhook`,
+            );
+          }
         } else if (
           checkout.status === 'EXPIRED' ||
           checkout.status === 'CANCELLED'
@@ -574,12 +723,41 @@ export class BachsService {
       }
     }
 
+    let payment = await this.prisma.payment.findFirst({
+      where: { reference: pendingPayment.reference },
+      include: { receipt: { select: { id: true, receiptNumber: true } } },
+    });
+    if (payment && !payment.receipt) {
+      await this.eventService.emitAsync(
+        SystemEvents.PAYMENT_COMPLETED_VIA_BACHS,
+        {
+          paymentId: payment.id,
+          userId: pendingPayment.userId,
+          chargeId: payment.bachsChargeId || '',
+          checkoutId: payment.bachsCheckoutId || '',
+        },
+      );
+      payment = await this.prisma.payment.findFirst({
+        where: { id: payment.id },
+        include: { receipt: { select: { id: true, receiptNumber: true } } },
+      });
+    }
+    const status =
+      pendingPayment.status === 'PENDING' && payment
+        ? 'COMPLETED'
+        : pendingPayment.status === 'PENDING'
+          ? 'PROCESSING'
+          : pendingPayment.status;
+
     return {
       id: pendingPayment.id,
-      status: pendingPayment.status,
+      status,
       amount: pendingPayment.amount,
       reference: pendingPayment.reference,
       checkoutId: pendingPayment.bachsCheckoutId,
+      paymentId: payment?.id || null,
+      receiptId: payment?.receipt?.id || null,
+      receiptNumber: payment?.receipt?.receiptNumber || null,
       completedAt: pendingPayment.completedAt,
       createdAt: pendingPayment.createdAt,
     };

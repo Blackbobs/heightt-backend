@@ -452,6 +452,34 @@ export class FinanceController {
     };
   }
 
+  @Get('payments/pending/:id/status')
+  @ApiOperation({
+    summary: 'Get and reconcile an external payment status',
+    description:
+      'Returns the authenticated user payment state and receipt identifiers. If still pending, the backend also checks Bachs for a terminal checkout state.',
+  })
+  @ApiParam({ name: 'id', description: 'Pending payment ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Payment status retrieved',
+  })
+  async getPendingPaymentStatus(@Request() req: any, @Param('id') id: string) {
+    return {
+      success: true,
+      data: await this.bachsService.getPendingPaymentStatus(id, req.user.id),
+    };
+  }
+
+  @Post('payments/pending/:id/cancel')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['finance', 'payments'])
+  @ApiOperation({ summary: 'Cancel the authenticated user pending payment' })
+  @ApiParam({ name: 'id', description: 'Pending payment ID' })
+  async cancelPendingPayment(@Request() req: any, @Param('id') id: string) {
+    await this.bachsService.cancelPendingPayment(id, req.user.id);
+    return { success: true, message: 'Payment cancelled' };
+  }
+
   @Post('payments/internal')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
   @ApiOperation({

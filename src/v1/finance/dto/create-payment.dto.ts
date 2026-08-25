@@ -7,6 +7,7 @@ import {
   Min,
   IsUrl,
   Matches,
+  MaxLength,
 } from 'class-validator';
 
 /**
@@ -90,6 +91,7 @@ export class CreatePaymentDto {
     require_tld: false, // Allow localhost URLs
     require_protocol: true, // Require http:// or https://
   })
+  @MaxLength(2048)
   successUrl?: string;
 
   @ApiPropertyOptional({
@@ -101,6 +103,7 @@ export class CreatePaymentDto {
     require_tld: false, // Allow localhost URLs
     require_protocol: true, // Require http:// or https://
   })
+  @MaxLength(2048)
   cancelUrl?: string;
 }
 
