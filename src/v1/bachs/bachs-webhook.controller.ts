@@ -62,8 +62,16 @@ export class BachsWebhookController {
       case 'payment.succeeded':
       case 'charge.succeeded':
       case 'checkout.session.completed':
-      case 'checkout.completed':
         await this.handleCollectionSucceeded(payload);
+        break;
+
+      // Bachs sends this immediately before/alongside collection.succeeded.
+      // Acknowledge it, but fulfill only from the collection event to avoid two
+      // concurrent transactions racing to create the same payment.
+      case 'checkout.completed':
+        this.logger.log(
+          `Checkout completed: ${payload.data?.checkout_id || 'unknown'}; awaiting collection.succeeded`,
+        );
         break;
 
       case 'collection.failed':
@@ -157,7 +165,10 @@ export class BachsWebhookController {
 
       this.logger.log(`Payment completed: ${result.payment?.id || result.id}`);
     } catch (error: any) {
-      this.logger.error(`Failed to complete payment: ${error.message}`);
+      this.logger.error(
+        `Failed to complete payment: ${error.message}; code=${error.code || 'n/a'}; meta=${JSON.stringify(error.meta || {})}`,
+        error.stack,
+      );
       // Acknowledge only successful/idempotent processing. Non-2xx tells the
       // provider to retry transient failures and keeps reconciliation possible.
       if (error instanceof BadRequestException) throw error;

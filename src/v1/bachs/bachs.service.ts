@@ -312,366 +312,425 @@ export class BachsService {
       `Completing payment for checkout ${checkoutId} with charge ${chargeId}`,
     );
 
-    const result = await this.prisma.$transaction(async (tx) => {
-      const pendingPaymentIdFromMeta =
-        paymentData?.pendingPaymentId ||
-        paymentData?.metadata?.pendingPaymentId;
-      const internalRefFromMeta =
-        paymentData?.internalReference ||
-        paymentData?.metadata?.internalReference;
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const pendingPaymentIdFromMeta =
+          paymentData?.pendingPaymentId ||
+          paymentData?.metadata?.pendingPaymentId;
+        const internalRefFromMeta =
+          paymentData?.internalReference ||
+          paymentData?.metadata?.internalReference;
 
-      const pendingPayment = await tx.pendingPayment.findFirst({
-        where: {
-          OR: [
-            ...(checkoutId ? [{ bachsCheckoutId: checkoutId }] : []),
-            ...(pendingPaymentIdFromMeta
-              ? [{ id: pendingPaymentIdFromMeta }]
-              : []),
-            ...(internalRefFromMeta
-              ? [{ reference: internalRefFromMeta }]
-              : []),
-          ],
-        },
-        include: {
-          user: true,
-          organization: true,
-        },
-      });
-
-      if (!pendingPayment) {
-        throw new NotFoundException(
-          `Pending payment not found for checkout ${checkoutId || 'unknown'}`,
-        );
-      }
-
-      const existingPayment = await tx.payment.findFirst({
-        where: { reference: pendingPayment.reference },
-        include: { receipt: true },
-      });
-
-      if (existingPayment) {
-        this.logger.log(
-          `Payment ${pendingPayment.reference} already processed`,
-        );
-        return {
-          payment: existingPayment,
-          transaction: null,
-          organizationBalance: null,
-          pendingPaymentId: pendingPayment.id,
-          alreadyProcessed: true,
-          shouldGenerateReceipt: !existingPayment.receipt,
-        };
-      }
-
-      if (pendingPayment.status !== 'PENDING') {
-        throw new BadRequestException(
-          `Payment cannot be completed from ${pendingPayment.status} status`,
-        );
-      }
-
-      const amountInKobo = this.bachsClient.fromBachsAmount(amountInBachs);
-      if (!Number.isSafeInteger(amountInKobo) || amountInKobo <= 0) {
-        throw new BadRequestException('Provider returned an invalid amount');
-      }
-      const pendingMetadata = (pendingPayment.metadata as any) || {};
-      const platformFee = Number(pendingMetadata.platformFee || 0);
-      const expectedSettlementAmount =
-        pendingMetadata.expectedSettlementAmount ||
-        pendingPayment.amount + platformFee;
-      if (amountInKobo !== expectedSettlementAmount) {
-        throw new BadRequestException(
-          `Payment settlement mismatch: expected ${expectedSettlementAmount} Kobo, received ${amountInKobo} Kobo`,
-        );
-      }
-      if (
-        pendingPayment.bachsCheckoutId &&
-        checkoutId !== pendingPayment.bachsCheckoutId
-      ) {
-        throw new BadRequestException('Checkout ID does not match payment');
-      }
-
-      const orgWallet = await tx.wallet.findUnique({
-        where: { organizationId: pendingPayment.organizationId },
-        include: { ledgerAccount: true },
-      });
-
-      if (!orgWallet) {
-        throw new NotFoundException('Organization wallet not found');
-      }
-      if (orgWallet.status !== 'ACTIVE' || !orgWallet.ledgerAccountId) {
-        throw new BadRequestException(
-          'Organization wallet or ledger account is not active',
-        );
-      }
-
-      const platformWallet = await tx.wallet.findFirst({
-        where: { isPlatformWallet: true },
-        include: { ledgerAccount: true },
-      });
-      if (
-        platformFee > 0 &&
-        (!platformWallet ||
-          platformWallet.status !== 'ACTIVE' ||
-          !platformWallet.ledgerAccountId)
-      ) {
-        throw new BadRequestException(
-          'Platform wallet or ledger account is not active',
-        );
-      }
-
-      // An external collection is funded by Bachs, not by the student's
-      // pre-existing Heightt wallet. Record the provider clearing asset as the
-      // debit side and the organization wallet as the credit side.
-      const clearingAccount = await tx.ledgerAccount.upsert({
-        where: { code: '1200' },
-        create: {
-          code: '1200',
-          name: 'Bachs Settlement Account',
-          type: 'ASSET',
-          category: 'SETTLEMENT',
-          ownerType: 'SYSTEM',
-          description: 'Funds collected externally and awaiting settlement',
-          isSystem: true,
-          isActive: true,
-        },
-        update: {},
-      });
-
-      const orgWalletBalanceBefore = orgWallet.balance;
-      const orgWalletBalanceAfter =
-        orgWalletBalanceBefore + pendingPayment.amount;
-      const platformBalanceBefore = platformWallet?.balance || 0;
-      const platformBalanceAfter = platformBalanceBefore + platformFee;
-      const clearingBalanceBefore = clearingAccount.balance;
-      const clearingBalanceAfter = clearingBalanceBefore + amountInKobo;
-
-      const transaction = await tx.transaction.create({
-        data: {
-          walletId: orgWallet.id,
-          type: 'CREDIT',
-          amount: amountInKobo,
-          fee: platformFee,
-          netAmount: pendingPayment.amount,
-          status: 'COMPLETED',
-          reference: pendingPayment.reference,
-          description: pendingPayment.description || 'Payment via Bachs',
-          completedAt: new Date(),
-          metadata: {
-            bachsChargeId: chargeId,
-            bachsCheckoutId: checkoutId,
-            bachsCustomerId: customerId,
-            baseAmount: pendingPayment.amount,
-            platformFee,
-            settledAmount: amountInKobo,
-            ...paymentData,
-          },
-        },
-      });
-
-      await tx.ledgerEntry.createMany({
-        data: [
-          {
-            accountId: clearingAccount.id,
-            transactionId: transaction.id,
-            amount: amountInKobo,
-            type: 'DEBIT',
-            balanceBefore: clearingBalanceBefore,
-            balanceAfter: clearingBalanceAfter,
-            description: `Bachs collection ${chargeId}`,
-          },
-          {
-            accountId: orgWallet.ledgerAccountId!,
-            transactionId: transaction.id,
-            amount: pendingPayment.amount,
-            type: 'CREDIT',
-            balanceBefore: orgWalletBalanceBefore,
-            balanceAfter: orgWalletBalanceAfter,
-            description: `Payment from ${pendingPayment.user.email} via Bachs`,
-          },
-          ...(platformFee > 0
-            ? [
-                {
-                  accountId: platformWallet!.ledgerAccountId!,
-                  transactionId: transaction.id,
-                  amount: platformFee,
-                  type: 'CREDIT' as const,
-                  balanceBefore: platformBalanceBefore,
-                  balanceAfter: platformBalanceAfter,
-                  description: 'Heightt platform service fee',
-                },
-              ]
-            : []),
-        ],
-      });
-
-      await tx.wallet.update({
-        where: { id: orgWallet.id },
-        data: { balance: orgWalletBalanceAfter },
-      });
-
-      await tx.ledgerAccount.update({
-        where: { id: orgWallet.ledgerAccountId! },
-        data: { balance: orgWalletBalanceAfter },
-      });
-      if (platformFee > 0) {
-        await tx.wallet.update({
-          where: { id: platformWallet!.id },
-          data: { balance: platformBalanceAfter },
-        });
-        await tx.ledgerAccount.update({
-          where: { id: platformWallet!.ledgerAccountId! },
-          data: { balance: platformBalanceAfter },
-        });
-      }
-      await tx.ledgerAccount.update({
-        where: { id: clearingAccount.id },
-        data: { balance: clearingBalanceAfter },
-      });
-
-      const payment = await tx.payment.create({
-        data: {
-          payerId: pendingPayment.userId,
-          organizationId: pendingPayment.organizationId,
-          transactionId: transaction.id,
-          amount: pendingPayment.amount,
-          serviceFee: platformFee,
-          status: 'COMPLETED',
-          paymentMethod: pendingPayment.paymentMethod as any,
-          reference: pendingPayment.reference,
-          description: pendingPayment.description,
-          paidAt: new Date(),
-          bachsChargeId: chargeId,
-          bachsCheckoutId: checkoutId,
-          bachsCustomerId: customerId,
-          metadata: {
-            pendingPaymentId: pendingPayment.id,
-            baseAmount: pendingPayment.amount,
-            platformFee,
-            totalBeforeGatewayFee: amountInKobo,
-            ...paymentData,
-          },
-        },
-      });
-
-      const journalEntry = await tx.journalEntry.create({
-        data: {
-          reference: `JE-BACHS-${chargeId}`,
-          description:
-            pendingPayment.description || 'External payment via Bachs',
-          transactionId: transaction.id,
-          paymentId: payment.id,
-          status: 'POSTED',
-          isBalanced: true,
-          createdBy: pendingPayment.userId,
-          lines: {
-            create: [
-              {
-                ledgerAccountId: clearingAccount.id,
-                type: 'DEBIT',
-                amount: amountInKobo,
-                description: `Bachs collection ${chargeId}`,
-              },
-              {
-                ledgerAccountId: orgWallet.ledgerAccountId!,
-                type: 'CREDIT',
-                amount: pendingPayment.amount,
-                description: `Payment to ${pendingPayment.organization.name}`,
-              },
-              ...(platformFee > 0
-                ? [
-                    {
-                      ledgerAccountId: platformWallet!.ledgerAccountId!,
-                      type: 'CREDIT' as const,
-                      amount: platformFee,
-                      description: 'Heightt platform service fee',
-                    },
-                  ]
+        const pendingPayment = await tx.pendingPayment.findFirst({
+          where: {
+            OR: [
+              ...(checkoutId ? [{ bachsCheckoutId: checkoutId }] : []),
+              ...(pendingPaymentIdFromMeta
+                ? [{ id: pendingPaymentIdFromMeta }]
+                : []),
+              ...(internalRefFromMeta
+                ? [{ reference: internalRefFromMeta }]
                 : []),
             ],
           },
-        },
-      });
-      await tx.transaction.update({
-        where: { id: transaction.id },
-        data: { journalEntryId: journalEntry.id },
-      });
-      await tx.payment.update({
-        where: { id: payment.id },
-        data: { journalEntryId: journalEntry.id },
-      });
-
-      if (pendingPayment.dueAssignmentId) {
-        const dueAssignment = await tx.dueAssignment.findUnique({
-          where: { id: pendingPayment.dueAssignmentId },
-          include: { due: true },
+          include: {
+            user: true,
+            organization: true,
+          },
         });
 
-        if (dueAssignment && !dueAssignment.isPaid) {
-          const totalPaid = await tx.duePayment.aggregate({
-            where: { assignmentId: dueAssignment.id },
-            _sum: { amount: true },
-          });
+        if (!pendingPayment) {
+          throw new NotFoundException(
+            `Pending payment not found for checkout ${checkoutId || 'unknown'}`,
+          );
+        }
 
-          const totalPaidAmount = totalPaid._sum.amount || 0;
-          const isFullyPaid =
-            totalPaidAmount + pendingPayment.amount >= dueAssignment.amount;
+        const existingPayment = await tx.payment.findFirst({
+          where: { reference: pendingPayment.reference },
+          include: { receipt: true },
+        });
 
-          await tx.duePayment.create({
+        if (existingPayment) {
+          this.logger.log(
+            `Payment ${pendingPayment.reference} already processed`,
+          );
+          return {
+            payment: existingPayment,
+            transaction: null,
+            organizationBalance: null,
+            pendingPaymentId: pendingPayment.id,
+            alreadyProcessed: true,
+            shouldGenerateReceipt: !existingPayment.receipt,
+          };
+        }
+
+        if (pendingPayment.status !== 'PENDING') {
+          throw new BadRequestException(
+            `Payment cannot be completed from ${pendingPayment.status} status`,
+          );
+        }
+
+        const amountInKobo = this.bachsClient.fromBachsAmount(amountInBachs);
+        if (!Number.isSafeInteger(amountInKobo) || amountInKobo <= 0) {
+          throw new BadRequestException('Provider returned an invalid amount');
+        }
+        const pendingMetadata = (pendingPayment.metadata as any) || {};
+        const platformFee = Number(pendingMetadata.platformFee || 0);
+        const expectedSettlementAmount =
+          pendingMetadata.expectedSettlementAmount ||
+          pendingPayment.amount + platformFee;
+        if (amountInKobo !== expectedSettlementAmount) {
+          throw new BadRequestException(
+            `Payment settlement mismatch: expected ${expectedSettlementAmount} Kobo, received ${amountInKobo} Kobo`,
+          );
+        }
+        if (
+          pendingPayment.bachsCheckoutId &&
+          checkoutId !== pendingPayment.bachsCheckoutId
+        ) {
+          throw new BadRequestException('Checkout ID does not match payment');
+        }
+
+        let orgWallet: any = await tx.wallet.findUnique({
+          where: { organizationId: pendingPayment.organizationId },
+          include: { ledgerAccount: true },
+        });
+
+        if (!orgWallet) {
+          const wallet = await tx.wallet.create({
             data: {
-              assignmentId: dueAssignment.id,
-              paymentId: payment.id,
-              amount: pendingPayment.amount,
-              paidAt: new Date(),
+              organizationId: pendingPayment.organizationId,
+              currency: 'NGN',
+              status: 'ACTIVE',
             },
           });
+          const ledgerAccount = await tx.ledgerAccount.create({
+            data: {
+              code: `ORG-WALLET-${wallet.id.substring(0, 12)}`,
+              name: `${pendingPayment.organization.name} Wallet`,
+              type: 'ASSET',
+              category: 'CASH',
+              ownerType: 'ORGANIZATION',
+              ownerId: pendingPayment.organizationId,
+              organizationId: pendingPayment.organizationId,
+              walletId: wallet.id,
+              isActive: true,
+            },
+          });
+          orgWallet = await tx.wallet.update({
+            where: { id: wallet.id },
+            data: { ledgerAccountId: ledgerAccount.id },
+            include: { ledgerAccount: true },
+          });
+        }
+        if (orgWallet.status !== 'ACTIVE' || !orgWallet.ledgerAccountId) {
+          throw new BadRequestException(
+            'Organization wallet or ledger account is not active',
+          );
+        }
 
-          if (isFullyPaid) {
-            await tx.dueAssignment.update({
-              where: { id: dueAssignment.id },
+        let platformWallet = await tx.wallet.findFirst({
+          where: { isPlatformWallet: true },
+          include: { ledgerAccount: true },
+        });
+        if (platformFee > 0 && !platformWallet) {
+          const wallet = await tx.wallet.create({
+            data: {
+              currency: 'NGN',
+              status: 'ACTIVE',
+              isPlatformWallet: true,
+            },
+          });
+          const ledgerAccount = await tx.ledgerAccount.create({
+            data: {
+              code: `PLATFORM-WALLET-${wallet.id.substring(0, 12)}`,
+              name: 'Platform Wallet',
+              type: 'ASSET',
+              category: 'CASH',
+              ownerType: 'PLATFORM',
+              walletId: wallet.id,
+              description: 'Heightt platform service-fee wallet',
+              isSystem: true,
+              isActive: true,
+            },
+          });
+          platformWallet = await tx.wallet.update({
+            where: { id: wallet.id },
+            data: { ledgerAccountId: ledgerAccount.id },
+            include: { ledgerAccount: true },
+          });
+        }
+        if (
+          platformFee > 0 &&
+          (!platformWallet ||
+            platformWallet.status !== 'ACTIVE' ||
+            !platformWallet.ledgerAccountId)
+        ) {
+          throw new BadRequestException(
+            'Platform wallet or ledger account is not active',
+          );
+        }
+
+        // An external collection is funded by Bachs, not by the student's
+        // pre-existing Heightt wallet. Record the provider clearing asset as the
+        // debit side and the organization wallet as the credit side.
+        const clearingAccount = await tx.ledgerAccount.upsert({
+          where: { code: '1200' },
+          create: {
+            code: '1200',
+            name: 'Bachs Settlement Account',
+            type: 'ASSET',
+            category: 'SETTLEMENT',
+            ownerType: 'SYSTEM',
+            description: 'Funds collected externally and awaiting settlement',
+            isSystem: true,
+            isActive: true,
+          },
+          update: {},
+        });
+
+        const orgWalletBalanceBefore = orgWallet.balance;
+        const orgWalletBalanceAfter =
+          orgWalletBalanceBefore + pendingPayment.amount;
+        const platformBalanceBefore = platformWallet?.balance || 0;
+        const platformBalanceAfter = platformBalanceBefore + platformFee;
+        const clearingBalanceBefore = clearingAccount.balance;
+        const clearingBalanceAfter = clearingBalanceBefore + amountInKobo;
+
+        const transaction = await tx.transaction.create({
+          data: {
+            walletId: orgWallet.id,
+            type: 'CREDIT',
+            amount: amountInKobo,
+            fee: platformFee,
+            netAmount: pendingPayment.amount,
+            status: 'COMPLETED',
+            reference: pendingPayment.reference,
+            description: pendingPayment.description || 'Payment via Bachs',
+            completedAt: new Date(),
+            metadata: {
+              bachsChargeId: chargeId,
+              bachsCheckoutId: checkoutId,
+              bachsCustomerId: customerId,
+              baseAmount: pendingPayment.amount,
+              platformFee,
+              settledAmount: amountInKobo,
+              ...paymentData,
+            },
+          },
+        });
+
+        await tx.ledgerEntry.createMany({
+          data: [
+            {
+              accountId: clearingAccount.id,
+              transactionId: transaction.id,
+              amount: amountInKobo,
+              type: 'DEBIT',
+              balanceBefore: clearingBalanceBefore,
+              balanceAfter: clearingBalanceAfter,
+              description: `Bachs collection ${chargeId}`,
+            },
+            {
+              accountId: orgWallet.ledgerAccountId!,
+              transactionId: transaction.id,
+              amount: pendingPayment.amount,
+              type: 'CREDIT',
+              balanceBefore: orgWalletBalanceBefore,
+              balanceAfter: orgWalletBalanceAfter,
+              description: `Payment from ${pendingPayment.user.email} via Bachs`,
+            },
+            ...(platformFee > 0
+              ? [
+                  {
+                    accountId: platformWallet!.ledgerAccountId!,
+                    transactionId: transaction.id,
+                    amount: platformFee,
+                    type: 'CREDIT' as const,
+                    balanceBefore: platformBalanceBefore,
+                    balanceAfter: platformBalanceAfter,
+                    description: 'Heightt platform service fee',
+                  },
+                ]
+              : []),
+          ],
+        });
+
+        await tx.wallet.update({
+          where: { id: orgWallet.id },
+          data: { balance: orgWalletBalanceAfter },
+        });
+
+        await tx.ledgerAccount.update({
+          where: { id: orgWallet.ledgerAccountId! },
+          data: { balance: orgWalletBalanceAfter },
+        });
+        if (platformFee > 0) {
+          await tx.wallet.update({
+            where: { id: platformWallet!.id },
+            data: { balance: platformBalanceAfter },
+          });
+          await tx.ledgerAccount.update({
+            where: { id: platformWallet!.ledgerAccountId! },
+            data: { balance: platformBalanceAfter },
+          });
+        }
+        await tx.ledgerAccount.update({
+          where: { id: clearingAccount.id },
+          data: { balance: clearingBalanceAfter },
+        });
+
+        const payment = await tx.payment.create({
+          data: {
+            payerId: pendingPayment.userId,
+            organizationId: pendingPayment.organizationId,
+            transactionId: transaction.id,
+            amount: pendingPayment.amount,
+            serviceFee: platformFee,
+            status: 'COMPLETED',
+            paymentMethod: pendingPayment.paymentMethod as any,
+            reference: pendingPayment.reference,
+            description: pendingPayment.description,
+            paidAt: new Date(),
+            bachsChargeId: chargeId,
+            bachsCheckoutId: checkoutId,
+            bachsCustomerId: customerId,
+            metadata: {
+              pendingPaymentId: pendingPayment.id,
+              baseAmount: pendingPayment.amount,
+              platformFee,
+              totalBeforeGatewayFee: amountInKobo,
+              ...paymentData,
+            },
+          },
+        });
+
+        const journalEntry = await tx.journalEntry.create({
+          data: {
+            reference: `JE-BACHS-${chargeId}`,
+            description:
+              pendingPayment.description || 'External payment via Bachs',
+            transactionId: transaction.id,
+            paymentId: payment.id,
+            status: 'POSTED',
+            isBalanced: true,
+            createdBy: pendingPayment.userId,
+            lines: {
+              create: [
+                {
+                  ledgerAccountId: clearingAccount.id,
+                  type: 'DEBIT',
+                  amount: amountInKobo,
+                  description: `Bachs collection ${chargeId}`,
+                },
+                {
+                  ledgerAccountId: orgWallet.ledgerAccountId!,
+                  type: 'CREDIT',
+                  amount: pendingPayment.amount,
+                  description: `Payment to ${pendingPayment.organization.name}`,
+                },
+                ...(platformFee > 0
+                  ? [
+                      {
+                        ledgerAccountId: platformWallet!.ledgerAccountId!,
+                        type: 'CREDIT' as const,
+                        amount: platformFee,
+                        description: 'Heightt platform service fee',
+                      },
+                    ]
+                  : []),
+              ],
+            },
+          },
+        });
+        await tx.transaction.update({
+          where: { id: transaction.id },
+          data: { journalEntryId: journalEntry.id },
+        });
+        await tx.payment.update({
+          where: { id: payment.id },
+          data: { journalEntryId: journalEntry.id },
+        });
+
+        if (pendingPayment.dueAssignmentId) {
+          const dueAssignment = await tx.dueAssignment.findUnique({
+            where: { id: pendingPayment.dueAssignmentId },
+            include: { due: true },
+          });
+
+          if (dueAssignment && !dueAssignment.isPaid) {
+            const totalPaid = await tx.duePayment.aggregate({
+              where: { assignmentId: dueAssignment.id },
+              _sum: { amount: true },
+            });
+
+            const totalPaidAmount = totalPaid._sum.amount || 0;
+            const isFullyPaid =
+              totalPaidAmount + pendingPayment.amount >= dueAssignment.amount;
+
+            await tx.duePayment.create({
               data: {
-                isPaid: true,
+                assignmentId: dueAssignment.id,
+                paymentId: payment.id,
+                amount: pendingPayment.amount,
                 paidAt: new Date(),
               },
             });
+
+            if (isFullyPaid) {
+              await tx.dueAssignment.update({
+                where: { id: dueAssignment.id },
+                data: {
+                  isPaid: true,
+                  paidAt: new Date(),
+                },
+              });
+            }
           }
         }
-      }
 
-      await tx.pendingPayment.update({
-        where: { id: pendingPayment.id },
-        data: {
-          status: 'COMPLETED',
-          completedAt: new Date(),
-          bachsChargeId: chargeId,
-        },
-      });
-
-      await tx.activityLog.create({
-        data: {
-          userId: pendingPayment.userId,
-          activity: 'PAYMENT_COMPLETED_VIA_BACHS',
-          details: JSON.stringify({
-            paymentId: payment.id,
-            amount: pendingPayment.amount,
-            platformFee,
-            settledAmount: amountInKobo,
-            reference: transaction.reference,
-            organizationId: pendingPayment.organizationId,
+        await tx.pendingPayment.update({
+          where: { id: pendingPayment.id },
+          data: {
+            status: 'COMPLETED',
+            completedAt: new Date(),
             bachsChargeId: chargeId,
-            bachsCheckoutId: checkoutId,
-          }),
-        },
-      });
+          },
+        });
 
-      return {
-        payment,
-        transaction,
-        organizationBalance: orgWalletBalanceAfter,
-        pendingPaymentId: pendingPayment.id,
-        alreadyProcessed: false,
-        shouldGenerateReceipt: true,
-      };
-    });
+        await tx.activityLog.create({
+          data: {
+            userId: pendingPayment.userId,
+            activity: 'PAYMENT_COMPLETED_VIA_BACHS',
+            details: JSON.stringify({
+              paymentId: payment.id,
+              amount: pendingPayment.amount,
+              platformFee,
+              settledAmount: amountInKobo,
+              reference: transaction.reference,
+              organizationId: pendingPayment.organizationId,
+              bachsChargeId: chargeId,
+              bachsCheckoutId: checkoutId,
+            }),
+          },
+        });
+
+        return {
+          payment,
+          transaction,
+          organizationBalance: orgWalletBalanceAfter,
+          pendingPaymentId: pendingPayment.id,
+          alreadyProcessed: false,
+          shouldGenerateReceipt: true,
+        };
+      },
+      {
+        // Render-hosted PostgreSQL can exceed Prisma's 5-second default during
+        // the balanced ledger, wallet, due, payment, and audit writes below.
+        maxWait: 10_000,
+        timeout: 30_000,
+      },
+    );
 
     // Consumers query Payment/Receipt using their own connection, so events
     // must only run after the transaction above has committed.
