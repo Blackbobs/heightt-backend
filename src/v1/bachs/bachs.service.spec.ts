@@ -26,6 +26,9 @@ describe('BachsService payment callbacks', () => {
         findFirst: jest.fn().mockResolvedValue(null),
         create: jest.fn().mockResolvedValue(pending),
       },
+      duePayment: {
+        findUnique: jest.fn().mockResolvedValue(null),
+      },
     };
     const prisma = {
       user: { findUnique: jest.fn().mockResolvedValue(user) },
@@ -56,11 +59,16 @@ describe('BachsService payment callbacks', () => {
       }),
     };
     const events = {};
+    const cache = {
+      delete: jest.fn(),
+      invalidateByTag: jest.fn(),
+    };
     const service = new BachsService(
       prisma as any,
       client as any,
       config as any,
       events as any,
+      cache as any,
     );
     return { service, prisma, client };
   }
@@ -119,5 +127,32 @@ describe('BachsService payment callbacks', () => {
     await expect(
       service.getPendingPaymentStatus(pending.id, 'different-user'),
     ).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('rejects another checkout after the due has a payment', async () => {
+    const { service, prisma, client } = createService();
+    const tx = {
+      pendingPayment: {
+        findFirst: jest.fn(),
+        create: jest.fn(),
+      },
+      duePayment: {
+        findUnique: jest.fn().mockResolvedValue({ id: 'due-payment-1' }),
+      },
+    };
+    prisma.$transaction.mockImplementation((callback: any) => callback(tx));
+
+    await expect(
+      service.initiatePayment(user.id, {
+        userId: user.id,
+        organizationId: 'org-1',
+        amount: 10_000,
+        paymentMethod: 'CARD',
+        dueAssignmentId: 'assignment-1',
+      }),
+    ).rejects.toThrow('This due has already been paid');
+
+    expect(tx.pendingPayment.create).not.toHaveBeenCalled();
+    expect(client.createCheckoutSession).not.toHaveBeenCalled();
   });
 });

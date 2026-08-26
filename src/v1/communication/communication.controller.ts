@@ -28,7 +28,12 @@ import { NotificationService } from './notification.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
 // Import cache decorators
-import { Cache, Cacheable, CacheKey, InvalidateCache } from '../../common/decorators/cache.decorator';
+import {
+  Cache,
+  Cacheable,
+  CacheKey,
+  InvalidateCache,
+} from '../../common/decorators/cache.decorator';
 
 @ApiTags('communication')
 @Controller('communication')
@@ -59,7 +64,14 @@ export class CommunicationController {
         title: { type: 'string' },
         content: { type: 'string' },
         type: {
-          enum: ['GENERAL', 'IMPORTANT', 'URGENT', 'FINANCIAL', 'ACADEMIC', 'EVENT'],
+          enum: [
+            'GENERAL',
+            'IMPORTANT',
+            'URGENT',
+            'FINANCIAL',
+            'ACADEMIC',
+            'EVENT',
+          ],
         },
         priority: { enum: ['LOW', 'NORMAL', 'HIGH', 'URGENT'] },
         expiresAt: { type: 'string', format: 'date-time' },
@@ -80,8 +92,9 @@ export class CommunicationController {
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      const { organizationId, page, limit, isPublished, type, priority } = request.query;
-      return `announcements:${organizationId || 'all'}:${page || 1}:${limit || 10}:${isPublished || 'all'}:${type || 'all'}:${priority || 'all'}`;
+      const { organizationId, page, limit, isPublished, type, priority } =
+        request.query;
+      return `announcements:v2:${organizationId || 'all'}:${page || 1}:${limit || 10}:${isPublished || 'all'}:${type || 'all'}:${priority || 'all'}`;
     },
     ttl: 300, // 5 minutes
     tags: ['announcements', 'communication'],
@@ -119,7 +132,12 @@ export class CommunicationController {
       parseInt(page, 10),
       parseInt(limit, 10),
       {
-        isPublished: isPublished === 'true' ? true : isPublished === 'false' ? false : undefined,
+        isPublished:
+          isPublished === 'true'
+            ? true
+            : isPublished === 'false'
+              ? false
+              : undefined,
         type,
         priority,
       },
@@ -159,7 +177,14 @@ export class CommunicationController {
         title: { type: 'string' },
         content: { type: 'string' },
         type: {
-          enum: ['GENERAL', 'IMPORTANT', 'URGENT', 'FINANCIAL', 'ACADEMIC', 'EVENT'],
+          enum: [
+            'GENERAL',
+            'IMPORTANT',
+            'URGENT',
+            'FINANCIAL',
+            'ACADEMIC',
+            'EVENT',
+          ],
         },
         priority: { enum: ['LOW', 'NORMAL', 'HIGH', 'URGENT'] },
         expiresAt: { type: 'string', format: 'date-time' },
@@ -344,7 +369,14 @@ export class CommunicationController {
         type: 'object',
         properties: {
           type: {
-            enum: ['SYSTEM', 'FINANCIAL', 'ACADEMIC', 'EVENT', 'REMINDER', 'SECURITY'],
+            enum: [
+              'SYSTEM',
+              'FINANCIAL',
+              'ACADEMIC',
+              'EVENT',
+              'REMINDER',
+              'SECURITY',
+            ],
           },
           email: { type: 'boolean' },
           push: { type: 'boolean' },
@@ -369,7 +401,12 @@ export class CommunicationController {
   @Post('cache/invalidate')
   @UseGuards(AdminGuard)
   @RequirePermission('communication:manage')
-  @InvalidateCache(['announcements', 'notifications', 'communication', 'preferences'])
+  @InvalidateCache([
+    'announcements',
+    'notifications',
+    'communication',
+    'preferences',
+  ])
   @ApiOperation({
     summary: 'Invalidate communication cache (Admin only)',
     description: 'Clear all communication-related cache.',
@@ -378,7 +415,10 @@ export class CommunicationController {
     schema: {
       type: 'object',
       properties: {
-        reason: { type: 'string', description: 'Reason for invalidating cache' },
+        reason: {
+          type: 'string',
+          description: 'Reason for invalidating cache',
+        },
       },
     },
   })
@@ -390,18 +430,25 @@ export class CommunicationController {
     @Body() body: { reason?: string },
     @Request() req: any,
   ) {
-    this.logger.log(`Invalidate communication cache endpoint called. Reason: ${body.reason || 'Not specified'}`);
-    
+    this.logger.log(
+      `Invalidate communication cache endpoint called. Reason: ${body.reason || 'Not specified'}`,
+    );
+
     // Also invalidate via service methods
     await this.announcementService.invalidateAnnouncementCache();
     await this.notificationService.invalidateNotificationCache(req.user.id);
-    
+
     return {
       message: 'Communication cache invalidated successfully',
       reason: body.reason || 'Not specified',
       invalidatedBy: req.user.id,
       invalidatedAt: new Date().toISOString(),
-      tagsInvalidated: ['announcements', 'notifications', 'communication', 'preferences'],
+      tagsInvalidated: [
+        'announcements',
+        'notifications',
+        'communication',
+        'preferences',
+      ],
     };
   }
 }

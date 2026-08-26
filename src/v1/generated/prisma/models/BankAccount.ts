@@ -32,6 +32,8 @@ export type BankAccountMinAggregateOutputType = {
   accountName: string | null
   bankCode: string | null
   isDefault: boolean | null
+  payoutDestinationId: string | null
+  payoutDestinationStatus: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +46,8 @@ export type BankAccountMaxAggregateOutputType = {
   accountName: string | null
   bankCode: string | null
   isDefault: boolean | null
+  payoutDestinationId: string | null
+  payoutDestinationStatus: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +60,8 @@ export type BankAccountCountAggregateOutputType = {
   accountName: number
   bankCode: number
   isDefault: number
+  payoutDestinationId: number
+  payoutDestinationStatus: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -70,6 +76,8 @@ export type BankAccountMinAggregateInputType = {
   accountName?: true
   bankCode?: true
   isDefault?: true
+  payoutDestinationId?: true
+  payoutDestinationStatus?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +90,8 @@ export type BankAccountMaxAggregateInputType = {
   accountName?: true
   bankCode?: true
   isDefault?: true
+  payoutDestinationId?: true
+  payoutDestinationStatus?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +104,8 @@ export type BankAccountCountAggregateInputType = {
   accountName?: true
   bankCode?: true
   isDefault?: true
+  payoutDestinationId?: true
+  payoutDestinationStatus?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -179,6 +191,8 @@ export type BankAccountGroupByOutputType = {
   accountName: string
   bankCode: string | null
   isDefault: boolean
+  payoutDestinationId: string | null
+  payoutDestinationStatus: string | null
   createdAt: Date
   updatedAt: Date
   _count: BankAccountCountAggregateOutputType | null
@@ -212,6 +226,8 @@ export type BankAccountWhereInput = {
   accountName?: Prisma.StringFilter<"BankAccount"> | string
   bankCode?: Prisma.StringNullableFilter<"BankAccount"> | string | null
   isDefault?: Prisma.BoolFilter<"BankAccount"> | boolean
+  payoutDestinationId?: Prisma.StringNullableFilter<"BankAccount"> | string | null
+  payoutDestinationStatus?: Prisma.StringNullableFilter<"BankAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BankAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BankAccount"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -225,6 +241,8 @@ export type BankAccountOrderByWithRelationInput = {
   accountName?: Prisma.SortOrder
   bankCode?: Prisma.SortOrderInput | Prisma.SortOrder
   isDefault?: Prisma.SortOrder
+  payoutDestinationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutDestinationStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -232,6 +250,7 @@ export type BankAccountOrderByWithRelationInput = {
 
 export type BankAccountWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  payoutDestinationId?: string
   userId_accountNumber_bankName?: Prisma.BankAccountUserIdAccountNumberBankNameCompoundUniqueInput
   AND?: Prisma.BankAccountWhereInput | Prisma.BankAccountWhereInput[]
   OR?: Prisma.BankAccountWhereInput[]
@@ -242,10 +261,11 @@ export type BankAccountWhereUniqueInput = Prisma.AtLeast<{
   accountName?: Prisma.StringFilter<"BankAccount"> | string
   bankCode?: Prisma.StringNullableFilter<"BankAccount"> | string | null
   isDefault?: Prisma.BoolFilter<"BankAccount"> | boolean
+  payoutDestinationStatus?: Prisma.StringNullableFilter<"BankAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BankAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BankAccount"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "userId_accountNumber_bankName">
+}, "id" | "payoutDestinationId" | "userId_accountNumber_bankName">
 
 export type BankAccountOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -255,6 +275,8 @@ export type BankAccountOrderByWithAggregationInput = {
   accountName?: Prisma.SortOrder
   bankCode?: Prisma.SortOrderInput | Prisma.SortOrder
   isDefault?: Prisma.SortOrder
+  payoutDestinationId?: Prisma.SortOrderInput | Prisma.SortOrder
+  payoutDestinationStatus?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BankAccountCountOrderByAggregateInput
@@ -273,6 +295,8 @@ export type BankAccountScalarWhereWithAggregatesInput = {
   accountName?: Prisma.StringWithAggregatesFilter<"BankAccount"> | string
   bankCode?: Prisma.StringNullableWithAggregatesFilter<"BankAccount"> | string | null
   isDefault?: Prisma.BoolWithAggregatesFilter<"BankAccount"> | boolean
+  payoutDestinationId?: Prisma.StringNullableWithAggregatesFilter<"BankAccount"> | string | null
+  payoutDestinationStatus?: Prisma.StringNullableWithAggregatesFilter<"BankAccount"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BankAccount"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BankAccount"> | Date | string
 }
@@ -284,6 +308,8 @@ export type BankAccountCreateInput = {
   accountName: string
   bankCode?: string | null
   isDefault?: boolean
+  payoutDestinationId?: string | null
+  payoutDestinationStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutBankAccountsInput
@@ -297,6 +323,8 @@ export type BankAccountUncheckedCreateInput = {
   accountName: string
   bankCode?: string | null
   isDefault?: boolean
+  payoutDestinationId?: string | null
+  payoutDestinationStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -308,6 +336,8 @@ export type BankAccountUpdateInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutBankAccountsNestedInput
@@ -321,6 +351,8 @@ export type BankAccountUncheckedUpdateInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -333,6 +365,8 @@ export type BankAccountCreateManyInput = {
   accountName: string
   bankCode?: string | null
   isDefault?: boolean
+  payoutDestinationId?: string | null
+  payoutDestinationStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -344,6 +378,8 @@ export type BankAccountUpdateManyMutationInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -356,6 +392,8 @@ export type BankAccountUncheckedUpdateManyInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -384,6 +422,8 @@ export type BankAccountCountOrderByAggregateInput = {
   accountName?: Prisma.SortOrder
   bankCode?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
+  payoutDestinationId?: Prisma.SortOrder
+  payoutDestinationStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -396,6 +436,8 @@ export type BankAccountMaxOrderByAggregateInput = {
   accountName?: Prisma.SortOrder
   bankCode?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
+  payoutDestinationId?: Prisma.SortOrder
+  payoutDestinationStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -408,6 +450,8 @@ export type BankAccountMinOrderByAggregateInput = {
   accountName?: Prisma.SortOrder
   bankCode?: Prisma.SortOrder
   isDefault?: Prisma.SortOrder
+  payoutDestinationId?: Prisma.SortOrder
+  payoutDestinationStatus?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -461,6 +505,8 @@ export type BankAccountCreateWithoutUserInput = {
   accountName: string
   bankCode?: string | null
   isDefault?: boolean
+  payoutDestinationId?: string | null
+  payoutDestinationStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -472,6 +518,8 @@ export type BankAccountUncheckedCreateWithoutUserInput = {
   accountName: string
   bankCode?: string | null
   isDefault?: boolean
+  payoutDestinationId?: string | null
+  payoutDestinationStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -513,6 +561,8 @@ export type BankAccountScalarWhereInput = {
   accountName?: Prisma.StringFilter<"BankAccount"> | string
   bankCode?: Prisma.StringNullableFilter<"BankAccount"> | string | null
   isDefault?: Prisma.BoolFilter<"BankAccount"> | boolean
+  payoutDestinationId?: Prisma.StringNullableFilter<"BankAccount"> | string | null
+  payoutDestinationStatus?: Prisma.StringNullableFilter<"BankAccount"> | string | null
   createdAt?: Prisma.DateTimeFilter<"BankAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BankAccount"> | Date | string
 }
@@ -524,6 +574,8 @@ export type BankAccountCreateManyUserInput = {
   accountName: string
   bankCode?: string | null
   isDefault?: boolean
+  payoutDestinationId?: string | null
+  payoutDestinationStatus?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -535,6 +587,8 @@ export type BankAccountUpdateWithoutUserInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -546,6 +600,8 @@ export type BankAccountUncheckedUpdateWithoutUserInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -557,6 +613,8 @@ export type BankAccountUncheckedUpdateManyWithoutUserInput = {
   accountName?: Prisma.StringFieldUpdateOperationsInput | string
   bankCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDefault?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  payoutDestinationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payoutDestinationStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -571,6 +629,8 @@ export type BankAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   accountName?: boolean
   bankCode?: boolean
   isDefault?: boolean
+  payoutDestinationId?: boolean
+  payoutDestinationStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -584,6 +644,8 @@ export type BankAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   accountName?: boolean
   bankCode?: boolean
   isDefault?: boolean
+  payoutDestinationId?: boolean
+  payoutDestinationStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -597,6 +659,8 @@ export type BankAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   accountName?: boolean
   bankCode?: boolean
   isDefault?: boolean
+  payoutDestinationId?: boolean
+  payoutDestinationStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -610,11 +674,13 @@ export type BankAccountSelectScalar = {
   accountName?: boolean
   bankCode?: boolean
   isDefault?: boolean
+  payoutDestinationId?: boolean
+  payoutDestinationStatus?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BankAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bankName" | "accountNumber" | "accountName" | "bankCode" | "isDefault" | "createdAt" | "updatedAt", ExtArgs["result"]["bankAccount"]>
+export type BankAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "bankName" | "accountNumber" | "accountName" | "bankCode" | "isDefault" | "payoutDestinationId" | "payoutDestinationStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["bankAccount"]>
 export type BankAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -638,6 +704,8 @@ export type $BankAccountPayload<ExtArgs extends runtime.Types.Extensions.Interna
     accountName: string
     bankCode: string | null
     isDefault: boolean
+    payoutDestinationId: string | null
+    payoutDestinationStatus: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["bankAccount"]>
@@ -1071,6 +1139,8 @@ export interface BankAccountFieldRefs {
   readonly accountName: Prisma.FieldRef<"BankAccount", 'String'>
   readonly bankCode: Prisma.FieldRef<"BankAccount", 'String'>
   readonly isDefault: Prisma.FieldRef<"BankAccount", 'Boolean'>
+  readonly payoutDestinationId: Prisma.FieldRef<"BankAccount", 'String'>
+  readonly payoutDestinationStatus: Prisma.FieldRef<"BankAccount", 'String'>
   readonly createdAt: Prisma.FieldRef<"BankAccount", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BankAccount", 'DateTime'>
 }

@@ -3,9 +3,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsUUID,
   IsOptional,
   IsBoolean,
+  IsNotEmpty,
   MaxLength,
   Matches,
 } from 'class-validator';
@@ -27,10 +27,13 @@ export class CreateBankAccountDto {
   @MaxLength(100)
   accountName: string;
 
-  @ApiProperty({ example: '058', description: 'Bank code', required: false })
-  @IsOptional()
+  @ApiProperty({
+    example: '058',
+    description: 'Provider-supported bank code selected from the bank list',
+  })
   @IsString()
-  bankCode?: string;
+  @IsNotEmpty()
+  bankCode: string;
 
   @ApiProperty({ default: false, required: false })
   @IsOptional()
@@ -72,4 +75,19 @@ export class UpdateBankAccountDto {
   @IsOptional()
   @IsBoolean()
   isDefault?: boolean;
+}
+
+export class ResolveBankAccountDto {
+  @ApiProperty({
+    example: '058',
+    description: 'Code returned by the banks endpoint',
+  })
+  @IsString()
+  @IsNotEmpty()
+  bankCode: string;
+
+  @ApiProperty({ example: '0123456789', description: 'Bank account number' })
+  @IsString()
+  @Matches(/^[0-9]+$/, { message: 'Account number must contain only numbers' })
+  accountNumber: string;
 }

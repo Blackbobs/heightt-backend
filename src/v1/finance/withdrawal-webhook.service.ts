@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { EventService, SystemEvents } from '../../events/event.service';
 import { LedgerService } from './ledger.service';
 import { WalletService } from './wallet.service';
+import { BachsClient } from '../bachs/bachs.client';
 
 @Injectable()
 export class WithdrawalWebhookService {
@@ -22,15 +23,24 @@ export class WithdrawalWebhookService {
     private readonly eventService: EventService,
     private readonly ledgerService: LedgerService,
     private readonly walletService: WalletService,
+    private readonly bachsClient: BachsClient,
   ) {}
 
   async processWebhook(
     provider: string,
     payload: any,
     signature: string,
+    timestamp?: string,
+    rawBody?: Buffer,
   ): Promise<any> {
     // Verify webhook signature
-    const isValid = this.verifyWebhookSignature(payload, signature, provider);
+    const isValid = this.verifyWebhookSignature(
+      payload,
+      signature,
+      provider,
+      timestamp,
+      rawBody,
+    );
     if (!isValid) {
       throw new BadRequestException('Invalid webhook signature');
     }
@@ -44,6 +54,7 @@ export class WithdrawalWebhookService {
       case 'withdrawal.succeeded':
       case 'transfer.succeeded':
       case 'payout.succeeded':
+      case 'payout.paid':
         result = await this.handleWithdrawalSucceeded(payload, provider);
         break;
 
@@ -55,6 +66,7 @@ export class WithdrawalWebhookService {
 
       case 'withdrawal.pending':
       case 'transfer.pending':
+      case 'payout.created':
         result = await this.handleWithdrawalPending(payload, provider);
         break;
 
@@ -72,12 +84,19 @@ export class WithdrawalWebhookService {
     provider: string,
   ): Promise<any> {
     const reference = payload.reference || payload.data?.reference;
-    const providerReference = payload.id || payload.data?.id;
+    const providerReference = payload.data?.withdrawal_id || payload.id;
 
     this.logger.log(`Withdrawal succeeded for reference: ${reference}`);
 
-    const withdrawal = await this.prisma.withdrawal.findUnique({
-      where: { reference },
+    const withdrawal = await this.prisma.withdrawal.findFirst({
+      where: {
+        OR: [
+          ...(reference ? [{ reference }] : []),
+          ...(providerReference
+            ? [{ providerPayoutId: providerReference }]
+            : []),
+        ],
+      },
       include: {
         wallet: {
           include: {
@@ -97,6 +116,11 @@ export class WithdrawalWebhookService {
       this.logger.log(`Withdrawal ${withdrawal.id} already completed`);
       return { withdrawalId: withdrawal.id, status: 'COMPLETED' };
     }
+    if (withdrawal.status !== 'PROCESSING') {
+      throw new BadRequestException(
+        `Cannot complete withdrawal from ${withdrawal.status} status`,
+      );
+    }
 
     // Update withdrawal status
     const updated = await this.prisma.$transaction(async (tx) => {
@@ -105,12 +129,17 @@ export class WithdrawalWebhookService {
         data: {
           status: 'COMPLETED',
           completedAt: new Date(),
+          webhookStatus: 'COMPLETED',
+          webhookCompletedAt: new Date(),
+          webhookId: payload.id || undefined,
+          webhookResponse: payload,
         },
       });
 
       // Record webhook
-      await tx.withdrawalWebhook.create({
-        data: {
+      await tx.withdrawalWebhook.upsert({
+        where: { withdrawalId: withdrawal.id },
+        create: {
           withdrawalId: withdrawal.id,
           event: 'withdrawal.succeeded',
           status: 'SUCCESS',
@@ -121,12 +150,20 @@ export class WithdrawalWebhookService {
           response: payload,
           processedAt: new Date(),
         },
+        update: {
+          event: 'payout.paid',
+          status: 'SUCCESS',
+          providerReference,
+          response: payload,
+          processedAt: new Date(),
+        },
       });
 
       return updatedWithdrawal;
     });
 
     this.logger.log(`Withdrawal ${withdrawal.id} completed via webhook`);
+    await this.invalidateWithdrawalWallet(withdrawal.wallet);
 
     this.eventService.emit(SystemEvents.WITHDRAWAL_COMPLETED, {
       withdrawalId: withdrawal.id,
@@ -148,7 +185,7 @@ export class WithdrawalWebhookService {
     provider: string,
   ): Promise<any> {
     const reference = payload.reference || payload.data?.reference;
-    const providerReference = payload.id || payload.data?.id;
+    const providerReference = payload.data?.withdrawal_id || payload.id;
     const failureReason =
       payload.reason || payload.data?.reason || 'Unknown error';
 
@@ -156,8 +193,15 @@ export class WithdrawalWebhookService {
       `Withdrawal failed for reference: ${reference}, reason: ${failureReason}`,
     );
 
-    const withdrawal = await this.prisma.withdrawal.findUnique({
-      where: { reference },
+    const withdrawal = await this.prisma.withdrawal.findFirst({
+      where: {
+        OR: [
+          ...(reference ? [{ reference }] : []),
+          ...(providerReference
+            ? [{ providerPayoutId: providerReference }]
+            : []),
+        ],
+      },
       include: {
         wallet: {
           include: {
@@ -179,6 +223,7 @@ export class WithdrawalWebhookService {
     }
 
     const totalAmount = withdrawal.amount + (withdrawal.fee || 0);
+    const wasDebited = withdrawal.status === 'PROCESSING';
 
     // Refund the amount back to the wallet
     const updated = await this.prisma.$transaction(async (tx) => {
@@ -189,6 +234,10 @@ export class WithdrawalWebhookService {
           status: 'FAILED',
           failedAt: new Date(),
           failureReason,
+          webhookStatus: 'FAILED',
+          webhookCompletedAt: new Date(),
+          webhookId: payload.id || undefined,
+          webhookResponse: payload,
         },
       });
 
@@ -210,7 +259,7 @@ export class WithdrawalWebhookService {
         await tx.wallet.update({
           where: { id: withdrawal.walletId },
           data: {
-            balance: withdrawal.wallet.balance + totalAmount,
+            ...(wasDebited ? { balance: { increment: totalAmount } } : {}),
             heldBalance: Math.max(
               0,
               (withdrawal.wallet.heldBalance || 0) - totalAmount,
@@ -218,19 +267,39 @@ export class WithdrawalWebhookService {
           },
         });
 
-        if (withdrawal.wallet.ledgerAccount) {
+        if (wasDebited && withdrawal.wallet.ledgerAccount) {
           await tx.ledgerAccount.update({
             where: { id: withdrawal.wallet.ledgerAccountId! },
             data: {
-              balance: withdrawal.wallet.ledgerAccount.balance + totalAmount,
+              balance: { increment: totalAmount },
             },
           });
         }
+        if (wasDebited) {
+          const bankClearingAccount = await tx.ledgerAccount.findUnique({
+            where: { code: '1100' },
+            select: { id: true },
+          });
+          if (bankClearingAccount) {
+            await tx.ledgerAccount.update({
+              where: { id: bankClearingAccount.id },
+              data: { balance: { decrement: totalAmount } },
+            });
+          }
+        }
+      }
+
+      if (withdrawal.journalEntryId) {
+        await tx.journalEntry.update({
+          where: { id: withdrawal.journalEntryId },
+          data: { status: 'REVERSED' },
+        });
       }
 
       // Record webhook
-      await tx.withdrawalWebhook.create({
-        data: {
+      await tx.withdrawalWebhook.upsert({
+        where: { withdrawalId: withdrawal.id },
+        create: {
           withdrawalId: withdrawal.id,
           event: 'withdrawal.failed',
           status: 'FAILED',
@@ -241,12 +310,20 @@ export class WithdrawalWebhookService {
           response: payload,
           processedAt: new Date(),
         },
+        update: {
+          event: 'payout.failed',
+          status: 'FAILED',
+          providerReference,
+          response: payload,
+          processedAt: new Date(),
+        },
       });
 
       return updatedWithdrawal;
     });
 
     this.logger.log(`Withdrawal ${withdrawal.id} failed, funds refunded`);
+    await this.invalidateWithdrawalWallet(withdrawal.wallet);
 
     this.eventService.emit(SystemEvents.WITHDRAWAL_FAILED, {
       withdrawalId: withdrawal.id,
@@ -268,18 +345,28 @@ export class WithdrawalWebhookService {
     provider: string,
   ): Promise<any> {
     const reference = payload.reference || payload.data?.reference;
-    const providerReference = payload.id || payload.data?.id;
+    const providerReference = payload.data?.withdrawal_id || payload.id;
 
     this.logger.log(`Withdrawal pending for reference: ${reference}`);
 
-    const withdrawal = await this.prisma.withdrawal.findUnique({
-      where: { reference },
+    const withdrawal = await this.prisma.withdrawal.findFirst({
+      where: {
+        OR: [
+          ...(reference ? [{ reference }] : []),
+          ...(providerReference
+            ? [{ providerPayoutId: providerReference }]
+            : []),
+        ],
+      },
     });
 
     if (!withdrawal) {
       throw new NotFoundException(
         `Withdrawal not found for reference: ${reference}`,
       );
+    }
+    if (withdrawal.status === 'COMPLETED' || withdrawal.status === 'FAILED') {
+      return { withdrawalId: withdrawal.id, status: withdrawal.status };
     }
 
     // Update withdrawal status to processing
@@ -291,8 +378,9 @@ export class WithdrawalWebhookService {
         },
       });
 
-      await tx.withdrawalWebhook.create({
-        data: {
+      await tx.withdrawalWebhook.upsert({
+        where: { withdrawalId: withdrawal.id },
+        create: {
           withdrawalId: withdrawal.id,
           event: 'withdrawal.pending',
           status: 'PENDING',
@@ -300,6 +388,12 @@ export class WithdrawalWebhookService {
           reference: withdrawal.reference,
           provider: provider,
           providerReference: providerReference,
+          response: payload,
+        },
+        update: {
+          event: 'payout.created',
+          status: 'PENDING',
+          providerReference,
           response: payload,
         },
       });
@@ -332,12 +426,37 @@ export class WithdrawalWebhookService {
     });
   }
 
+  private async invalidateWithdrawalWallet(wallet: any): Promise<void> {
+    if (wallet.organizationId) {
+      await this.walletService.invalidateWalletCache({
+        type: 'ORGANIZATION',
+        id: wallet.organizationId,
+      });
+    } else if (wallet.isPlatformWallet) {
+      await this.walletService.invalidateWalletCache({ type: 'PLATFORM' });
+    } else if (wallet.userId) {
+      await this.walletService.invalidateWalletCache({
+        type: 'USER',
+        id: wallet.userId,
+      });
+    }
+  }
+
   private verifyWebhookSignature(
     payload: any,
     signature: string,
     provider: string,
+    timestamp?: string,
+    rawBody?: Buffer,
   ): boolean {
     try {
+      if (provider?.toLowerCase() === 'bachs') {
+        return this.bachsClient.verifyWebhookSignature(
+          rawBody || JSON.stringify(payload),
+          signature,
+          timestamp || '',
+        );
+      }
       let secret: string | undefined;
 
       switch (provider) {

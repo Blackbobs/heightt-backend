@@ -59,6 +59,7 @@ export class PermissionService {
 
     // Finance permissions
     FINANCE_READ: 'finance:read',
+    FINANCE_WITHDRAWAL_CREATE: 'finance:withdrawal:create',
     FINANCE_CREATE: 'finance:create',
     FINANCE_UPDATE: 'finance:update',
     FINANCE_DELETE: 'finance:delete',
@@ -600,6 +601,7 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ORGANIZATION_CREATE,
           PermissionService.PERMISSIONS.ORGANIZATION_UPDATE,
           PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.STUDENT_READ,
           PermissionService.PERMISSIONS.STUDENT_UPDATE,
           PermissionService.PERMISSIONS.ACADEMIC_READ,
@@ -616,6 +618,7 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ORGANIZATION_READ,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
           PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
         ];
         break;
       case 'DEPARTMENT_ADMIN':
@@ -624,6 +627,7 @@ export class PermissionService {
           PermissionService.PERMISSIONS.STUDENT_READ,
           PermissionService.PERMISSIONS.ACADEMIC_READ,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
         ];
         break;
       case 'ORGANIZATION_ADMIN':
@@ -633,7 +637,9 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ORGANIZATION_UPDATE,
           PermissionService.PERMISSIONS.ORGANIZATION_MANAGE,
           PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.EVENT_CREATE,
           PermissionService.PERMISSIONS.GOVERNANCE_READ,
         ];

@@ -65,13 +65,8 @@ export class BachsWebhookController {
         await this.handleCollectionSucceeded(payload);
         break;
 
-      // Bachs sends this immediately before/alongside collection.succeeded.
-      // Acknowledge it, but fulfill only from the collection event to avoid two
-      // concurrent transactions racing to create the same payment.
       case 'checkout.completed':
-        this.logger.log(
-          `Checkout completed: ${payload.data?.checkout_id || 'unknown'}; awaiting collection.succeeded`,
-        );
+        await this.handleCheckoutCompleted(payload);
         break;
 
       case 'collection.failed':
@@ -95,6 +90,68 @@ export class BachsWebhookController {
 
     // Return 200 only after successful or idempotent processing.
     return { received: true, event: eventType };
+  }
+
+  /**
+   * Sandbox may only emit checkout.completed. Re-read the checkout from Bachs
+   * before fulfilling so the webhook body is never trusted as proof of funds.
+   */
+  private async handleCheckoutCompleted(payload: any) {
+    const data = payload.data?.object || payload.data || payload;
+    const metadata = data.metadata || payload.metadata || {};
+    const checkoutId =
+      data.checkout_id || data.id || metadata.checkoutId || payload.checkout_id;
+
+    if (!checkoutId) {
+      throw new BadRequestException(
+        'Completed checkout webhook is missing checkout ID',
+      );
+    }
+
+    const checkout = await this.bachsClient.getCheckoutSession(checkoutId);
+    const status = String(
+      checkout.payment_status || checkout.status || '',
+    ).toUpperCase();
+    if (!['PAID', 'COMPLETED', 'SUCCEEDED'].includes(status)) {
+      this.logger.log(
+        `Checkout ${checkoutId} is ${status || 'not paid'}; skipping fulfillment`,
+      );
+      return;
+    }
+
+    const providerPayment =
+      checkout.payment || checkout.charge || checkout.collection || checkout;
+    const chargeId =
+      providerPayment.payment_id ||
+      providerPayment.charge_id ||
+      providerPayment.id;
+    const rawAmount =
+      providerPayment.settlement_amount ??
+      providerPayment.amount_paid ??
+      providerPayment.amount ??
+      checkout.pricing?.amount;
+    const amount =
+      typeof rawAmount === 'object'
+        ? (rawAmount?.value ?? rawAmount?.amount)
+        : rawAmount;
+    const customerId =
+      providerPayment.customer?.id ||
+      providerPayment.customer_id ||
+      checkout.customer?.id;
+
+    if (!chargeId || amount === undefined || amount === null) {
+      throw new BadRequestException(
+        'Completed checkout could not be verified with payment details',
+      );
+    }
+
+    await this.bachsService.completePayment(
+      checkoutId,
+      String(chargeId),
+      String(amount),
+      customerId ? String(customerId) : '',
+      checkout.metadata || providerPayment.metadata || metadata,
+    );
   }
 
   /**

@@ -18,8 +18,19 @@ describe('BachsWebhookController fulfillment events', () => {
     };
   }
 
-  it('acknowledges checkout.completed without starting fulfillment', async () => {
+  it('reconciles checkout.completed against Bachs before fulfillment', async () => {
     const { controller, service } = createController();
+    (controller as any).bachsClient.getCheckoutSession = jest
+      .fn()
+      .mockResolvedValue({
+        checkout_id: 'chk-1',
+        status: 'COMPLETED',
+        payment: {
+          payment_id: 'pay-provider-1',
+          settlement_amount: '102.00',
+        },
+        metadata: { pendingPaymentId: 'pending-1' },
+      });
 
     const result = await controller.handleWebhook(
       'signature',
@@ -36,7 +47,13 @@ describe('BachsWebhookController fulfillment events', () => {
     );
 
     expect(result.received).toBe(true);
-    expect(service.completePayment).not.toHaveBeenCalled();
+    expect(service.completePayment).toHaveBeenCalledWith(
+      'chk-1',
+      'pay-provider-1',
+      '102.00',
+      '',
+      expect.objectContaining({ pendingPaymentId: 'pending-1' }),
+    );
   });
 
   it('fulfills collection.succeeded using the settlement amount', async () => {

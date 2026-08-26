@@ -145,7 +145,45 @@ export class AnnouncementService {
   ) {
     const where: any = {};
     if (organizationId) {
-      where.organizationId = organizationId;
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: organizationId },
+        select: {
+          id: true,
+          type: true,
+          institutionId: true,
+          facultyId: true,
+          departmentId: true,
+        },
+      });
+      if (!organization) {
+        throw new NotFoundException('Organization not found');
+      }
+
+      // A hierarchy organization represents its whole scope. For example, a
+      // faculty feed includes announcements created by its level/department
+      // organizations as well as announcements created directly on faculty.
+      switch (organization.type) {
+        case 'INSTITUTION':
+          where.OR = [
+            { organizationId },
+            { organization: { institutionId: organization.institutionId } },
+          ];
+          break;
+        case 'FACULTY':
+          where.OR = [
+            { organizationId },
+            { organization: { facultyId: organization.facultyId } },
+          ];
+          break;
+        case 'DEPARTMENT':
+          where.OR = [
+            { organizationId },
+            { organization: { departmentId: organization.departmentId } },
+          ];
+          break;
+        default:
+          where.organizationId = organizationId;
+      }
     }
     if (filters?.isPublished !== undefined) {
       where.isPublished = filters.isPublished;

@@ -63,6 +63,7 @@ export type WithdrawalMinAggregateOutputType = {
   webhookStatus: string | null
   webhookAttempts: number | null
   webhookCompletedAt: Date | null
+  providerPayoutId: string | null
 }
 
 export type WithdrawalMaxAggregateOutputType = {
@@ -88,6 +89,7 @@ export type WithdrawalMaxAggregateOutputType = {
   webhookStatus: string | null
   webhookAttempts: number | null
   webhookCompletedAt: Date | null
+  providerPayoutId: string | null
 }
 
 export type WithdrawalCountAggregateOutputType = {
@@ -115,6 +117,7 @@ export type WithdrawalCountAggregateOutputType = {
   webhookAttempts: number
   webhookResponse: number
   webhookCompletedAt: number
+  providerPayoutId: number
   _all: number
 }
 
@@ -156,6 +159,7 @@ export type WithdrawalMinAggregateInputType = {
   webhookStatus?: true
   webhookAttempts?: true
   webhookCompletedAt?: true
+  providerPayoutId?: true
 }
 
 export type WithdrawalMaxAggregateInputType = {
@@ -181,6 +185,7 @@ export type WithdrawalMaxAggregateInputType = {
   webhookStatus?: true
   webhookAttempts?: true
   webhookCompletedAt?: true
+  providerPayoutId?: true
 }
 
 export type WithdrawalCountAggregateInputType = {
@@ -208,6 +213,7 @@ export type WithdrawalCountAggregateInputType = {
   webhookAttempts?: true
   webhookResponse?: true
   webhookCompletedAt?: true
+  providerPayoutId?: true
   _all?: true
 }
 
@@ -322,6 +328,7 @@ export type WithdrawalGroupByOutputType = {
   webhookAttempts: number
   webhookResponse: runtime.JsonValue | null
   webhookCompletedAt: Date | null
+  providerPayoutId: string | null
   _count: WithdrawalCountAggregateOutputType | null
   _avg: WithdrawalAvgAggregateOutputType | null
   _sum: WithdrawalSumAggregateOutputType | null
@@ -372,6 +379,7 @@ export type WithdrawalWhereInput = {
   webhookAttempts?: Prisma.IntFilter<"Withdrawal"> | number
   webhookResponse?: Prisma.JsonNullableFilter<"Withdrawal">
   webhookCompletedAt?: Prisma.DateTimeNullableFilter<"Withdrawal"> | Date | string | null
+  providerPayoutId?: Prisma.StringNullableFilter<"Withdrawal"> | string | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
   journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
   transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
@@ -405,6 +413,7 @@ export type WithdrawalOrderByWithRelationInput = {
   webhookAttempts?: Prisma.SortOrder
   webhookResponse?: Prisma.SortOrderInput | Prisma.SortOrder
   webhookCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  providerPayoutId?: Prisma.SortOrderInput | Prisma.SortOrder
   refund?: Prisma.RefundOrderByWithRelationInput
   journalEntry?: Prisma.JournalEntryOrderByWithRelationInput
   transaction?: Prisma.TransactionOrderByWithRelationInput
@@ -419,6 +428,7 @@ export type WithdrawalWhereUniqueInput = Prisma.AtLeast<{
   reference?: string
   journalEntryId?: string
   webhookId?: string
+  providerPayoutId?: string
   AND?: Prisma.WithdrawalWhereInput | Prisma.WithdrawalWhereInput[]
   OR?: Prisma.WithdrawalWhereInput[]
   NOT?: Prisma.WithdrawalWhereInput | Prisma.WithdrawalWhereInput[]
@@ -447,7 +457,7 @@ export type WithdrawalWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   wallet?: Prisma.XOR<Prisma.WalletScalarRelationFilter, Prisma.WalletWhereInput>
   withdrawalWebhook?: Prisma.XOR<Prisma.WithdrawalWebhookNullableScalarRelationFilter, Prisma.WithdrawalWebhookWhereInput> | null
-}, "id" | "transactionId" | "reference" | "journalEntryId" | "webhookId">
+}, "id" | "transactionId" | "reference" | "journalEntryId" | "webhookId" | "providerPayoutId">
 
 export type WithdrawalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -474,6 +484,7 @@ export type WithdrawalOrderByWithAggregationInput = {
   webhookAttempts?: Prisma.SortOrder
   webhookResponse?: Prisma.SortOrderInput | Prisma.SortOrder
   webhookCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  providerPayoutId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.WithdrawalCountOrderByAggregateInput
   _avg?: Prisma.WithdrawalAvgOrderByAggregateInput
   _max?: Prisma.WithdrawalMaxOrderByAggregateInput
@@ -509,6 +520,7 @@ export type WithdrawalScalarWhereWithAggregatesInput = {
   webhookAttempts?: Prisma.IntWithAggregatesFilter<"Withdrawal"> | number
   webhookResponse?: Prisma.JsonNullableWithAggregatesFilter<"Withdrawal">
   webhookCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Withdrawal"> | Date | string | null
+  providerPayoutId?: Prisma.StringNullableWithAggregatesFilter<"Withdrawal"> | string | null
 }
 
 export type WithdrawalCreateInput = {
@@ -532,6 +544,7 @@ export type WithdrawalCreateInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundCreateNestedOneWithoutWithdrawalInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutWithdrawalInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutWithdrawalInput
@@ -565,6 +578,7 @@ export type WithdrawalUncheckedCreateInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutWithdrawalInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedCreateNestedOneWithoutWithdrawalInput
 }
@@ -590,6 +604,7 @@ export type WithdrawalUpdateInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUpdateOneWithoutWithdrawalNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutWithdrawalNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutWithdrawalNestedInput
@@ -623,6 +638,7 @@ export type WithdrawalUncheckedUpdateInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUncheckedUpdateOneWithoutWithdrawalNestedInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
@@ -652,6 +668,7 @@ export type WithdrawalCreateManyInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
 }
 
 export type WithdrawalUpdateManyMutationInput = {
@@ -675,6 +692,7 @@ export type WithdrawalUpdateManyMutationInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type WithdrawalUncheckedUpdateManyInput = {
@@ -702,6 +720,7 @@ export type WithdrawalUncheckedUpdateManyInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type WithdrawalListRelationFilter = {
@@ -744,6 +763,7 @@ export type WithdrawalCountOrderByAggregateInput = {
   webhookAttempts?: Prisma.SortOrder
   webhookResponse?: Prisma.SortOrder
   webhookCompletedAt?: Prisma.SortOrder
+  providerPayoutId?: Prisma.SortOrder
 }
 
 export type WithdrawalAvgOrderByAggregateInput = {
@@ -776,6 +796,7 @@ export type WithdrawalMaxOrderByAggregateInput = {
   webhookStatus?: Prisma.SortOrder
   webhookAttempts?: Prisma.SortOrder
   webhookCompletedAt?: Prisma.SortOrder
+  providerPayoutId?: Prisma.SortOrder
 }
 
 export type WithdrawalMinOrderByAggregateInput = {
@@ -801,6 +822,7 @@ export type WithdrawalMinOrderByAggregateInput = {
   webhookStatus?: Prisma.SortOrder
   webhookAttempts?: Prisma.SortOrder
   webhookCompletedAt?: Prisma.SortOrder
+  providerPayoutId?: Prisma.SortOrder
 }
 
 export type WithdrawalSumOrderByAggregateInput = {
@@ -1018,6 +1040,7 @@ export type WithdrawalCreateWithoutUserInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundCreateNestedOneWithoutWithdrawalInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutWithdrawalInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutWithdrawalInput
@@ -1049,6 +1072,7 @@ export type WithdrawalUncheckedCreateWithoutUserInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutWithdrawalInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedCreateNestedOneWithoutWithdrawalInput
 }
@@ -1107,6 +1131,7 @@ export type WithdrawalScalarWhereInput = {
   webhookAttempts?: Prisma.IntFilter<"Withdrawal"> | number
   webhookResponse?: Prisma.JsonNullableFilter<"Withdrawal">
   webhookCompletedAt?: Prisma.DateTimeNullableFilter<"Withdrawal"> | Date | string | null
+  providerPayoutId?: Prisma.StringNullableFilter<"Withdrawal"> | string | null
 }
 
 export type WithdrawalCreateWithoutWalletInput = {
@@ -1130,6 +1155,7 @@ export type WithdrawalCreateWithoutWalletInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundCreateNestedOneWithoutWithdrawalInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutWithdrawalInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutWithdrawalInput
@@ -1161,6 +1187,7 @@ export type WithdrawalUncheckedCreateWithoutWalletInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutWithdrawalInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedCreateNestedOneWithoutWithdrawalInput
 }
@@ -1212,6 +1239,7 @@ export type WithdrawalCreateWithoutJournalEntryInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundCreateNestedOneWithoutWithdrawalInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutWithdrawalInput
   user: Prisma.UserCreateNestedOneWithoutWithdrawalsInput
@@ -1243,6 +1271,7 @@ export type WithdrawalUncheckedCreateWithoutJournalEntryInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutWithdrawalInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedCreateNestedOneWithoutWithdrawalInput
 }
@@ -1284,6 +1313,7 @@ export type WithdrawalUpdateWithoutJournalEntryInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUpdateOneWithoutWithdrawalNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutWithdrawalNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutWithdrawalsNestedInput
@@ -1315,6 +1345,7 @@ export type WithdrawalUncheckedUpdateWithoutJournalEntryInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUncheckedUpdateOneWithoutWithdrawalNestedInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
@@ -1340,6 +1371,7 @@ export type WithdrawalCreateWithoutTransactionInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundCreateNestedOneWithoutWithdrawalInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutWithdrawalInput
   user: Prisma.UserCreateNestedOneWithoutWithdrawalsInput
@@ -1371,6 +1403,7 @@ export type WithdrawalUncheckedCreateWithoutTransactionInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutWithdrawalInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedCreateNestedOneWithoutWithdrawalInput
 }
@@ -1412,6 +1445,7 @@ export type WithdrawalUpdateWithoutTransactionInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUpdateOneWithoutWithdrawalNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutWithdrawalNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutWithdrawalsNestedInput
@@ -1443,6 +1477,7 @@ export type WithdrawalUncheckedUpdateWithoutTransactionInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUncheckedUpdateOneWithoutWithdrawalNestedInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
@@ -1468,6 +1503,7 @@ export type WithdrawalCreateWithoutWithdrawalWebhookInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundCreateNestedOneWithoutWithdrawalInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutWithdrawalInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutWithdrawalInput
@@ -1500,6 +1536,7 @@ export type WithdrawalUncheckedCreateWithoutWithdrawalWebhookInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutWithdrawalInput
 }
 
@@ -1540,6 +1577,7 @@ export type WithdrawalUpdateWithoutWithdrawalWebhookInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUpdateOneWithoutWithdrawalNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutWithdrawalNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutWithdrawalNestedInput
@@ -1572,6 +1610,7 @@ export type WithdrawalUncheckedUpdateWithoutWithdrawalWebhookInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
 
@@ -1596,6 +1635,7 @@ export type WithdrawalCreateWithoutRefundInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutWithdrawalInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutWithdrawalInput
   user: Prisma.UserCreateNestedOneWithoutWithdrawalsInput
@@ -1628,6 +1668,7 @@ export type WithdrawalUncheckedCreateWithoutRefundInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedCreateNestedOneWithoutWithdrawalInput
 }
 
@@ -1668,6 +1709,7 @@ export type WithdrawalUpdateWithoutRefundInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutWithdrawalNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutWithdrawalNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutWithdrawalsNestedInput
@@ -1700,6 +1742,7 @@ export type WithdrawalUncheckedUpdateWithoutRefundInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
 
@@ -1727,6 +1770,7 @@ export type WithdrawalCreateManyUserInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
 }
 
 export type WithdrawalUpdateWithoutUserInput = {
@@ -1750,6 +1794,7 @@ export type WithdrawalUpdateWithoutUserInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUpdateOneWithoutWithdrawalNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutWithdrawalNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutWithdrawalNestedInput
@@ -1781,6 +1826,7 @@ export type WithdrawalUncheckedUpdateWithoutUserInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUncheckedUpdateOneWithoutWithdrawalNestedInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
@@ -1809,6 +1855,7 @@ export type WithdrawalUncheckedUpdateManyWithoutUserInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type WithdrawalCreateManyWalletInput = {
@@ -1835,6 +1882,7 @@ export type WithdrawalCreateManyWalletInput = {
   webhookAttempts?: number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Date | string | null
+  providerPayoutId?: string | null
 }
 
 export type WithdrawalUpdateWithoutWalletInput = {
@@ -1858,6 +1906,7 @@ export type WithdrawalUpdateWithoutWalletInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUpdateOneWithoutWithdrawalNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutWithdrawalNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutWithdrawalNestedInput
@@ -1889,6 +1938,7 @@ export type WithdrawalUncheckedUpdateWithoutWalletInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refund?: Prisma.RefundUncheckedUpdateOneWithoutWithdrawalNestedInput
   withdrawalWebhook?: Prisma.WithdrawalWebhookUncheckedUpdateOneWithoutWithdrawalNestedInput
 }
@@ -1917,6 +1967,7 @@ export type WithdrawalUncheckedUpdateManyWithoutWalletInput = {
   webhookAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   webhookResponse?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   webhookCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  providerPayoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1946,6 +1997,7 @@ export type WithdrawalSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   webhookAttempts?: boolean
   webhookResponse?: boolean
   webhookCompletedAt?: boolean
+  providerPayoutId?: boolean
   refund?: boolean | Prisma.Withdrawal$refundArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Withdrawal$journalEntryArgs<ExtArgs>
   transaction?: boolean | Prisma.Withdrawal$transactionArgs<ExtArgs>
@@ -1979,6 +2031,7 @@ export type WithdrawalSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   webhookAttempts?: boolean
   webhookResponse?: boolean
   webhookCompletedAt?: boolean
+  providerPayoutId?: boolean
   journalEntry?: boolean | Prisma.Withdrawal$journalEntryArgs<ExtArgs>
   transaction?: boolean | Prisma.Withdrawal$transactionArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2010,6 +2063,7 @@ export type WithdrawalSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   webhookAttempts?: boolean
   webhookResponse?: boolean
   webhookCompletedAt?: boolean
+  providerPayoutId?: boolean
   journalEntry?: boolean | Prisma.Withdrawal$journalEntryArgs<ExtArgs>
   transaction?: boolean | Prisma.Withdrawal$transactionArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -2041,9 +2095,10 @@ export type WithdrawalSelectScalar = {
   webhookAttempts?: boolean
   webhookResponse?: boolean
   webhookCompletedAt?: boolean
+  providerPayoutId?: boolean
 }
 
-export type WithdrawalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "walletId" | "transactionId" | "amount" | "fee" | "netAmount" | "status" | "bankName" | "accountNumber" | "accountName" | "reference" | "metadata" | "requestedAt" | "processedAt" | "completedAt" | "failedAt" | "failureReason" | "journalEntryId" | "webhookId" | "webhookStatus" | "webhookAttempts" | "webhookResponse" | "webhookCompletedAt", ExtArgs["result"]["withdrawal"]>
+export type WithdrawalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "walletId" | "transactionId" | "amount" | "fee" | "netAmount" | "status" | "bankName" | "accountNumber" | "accountName" | "reference" | "metadata" | "requestedAt" | "processedAt" | "completedAt" | "failedAt" | "failureReason" | "journalEntryId" | "webhookId" | "webhookStatus" | "webhookAttempts" | "webhookResponse" | "webhookCompletedAt" | "providerPayoutId", ExtArgs["result"]["withdrawal"]>
 export type WithdrawalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   refund?: boolean | Prisma.Withdrawal$refundArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Withdrawal$journalEntryArgs<ExtArgs>
@@ -2100,6 +2155,7 @@ export type $WithdrawalPayload<ExtArgs extends runtime.Types.Extensions.Internal
     webhookAttempts: number
     webhookResponse: runtime.JsonValue | null
     webhookCompletedAt: Date | null
+    providerPayoutId: string | null
   }, ExtArgs["result"]["withdrawal"]>
   composites: {}
 }
@@ -2553,6 +2609,7 @@ export interface WithdrawalFieldRefs {
   readonly webhookAttempts: Prisma.FieldRef<"Withdrawal", 'Int'>
   readonly webhookResponse: Prisma.FieldRef<"Withdrawal", 'Json'>
   readonly webhookCompletedAt: Prisma.FieldRef<"Withdrawal", 'DateTime'>
+  readonly providerPayoutId: Prisma.FieldRef<"Withdrawal", 'String'>
 }
     
 

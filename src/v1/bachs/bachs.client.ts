@@ -299,6 +299,80 @@ export class BachsClient {
     }
   }
 
+  async listPayoutBanks(countryCode = 'NG'): Promise<any> {
+    try {
+      const response = await this.client.get('/payouts/banks', {
+        params: { country_code: countryCode },
+      });
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async resolveBankAccount(data: {
+    bank_code: string;
+    account_number: string;
+  }): Promise<any> {
+    try {
+      const response = await this.client.post('/payouts/resolve-account', data);
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async createPayoutDestination(
+    data: {
+      name: string;
+      currency: string;
+      type: 'bank_account';
+      account_number: string;
+      bank_code: string;
+      metadata?: Record<string, any>;
+    },
+    idempotencyKey: string,
+  ): Promise<any> {
+    try {
+      const response = await this.client.post('/payouts/destinations', data, {
+        headers: { 'Idempotency-Key': idempotencyKey },
+      });
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async getPayoutDestination(destinationId: string): Promise<any> {
+    try {
+      const response = await this.client.get(
+        `/payouts/destinations/${destinationId}`,
+      );
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async createPayout(
+    data: {
+      destination: string;
+      amount: string;
+      reference: string;
+      metadata?: Record<string, any>;
+    },
+    idempotencyKey: string,
+  ): Promise<any> {
+    try {
+      const response = await this.client.post('/payouts', data, {
+        headers: { 'Idempotency-Key': idempotencyKey },
+      });
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
   // ============================================
   // WEBHOOK VERIFICATION
   // ============================================

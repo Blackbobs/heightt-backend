@@ -431,20 +431,23 @@ export class LedgerService {
   // JOURNAL ENTRY MANAGEMENT
   // ============================================
 
-  async createJournalEntry(data: {
-    lines: Array<{
-      accountId: string;
-      type: 'DEBIT' | 'CREDIT';
-      amount: number;
+  async createJournalEntry(
+    data: {
+      lines: Array<{
+        accountId: string;
+        type: 'DEBIT' | 'CREDIT';
+        amount: number;
+        description?: string;
+      }>;
       description?: string;
-    }>;
-    description?: string;
-    transactionId?: string;
-    paymentId?: string;
-    withdrawalId?: string;
-    refundId?: string;
-    createdBy?: string;
-  }) {
+      transactionId?: string;
+      paymentId?: string;
+      withdrawalId?: string;
+      refundId?: string;
+      createdBy?: string;
+    },
+    transactionClient?: any,
+  ) {
     this.logger.log(`Creating journal entry with ${data.lines.length} lines`);
 
     // Validate: Total debits must equal total credits
@@ -468,8 +471,7 @@ export class LedgerService {
     // Generate reference
     const reference = `JE-${new Date().getFullYear()}-${uuidv4().substring(0, 8).toUpperCase()}`;
 
-    // Create journal entry with lines in a transaction
-    const journalEntry = await this.prisma.$transaction(async (tx) => {
+    const createWithClient = async (tx: any) => {
       // Create the journal entry
       const entry = await tx.journalEntry.create({
         data: {
@@ -522,7 +524,13 @@ export class LedgerService {
       }
 
       return entry;
-    });
+    };
+
+    // Callers that already own a transaction must pass its client so journal
+    // rows and their surrounding business operation commit or roll back as one.
+    const journalEntry = transactionClient
+      ? await createWithClient(transactionClient)
+      : await this.prisma.$transaction(createWithClient);
 
     this.logger.log(`Journal entry created: ${journalEntry.reference}`);
     return journalEntry;

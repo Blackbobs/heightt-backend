@@ -12,7 +12,9 @@ import { CacheService } from '../../redis/cache.service';
 import {
   CreateBankAccountDto,
   UpdateBankAccountDto,
+  ResolveBankAccountDto,
 } from './dto/bank-account.dto';
+import { BachsClient } from '../bachs/bachs.client';
 
 @Injectable()
 export class BankAccountService {
@@ -21,16 +23,90 @@ export class BankAccountService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
+    private readonly bachsClient: BachsClient,
   ) {}
+
+  async getSupportedBanks(countryCode = 'NG') {
+    const normalizedCountryCode = countryCode.trim().toUpperCase();
+    if (!/^[A-Z]{2}$/.test(normalizedCountryCode)) {
+      throw new BadRequestException(
+        'countryCode must be a two-letter ISO code',
+      );
+    }
+
+    const cacheKey = `bachs:payout-banks:${normalizedCountryCode}`;
+    const cached = await this.cacheService.get(cacheKey);
+    if (cached) return cached;
+
+    const response = await this.bachsClient.listPayoutBanks(
+      normalizedCountryCode,
+    );
+    await this.cacheService.set(cacheKey, response, 3600);
+    return response;
+  }
+
+  async resolveBankAccount(dto: ResolveBankAccountDto) {
+    const response = await this.bachsClient.resolveBankAccount({
+      bank_code: dto.bankCode,
+      account_number: dto.accountNumber,
+    });
+
+    const candidates = [response?.data?.data, response?.data, response].filter(
+      Boolean,
+    );
+    const resolved = candidates.find(
+      (value: any) => value.account_name || value.accountName,
+    );
+    const providerRejected = candidates.some(
+      (value: any) => value.status === false || value.success === false,
+    );
+
+    if (!resolved || providerRejected) {
+      const providerError = candidates.find(
+        (value: any) => value.error || value.detail || value.message,
+      );
+      throw new BadRequestException(
+        providerError?.error ||
+          providerError?.detail ||
+          providerError?.message ||
+          'Bank account could not be verified',
+      );
+    }
+
+    return {
+      status: true,
+      message:
+        response?.message ||
+        response?.data?.message ||
+        'Account resolved successfully',
+      data: {
+        accountNumber:
+          resolved.account_number ||
+          resolved.accountNumber ||
+          dto.accountNumber,
+        accountName: resolved.account_name || resolved.accountName,
+        bankCode: resolved.bank_code || resolved.bankCode || dto.bankCode,
+        bankName: resolved.bank_name || resolved.bankName,
+      },
+      error: null,
+    };
+  }
 
   async createBankAccount(userId: string, dto: CreateBankAccountDto) {
     this.logger.log(`Creating bank account for user: ${userId}`);
+
+    const resolution = await this.resolveBankAccount({
+      bankCode: dto.bankCode,
+      accountNumber: dto.accountNumber,
+    });
+    const verified = resolution.data;
+    const verifiedBankName = verified.bankName || dto.bankName;
 
     const existing = await this.prisma.bankAccount.findFirst({
       where: {
         userId,
         accountNumber: dto.accountNumber,
-        bankName: dto.bankName,
+        bankName: verifiedBankName,
       },
     });
 
@@ -51,9 +127,9 @@ export class BankAccountService {
     const bankAccount = await this.prisma.bankAccount.create({
       data: {
         userId,
-        bankName: dto.bankName,
+        bankName: verifiedBankName,
         accountNumber: dto.accountNumber,
-        accountName: dto.accountName,
+        accountName: verified.accountName,
         bankCode: dto.bankCode,
         isDefault,
       },
@@ -104,6 +180,11 @@ export class BankAccountService {
     dto: UpdateBankAccountDto,
   ) {
     const bankAccount = await this.getBankAccountById(id, userId);
+    const payoutDetailsChanged =
+      (dto.bankName !== undefined && dto.bankName !== bankAccount.bankName) ||
+      (dto.accountNumber !== undefined &&
+        dto.accountNumber !== bankAccount.accountNumber) ||
+      (dto.bankCode !== undefined && dto.bankCode !== bankAccount.bankCode);
 
     if (dto.isDefault) {
       await this.prisma.bankAccount.updateMany({
@@ -120,6 +201,12 @@ export class BankAccountService {
         accountName: dto.accountName,
         bankCode: dto.bankCode,
         isDefault: dto.isDefault,
+        ...(payoutDetailsChanged
+          ? {
+              payoutDestinationId: null,
+              payoutDestinationStatus: null,
+            }
+          : {}),
       },
     });
 

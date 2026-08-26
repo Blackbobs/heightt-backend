@@ -2,7 +2,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsUUID,
   IsNumber,
   IsString,
   IsOptional,
@@ -13,7 +12,7 @@ import {
 
 export class UserWithdrawalRequestDto {
   @ApiProperty({ description: 'Bank account ID to withdraw to' })
-  @IsUUID()
+  @IsString()
   bankAccountId: string;
 
   @ApiProperty({
@@ -34,7 +33,7 @@ export class UserWithdrawalRequestDto {
 
 export class PlatformWithdrawalRequestDto {
   @ApiProperty({ description: 'Bank account ID to withdraw to' })
-  @IsUUID()
+  @IsString()
   bankAccountId: string;
 
   @ApiProperty({
@@ -53,6 +52,27 @@ export class PlatformWithdrawalRequestDto {
   reason?: string;
 }
 
+export class OrganizationWithdrawalRequestDto {
+  @ApiProperty({ description: 'Organization ID whose wallet will be debited' })
+  @IsString()
+  organizationId: string;
+
+  @ApiProperty({ description: 'Bank account ID to settle into' })
+  @IsString()
+  bankAccountId: string;
+
+  @ApiProperty({ description: 'Amount in Kobo', minimum: 100 })
+  @IsNumber()
+  @Min(100)
+  amount: number;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  reason?: string;
+}
+
 export enum WithdrawalType {
   USER = 'USER',
   ORGANIZATION = 'ORGANIZATION',
@@ -60,6 +80,11 @@ export enum WithdrawalType {
 }
 
 export class WithdrawalFilterDto {
+  @ApiProperty({ required: false, description: 'Organization ID' })
+  @IsOptional()
+  @IsString()
+  organizationId?: string;
+
   @ApiProperty({ required: false })
   @IsOptional()
   @IsEnum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED'])

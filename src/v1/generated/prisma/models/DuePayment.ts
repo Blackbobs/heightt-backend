@@ -232,16 +232,16 @@ export type DuePaymentOrderByWithRelationInput = {
 
 export type DuePaymentWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  assignmentId?: string
   paymentId?: string
   AND?: Prisma.DuePaymentWhereInput | Prisma.DuePaymentWhereInput[]
   OR?: Prisma.DuePaymentWhereInput[]
   NOT?: Prisma.DuePaymentWhereInput | Prisma.DuePaymentWhereInput[]
-  assignmentId?: Prisma.StringFilter<"DuePayment"> | string
   amount?: Prisma.IntFilter<"DuePayment"> | number
   paidAt?: Prisma.DateTimeFilter<"DuePayment"> | Date | string
   assignment?: Prisma.XOR<Prisma.DueAssignmentScalarRelationFilter, Prisma.DueAssignmentWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
-}, "id" | "paymentId">
+}, "id" | "assignmentId" | "paymentId">
 
 export type DuePaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

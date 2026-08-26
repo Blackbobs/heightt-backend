@@ -60,9 +60,11 @@ import {
   ReceiptListResponseDto,
   WithdrawalFilterDto,
   PlatformWithdrawalRequestDto,
+  OrganizationWithdrawalRequestDto,
   UserWithdrawalRequestDto,
   UpdateBankAccountDto,
   CreateBankAccountDto,
+  ResolveBankAccountDto,
 } from './dto';
 import {
   Cache,
@@ -183,6 +185,33 @@ export class FinanceController {
   async getPlatformWallet() {
     this.logger.log('Get platform wallet endpoint called');
     return this.financeService.getPlatformWallet();
+  }
+
+  @Get('organizations/:organizationId/overview')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `finance:organization:${request.params.organizationId}:overview:v2`;
+    },
+    ttl: 60,
+    tags: ['finance', 'wallet', 'transactions', 'dues', 'payments'],
+  })
+  @ApiOperation({
+    summary: 'Get organization finance overview (Admin only)',
+    description:
+      'Returns wallet balance, transaction totals, collections, pending payments, and due-payment totals for an organization within the admin scope.',
+  })
+  @ApiParam({ name: 'organizationId', description: 'Organization ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Organization finance overview retrieved',
+  })
+  async getOrganizationFinanceOverview(
+    @Param('organizationId') organizationId: string,
+  ) {
+    return this.financeService.getOrganizationFinanceOverview(organizationId);
   }
 
   // ============================================
@@ -382,6 +411,60 @@ export class FinanceController {
   // PAYMENT ENDPOINTS
   // ============================================
 
+  @Get('payments/history')
+  @ApiOperation({
+    summary: 'Get my payment history',
+    description:
+      'Returns each payment with its transaction, due, organization, and receipt details.',
+  })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'organizationId', required: false })
+  async getMyPaymentHistory(
+    @Request() req: any,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('status') status?: string,
+    @Query('organizationId') organizationId?: string,
+  ) {
+    return this.financeService.getStudentPaymentHistory(
+      req.user.id,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      { status, organizationId },
+    );
+  }
+
+  @Get('payments/history/admin')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:read')
+  @ApiOperation({
+    summary: 'Get student payment history (Admin only)',
+    description:
+      'Returns payments within the authenticated admin scope, including student, due, transaction, and receipt details.',
+  })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'organizationId', required: false })
+  @ApiQuery({ name: 'payerId', required: false })
+  async getAdminPaymentHistory(
+    @Request() req: any,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('status') status?: string,
+    @Query('organizationId') organizationId?: string,
+    @Query('payerId') payerId?: string,
+  ) {
+    return this.financeService.getAdminPaymentHistory(
+      req.admin,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      { status, organizationId, payerId },
+    );
+  }
+
   @Post('payments')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
   @ApiOperation({
@@ -439,6 +522,7 @@ export class FinanceController {
         req.user.id,
         dto.dueId,
         dto.dueAssignmentId,
+        dto.amount,
       );
 
     // Create Bachs checkout session
@@ -814,6 +898,20 @@ export class FinanceController {
   // BANK ACCOUNT ENDPOINTS
   // ============================================
 
+  @Get('bank-accounts/supported-banks')
+  @ApiOperation({ summary: 'Get Bachs-supported payout banks' })
+  @ApiQuery({ name: 'countryCode', required: false, example: 'NG' })
+  async getSupportedPayoutBanks(@Query('countryCode') countryCode = 'NG') {
+    return this.bankAccountService.getSupportedBanks(countryCode);
+  }
+
+  @Post('bank-accounts/resolve')
+  @ApiOperation({ summary: 'Verify a bank account with Bachs' })
+  @ApiBody({ type: ResolveBankAccountDto })
+  async resolveBankAccount(@Body() dto: ResolveBankAccountDto) {
+    return this.bankAccountService.resolveBankAccount(dto);
+  }
+
   @Post('bank-accounts')
   @ApiOperation({ summary: 'Add bank account for withdrawals' })
   @ApiBody({ type: CreateBankAccountDto })
@@ -878,6 +976,15 @@ export class FinanceController {
     return this.bankAccountService.setDefaultBankAccount(id, req.user.id);
   }
 
+  @Post('bank-accounts/:id/payout-destination')
+  @ApiOperation({
+    summary: 'Register or refresh a bank account payout destination',
+  })
+  @ApiParam({ name: 'id', description: 'Bank account ID' })
+  async prepareBankAccountPayout(@Param('id') id: string, @Request() req: any) {
+    return this.financeService.prepareBankAccountPayout(req.user.id, id);
+  }
+
   // ============================================
   // USER WITHDRAWAL ENDPOINTS
   // ============================================
@@ -893,6 +1000,48 @@ export class FinanceController {
   ) {
     this.logger.log('Request user withdrawal endpoint called');
     return this.financeService.requestUserWithdrawal(req.user.id, dto);
+  }
+
+  @Post('withdrawals/organization')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:withdrawal:create')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({ summary: 'Request an organization wallet withdrawal' })
+  @ApiBody({ type: OrganizationWithdrawalRequestDto })
+  async requestOrganizationWithdrawal(
+    @Request() req: any,
+    @Body() dto: OrganizationWithdrawalRequestDto,
+  ) {
+    return this.financeService.requestOrganizationWithdrawal(req.user.id, dto);
+  }
+
+  @Post('withdrawals/organization/:id/approve')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  async approveOrganizationWithdrawal(
+    @Param('id') id: string,
+    @Request() req: any,
+  ) {
+    return this.financeService.approveUserWithdrawal(id, req.user.id);
+  }
+
+  @Post('withdrawals/organization/:id/reject')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  async rejectOrganizationWithdrawal(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Body() body: { reason?: string },
+  ) {
+    return this.financeService.rejectUserWithdrawal(
+      id,
+      req.user.id,
+      body.reason,
+    );
   }
 
   @Post('withdrawals/user/:id/approve')
@@ -986,8 +1135,9 @@ export class FinanceController {
     key: (context) => {
       const request = context.switchToHttp().getRequest();
       const userId = request.user.id;
-      const { status, type, page, limit, startDate, endDate } = request.query;
-      return `withdrawals:user:${userId}:${status || 'all'}:${type || 'all'}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}`;
+      const { status, type, organizationId, page, limit, startDate, endDate } =
+        request.query;
+      return `withdrawals:v2:user:${userId}:${organizationId || 'self'}:${status || 'all'}:${type || 'all'}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}`;
     },
     ttl: 60,
     tags: ['finance', 'withdrawals'],
@@ -1002,6 +1152,12 @@ export class FinanceController {
     name: 'type',
     required: false,
     enum: ['USER', 'ORGANIZATION', 'PLATFORM'],
+  })
+  @ApiQuery({
+    name: 'organizationId',
+    required: false,
+    description:
+      'Organization wallet to query. Requires an active admin role within that organization scope.',
   })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
@@ -1018,6 +1174,18 @@ export class FinanceController {
   ) {
     this.logger.log('Get withdrawal history endpoint called');
     return this.financeService.getWithdrawalHistory(req.user.id, filters);
+  }
+
+  @Get('withdrawals/admin')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @ApiOperation({ summary: 'List withdrawal requests for platform review' })
+  async getAdminWithdrawalHistory(
+    @Request() req: any,
+    @Query() filters: WithdrawalFilterDto,
+  ) {
+    return this.financeService.getWithdrawalHistory(req.user.id, filters, true);
   }
 
   @Get('withdrawals/:id')

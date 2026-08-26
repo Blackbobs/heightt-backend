@@ -10,7 +10,10 @@ import {
   Logger,
   BadRequestException,
   NotFoundException,
+  Req,
 } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
+import type { Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { WithdrawalWebhookService } from './withdrawal-webhook.service';
 
@@ -30,24 +33,30 @@ export class WithdrawalWebhookController {
   @ApiResponse({ status: 400, description: 'Invalid webhook payload' })
   async handleWithdrawalWebhook(
     @Headers('x-webhook-signature') signature: string,
+    @Headers('x-bachs-signature') bachsSignature: string,
+    @Headers('x-bachs-timestamp') timestamp: string,
     @Headers('x-provider') provider: string,
     @Headers('x-request-id') requestId: string,
     @Body() payload: any,
+    @Req() request: RawBodyRequest<Request>,
   ) {
     this.logger.log(
       `Received withdrawal webhook from ${provider}, request-id: ${requestId}`,
     );
 
-    if (!signature) {
+    const suppliedSignature = bachsSignature || signature;
+    if (!suppliedSignature) {
       this.logger.warn('Webhook missing signature header');
       throw new BadRequestException('Missing signature');
     }
 
     // Process the webhook
     const result = await this.withdrawalWebhookService.processWebhook(
-      provider,
+      provider || (bachsSignature ? 'Bachs' : ''),
       payload,
-      signature,
+      suppliedSignature,
+      timestamp,
+      request.rawBody,
     );
 
     return {

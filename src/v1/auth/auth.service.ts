@@ -400,46 +400,15 @@ export class AuthService {
 
     this.logger.log(`User logged in successfully: ${user.id}`);
 
-    // Get user with admin information
-    const userWithAdmins = await this.prisma.user.findUnique({
-      where: { id: user.id },
-      include: {
-        profile: true,
-        studentProfile: true,
-        admins: {
-          where: {
-            status: 'ACTIVE',
-          },
-        },
-      },
-    });
-
-    const isPlatformAdmin =
-      userWithAdmins?.admins?.some(
-        (admin) => admin.adminType === 'PLATFORM_ADMIN',
-      ) || false;
-
-    const adminTypes =
-      userWithAdmins?.admins?.map((admin) => admin.adminType) || [];
-
+    // Use the same serializer as /auth/me and admin login so regular login
+    // includes resource IDs for every active admin assignment.
+    await this.cacheService.invalidateUserCache(user.id);
+    const currentUser = await this.getCurrentUser(user.id);
     const userData = {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      emailVerified: user.emailVerified,
-      profile: user.profile,
-      studentProfile: user.studentProfile,
-      hasCompletedOnboarding: user.profile?.onboardingCompleted || false,
-      onboardingStep: user.profile?.onboardingStep || 'PERSONAL_INFO',
+      ...currentUser,
       sessionId: session.id,
       accessToken: accessToken,
-      isPlatformAdmin,
-      adminTypes,
-      userType: isPlatformAdmin ? 'PLATFORM_ADMIN' : 'USER',
-      roles: adminTypes,
     };
-
-    await this.cacheService.cacheUserProfile(user.id, userData);
 
     return userData;
   }
@@ -652,8 +621,6 @@ export class AuthService {
   // ============================================
   // GET CURRENT USER - FIXED WITH ADMIN SCOPES
   // ============================================
-
-
 
   async getCurrentUser(userId: string) {
     const cached = await this.cacheService.getUserProfile(userId);

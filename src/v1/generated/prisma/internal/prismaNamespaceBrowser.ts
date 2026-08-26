@@ -782,7 +782,8 @@ export const WithdrawalScalarFieldEnum = {
   webhookStatus: 'webhookStatus',
   webhookAttempts: 'webhookAttempts',
   webhookResponse: 'webhookResponse',
-  webhookCompletedAt: 'webhookCompletedAt'
+  webhookCompletedAt: 'webhookCompletedAt',
+  providerPayoutId: 'providerPayoutId'
 } as const
 
 export type WithdrawalScalarFieldEnum = (typeof WithdrawalScalarFieldEnum)[keyof typeof WithdrawalScalarFieldEnum]
@@ -813,6 +814,8 @@ export const BankAccountScalarFieldEnum = {
   accountName: 'accountName',
   bankCode: 'bankCode',
   isDefault: 'isDefault',
+  payoutDestinationId: 'payoutDestinationId',
+  payoutDestinationStatus: 'payoutDestinationStatus',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
