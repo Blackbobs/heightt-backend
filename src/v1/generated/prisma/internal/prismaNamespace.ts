@@ -6353,6 +6353,7 @@ export const OrganizationScalarFieldEnum = {
   name: 'name',
   slug: 'slug',
   description: 'description',
+  logo: 'logo',
   type: 'type',
   scope: 'scope',
   status: 'status',

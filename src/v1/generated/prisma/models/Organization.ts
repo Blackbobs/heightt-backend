@@ -34,6 +34,7 @@ export type OrganizationMinAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  logo: string | null
   type: $Enums.OrganizationType | null
   scope: $Enums.OrganizationScope | null
   status: $Enums.OrganizationStatus | null
@@ -58,6 +59,7 @@ export type OrganizationMaxAggregateOutputType = {
   name: string | null
   slug: string | null
   description: string | null
+  logo: string | null
   type: $Enums.OrganizationType | null
   scope: $Enums.OrganizationScope | null
   status: $Enums.OrganizationStatus | null
@@ -82,6 +84,7 @@ export type OrganizationCountAggregateOutputType = {
   name: number
   slug: number
   description: number
+  logo: number
   type: number
   scope: number
   status: number
@@ -108,6 +111,7 @@ export type OrganizationMinAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  logo?: true
   type?: true
   scope?: true
   status?: true
@@ -132,6 +136,7 @@ export type OrganizationMaxAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  logo?: true
   type?: true
   scope?: true
   status?: true
@@ -156,6 +161,7 @@ export type OrganizationCountAggregateInputType = {
   name?: true
   slug?: true
   description?: true
+  logo?: true
   type?: true
   scope?: true
   status?: true
@@ -253,6 +259,7 @@ export type OrganizationGroupByOutputType = {
   name: string
   slug: string
   description: string | null
+  logo: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status: $Enums.OrganizationStatus
@@ -298,6 +305,7 @@ export type OrganizationWhereInput = {
   name?: Prisma.StringFilter<"Organization"> | string
   slug?: Prisma.StringFilter<"Organization"> | string
   description?: Prisma.StringNullableFilter<"Organization"> | string | null
+  logo?: Prisma.StringNullableFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypeFilter<"Organization"> | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFilter<"Organization"> | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFilter<"Organization"> | $Enums.OrganizationStatus
@@ -349,6 +357,7 @@ export type OrganizationOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -404,6 +413,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Organization"> | string
   slug?: Prisma.StringFilter<"Organization"> | string
   description?: Prisma.StringNullableFilter<"Organization"> | string | null
+  logo?: Prisma.StringNullableFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypeFilter<"Organization"> | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFilter<"Organization"> | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFilter<"Organization"> | $Enums.OrganizationStatus
@@ -455,6 +465,7 @@ export type OrganizationOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -485,6 +496,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
+  logo?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypeWithAggregatesFilter<"Organization"> | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeWithAggregatesFilter<"Organization"> | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusWithAggregatesFilter<"Organization"> | $Enums.OrganizationStatus
@@ -504,6 +516,7 @@ export type OrganizationCreateInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -553,6 +566,7 @@ export type OrganizationUncheckedCreateInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -592,6 +606,7 @@ export type OrganizationUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -641,6 +656,7 @@ export type OrganizationUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -685,6 +701,7 @@ export type OrganizationCreateManyInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -704,6 +721,7 @@ export type OrganizationUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -726,6 +744,7 @@ export type OrganizationUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -776,6 +795,7 @@ export type OrganizationCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -800,6 +820,7 @@ export type OrganizationMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -824,6 +845,7 @@ export type OrganizationMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   type?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -1445,6 +1467,7 @@ export type OrganizationCreateWithoutCreatorInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1493,6 +1516,7 @@ export type OrganizationUncheckedCreateWithoutCreatorInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1565,6 +1589,7 @@ export type OrganizationScalarWhereInput = {
   name?: Prisma.StringFilter<"Organization"> | string
   slug?: Prisma.StringFilter<"Organization"> | string
   description?: Prisma.StringNullableFilter<"Organization"> | string | null
+  logo?: Prisma.StringNullableFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypeFilter<"Organization"> | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFilter<"Organization"> | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFilter<"Organization"> | $Enums.OrganizationStatus
@@ -1584,6 +1609,7 @@ export type OrganizationCreateWithoutInstitutionInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1631,6 +1657,7 @@ export type OrganizationUncheckedCreateWithoutInstitutionInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1696,6 +1723,7 @@ export type OrganizationCreateWithoutFacultyInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1743,6 +1771,7 @@ export type OrganizationUncheckedCreateWithoutFacultyInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1808,6 +1837,7 @@ export type OrganizationCreateWithoutDepartmentInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1855,6 +1885,7 @@ export type OrganizationUncheckedCreateWithoutDepartmentInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1920,6 +1951,7 @@ export type OrganizationCreateWithoutAcademicLevelInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -1967,6 +1999,7 @@ export type OrganizationUncheckedCreateWithoutAcademicLevelInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2032,6 +2065,7 @@ export type OrganizationCreateWithoutAcademicSessionInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2080,6 +2114,7 @@ export type OrganizationUncheckedCreateWithoutAcademicSessionInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2144,6 +2179,7 @@ export type OrganizationCreateWithoutStudentEnrollmentsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2192,6 +2228,7 @@ export type OrganizationUncheckedCreateWithoutStudentEnrollmentsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2246,6 +2283,7 @@ export type OrganizationUpdateWithoutStudentEnrollmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2294,6 +2332,7 @@ export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2332,6 +2371,7 @@ export type OrganizationCreateWithoutChildrenInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2380,6 +2420,7 @@ export type OrganizationUncheckedCreateWithoutChildrenInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2423,6 +2464,7 @@ export type OrganizationCreateWithoutParentInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2470,6 +2512,7 @@ export type OrganizationUncheckedCreateWithoutParentInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2530,6 +2573,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2578,6 +2622,7 @@ export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2632,6 +2677,7 @@ export type OrganizationCreateWithoutMembershipsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2680,6 +2726,7 @@ export type OrganizationUncheckedCreateWithoutMembershipsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2734,6 +2781,7 @@ export type OrganizationUpdateWithoutMembershipsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2782,6 +2830,7 @@ export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2820,6 +2869,7 @@ export type OrganizationCreateWithoutJoinRequestsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2868,6 +2918,7 @@ export type OrganizationUncheckedCreateWithoutJoinRequestsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -2922,6 +2973,7 @@ export type OrganizationUpdateWithoutJoinRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -2970,6 +3022,7 @@ export type OrganizationUncheckedUpdateWithoutJoinRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3008,6 +3061,7 @@ export type OrganizationCreateWithoutRolesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3056,6 +3110,7 @@ export type OrganizationUncheckedCreateWithoutRolesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3110,6 +3165,7 @@ export type OrganizationUpdateWithoutRolesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3158,6 +3214,7 @@ export type OrganizationUncheckedUpdateWithoutRolesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3196,6 +3253,7 @@ export type OrganizationCreateWithoutAdminsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3244,6 +3302,7 @@ export type OrganizationUncheckedCreateWithoutAdminsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3298,6 +3357,7 @@ export type OrganizationUpdateWithoutAdminsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3346,6 +3406,7 @@ export type OrganizationUncheckedUpdateWithoutAdminsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3384,6 +3445,7 @@ export type OrganizationCreateWithoutWalletInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3432,6 +3494,7 @@ export type OrganizationUncheckedCreateWithoutWalletInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3486,6 +3549,7 @@ export type OrganizationUpdateWithoutWalletInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3534,6 +3598,7 @@ export type OrganizationUncheckedUpdateWithoutWalletInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3572,6 +3637,7 @@ export type OrganizationCreateWithoutLedgerAccountsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3620,6 +3686,7 @@ export type OrganizationUncheckedCreateWithoutLedgerAccountsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3674,6 +3741,7 @@ export type OrganizationUpdateWithoutLedgerAccountsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3722,6 +3790,7 @@ export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3760,6 +3829,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3808,6 +3878,7 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3862,6 +3933,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3910,6 +3982,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -3948,6 +4021,7 @@ export type OrganizationCreateWithoutDuesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -3996,6 +4070,7 @@ export type OrganizationUncheckedCreateWithoutDuesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4050,6 +4125,7 @@ export type OrganizationUpdateWithoutDuesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4098,6 +4174,7 @@ export type OrganizationUncheckedUpdateWithoutDuesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4136,6 +4213,7 @@ export type OrganizationCreateWithoutSettlementsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4184,6 +4262,7 @@ export type OrganizationUncheckedCreateWithoutSettlementsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4238,6 +4317,7 @@ export type OrganizationUpdateWithoutSettlementsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4286,6 +4366,7 @@ export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4324,6 +4405,7 @@ export type OrganizationCreateWithoutReceiptsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4372,6 +4454,7 @@ export type OrganizationUncheckedCreateWithoutReceiptsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4426,6 +4509,7 @@ export type OrganizationUpdateWithoutReceiptsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4474,6 +4558,7 @@ export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4512,6 +4597,7 @@ export type OrganizationCreateWithoutAnnouncementsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4560,6 +4646,7 @@ export type OrganizationUncheckedCreateWithoutAnnouncementsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4614,6 +4701,7 @@ export type OrganizationUpdateWithoutAnnouncementsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4662,6 +4750,7 @@ export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4700,6 +4789,7 @@ export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4748,6 +4838,7 @@ export type OrganizationUncheckedCreateWithoutFeatureFlagTargetsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4802,6 +4893,7 @@ export type OrganizationUpdateWithoutFeatureFlagTargetsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4850,6 +4942,7 @@ export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -4888,6 +4981,7 @@ export type OrganizationCreateWithoutElectionsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4936,6 +5030,7 @@ export type OrganizationUncheckedCreateWithoutElectionsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -4990,6 +5085,7 @@ export type OrganizationUpdateWithoutElectionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5038,6 +5134,7 @@ export type OrganizationUncheckedUpdateWithoutElectionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5076,6 +5173,7 @@ export type OrganizationCreateWithoutExecutiveTermsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5124,6 +5222,7 @@ export type OrganizationUncheckedCreateWithoutExecutiveTermsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5178,6 +5277,7 @@ export type OrganizationUpdateWithoutExecutiveTermsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5226,6 +5326,7 @@ export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5264,6 +5365,7 @@ export type OrganizationCreateWithoutCommitteesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5312,6 +5414,7 @@ export type OrganizationUncheckedCreateWithoutCommitteesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5366,6 +5469,7 @@ export type OrganizationUpdateWithoutCommitteesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5414,6 +5518,7 @@ export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5452,6 +5557,7 @@ export type OrganizationCreateWithoutEventsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5500,6 +5606,7 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5554,6 +5661,7 @@ export type OrganizationUpdateWithoutEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5602,6 +5710,7 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5640,6 +5749,7 @@ export type OrganizationCreateWithoutPendingPaymentsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5688,6 +5798,7 @@ export type OrganizationUncheckedCreateWithoutPendingPaymentsInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5742,6 +5853,7 @@ export type OrganizationUpdateWithoutPendingPaymentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5790,6 +5902,7 @@ export type OrganizationUncheckedUpdateWithoutPendingPaymentsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5828,6 +5941,7 @@ export type OrganizationCreateWithoutFilesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5876,6 +5990,7 @@ export type OrganizationUncheckedCreateWithoutFilesInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -5930,6 +6045,7 @@ export type OrganizationUpdateWithoutFilesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -5978,6 +6094,7 @@ export type OrganizationUncheckedUpdateWithoutFilesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6021,6 +6138,7 @@ export type OrganizationCreateManyCreatorInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6039,6 +6157,7 @@ export type OrganizationUpdateWithoutCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6087,6 +6206,7 @@ export type OrganizationUncheckedUpdateWithoutCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6130,6 +6250,7 @@ export type OrganizationUncheckedUpdateManyWithoutCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6152,6 +6273,7 @@ export type OrganizationCreateManyInstitutionInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6171,6 +6293,7 @@ export type OrganizationUpdateWithoutInstitutionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6218,6 +6341,7 @@ export type OrganizationUncheckedUpdateWithoutInstitutionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6261,6 +6385,7 @@ export type OrganizationUncheckedUpdateManyWithoutInstitutionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6284,6 +6409,7 @@ export type OrganizationCreateManyFacultyInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6303,6 +6429,7 @@ export type OrganizationUpdateWithoutFacultyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6350,6 +6477,7 @@ export type OrganizationUncheckedUpdateWithoutFacultyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6393,6 +6521,7 @@ export type OrganizationUncheckedUpdateManyWithoutFacultyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6416,6 +6545,7 @@ export type OrganizationCreateManyDepartmentInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6435,6 +6565,7 @@ export type OrganizationUpdateWithoutDepartmentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6482,6 +6613,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6525,6 +6657,7 @@ export type OrganizationUncheckedUpdateManyWithoutDepartmentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6548,6 +6681,7 @@ export type OrganizationCreateManyAcademicLevelInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6567,6 +6701,7 @@ export type OrganizationUpdateWithoutAcademicLevelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6614,6 +6749,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6657,6 +6793,7 @@ export type OrganizationUncheckedUpdateManyWithoutAcademicLevelInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6681,6 +6818,7 @@ export type OrganizationCreateManyAcademicSessionInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6699,6 +6837,7 @@ export type OrganizationUpdateWithoutAcademicSessionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6747,6 +6886,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicSessionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6790,6 +6930,7 @@ export type OrganizationUncheckedUpdateManyWithoutAcademicSessionInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6812,6 +6953,7 @@ export type OrganizationCreateManyParentInput = {
   name: string
   slug: string
   description?: string | null
+  logo?: string | null
   type: $Enums.OrganizationType
   scope: $Enums.OrganizationScope
   status?: $Enums.OrganizationStatus
@@ -6831,6 +6973,7 @@ export type OrganizationUpdateWithoutParentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6878,6 +7021,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -6921,6 +7065,7 @@ export type OrganizationUncheckedUpdateManyWithoutParentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
   scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
   status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
@@ -7138,6 +7283,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   name?: boolean
   slug?: boolean
   description?: boolean
+  logo?: boolean
   type?: boolean
   scope?: boolean
   status?: boolean
@@ -7190,6 +7336,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   name?: boolean
   slug?: boolean
   description?: boolean
+  logo?: boolean
   type?: boolean
   scope?: boolean
   status?: boolean
@@ -7221,6 +7368,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   name?: boolean
   slug?: boolean
   description?: boolean
+  logo?: boolean
   type?: boolean
   scope?: boolean
   status?: boolean
@@ -7252,6 +7400,7 @@ export type OrganizationSelectScalar = {
   name?: boolean
   slug?: boolean
   description?: boolean
+  logo?: boolean
   type?: boolean
   scope?: boolean
   status?: boolean
@@ -7266,7 +7415,7 @@ export type OrganizationSelectScalar = {
   academicSessionId?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "institutionId" | "facultyId" | "departmentId" | "academicLevelId" | "parentOrganizationId" | "name" | "slug" | "description" | "type" | "scope" | "status" | "createdBy" | "updatedBy" | "activatedAt" | "archivedAt" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt" | "academicSessionId", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "institutionId" | "facultyId" | "departmentId" | "academicLevelId" | "parentOrganizationId" | "name" | "slug" | "description" | "logo" | "type" | "scope" | "status" | "createdBy" | "updatedBy" | "activatedAt" | "archivedAt" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt" | "academicSessionId", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admins?: boolean | Prisma.Organization$adminsArgs<ExtArgs>
   announcements?: boolean | Prisma.Organization$announcementsArgs<ExtArgs>
@@ -7357,6 +7506,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     name: string
     slug: string
     description: string | null
+    logo: string | null
     type: $Enums.OrganizationType
     scope: $Enums.OrganizationScope
     status: $Enums.OrganizationStatus
@@ -7828,6 +7978,7 @@ export interface OrganizationFieldRefs {
   readonly name: Prisma.FieldRef<"Organization", 'String'>
   readonly slug: Prisma.FieldRef<"Organization", 'String'>
   readonly description: Prisma.FieldRef<"Organization", 'String'>
+  readonly logo: Prisma.FieldRef<"Organization", 'String'>
   readonly type: Prisma.FieldRef<"Organization", 'OrganizationType'>
   readonly scope: Prisma.FieldRef<"Organization", 'OrganizationScope'>
   readonly status: Prisma.FieldRef<"Organization", 'OrganizationStatus'>

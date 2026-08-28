@@ -48,6 +48,9 @@ export class OrganizationResponseDto {
   @ApiProperty({ required: false })
   description?: string;
 
+  @ApiProperty({ required: false })
+  logo?: string;
+
   @ApiProperty({
     enum: [
       'INSTITUTION',

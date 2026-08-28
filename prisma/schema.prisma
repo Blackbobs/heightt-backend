@@ -400,6 +400,7 @@ model Organization {
   name                 String
   slug                 String
   description          String?
+  logo                 String?
   type                 OrganizationType
   scope                OrganizationScope
   status               OrganizationStatus        @default(DRAFT)

@@ -503,7 +503,7 @@ export class ReceiptService {
 
   /**
    * Resolve the most specific available logo for an organization.
-   * Chain: department logo -> faculty logo -> institution logo.
+   * Chain: organization logo -> department logo -> faculty logo -> institution logo.
    */
   private async getReceiptBranding(organizationId?: string | null): Promise<{
     logoUrl?: string;
@@ -522,6 +522,7 @@ export class ReceiptService {
 
     if (!org) return {};
     const logoUrl =
+      org.logo ||
       org.department?.logo ||
       org.faculty?.logo ||
       org.institution?.logo ||
@@ -577,7 +578,7 @@ export class ReceiptService {
 
   /**
    * Render a branded PDF receipt. Branding comes from the organization's
-   * hierarchy logos: department -> faculty -> institution.
+   * own logo first, then its hierarchy: department -> faculty -> institution.
    */
   async generateReceiptPdf(
     receiptId: string,
@@ -607,7 +608,10 @@ export class ReceiptService {
     const subtitle =
       org?.department?.name || org?.faculty?.name || org?.institution?.name;
     const logoUrl =
-      org?.department?.logo || org?.faculty?.logo || org?.institution?.logo;
+      org?.logo ||
+      org?.department?.logo ||
+      org?.faculty?.logo ||
+      org?.institution?.logo;
 
     const doc = new PDFDocument({ size: 'A4', margin: 50 });
     const chunks: Buffer[] = [];
@@ -677,7 +681,11 @@ export class ReceiptService {
 
     // Payer
     const py = metaTop + 118;
-    doc.font('Helvetica-Bold').fontSize(11).fillColor('#111827').text('Billed To', left, py);
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(11)
+      .fillColor('#111827')
+      .text('Billed To', left, py);
     doc
       .font('Helvetica')
       .fontSize(10)
@@ -886,8 +894,7 @@ export class ReceiptService {
           public_id: filename.replace(/\.pdf$/i, ''),
           overwrite: true,
         },
-        (err: any, res: any) =>
-          err ? reject(err) : resolve(res),
+        (err: any, res: any) => (err ? reject(err) : resolve(res)),
       );
       stream.end(buffer);
     });
@@ -917,4 +924,3 @@ export class ReceiptService {
       </div>`;
   }
 }
-

@@ -1060,6 +1060,7 @@ export class InstitutionsService {
           const instOrg = await tx.organization.create({
             data: {
               name: `${institution.name}`,
+              logo: dto.logo || null,
               slug: instOrgSlug,
               description: `Institution organization for ${institution.name}`,
               type: 'INSTITUTION',
@@ -1428,6 +1429,7 @@ export class InstitutionsService {
         const facultyOrg = await this.prisma.organization.create({
           data: {
             name: `${faculty.name}`,
+            logo: dto.logo || null,
             slug: facultyOrgSlug,
             description: `Faculty organization for ${faculty.name}`,
             type: 'FACULTY',
@@ -1797,6 +1799,7 @@ export class InstitutionsService {
           const org = await this.prisma.organization.create({
             data: {
               name: `${department.name} - ${level.name} (${session.name})`,
+              logo: dto.logo || null,
               slug: orgSlug,
               description: `${level.name} organization for ${department.name} (${session.name})`,
               type: 'LEVEL',
@@ -1842,6 +1845,7 @@ export class InstitutionsService {
         const deptOrg = await this.prisma.organization.create({
           data: {
             name: `${department.name} Department (${session.name})`,
+            logo: dto.logo || null,
             slug: deptOrgSlug,
             description: `Department organization for ${department.name} (${session.name})`,
             type: 'DEPARTMENT',

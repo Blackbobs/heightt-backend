@@ -2352,10 +2352,36 @@ export class FinanceService {
       },
     });
 
+    const platformFeeTotal = await this.prisma.journalLine.aggregate({
+      where: {
+        type: 'CREDIT',
+        description: {
+          in: ['Platform service fee', 'Heightt platform service fee'],
+        },
+        journalEntry: {
+          payment: {
+            status: 'COMPLETED',
+            organization: where,
+          },
+        },
+      },
+      _sum: { amount: true },
+    });
+
+    const platformEarnings = platformFeeTotal._sum.amount ?? 0;
+
     return {
       totalBalance,
       totalHeld,
       totalWallets: wallets.length,
+      platformEarnings: {
+        amount: platformEarnings,
+        amountFormatted: `₦${(platformEarnings / this.KOBO_PER_NAIRA).toFixed(
+          2,
+        )}`,
+        currency: 'NGN',
+        currencyUnit: 'KOBO',
+      },
       dueStats: {
         total: totalDues,
         paid: totalPaidDues,
@@ -2851,7 +2877,7 @@ export class FinanceService {
     );
 
     await this.triggerWithdrawalTransfer(withdrawalId);
-    await this.notifyUser(approvedWithdrawal.userId, 'WITHDRAWAL_APPROVED', {
+    await this.notifyUser(approvedWithdrawal.userId, 'WITHDRAWAL_PROCESSING', {
       withdrawalId,
       amount: approvedWithdrawal.amount,
       fee: approvedWithdrawal.fee || 0,
@@ -3011,7 +3037,7 @@ export class FinanceService {
     );
 
     await this.triggerWithdrawalTransfer(withdrawalId);
-    await this.notifyUser(approvedWithdrawal.userId, 'WITHDRAWAL_APPROVED', {
+    await this.notifyUser(approvedWithdrawal.userId, 'WITHDRAWAL_PROCESSING', {
       withdrawalId,
       amount: approvedWithdrawal.amount,
       fee: approvedWithdrawal.fee || 0,
@@ -3053,6 +3079,14 @@ export class FinanceService {
         },
         `withdrawal-${withdrawal.id}`,
       );
+      const payoutStatus = String(payout.status || 'PENDING').toUpperCase();
+      if (['FAILED', 'REJECTED', 'CANCELLED'].includes(payoutStatus)) {
+        throw new BadRequestException(
+          payout.reason ||
+            payout.failure_reason ||
+            `Payout provider returned ${payoutStatus}`,
+        );
+      }
       const providerFee = payout.fee
         ? this.bachsClient.fromBachsAmount(String(payout.fee))
         : withdrawal.fee;
@@ -3064,7 +3098,7 @@ export class FinanceService {
           data: {
             fee: providerFee,
             providerPayoutId: payout.id,
-            webhookStatus: String(payout.status || 'PENDING').toUpperCase(),
+            webhookStatus: payoutStatus,
             webhookAttempts: { increment: 1 },
             webhookResponse: payout,
           },
@@ -3580,9 +3614,9 @@ export class FinanceService {
     let title = '';
     let body = '';
 
-    if (event === 'WITHDRAWAL_APPROVED') {
-      title = 'Withdrawal Approved ✅';
-      body = `Your withdrawal of ${data.amountFormatted} has been approved and is being processed.`;
+    if (event === 'WITHDRAWAL_PROCESSING') {
+      title = 'Withdrawal Processing ⏳';
+      body = `Your withdrawal of ${data.amountFormatted} is being processed. You will be notified when the transfer is completed.`;
     } else if (event === 'WITHDRAWAL_REJECTED') {
       title = 'Withdrawal Rejected ❌';
       body = `Your withdrawal of ${data.amountFormatted} was rejected. Reason: ${data.reason || 'Not specified'}`;
@@ -3599,11 +3633,20 @@ export class FinanceService {
       },
     });
 
-    await this.emailService.sendEmail(
-      user.email,
-      title,
-      `<p>${body}</p><p>Reference: ${data.withdrawalId}</p>`,
-    );
+    // Email delivery is intentionally outside the approval request's critical
+    // path. The notification is persisted first, and a slow email provider must
+    // not turn a successful payout submission into an HTTP timeout.
+    void this.emailService
+      .sendEmail(
+        user.email,
+        title,
+        `<p>${body}</p><p>Reference: ${data.withdrawalId}</p>`,
+      )
+      .catch((error: any) => {
+        this.logger.error(
+          `Failed to send ${event} email for withdrawal ${data.withdrawalId}: ${error.message}`,
+        );
+      });
   }
 
   // ============================================

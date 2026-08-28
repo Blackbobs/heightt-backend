@@ -532,6 +532,32 @@ export class NotificationGateway
     });
   }
 
+  @OnEvent(SystemEvents.WITHDRAWAL_COMPLETED)
+  async handleWithdrawalCompleted(data: any) {
+    this.logger.log(`Withdrawal completed: ${data.withdrawalId}`);
+
+    await this.sendToUser(data.userId, 'withdrawal-completed', {
+      withdrawalId: data.withdrawalId,
+      amount: data.amount,
+      reference: data.reference,
+      completedAt: data.completedAt,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  @OnEvent(SystemEvents.WITHDRAWAL_FAILED)
+  async handleWithdrawalFailed(data: any) {
+    this.logger.log(`Withdrawal failed: ${data.withdrawalId}`);
+
+    await this.sendToUser(data.userId, 'withdrawal-failed', {
+      withdrawalId: data.withdrawalId,
+      amount: data.amount,
+      reference: data.reference,
+      reason: data.reason,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
   @OnEvent(SystemEvents.DUES_DUE_SOON)
   async handleDuesDueSoon(data: any) {
     this.logger.log(`Dues due soon: ${data.studentId}`);

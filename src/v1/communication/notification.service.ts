@@ -520,6 +520,34 @@ export class NotificationService {
     });
   }
 
+  @OnEvent(SystemEvents.WITHDRAWAL_COMPLETED)
+  async handleWithdrawalCompleted(data: any) {
+    await this.createNotification(data.userId, {
+      title: 'Withdrawal Completed ✅',
+      body: `Your withdrawal of ₦${(Number(data.amount) / 100).toFixed(2)} has been completed successfully.`,
+      type: 'FINANCIAL',
+      priority: 'NORMAL',
+      data: { withdrawalId: data.withdrawalId, reference: data.reference },
+      sendEmail: true,
+    });
+  }
+
+  @OnEvent(SystemEvents.WITHDRAWAL_FAILED)
+  async handleWithdrawalFailed(data: any) {
+    await this.createNotification(data.userId, {
+      title: 'Withdrawal Failed ❌',
+      body: `Your withdrawal of ₦${(Number(data.amount) / 100).toFixed(2)} failed. Reason: ${data.reason || 'Not specified'}. The funds have been returned to your wallet.`,
+      type: 'FINANCIAL',
+      priority: 'HIGH',
+      data: {
+        withdrawalId: data.withdrawalId,
+        reference: data.reference,
+        reason: data.reason,
+      },
+      sendEmail: true,
+    });
+  }
+
   @OnEvent(SystemEvents.DUES_DUE_SOON)
   async handleDuesDueSoon(data: any) {
     const { studentId, due, organization } = data;

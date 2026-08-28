@@ -792,7 +792,7 @@ export class FinanceController {
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      return `reports:overview:${request.query.institutionId || 'all'}`;
+      return `reports:overview:v2:${request.query.institutionId || 'all'}`;
     },
     ttl: 900,
     tags: ['finance', 'reports'],
@@ -874,7 +874,7 @@ export class FinanceController {
   @ApiOperation({
     summary: 'Download receipt as branded PDF',
     description:
-      'Renders the receipt with the organization hierarchy logo (department -> faculty -> institution) and streams it as a PDF file.',
+      'Renders the receipt with the organization logo, falling back through its hierarchy (department -> faculty -> institution), and streams it as a PDF file.',
   })
   @ApiParam({ name: 'id', description: 'Receipt ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Receipt PDF stream' })

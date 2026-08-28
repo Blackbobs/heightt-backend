@@ -6,6 +6,7 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateOrganizationDto {
@@ -38,6 +39,16 @@ export class CreateOrganizationDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({
+    example: 'https://res.cloudinary.com/demo/image/upload/logo.png',
+    description:
+      'Organization logo URL (upload via the files module, then pass the secure URL)',
+    required: false,
+  })
+  @IsOptional()
+  @IsUrl({ require_protocol: true })
+  logo?: string;
 
   @ApiProperty({
     enum: [

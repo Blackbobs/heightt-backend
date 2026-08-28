@@ -366,6 +366,9 @@ export class BachsClient {
     try {
       const response = await this.client.post('/payouts', data, {
         headers: { 'Idempotency-Key': idempotencyKey },
+        // Keep this below the API's 30-second request timeout so the finance
+        // service has time to compensate and return a truthful error response.
+        timeout: 20000,
       });
       return response.data;
     } catch (error) {

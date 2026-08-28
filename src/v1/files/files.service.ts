@@ -135,6 +135,16 @@ export class FilesService {
     this.logger.log(`Saving file record: ${data.filename}`);
 
     // Validate associations
+    if (data.organizationId) {
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: data.organizationId },
+        select: { id: true },
+      });
+      if (!organization) {
+        throw new NotFoundException('Organization not found');
+      }
+    }
+
     if (data.studentId) {
       const student = await this.prisma.studentProfile.findUnique({
         where: { id: data.studentId },

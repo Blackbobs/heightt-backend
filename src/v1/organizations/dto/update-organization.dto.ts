@@ -6,6 +6,7 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsUrl,
 } from 'class-validator';
 
 export class UpdateOrganizationDto {
@@ -42,6 +43,15 @@ export class UpdateOrganizationDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({
+    example: 'https://res.cloudinary.com/demo/image/upload/logo.png',
+    description: 'Organization logo URL',
+    required: false,
+  })
+  @IsOptional()
+  @IsUrl({ require_protocol: true })
+  logo?: string;
 
   @ApiProperty({
     enum: [

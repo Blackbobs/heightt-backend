@@ -60,7 +60,7 @@ export class UploadFileDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsUUID()
+  @IsString()
   organizationId?: string;
 
   @ApiPropertyOptional()
