@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsString,
   IsNumber,
@@ -57,9 +58,14 @@ export class CreatePaymentDto {
 
   @ApiPropertyOptional({
     description:
-      'Due assignment ID (UUID or Cuid) - Use this if the due is already assigned to the student',
+      'Due assignment ID (UUID or Cuid) - Use this only if the due is already assigned to the student. Virtual due_* IDs are ignored when dueId is provided.',
     example: 'cmt6oekry0000ugtv7e7fjxi6',
   })
+  @Transform(({ value, obj }) =>
+    typeof value === 'string' && value.startsWith('due_') && obj.dueId
+      ? undefined
+      : value,
+  )
   @IsOptional()
   @IsCuidOrUUID()
   dueAssignmentId?: string;

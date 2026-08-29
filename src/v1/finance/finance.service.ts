@@ -788,8 +788,6 @@ export class FinanceService {
         name: dto.name,
         description: dto.description,
         amount: dto.amount,
-        dueDate: new Date(dto.dueDate),
-        lateFee: dto.lateFee || 0,
         isRequired: dto.isRequired !== undefined ? dto.isRequired : true,
         status: dto.status ?? 'ACTIVE',
       },
@@ -895,7 +893,6 @@ export class FinanceService {
           organizationId: dueWithOrg.organizationId,
           studentId: assignment.studentId,
           amount: due.amount,
-          dueDate: due.dueDate,
         });
       }
     }
@@ -923,7 +920,7 @@ export class FinanceService {
           organization: true,
           session: true,
         },
-        orderBy: { dueDate: 'asc' },
+        orderBy: { createdAt: 'desc' },
       }),
       this.prisma.due.count({ where }),
     ]);
@@ -996,7 +993,7 @@ export class FinanceService {
         session: true,
       },
       orderBy: {
-        dueDate: 'asc',
+        createdAt: 'desc',
       },
     });
 
@@ -1080,7 +1077,7 @@ export class FinanceService {
           },
         },
       },
-      orderBy: { due: { dueDate: 'asc' } },
+      orderBy: { createdAt: 'desc' },
     });
 
     const assignmentsWithPayments = await Promise.all(
@@ -1271,7 +1268,6 @@ export class FinanceService {
       organizationId: due.organizationId,
       studentId: studentProfile.id,
       amount: due.amount,
-      dueDate: due.dueDate,
     });
 
     return newAssignment.id;
@@ -1432,7 +1428,6 @@ export class FinanceService {
             organizationId: due.organizationId,
             studentId: studentProfile.id,
             amount: due.amount,
-            dueDate: due.dueDate,
           });
         }
       }

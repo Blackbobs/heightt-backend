@@ -723,8 +723,6 @@ export const DueScalarFieldEnum = {
   name: 'name',
   description: 'description',
   amount: 'amount',
-  dueDate: 'dueDate',
-  lateFee: 'lateFee',
   isRequired: 'isRequired',
   status: 'status',
   createdAt: 'createdAt',

@@ -979,7 +979,6 @@ export class StudentsService {
         studentId,
         isPaid: false,
         due: {
-          dueDate: { gt: new Date() },
           status: 'ACTIVE',
         },
       },
@@ -991,7 +990,7 @@ export class StudentsService {
         },
       },
       take: 5,
-      orderBy: { due: { dueDate: 'asc' } },
+      orderBy: { createdAt: 'desc' },
     });
 
     const recentAnnouncements = await this.prisma.announcement.findMany({
@@ -1072,9 +1071,7 @@ export class StudentsService {
           id: d.id,
           dueId: d.dueId,
           amount: Number(d.amount),
-          dueDate: d.due.dueDate,
           organization: d.due.organization?.name || 'Unknown',
-          isLate: d.due.dueDate < new Date(),
         })),
         totalUpcomingDues,
       },

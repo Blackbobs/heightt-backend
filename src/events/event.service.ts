@@ -165,7 +165,6 @@ export class EventService {
     organizationId: string;
     studentId: string;
     amount: number;
-    dueDate: Date;
   }) {
     this.emit(SystemEvents.DUES_ASSIGNED, data);
   }

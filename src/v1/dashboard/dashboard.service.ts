@@ -65,7 +65,6 @@ export class DashboardService {
         studentId: student.id,
         isPaid: false,
         due: {
-          dueDate: { gt: new Date() },
           status: 'ACTIVE',
           organizationId: { in: organizationIds },
         },
@@ -78,7 +77,7 @@ export class DashboardService {
         },
       },
       take: 5,
-      orderBy: { due: { dueDate: 'asc' } },
+      orderBy: { createdAt: 'desc' },
     });
 
     // Get recent announcements
@@ -155,9 +154,7 @@ export class DashboardService {
           id: d.id,
           amount: Number(d.amount),
           formattedAmount: `₦${(Number(d.amount) / 100).toFixed(2)}`,
-          dueDate: d.due.dueDate,
           organization: d.due.organization?.name || 'Unknown',
-          isLate: d.due.dueDate < new Date(),
         })),
         totalUpcomingDues: upcomingDues.reduce(
           (sum, d) => sum + Number(d.amount),

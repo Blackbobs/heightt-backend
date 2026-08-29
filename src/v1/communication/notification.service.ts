@@ -548,48 +548,6 @@ export class NotificationService {
     });
   }
 
-  @OnEvent(SystemEvents.DUES_DUE_SOON)
-  async handleDuesDueSoon(data: any) {
-    const { studentId, due, organization } = data;
-
-    const student = await this.prisma.studentProfile.findUnique({
-      where: { id: studentId },
-      include: { user: true },
-    });
-
-    if (student) {
-      await this.createNotification(student.userId, {
-        title: 'Dues Due Soon ⏰',
-        body: `Your ${due.name} of ₦${(Number(due.amount) / 100).toFixed(2)} is due on ${new Date(due.dueDate).toLocaleDateString()}.`,
-        type: 'FINANCIAL',
-        priority: 'NORMAL',
-        data: { dueId: due.id, organizationId: organization.id },
-        sendEmail: true,
-      });
-    }
-  }
-
-  @OnEvent(SystemEvents.DUES_OVERDUE)
-  async handleDuesOverdue(data: any) {
-    const { studentId, due, organization } = data;
-
-    const student = await this.prisma.studentProfile.findUnique({
-      where: { id: studentId },
-      include: { user: true },
-    });
-
-    if (student) {
-      await this.createNotification(student.userId, {
-        title: 'Dues Overdue ⚠️',
-        body: `Your ${due.name} of ₦${(Number(due.amount) / 100).toFixed(2)} is overdue. Please pay as soon as possible.`,
-        type: 'FINANCIAL',
-        priority: 'HIGH',
-        data: { dueId: due.id, organizationId: organization.id },
-        sendEmail: true,
-      });
-    }
-  }
-
   @OnEvent(SystemEvents.ANNOUNCEMENT_PUBLISHED)
   async handleAnnouncementPublished(data: any) {
     const { announcement, organization } = data;

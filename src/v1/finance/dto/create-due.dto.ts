@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsNumber,
-  IsDateString,
   IsOptional,
   IsBoolean,
   IsNotEmpty,
@@ -52,24 +51,6 @@ export class CreateDueDto {
   @IsNumber()
   @Min(1, { message: 'Amount must be at least 1 Kobo (₦0.01)' })
   amount: number;
-
-  @ApiProperty({
-    example: '2024-01-31T23:59:59.000Z',
-    description: 'Due date',
-  })
-  @IsDateString()
-  dueDate: string;
-
-  @ApiProperty({
-    example: 50000,
-    description: 'Late fee (in Kobo - 1 NGN = 100 Kobo). E.g., 50000 = ₦500',
-    required: false,
-    default: 0,
-  })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  lateFee?: number;
 
   @ApiProperty({
     example: true,

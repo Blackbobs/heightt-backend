@@ -413,7 +413,7 @@ export class AnalyticsService {
       where.organization = { institutionId: dto.institutionId };
     }
 
-    const [totalDueAmount, collectedAmount, dueCount, paidCount, overdueCount] =
+    const [totalDueAmount, collectedAmount, dueCount, paidCount] =
       await Promise.all([
         this.prisma.due.aggregate({
           where: { ...where, status: 'ACTIVE' },
@@ -439,16 +439,6 @@ export class AnalyticsService {
             isPaid: true,
           },
         }),
-        this.prisma.dueAssignment.count({
-          where: {
-            due: {
-              ...where,
-              status: 'ACTIVE',
-              dueDate: { lt: new Date() },
-            },
-            isPaid: false,
-          },
-        }),
       ]);
 
     const totalDueAmountValue = totalDueAmount._sum.amount || 0;
@@ -463,7 +453,6 @@ export class AnalyticsService {
           : 0,
       dueCount,
       paidCount,
-      overdueCount,
     };
 
     await this.cacheService.setWithTag(

@@ -832,8 +832,6 @@ model Due {
   name           String
   description    String?
   amount         Int
-  dueDate        DateTime
-  lateFee        Int              @default(0)
   isRequired     Boolean          @default(true)
   status         DueStatus        @default(ACTIVE)
   createdAt      DateTime         @default(now())

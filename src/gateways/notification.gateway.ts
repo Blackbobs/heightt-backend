@@ -558,45 +558,6 @@ export class NotificationGateway
     });
   }
 
-  @OnEvent(SystemEvents.DUES_DUE_SOON)
-  async handleDuesDueSoon(data: any) {
-    this.logger.log(`Dues due soon: ${data.studentId}`);
-
-    await this.sendToUser(data.userId, 'dues-due-soon', {
-      dueId: data.dueId,
-      amount: data.amount,
-      dueDate: data.dueDate,
-      organizationId: data.organizationId,
-      daysUntilDue: data.daysUntilDue,
-      timestamp: new Date().toISOString(),
-    });
-  }
-
-  @OnEvent(SystemEvents.DUES_OVERDUE)
-  async handleDuesOverdue(data: any) {
-    this.logger.log(`Dues overdue: ${data.studentId}`);
-
-    await this.sendToUser(data.userId, 'dues-overdue', {
-      dueId: data.dueId,
-      amount: data.amount,
-      dueDate: data.dueDate,
-      organizationId: data.organizationId,
-      daysOverdue: data.daysOverdue,
-      timestamp: new Date().toISOString(),
-    });
-
-    // Notify organization admins
-    if (data.organizationId) {
-      await this.sendToOrganization(data.organizationId, 'dues-overdue', {
-        studentId: data.studentId,
-        dueId: data.dueId,
-        amount: data.amount,
-        daysOverdue: data.daysOverdue,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  }
-
   @OnEvent(SystemEvents.SAVINGS_GOAL_COMPLETED)
   async handleSavingsGoalCompleted(data: any) {
     this.logger.log(`Savings goal completed: ${data.goalId}`);
