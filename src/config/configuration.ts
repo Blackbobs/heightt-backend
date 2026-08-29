@@ -5,7 +5,7 @@ export default () => ({
 
   fees: {
     platform: {
-      percentage: Number(process.env.PLATFORM_FEE_PERCENTAGE || 2),
+      amountKobo: Number(process.env.PLATFORM_FEE_AMOUNT_KOBO || 10000),
       enabled: true,
     },
     paymentGateway: {

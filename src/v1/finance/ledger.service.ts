@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class LedgerService {
   private readonly logger = new Logger(LedgerService.name);
   private readonly VAT_RATE: number;
-  private readonly PLATFORM_FEE_PERCENTAGE: number;
+  private readonly PLATFORM_FEE_AMOUNT: number;
   private readonly PAYMENT_GATEWAY_FEE_PERCENTAGE: number;
   private readonly PAYMENT_GATEWAY_FIXED_FEE: number = 0; // Bachs has no fixed fee
 
@@ -38,8 +38,10 @@ export class LedgerService {
     private readonly configService: ConfigService,
   ) {
     this.VAT_RATE = this.configService.get('fees.vat.rate', 7.5) / 100;
-    this.PLATFORM_FEE_PERCENTAGE =
-      this.configService.get('fees.platform.percentage', 2) / 100;
+    this.PLATFORM_FEE_AMOUNT = this.configService.get(
+      'fees.platform.amountKobo',
+      10000,
+    );
     this.PAYMENT_GATEWAY_FEE_PERCENTAGE =
       this.configService.get('fees.paymentGateway.percentage', 1.5) / 100;
   }
@@ -402,8 +404,8 @@ export class LedgerService {
     // Organization gets the full amount
     const netToOrganization = amount;
 
-    // Platform fee: 2% of amount
-    const platformFee = Math.round(amount * this.PLATFORM_FEE_PERCENTAGE);
+    // Platform fee: fixed ₦100
+    const platformFee = this.PLATFORM_FEE_AMOUNT;
 
     // Payment gateway (Bachs) fee: 1.5% of amount (no fixed fee)
     const gatewayFee = Math.round(amount * this.PAYMENT_GATEWAY_FEE_PERCENTAGE);

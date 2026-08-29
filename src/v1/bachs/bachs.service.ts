@@ -107,16 +107,16 @@ export class BachsService {
       );
     }
 
-    const platformFeePercentage = this.configService.get<number>(
-      'fees.platform.percentage',
-      2,
+    const platformFeeAmount = this.configService.get<number>(
+      'fees.platform.amountKobo',
+      10000,
     );
     const platformFeeEnabled = this.configService.get<boolean>(
       'fees.platform.enabled',
       true,
     );
     const platformFee = platformFeeEnabled
-      ? Math.round(paymentData.amount * (platformFeePercentage / 100))
+      ? platformFeeAmount
       : 0;
     const settlementAmount = paymentData.amount + platformFee;
 
@@ -207,7 +207,7 @@ export class BachsService {
               ...(paymentData.metadata || {}),
               baseAmount: paymentData.amount,
               platformFee,
-              platformFeePercentage,
+              platformFeeType: 'FIXED',
               expectedSettlementAmount: settlementAmount,
             },
             status: 'PENDING',
@@ -301,7 +301,7 @@ export class BachsService {
           ...((pendingPayment.metadata as any) || {}),
           baseAmount: paymentData.amount,
           platformFee,
-          platformFeePercentage,
+          platformFeeType: 'FIXED',
           expectedSettlementAmount: settlementAmount,
           checkoutSession,
         },

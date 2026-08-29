@@ -745,7 +745,7 @@ export class FinanceController {
           kobo: charges.platformFee,
           naira: (charges.platformFee / 100).toFixed(2),
           formatted: `₦${(charges.platformFee / 100).toFixed(2)}`,
-          percentage: '2%',
+          percentage: 'Fixed ₦100',
           recipient: 'Platform',
         },
         gatewayFee: {
