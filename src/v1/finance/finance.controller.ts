@@ -343,6 +343,25 @@ export class FinanceController {
     return this.financeService.assignDueToStudents(req.user.id, id, dto);
   }
 
+  @Delete('dues/:id')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:due:delete')
+  @InvalidateCache(['finance', 'dues', 'student'])
+  @ApiOperation({ summary: 'Delete due (Admin only)' })
+  @ApiParam({ name: 'id', description: 'Due ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Due deleted',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Due has payment activity and cannot be deleted',
+  })
+  async deleteDue(@Param('id') id: string, @Request() req: any) {
+    this.logger.log(`Delete due endpoint called: ${id}`);
+    return this.financeService.deleteDue(req.user.id, id);
+  }
+
   @Get('dues')
   @Cache({
     key: (context) => {

@@ -904,6 +904,54 @@ export class FinanceService {
     };
   }
 
+  async deleteDue(userId: string, dueId: string) {
+    const due = await this.prisma.due.findUnique({
+      where: { id: dueId },
+      select: {
+        id: true,
+        name: true,
+        organizationId: true,
+      },
+    });
+
+    if (!due) {
+      throw new NotFoundException('Due not found');
+    }
+
+    const [paymentCount, pendingPaymentCount] = await Promise.all([
+      this.prisma.duePayment.count({
+        where: { assignment: { dueId } },
+      }),
+      this.prisma.pendingPayment.count({
+        where: { dueAssignment: { dueId } },
+      }),
+    ]);
+
+    if (paymentCount > 0 || pendingPaymentCount > 0) {
+      throw new BadRequestException(
+        'This due has payment activity and cannot be deleted',
+      );
+    }
+
+    await this.prisma.$transaction([
+      this.prisma.due.delete({ where: { id: dueId } }),
+      this.prisma.activityLog.create({
+        data: {
+          userId,
+          activity: 'DUE_DELETED',
+          details: JSON.stringify({
+            dueId: due.id,
+            name: due.name,
+            organizationId: due.organizationId,
+          }),
+        },
+      }),
+    ]);
+
+    this.logger.log(`Due deleted: ${dueId}`);
+    return { message: 'Due deleted successfully' };
+  }
+
   async getDues(organizationId?: string, page: number = 1, limit: number = 10) {
     const where: any = {};
     if (organizationId) {
