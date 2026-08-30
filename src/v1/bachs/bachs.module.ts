@@ -5,6 +5,7 @@ import { BachsClient } from './bachs.client';
 import { BachsWebhookController } from './bachs-webhook.controller';
 import { BachsService } from './bachs.service';
 import { PrismaModule } from '../../prisma/prisma.module';
+import { CacheService } from '../../redis/cache.service';
 // import { FinanceModule } from '../finance/finance.module';
 
 @Module({
@@ -18,7 +19,7 @@ import { PrismaModule } from '../../prisma/prisma.module';
     // FinanceModule,
   ],
   controllers: [BachsWebhookController],
-  providers: [BachsClient, BachsService],
+  providers: [BachsClient, BachsService, CacheService],
   exports: [BachsClient, BachsService],
 })
 export class BachsModule {}

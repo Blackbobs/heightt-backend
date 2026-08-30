@@ -1,4 +1,5 @@
 // src/v1/onboarding/onboarding.controller.ts
+
 import {
   Controller,
   Post,
@@ -22,11 +23,8 @@ import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
-// Import cache decorators
 import {
   Cache,
-  Cacheable,
-  CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
 
@@ -53,6 +51,36 @@ export class OnboardingController {
     return this.onboardingService.updatePersonalInfo(req.user.id, dto);
   }
 
+  @Post('complete')
+  @InvalidateCache(['onboarding', 'user'])
+  @ApiOperation({
+    summary: 'Complete onboarding',
+    description: 'Marks the onboarding process as completed.',
+  })
+  @ApiOkResponse({ description: 'Onboarding completed successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid input data' })
+  async completeOnboarding(
+    @Request() req: any,
+    @Body()
+    body: {
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+      studentId?: string;
+      gender?: string;
+      dateOfBirth?: string;
+      country?: string;
+      state?: string;
+      bio?: string;
+      institution?: string;
+      faculty?: string;
+      department?: string;
+      academicLevelId?: string;
+    },
+  ) {
+    return this.onboardingService.completeOnboarding(req.user.id, body);
+  }
+
   @Patch('institution')
   @InvalidateCache(['onboarding', 'user'])
   @ApiOperation({
@@ -72,13 +100,43 @@ export class OnboardingController {
     return this.onboardingService.updateInstitutionInfo(req.user.id, dto);
   }
 
+  @Get('check')
+  @ApiOperation({
+    summary: 'Check if user needs onboarding',
+    description: 'Returns whether the user has completed onboarding.',
+  })
+  @ApiOkResponse({
+    description: 'Onboarding status check result',
+    schema: {
+      type: 'object',
+      properties: {
+        needsOnboarding: { type: 'boolean' },
+        onboardingCompleted: { type: 'boolean' },
+        onboardingStep: { type: 'string' },
+        redirectTo: { type: 'string' },
+      },
+    },
+  })
+  async checkOnboardingStatus(@Request() req: any) {
+    const status = await this.onboardingService.getOnboardingStatus(
+      req.user.id,
+    );
+
+    return {
+      needsOnboarding: !status.onboardingCompleted,
+      onboardingCompleted: status.onboardingCompleted,
+      onboardingStep: status.onboardingStep,
+      redirectTo: status.onboardingCompleted ? '/dashboard' : '/onboarding',
+    };
+  }
+
   @Get('status')
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
       return `onboarding:status:${request.user.id}`;
     },
-    ttl: 60, // 1 minute
+    ttl: 60,
     tags: ['onboarding', 'user'],
   })
   @ApiOperation({

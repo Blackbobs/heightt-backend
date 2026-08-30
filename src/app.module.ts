@@ -22,12 +22,22 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CacheModule } from './redis/cache.module';
 import { BachsModule } from './v1/bachs/bachs.module';
+import { CommonModule } from './common/common.module';
+import { HealthModule } from './v1/health/health.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.development', '.env.production'],
+      load: [configuration],
+      // Only load the environment-specific file that matches NODE_ENV.
+      // Previously, all files were loaded with later files overriding earlier ones,
+      // which meant .env.production would override .env even in development,
+      // causing NODE_ENV to be 'production' and CORS to use production origins.
+      envFilePath: ['.env', `.env.${process.env.NODE_ENV || 'development'}`],
+      cache: true,
+      expandVariables: true,
       validationOptions: {
         allowUnknownKeys: true,
       },
@@ -52,7 +62,9 @@ import { BachsModule } from './v1/bachs/bachs.module';
     EventsModule,
     BachsModule,
     GatewaysModule,
+    CommonModule,
     V1Module,
+    HealthModule,
   ],
   providers: [
     {

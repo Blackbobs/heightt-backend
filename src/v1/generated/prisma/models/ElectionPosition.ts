@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model ElectionPosition
@@ -256,8 +256,8 @@ export type ElectionPositionWhereInput = {
   order?: Prisma.IntFilter<"ElectionPosition"> | number
   createdAt?: Prisma.DateTimeFilter<"ElectionPosition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ElectionPosition"> | Date | string
-  election?: Prisma.XOR<Prisma.ElectionScalarRelationFilter, Prisma.ElectionWhereInput>
   candidates?: Prisma.CandidateListRelationFilter
+  election?: Prisma.XOR<Prisma.ElectionScalarRelationFilter, Prisma.ElectionWhereInput>
 }
 
 export type ElectionPositionOrderByWithRelationInput = {
@@ -270,8 +270,8 @@ export type ElectionPositionOrderByWithRelationInput = {
   order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  election?: Prisma.ElectionOrderByWithRelationInput
   candidates?: Prisma.CandidateOrderByRelationAggregateInput
+  election?: Prisma.ElectionOrderByWithRelationInput
 }
 
 export type ElectionPositionWhereUniqueInput = Prisma.AtLeast<{
@@ -287,8 +287,8 @@ export type ElectionPositionWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.IntFilter<"ElectionPosition"> | number
   createdAt?: Prisma.DateTimeFilter<"ElectionPosition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ElectionPosition"> | Date | string
-  election?: Prisma.XOR<Prisma.ElectionScalarRelationFilter, Prisma.ElectionWhereInput>
   candidates?: Prisma.CandidateListRelationFilter
+  election?: Prisma.XOR<Prisma.ElectionScalarRelationFilter, Prisma.ElectionWhereInput>
 }, "id">
 
 export type ElectionPositionOrderByWithAggregationInput = {
@@ -332,8 +332,8 @@ export type ElectionPositionCreateInput = {
   order: number
   createdAt?: Date | string
   updatedAt?: Date | string
-  election: Prisma.ElectionCreateNestedOneWithoutPositionsInput
   candidates?: Prisma.CandidateCreateNestedManyWithoutPositionInput
+  election: Prisma.ElectionCreateNestedOneWithoutPositionsInput
 }
 
 export type ElectionPositionUncheckedCreateInput = {
@@ -358,8 +358,8 @@ export type ElectionPositionUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  election?: Prisma.ElectionUpdateOneRequiredWithoutPositionsNestedInput
   candidates?: Prisma.CandidateUpdateManyWithoutPositionNestedInput
+  election?: Prisma.ElectionUpdateOneRequiredWithoutPositionsNestedInput
 }
 
 export type ElectionPositionUncheckedUpdateInput = {
@@ -745,8 +745,8 @@ export type ElectionPositionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  election?: boolean | Prisma.ElectionDefaultArgs<ExtArgs>
   candidates?: boolean | Prisma.ElectionPosition$candidatesArgs<ExtArgs>
+  election?: boolean | Prisma.ElectionDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ElectionPositionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["electionPosition"]>
 
@@ -790,8 +790,8 @@ export type ElectionPositionSelectScalar = {
 
 export type ElectionPositionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "electionId" | "title" | "description" | "maxCandidates" | "maxVotes" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["electionPosition"]>
 export type ElectionPositionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  election?: boolean | Prisma.ElectionDefaultArgs<ExtArgs>
   candidates?: boolean | Prisma.ElectionPosition$candidatesArgs<ExtArgs>
+  election?: boolean | Prisma.ElectionDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ElectionPositionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ElectionPositionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -804,8 +804,8 @@ export type ElectionPositionIncludeUpdateManyAndReturn<ExtArgs extends runtime.T
 export type $ElectionPositionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ElectionPosition"
   objects: {
-    election: Prisma.$ElectionPayload<ExtArgs>
     candidates: Prisma.$CandidatePayload<ExtArgs>[]
+    election: Prisma.$ElectionPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1211,8 +1211,8 @@ readonly fields: ElectionPositionFieldRefs;
  */
 export interface Prisma__ElectionPositionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  election<T extends Prisma.ElectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ElectionDefaultArgs<ExtArgs>>): Prisma.Prisma__ElectionClient<runtime.Types.Result.GetResult<Prisma.$ElectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   candidates<T extends Prisma.ElectionPosition$candidatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ElectionPosition$candidatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  election<T extends Prisma.ElectionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ElectionDefaultArgs<ExtArgs>>): Prisma.Prisma__ElectionClient<runtime.Types.Result.GetResult<Prisma.$ElectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

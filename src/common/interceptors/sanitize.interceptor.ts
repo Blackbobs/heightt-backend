@@ -1,4 +1,3 @@
-// src/common/interceptors/sanitize.interceptor.ts
 import {
   Injectable,
   NestInterceptor,
@@ -14,19 +13,25 @@ export class SanitizeInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
 
-    // Sanitize request body
+    // Sanitize request body - this is writable
     if (request.body) {
       request.body = this.sanitizeObject(request.body);
     }
 
-    // Sanitize query parameters
-    if (request.query) {
-      request.query = this.sanitizeObject(request.query);
+    // Sanitize query parameters - use Object.assign instead of direct assignment
+    if (request.query && typeof request.query === 'object') {
+      const sanitizedQuery = this.sanitizeObject(request.query);
+      // Clear existing keys and assign new ones
+      Object.keys(request.query).forEach(key => delete request.query[key]);
+      Object.assign(request.query, sanitizedQuery);
     }
 
-    // Sanitize URL parameters
-    if (request.params) {
-      request.params = this.sanitizeObject(request.params);
+    // Sanitize URL parameters - use Object.assign instead of direct assignment
+    if (request.params && typeof request.params === 'object') {
+      const sanitizedParams = this.sanitizeObject(request.params);
+      // Clear existing keys and assign new ones
+      Object.keys(request.params).forEach(key => delete request.params[key]);
+      Object.assign(request.params, sanitizedParams);
     }
 
     return next.handle().pipe(
@@ -40,24 +45,43 @@ export class SanitizeInterceptor implements NestInterceptor {
   private sanitizeObject(obj: any): any {
     if (!obj) return obj;
 
-    const sanitized = { ...obj };
-    for (const key in sanitized) {
-      if (typeof sanitized[key] === 'string') {
-        // Only sanitize strings that contain HTML
-        if (this.containsHtml(sanitized[key])) {
-          sanitized[key] = sanitizeHtml(sanitized[key], {
-            allowedTags: [],
-            allowedAttributes: {},
-            disallowedTagsMode: 'discard',
-            selfClosing: ['br', 'hr'],
-            allowedSchemes: ['http', 'https', 'mailto'],
-          });
-        }
-      } else if (typeof sanitized[key] === 'object') {
-        sanitized[key] = this.sanitizeObject(sanitized[key]);
-      }
+    // Handle arrays
+    if (Array.isArray(obj)) {
+      return obj.map((item) => this.sanitizeObject(item));
     }
-    return sanitized;
+
+    // Handle objects
+    if (typeof obj === 'object') {
+      const sanitized = {};
+      for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          const value = obj[key];
+          if (typeof value === 'string') {
+            // Only sanitize strings that contain HTML
+            if (this.containsHtml(value)) {
+              sanitized[key] = sanitizeHtml(value, {
+                allowedTags: [],
+                allowedAttributes: {},
+                disallowedTagsMode: 'discard',
+                selfClosing: ['br', 'hr'],
+                allowedSchemes: ['http', 'https', 'mailto'],
+              });
+            } else {
+              sanitized[key] = value;
+            }
+          } else if (Array.isArray(value)) {
+            sanitized[key] = value.map((item) => this.sanitizeObject(item));
+          } else if (value && typeof value === 'object') {
+            sanitized[key] = this.sanitizeObject(value);
+          } else {
+            sanitized[key] = value;
+          }
+        }
+      }
+      return sanitized;
+    }
+
+    return obj;
   }
 
   private containsHtml(text: string): boolean {

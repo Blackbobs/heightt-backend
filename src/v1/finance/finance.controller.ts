@@ -33,13 +33,17 @@ import {
 import { FinanceService } from './finance.service';
 import { LedgerService } from './ledger.service';
 import { ReceiptService } from './receipt.service';
+import { BankAccountService } from './bank-account.service';
+import { WalletService } from './wallet.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { BachsService } from '../bachs/bachs.service';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import {
   AdminGuard,
   RequirePermission,
   RequireAdminType,
 } from '../../common/guards/admin.guard';
+import type { Response } from 'express';
 import {
   CreateWalletDto,
   CreditWalletDto,
@@ -54,6 +58,13 @@ import {
   GenerateReceiptDto,
   ReceiptResponseDto,
   ReceiptListResponseDto,
+  WithdrawalFilterDto,
+  PlatformWithdrawalRequestDto,
+  OrganizationWithdrawalRequestDto,
+  UserWithdrawalRequestDto,
+  UpdateBankAccountDto,
+  CreateBankAccountDto,
+  ResolveBankAccountDto,
 } from './dto';
 import {
   Cache,
@@ -63,10 +74,11 @@ import {
 } from '../../common/decorators/cache.decorator';
 import { IdempotencyService } from '../../redis/idempotency.service';
 import { IdempotencyKey } from '../../common/decorators/idempotency.decorator';
+import { WalletGuard } from '../../common/guards/wallet.guard';
 
 @ApiTags('finance')
 @Controller('finance')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, WalletGuard)
 @ApiBearerAuth('access-token')
 export class FinanceController {
   private readonly logger = new Logger(FinanceController.name);
@@ -75,28 +87,16 @@ export class FinanceController {
     private readonly financeService: FinanceService,
     private readonly receiptService: ReceiptService,
     private readonly ledgerService: LedgerService,
+    private readonly walletService: WalletService,
     private readonly prisma: PrismaService,
     private readonly idempotencyService: IdempotencyService,
+    private readonly bankAccountService: BankAccountService,
+    private readonly bachsService: BachsService,
   ) {}
 
   // ============================================
   // WALLET ENDPOINTS
   // ============================================
-
-  @Post('wallet')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:create')
-  @InvalidateCache(['finance', 'wallet'])
-  @ApiOperation({ summary: 'Create wallet (Admin only)' })
-  @ApiBody({ type: CreateWalletDto })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Wallet created successfully',
-  })
-  async createWallet(@Request() req: any, @Body() dto: CreateWalletDto) {
-    this.logger.log('Create wallet endpoint called');
-    return this.financeService.createWallet(req.user.id, dto);
-  }
 
   @Get('wallet/me')
   @Cache({
@@ -163,6 +163,55 @@ export class FinanceController {
       `Get wallet by organization ID endpoint called: ${organizationId}`,
     );
     return this.financeService.getWalletByOrganizationId(organizationId);
+  }
+
+  @Get('wallet/platform')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:read')
+  @Cache({
+    key: () => 'wallet:platform',
+    ttl: 60,
+    tags: ['finance', 'wallet', 'platform'],
+  })
+  @ApiOperation({
+    summary: 'Get platform wallet (Platform Admin only)',
+    description: 'Returns the platform wallet with balance and details.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Platform wallet retrieved',
+  })
+  async getPlatformWallet() {
+    this.logger.log('Get platform wallet endpoint called');
+    return this.financeService.getPlatformWallet();
+  }
+
+  @Get('organizations/:organizationId/overview')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:read')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `finance:organization:${request.params.organizationId}:overview:v2`;
+    },
+    ttl: 60,
+    tags: ['finance', 'wallet', 'transactions', 'dues', 'payments'],
+  })
+  @ApiOperation({
+    summary: 'Get organization finance overview (Admin only)',
+    description:
+      'Returns wallet balance, transaction totals, collections, pending payments, and due-payment totals for an organization within the admin scope.',
+  })
+  @ApiParam({ name: 'organizationId', description: 'Organization ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Organization finance overview retrieved',
+  })
+  async getOrganizationFinanceOverview(
+    @Param('organizationId') organizationId: string,
+  ) {
+    return this.financeService.getOrganizationFinanceOverview(organizationId);
   }
 
   // ============================================
@@ -294,6 +343,25 @@ export class FinanceController {
     return this.financeService.assignDueToStudents(req.user.id, id, dto);
   }
 
+  @Delete('dues/:id')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:due:delete')
+  @InvalidateCache(['finance', 'dues', 'student'])
+  @ApiOperation({ summary: 'Delete due (Admin only)' })
+  @ApiParam({ name: 'id', description: 'Due ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Due deleted',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Due has payment activity and cannot be deleted',
+  })
+  async deleteDue(@Param('id') id: string, @Request() req: any) {
+    this.logger.log(`Delete due endpoint called: ${id}`);
+    return this.financeService.deleteDue(req.user.id, id);
+  }
+
   @Get('dues')
   @Cache({
     key: (context) => {
@@ -329,6 +397,10 @@ export class FinanceController {
     );
   }
 
+  // ============================================
+  // GET MY DUES - UPDATED ENDPOINT
+  // ============================================
+
   @Get('dues/student')
   @Cache({
     key: (context) => {
@@ -338,56 +410,190 @@ export class FinanceController {
     ttl: 120,
     tags: ['finance', 'dues', 'student'],
   })
-  @ApiOperation({ summary: 'Get my dues' })
+  @ApiOperation({
+    summary: 'Get my dues',
+    description:
+      'Get all dues for the authenticated user across all organizations',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Student dues retrieved',
   })
   async getStudentDues(@Request() req: any) {
-    const student = await this.prisma.studentProfile.findUnique({
-      where: { userId: req.user.id },
-    });
-    if (!student) {
-      throw new NotFoundException('Student profile not found');
-    }
-    this.logger.log('Get student dues endpoint called');
-    return this.financeService.getStudentDues(student.id);
+    this.logger.log(
+      `Get student dues endpoint called for user: ${req.user.id}`,
+    );
+    return this.financeService.getMyDues(req.user.id);
   }
 
   // ============================================
-  // PAYMENT ENDPOINTS (External - Bachs)
+  // PAYMENT ENDPOINTS
   // ============================================
+
+  @Get('payments/history')
+  @ApiOperation({
+    summary: 'Get my payment history',
+    description:
+      'Returns each payment with its transaction, due, organization, and receipt details.',
+  })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'organizationId', required: false })
+  async getMyPaymentHistory(
+    @Request() req: any,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('status') status?: string,
+    @Query('organizationId') organizationId?: string,
+  ) {
+    return this.financeService.getStudentPaymentHistory(
+      req.user.id,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      { status, organizationId },
+    );
+  }
+
+  @Get('payments/history/admin')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:read')
+  @ApiOperation({
+    summary: 'Get student payment history (Admin only)',
+    description:
+      'Returns payments within the authenticated admin scope, including student, due, transaction, and receipt details.',
+  })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'organizationId', required: false })
+  @ApiQuery({ name: 'payerId', required: false })
+  async getAdminPaymentHistory(
+    @Request() req: any,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('status') status?: string,
+    @Query('organizationId') organizationId?: string,
+    @Query('payerId') payerId?: string,
+  ) {
+    return this.financeService.getAdminPaymentHistory(
+      req.admin,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      { status, organizationId, payerId },
+    );
+  }
 
   @Post('payments')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
   @ApiOperation({
-    summary: 'Make payment via Bachs',
+    summary: 'Initiate payment (Bachs checkout)',
     description:
-      'Initiates a payment using Bachs checkout. Idempotency key should be passed in the header.',
-  })
-  @ApiHeader({
-    name: 'Idempotency-Key',
-    description: 'Unique key to prevent duplicate payment processing',
-    required: false,
-    example: 'payment_1234567890_abc',
+      'Creates a Bachs checkout session for external payment processing. ' +
+      'Used for paying dues, fees, and other charges via card, bank transfer, USSD, etc. ' +
+      'Returns a checkout URL that the frontend should redirect the user to for payment.',
   })
   @ApiBody({ type: CreatePaymentDto })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Payment initiated - returns checkout URL',
+    description: 'Payment initiated successfully, returns Bachs checkout URL',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'Payment initiated successfully' },
+        data: {
+          type: 'object',
+          properties: {
+            checkoutId: { type: 'string' },
+            checkoutUrl: { type: 'string' },
+            pendingPaymentId: { type: 'string' },
+            baseAmount: {
+              type: 'number',
+              description: 'Organization payment in Kobo',
+            },
+            platformFee: {
+              type: 'number',
+              description: 'Heightt platform fee in Kobo',
+            },
+            totalBeforeGatewayFee: {
+              type: 'number',
+              description: 'Checkout subtotal before any Bachs processing fee',
+            },
+          },
+        },
+      },
+    },
   })
-  async makePayment(
-    @Request() req: any,
-    @Body() dto: CreatePaymentDto,
-    @IdempotencyKey() idempotencyKey?: string,
-  ) {
-    this.logger.log('Make payment endpoint called');
-    return this.financeService.processPayment(req.user.id, dto, idempotencyKey);
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid payment data or due not found',
+  })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
+  async initiatePayment(@Request() req: any, @Body() dto: CreatePaymentDto) {
+    this.logger.log(
+      `Initiate payment endpoint called for user: ${req.user.id}`,
+    );
+
+    // Resolve dueId/dueAssignmentId to a valid dueAssignmentId
+    const resolvedDueAssignmentId =
+      await this.financeService.resolveDueAssignment(
+        req.user.id,
+        dto.dueId,
+        dto.dueAssignmentId,
+        dto.amount,
+      );
+
+    // Create Bachs checkout session
+    const result = await this.bachsService.initiatePayment(
+      req.user.id,
+      {
+        userId: req.user.id,
+        organizationId: dto.organizationId,
+        amount: dto.amount,
+        paymentMethod: dto.paymentMethod,
+        description: dto.description,
+        dueAssignmentId: resolvedDueAssignmentId || undefined,
+        category: dto.dueId || dto.dueAssignmentId ? 'DUE' : 'OTHER',
+      },
+      dto.successUrl,
+      dto.cancelUrl,
+    );
+
+    return {
+      success: true,
+      message: 'Payment initiated successfully',
+      data: result,
+    };
   }
 
-  // ============================================
-  // INTERNAL PAYMENT ENDPOINTS
-  // ============================================
+  @Get('payments/pending/:id/status')
+  @ApiOperation({
+    summary: 'Get and reconcile an external payment status',
+    description:
+      'Returns the authenticated user payment state and receipt identifiers. If still pending, the backend also checks Bachs for a terminal checkout state.',
+  })
+  @ApiParam({ name: 'id', description: 'Pending payment ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Payment status retrieved',
+  })
+  async getPendingPaymentStatus(@Request() req: any, @Param('id') id: string) {
+    return {
+      success: true,
+      data: await this.bachsService.getPendingPaymentStatus(id, req.user.id),
+    };
+  }
+
+  @Post('payments/pending/:id/cancel')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['finance', 'payments'])
+  @ApiOperation({ summary: 'Cancel the authenticated user pending payment' })
+  @ApiParam({ name: 'id', description: 'Pending payment ID' })
+  async cancelPendingPayment(@Request() req: any, @Param('id') id: string) {
+    await this.bachsService.cancelPendingPayment(id, req.user.id);
+    return { success: true, message: 'Payment cancelled' };
+  }
 
   @Post('payments/internal')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
@@ -420,16 +626,14 @@ export class FinanceController {
     );
   }
 
-  // ============================================
-  // MANUAL PAYMENT ENDPOINTS
-  // ============================================
-
   @Post('payments/manual')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:manual')
   @InvalidateCache(['finance', 'wallet', 'transactions', 'receipts'])
   @ApiOperation({
-    summary: 'Make a manual payment',
+    summary: 'Make a manual payment (Admin only)',
     description:
-      'Processes a manual payment (admin-only operation). Idempotency key should be passed in the header.',
+      'Processes a manual payment. Idempotency key should be passed in the header.',
   })
   @ApiHeader({
     name: 'Idempotency-Key',
@@ -452,165 +656,6 @@ export class FinanceController {
       req.user.id,
       dto,
       idempotencyKey,
-    );
-  }
-
-  // ============================================
-  // PENDING PAYMENT ENDPOINTS
-  // ============================================
-
-  @Get('payments/pending/:id')
-  @ApiOperation({
-    summary: 'Get pending payment status',
-    description: 'Check the status of a pending payment',
-  })
-  @ApiParam({ name: 'id', description: 'Pending payment ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Payment status retrieved',
-  })
-  async getPendingPaymentStatus(@Param('id') id: string, @Request() req: any) {
-    return this.financeService.getPendingPaymentStatus(id, req.user.id);
-  }
-
-  @Post('payments/pending/:id/cancel')
-  @ApiOperation({
-    summary: 'Cancel a pending payment',
-    description: 'Cancel a pending payment before it is completed',
-  })
-  @ApiParam({ name: 'id', description: 'Pending payment ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Payment cancelled',
-  })
-  async cancelPendingPayment(@Param('id') id: string, @Request() req: any) {
-    return this.financeService.cancelPendingPayment(id, req.user.id);
-  }
-
-  @Get('payments/success')
-  @ApiOperation({
-    summary: 'Payment success callback',
-    description: 'Handle successful payment redirect from Bachs',
-  })
-  @ApiQuery({ name: 'checkout_id', description: 'Bachs checkout ID' })
-  async paymentSuccess(
-    @Query('checkout_id') checkoutId: string,
-    @Request() req: any,
-  ) {
-    const pendingPayment = await this.prisma.pendingPayment.findFirst({
-      where: { bachsCheckoutId: checkoutId },
-    });
-
-    if (!pendingPayment) {
-      throw new NotFoundException('Payment not found');
-    }
-
-    if (pendingPayment.userId !== req.user.id) {
-      throw new ForbiddenException('You do not have access to this payment');
-    }
-
-    return this.financeService.getPendingPaymentStatus(
-      pendingPayment.id,
-      req.user.id,
-    );
-  }
-
-  @Get('payments/cancel')
-  @ApiOperation({
-    summary: 'Payment cancel callback',
-    description: 'Handle cancelled payment redirect from Bachs',
-  })
-  @ApiQuery({ name: 'checkout_id', description: 'Bachs checkout ID' })
-  async paymentCancel(
-    @Query('checkout_id') checkoutId: string,
-    @Request() req: any,
-  ) {
-    const pendingPayment = await this.prisma.pendingPayment.findFirst({
-      where: { bachsCheckoutId: checkoutId },
-    });
-
-    if (pendingPayment && pendingPayment.userId === req.user.id) {
-      await this.financeService.cancelPendingPayment(
-        pendingPayment.id,
-        req.user.id,
-      );
-    }
-
-    return { message: 'Payment cancelled' };
-  }
-
-  // ============================================
-  // ORGANIZATION WITHDRAWAL ENDPOINTS
-  // ============================================
-
-  @Post('withdrawals/organization')
-  @InvalidateCache(['finance', 'wallet', 'transactions'])
-  @ApiOperation({ summary: 'Request organization withdrawal (Admin only)' })
-  @ApiBody({ type: WithdrawalRequestDto })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Withdrawal requested',
-  })
-  async requestOrganizationWithdrawal(
-    @Request() req: any,
-    @Body() dto: WithdrawalRequestDto,
-  ) {
-    this.logger.log('Request organization withdrawal endpoint called');
-    return this.financeService.requestOrganizationWithdrawal(req.user.id, dto);
-  }
-
-  @Post('withdrawals/organization/:id/approve')
-  @UseGuards(AdminGuard)
-  @RequireAdminType('PLATFORM_ADMIN')
-  @RequirePermission('finance:withdrawal:process')
-  @InvalidateCache(['finance', 'wallet', 'transactions'])
-  @ApiOperation({
-    summary: 'Approve organization withdrawal (Platform Admin only)',
-  })
-  @ApiParam({ name: 'id', description: 'Withdrawal ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Withdrawal approved',
-  })
-  async approveOrganizationWithdrawal(
-    @Param('id') id: string,
-    @Request() req: any,
-  ) {
-    this.logger.log(`Approve organization withdrawal endpoint called: ${id}`);
-    return this.financeService.approveOrganizationWithdrawal(id, req.user.id);
-  }
-
-  @Post('withdrawals/organization/:id/reject')
-  @UseGuards(AdminGuard)
-  @RequireAdminType('PLATFORM_ADMIN')
-  @RequirePermission('finance:withdrawal:process')
-  @InvalidateCache(['finance', 'wallet', 'transactions'])
-  @ApiOperation({
-    summary: 'Reject organization withdrawal (Platform Admin only)',
-  })
-  @ApiParam({ name: 'id', description: 'Withdrawal ID' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        reason: { type: 'string', nullable: true },
-      },
-    },
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Withdrawal rejected',
-  })
-  async rejectOrganizationWithdrawal(
-    @Param('id') id: string,
-    @Request() req: any,
-    @Body() body: { reason?: string },
-  ) {
-    this.logger.log(`Reject organization withdrawal endpoint called: ${id}`);
-    return this.financeService.rejectOrganizationWithdrawal(
-      id,
-      req.user.id,
-      body.reason,
     );
   }
 
@@ -667,103 +712,128 @@ export class FinanceController {
   }
 
   // ============================================
-  // ORGANIZATION FINANCIAL OVERVIEW ENDPOINTS
+  // CHARGES CALCULATION
   // ============================================
 
-  @Get('organizations/:organizationId/overview')
+  @Get('charges/calculate')
+  @ApiOperation({
+    summary: 'Calculate charges for a payment amount',
+    description:
+      'Returns detailed breakdown of all applicable fees including platform fee, Bachs fee, and VAT.',
+  })
+  @ApiQuery({
+    name: 'amount',
+    description: 'Amount in Kobo (e.g., 500000 = ₦5,000)',
+    example: 500000,
+  })
+  async calculateCharges(@Query('amount') amount: string) {
+    const amountNum = parseInt(amount, 10);
+    if (isNaN(amountNum) || amountNum <= 0) {
+      throw new BadRequestException('Invalid amount');
+    }
+
+    const charges = this.ledgerService.calculatePaymentCharges(amountNum);
+
+    return {
+      originalAmount: {
+        kobo: amountNum,
+        naira: (amountNum / 100).toFixed(2),
+        formatted: `₦${(amountNum / 100).toFixed(2)}`,
+      },
+      breakdown: {
+        platformFee: {
+          kobo: charges.platformFee,
+          naira: (charges.platformFee / 100).toFixed(2),
+          formatted: `₦${(charges.platformFee / 100).toFixed(2)}`,
+          percentage: 'Fixed ₦100',
+          recipient: 'Platform',
+        },
+        gatewayFee: {
+          kobo: charges.gatewayFee,
+          naira: (charges.gatewayFee / 100).toFixed(2),
+          formatted: `₦${(charges.gatewayFee / 100).toFixed(2)}`,
+          percentage: '1.5%',
+          recipient: 'Bachs (Payment Gateway)',
+        },
+        vat: {
+          kobo: charges.vat,
+          naira: (charges.vat / 100).toFixed(2),
+          formatted: `₦${(charges.vat / 100).toFixed(2)}`,
+          percentage: '7.5% (on platform fee)',
+          recipient: 'Government (VAT)',
+        },
+        totalCharges: {
+          kobo: charges.totalCharges,
+          naira: (charges.totalCharges / 100).toFixed(2),
+          formatted: `₦${(charges.totalCharges / 100).toFixed(2)}`,
+        },
+      },
+      totalToPay: {
+        kobo: charges.totalAmount,
+        naira: (charges.totalAmount / 100).toFixed(2),
+        formatted: `₦${(charges.totalAmount / 100).toFixed(2)}`,
+      },
+      organizationReceives: {
+        kobo: charges.netToOrganization,
+        naira: (charges.netToOrganization / 100).toFixed(2),
+        formatted: `₦${(charges.netToOrganization / 100).toFixed(2)}`,
+        note: 'Organization receives the full original amount',
+      },
+      distribution: {
+        toOrganization: {
+          amount: charges.netToOrganization,
+          percentage: 100,
+          formatted: `₦${(charges.netToOrganization / 100).toFixed(2)}`,
+        },
+        toPlatform: {
+          amount: charges.platformFee + charges.vat,
+          percentage:
+            ((charges.platformFee + charges.vat) / charges.totalAmount) * 100,
+          formatted: `₦${((charges.platformFee + charges.vat) / 100).toFixed(2)}`,
+          breakdown: {
+            platformFee: `₦${(charges.platformFee / 100).toFixed(2)}`,
+            vat: `₦${(charges.vat / 100).toFixed(2)}`,
+          },
+        },
+        toGateway: {
+          amount: charges.gatewayFee,
+          percentage: (charges.gatewayFee / charges.totalAmount) * 100,
+          formatted: `₦${(charges.gatewayFee / 100).toFixed(2)}`,
+          recipient: 'Bachs',
+        },
+      },
+    };
+  }
+
+  @Get('reports/overview')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:reports')
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      return `organization:overview:${request.params.organizationId}:user:${request.user.id}`;
+      return `reports:overview:v2:${request.query.institutionId || 'all'}`;
     },
-    ttl: 300,
-    tags: ['finance', 'organization', 'overview'],
+    ttl: 900,
+    tags: ['finance', 'reports'],
   })
-  @ApiOperation({
-    summary: 'Get financial overview for an organization',
-    description:
-      'Returns comprehensive financial overview for a specific organization. Accessible by organization admins and staff.',
+  @ApiOperation({ summary: 'Get financial overview (Admin only)' })
+  @ApiQuery({
+    name: 'institutionId',
+    required: false,
+    description: 'Filter by institution',
   })
-  @ApiParam({ name: 'organizationId', description: 'Organization ID' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Financial overview retrieved',
   })
-  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Access denied' })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Organization not found',
-  })
-  async getOrganizationFinancialOverview(
-    @Param('organizationId') organizationId: string,
-    @Request() req: any,
-  ) {
-    this.logger.log(
-      `Get organization financial overview endpoint called: ${organizationId}`,
-    );
-    return this.financeService.getOrganizationFinancialOverview(
-      organizationId,
-      req.user.id,
-    );
-  }
-
-  @Get('organizations/:organizationId/dashboard')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      return `organization:dashboard:${request.params.organizationId}:user:${request.user.id}`;
-    },
-    ttl: 300,
-    tags: ['finance', 'organization', 'dashboard'],
-  })
-  @ApiOperation({
-    summary: 'Get comprehensive finance dashboard for an organization',
-    description:
-      'Returns detailed finance dashboard including transactions, payments, due assignments, top contributors, and overdue dues.',
-  })
-  @ApiParam({ name: 'organizationId', description: 'Organization ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Finance dashboard retrieved',
-  })
-  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Access denied' })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Organization not found',
-  })
-  async getOrganizationFinanceDashboard(
-    @Param('organizationId') organizationId: string,
-    @Request() req: any,
-  ) {
-    this.logger.log(
-      `Get organization finance dashboard endpoint called: ${organizationId}`,
-    );
-    return this.financeService.getOrganizationFinanceDashboard(
-      organizationId,
-      req.user.id,
-    );
+  async getFinancialOverview(@Query('institutionId') institutionId?: string) {
+    this.logger.log('Get financial overview endpoint called');
+    return this.financeService.getFinancialOverview(institutionId);
   }
 
   // ============================================
   // RECEIPT ENDPOINTS
   // ============================================
-
-  @Post('receipts')
-  @InvalidateCache(['finance', 'receipts'])
-  @ApiOperation({
-    summary: 'Generate receipt',
-    description: 'Generate a receipt for a payment.',
-  })
-  @ApiBody({ type: GenerateReceiptDto })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Receipt generated',
-    type: ReceiptResponseDto,
-  })
-  async generateReceipt(@Request() req: any, @Body() dto: GenerateReceiptDto) {
-    this.logger.log('Generate receipt endpoint called');
-    return this.receiptService.generateReceipt(req.user.id, dto);
-  }
 
   @Get('receipts')
   @Cache({
@@ -819,71 +889,200 @@ export class FinanceController {
     );
   }
 
-  @Get('receipts/:id')
+  @Get('receipts/:id/download')
+  @ApiOperation({
+    summary: 'Download receipt as branded PDF',
+    description:
+      'Renders the receipt with the organization logo, falling back through its hierarchy (department -> faculty -> institution), and streams it as a PDF file.',
+  })
+  @ApiParam({ name: 'id', description: 'Receipt ID' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Receipt PDF stream' })
+  async downloadReceiptPdf(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    this.logger.log(`Download receipt PDF endpoint called: ${id}`);
+    const { buffer, filename } = await this.receiptService.getReceiptPdfForUser(
+      id,
+      req.user.id,
+    );
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', String(buffer.length));
+    res.end(buffer);
+  }
+
+  // ============================================
+  // BANK ACCOUNT ENDPOINTS
+  // ============================================
+
+  @Get('bank-accounts/supported-banks')
+  @ApiOperation({ summary: 'Get Bachs-supported payout banks' })
+  @ApiQuery({ name: 'countryCode', required: false, example: 'NG' })
+  async getSupportedPayoutBanks(@Query('countryCode') countryCode = 'NG') {
+    return this.bankAccountService.getSupportedBanks(countryCode);
+  }
+
+  @Post('bank-accounts/resolve')
+  @ApiOperation({ summary: 'Verify a bank account with Bachs' })
+  @ApiBody({ type: ResolveBankAccountDto })
+  async resolveBankAccount(@Body() dto: ResolveBankAccountDto) {
+    return this.bankAccountService.resolveBankAccount(dto);
+  }
+
+  @Post('bank-accounts')
+  @ApiOperation({ summary: 'Add bank account for withdrawals' })
+  @ApiBody({ type: CreateBankAccountDto })
+  @ApiResponse({ status: 201, description: 'Bank account added' })
+  @InvalidateCache(['bank-accounts'])
+  async createBankAccount(
+    @Request() req: any,
+    @Body() dto: CreateBankAccountDto,
+  ) {
+    this.logger.log('Create bank account endpoint called');
+    return this.bankAccountService.createBankAccount(req.user.id, dto);
+  }
+
+  @Get('bank-accounts')
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      return `receipt:${request.params.id}`;
+      return `bank-accounts:user:${request.user.id}`;
     },
-    ttl: 3600,
-    tags: ['finance', 'receipts'],
+    ttl: 300,
+    tags: ['finance', 'bank-accounts'],
   })
-  @ApiOperation({
-    summary: 'Get receipt by ID',
-    description: 'Get a specific receipt by ID.',
-  })
-  @ApiParam({ name: 'id', description: 'Receipt ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Receipt retrieved',
-    type: ReceiptResponseDto,
-  })
-  async getReceiptById(@Param('id') id: string, @Request() req: any) {
-    this.logger.log(`Get receipt by ID endpoint called: ${id}`);
-    return this.receiptService.getReceiptById(id, req.user.id);
+  @ApiOperation({ summary: 'Get user bank accounts' })
+  @ApiResponse({ status: 200, description: 'Bank accounts retrieved' })
+  async getUserBankAccounts(@Request() req: any) {
+    this.logger.log('Get user bank accounts endpoint called');
+    return this.bankAccountService.getUserBankAccounts(req.user.id);
   }
 
-  @Post('receipts/:id/download')
-  @InvalidateCache(['finance', 'receipts'])
-  @ApiOperation({
-    summary: 'Track receipt download',
-    description: 'Track when a receipt is downloaded.',
-  })
-  @ApiParam({ name: 'id', description: 'Receipt ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Download tracked',
-  })
-  async trackDownload(@Param('id') id: string, @Request() req: any) {
-    this.logger.log(`Track receipt download endpoint called: ${id}`);
-    return this.receiptService.trackDownload(id, req.user.id);
+  @Patch('bank-accounts/:id')
+  @ApiOperation({ summary: 'Update bank account' })
+  @ApiParam({ name: 'id', description: 'Bank account ID' })
+  @ApiBody({ type: UpdateBankAccountDto })
+  @ApiResponse({ status: 200, description: 'Bank account updated' })
+  @InvalidateCache(['bank-accounts'])
+  async updateBankAccount(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Body() dto: UpdateBankAccountDto,
+  ) {
+    this.logger.log('Update bank account endpoint called');
+    return this.bankAccountService.updateBankAccount(id, req.user.id, dto);
   }
 
-  @Post('receipts/:id/view')
-  @InvalidateCache(['finance', 'receipts'])
-  @ApiOperation({
-    summary: 'Track receipt view',
-    description: 'Track when a receipt is viewed.',
-  })
-  @ApiParam({ name: 'id', description: 'Receipt ID' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'View tracked',
-  })
-  async markViewed(@Param('id') id: string, @Request() req: any) {
-    this.logger.log(`Mark receipt viewed endpoint called: ${id}`);
-    return this.receiptService.markViewed(id, req.user.id);
+  @Delete('bank-accounts/:id')
+  @ApiOperation({ summary: 'Delete bank account' })
+  @ApiParam({ name: 'id', description: 'Bank account ID' })
+  @ApiResponse({ status: 200, description: 'Bank account deleted' })
+  @InvalidateCache(['bank-accounts'])
+  async deleteBankAccount(@Param('id') id: string, @Request() req: any) {
+    this.logger.log('Delete bank account endpoint called');
+    return this.bankAccountService.deleteBankAccount(id, req.user.id);
   }
 
-  @Post('receipts/:id/void')
+  @Post('bank-accounts/:id/default')
+  @ApiOperation({ summary: 'Set default bank account' })
+  @ApiParam({ name: 'id', description: 'Bank account ID' })
+  @ApiResponse({ status: 200, description: 'Default bank account updated' })
+  @InvalidateCache(['bank-accounts'])
+  async setDefaultBankAccount(@Param('id') id: string, @Request() req: any) {
+    this.logger.log('Set default bank account endpoint called');
+    return this.bankAccountService.setDefaultBankAccount(id, req.user.id);
+  }
+
+  @Post('bank-accounts/:id/payout-destination')
+  @ApiOperation({
+    summary: 'Register or refresh a bank account payout destination',
+  })
+  @ApiParam({ name: 'id', description: 'Bank account ID' })
+  async prepareBankAccountPayout(@Param('id') id: string, @Request() req: any) {
+    return this.financeService.prepareBankAccountPayout(req.user.id, id);
+  }
+
+  // ============================================
+  // USER WITHDRAWAL ENDPOINTS
+  // ============================================
+
+  @Post('withdrawals/user')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({ summary: 'Request user withdrawal' })
+  @ApiBody({ type: UserWithdrawalRequestDto })
+  @ApiResponse({ status: 201, description: 'Withdrawal requested' })
+  async requestUserWithdrawal(
+    @Request() req: any,
+    @Body() dto: UserWithdrawalRequestDto,
+  ) {
+    this.logger.log('Request user withdrawal endpoint called');
+    return this.financeService.requestUserWithdrawal(req.user.id, dto);
+  }
+
+  @Post('withdrawals/organization')
   @UseGuards(AdminGuard)
-  @RequirePermission('finance:manage')
-  @InvalidateCache(['finance', 'receipts'])
-  @ApiOperation({
-    summary: 'Void receipt (Admin only)',
-    description: 'Void a receipt. Only platform admins can do this.',
-  })
-  @ApiParam({ name: 'id', description: 'Receipt ID' })
+  @RequirePermission('finance:withdrawal:create')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({ summary: 'Request an organization wallet withdrawal' })
+  @ApiBody({ type: OrganizationWithdrawalRequestDto })
+  async requestOrganizationWithdrawal(
+    @Request() req: any,
+    @Body() dto: OrganizationWithdrawalRequestDto,
+  ) {
+    return this.financeService.requestOrganizationWithdrawal(req.user.id, dto);
+  }
+
+  @Post('withdrawals/organization/:id/approve')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  async approveOrganizationWithdrawal(
+    @Param('id') id: string,
+    @Request() req: any,
+  ) {
+    return this.financeService.approveUserWithdrawal(id, req.user.id);
+  }
+
+  @Post('withdrawals/organization/:id/reject')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  async rejectOrganizationWithdrawal(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Body() body: { reason?: string },
+  ) {
+    return this.financeService.rejectUserWithdrawal(
+      id,
+      req.user.id,
+      body.reason,
+    );
+  }
+
+  @Post('withdrawals/user/:id/approve')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({ summary: 'Approve user withdrawal (Platform Admin only)' })
+  @ApiParam({ name: 'id', description: 'Withdrawal ID' })
+  @ApiResponse({ status: 200, description: 'Withdrawal approved' })
+  async approveUserWithdrawal(@Param('id') id: string, @Request() req: any) {
+    this.logger.log('Approve user withdrawal endpoint called');
+    return this.financeService.approveUserWithdrawal(id, req.user.id);
+  }
+
+  @Post('withdrawals/user/:id/reject')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({ summary: 'Reject user withdrawal (Platform Admin only)' })
+  @ApiParam({ name: 'id', description: 'Withdrawal ID' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -892,386 +1091,165 @@ export class FinanceController {
       },
     },
   })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Receipt voided',
-  })
-  async voidReceipt(
+  @ApiResponse({ status: 200, description: 'Withdrawal rejected' })
+  async rejectUserWithdrawal(
     @Param('id') id: string,
     @Request() req: any,
     @Body() body: { reason?: string },
   ) {
-    this.logger.log(`Void receipt endpoint called: ${id}`);
-    return this.receiptService.voidReceipt(id, req.user.id, body.reason);
-  }
-
-  @Get('organizations/:organizationId/receipts')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:read')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      const organizationId = request.params.organizationId;
-      const userId = request.user.id;
-      const { page, limit } = request.query;
-      return `receipts:organization:${organizationId}:user:${userId}:${page || 1}:${limit || 10}`;
-    },
-    ttl: 300,
-    tags: ['finance', 'receipts', 'organization'],
-  })
-  @ApiOperation({
-    summary: 'Get organization receipts (Admin only)',
-    description: 'Get all receipts for a specific organization.',
-  })
-  @ApiParam({ name: 'organizationId', description: 'Organization ID' })
-  @ApiQuery({ name: 'page', required: false, example: 1 })
-  @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Organization receipts retrieved',
-    type: ReceiptListResponseDto,
-  })
-  async getOrganizationReceipts(
-    @Param('organizationId') organizationId: string,
-    @Request() req: any,
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-  ) {
-    this.logger.log(
-      `Get organization receipts endpoint called: ${organizationId}`,
-    );
-    return this.receiptService.getOrganizationReceipts(
-      organizationId,
+    this.logger.log('Reject user withdrawal endpoint called');
+    return this.financeService.rejectUserWithdrawal(
+      id,
       req.user.id,
-      parseInt(page, 10),
-      parseInt(limit, 10),
+      body.reason,
     );
   }
 
   // ============================================
-  // LEDGER ENDPOINTS
+  // PLATFORM WITHDRAWAL ENDPOINTS
   // ============================================
 
-  @Get('ledger/accounts')
+  @Post('withdrawals/platform')
   @UseGuards(AdminGuard)
-  @RequirePermission('finance:read')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      const { type, ownerType, ownerId, isActive } = request.query;
-      return `ledger:accounts:${type || 'all'}:${ownerType || 'all'}:${ownerId || 'all'}:${isActive || 'all'}`;
-    },
-    ttl: 300,
-    tags: ['finance', 'ledger'],
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:platform')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({
+    summary: 'Request platform withdrawal (Platform Admin only)',
   })
-  @ApiOperation({ summary: 'Get ledger accounts (Admin only)' })
-  @ApiQuery({
-    name: 'type',
-    required: false,
-    enum: ['ASSET', 'LIABILITY', 'EQUITY', 'REVENUE', 'EXPENSE'],
-  })
-  @ApiQuery({
-    name: 'ownerType',
-    required: false,
-    enum: ['USER', 'ORGANIZATION', 'PLATFORM', 'SYSTEM'],
-  })
-  @ApiQuery({
-    name: 'ownerId',
-    required: false,
-    description: 'Filter by owner ID',
-  })
-  @ApiQuery({ name: 'isActive', required: false, type: 'boolean' })
-  @ApiResponse({ status: 200, description: 'Ledger accounts retrieved' })
-  async getLedgerAccounts(
-    @Query('type') type?: string,
-    @Query('ownerType') ownerType?: string,
-    @Query('ownerId') ownerId?: string,
-    @Query('isActive') isActive?: string,
+  @ApiBody({ type: PlatformWithdrawalRequestDto })
+  @ApiResponse({ status: 201, description: 'Platform withdrawal requested' })
+  async requestPlatformWithdrawal(
+    @Request() req: any,
+    @Body() dto: PlatformWithdrawalRequestDto,
   ) {
-    this.logger.log('Get ledger accounts endpoint called');
-    return this.ledgerService.getLedgerAccounts({
-      type,
-      ownerType,
-      ownerId,
-      isActive:
-        isActive === 'true' ? true : isActive === 'false' ? false : undefined,
-    });
+    this.logger.log('Request platform withdrawal endpoint called');
+    return this.financeService.requestPlatformWithdrawal(req.user.id, dto);
   }
 
-  @Get('ledger/accounts/:id')
+  @Post('withdrawals/platform/:id/approve')
   @UseGuards(AdminGuard)
-  @RequirePermission('finance:read')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      return `ledger:account:${request.params.id}`;
-    },
-    ttl: 300,
-    tags: ['finance', 'ledger'],
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @InvalidateCache(['finance', 'wallet', 'withdrawals'])
+  @ApiOperation({
+    summary: 'Approve platform withdrawal (Platform Admin only)',
   })
-  @ApiOperation({ summary: 'Get ledger account by ID (Admin only)' })
-  @ApiParam({ name: 'id', description: 'Ledger account ID' })
-  @ApiResponse({ status: 200, description: 'Ledger account retrieved' })
-  async getLedgerAccountById(@Param('id') id: string) {
-    this.logger.log(`Get ledger account by ID endpoint called: ${id}`);
-    return this.ledgerService.getLedgerAccountById(id);
+  @ApiParam({ name: 'id', description: 'Withdrawal ID' })
+  @ApiResponse({ status: 200, description: 'Platform withdrawal approved' })
+  async approvePlatformWithdrawal(
+    @Param('id') id: string,
+    @Request() req: any,
+  ) {
+    this.logger.log('Approve platform withdrawal endpoint called');
+    return this.financeService.approvePlatformWithdrawal(id, req.user.id);
   }
 
-  @Get('ledger/accounts/:id/balance')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:read')
+  // ============================================
+  // WITHDRAWAL HISTORY ENDPOINTS
+  // ============================================
+
+  @Get('withdrawals')
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      return `ledger:account:balance:${request.params.id}`;
+      const userId = request.user.id;
+      const { status, type, organizationId, page, limit, startDate, endDate } =
+        request.query;
+      return `withdrawals:v2:user:${userId}:${organizationId || 'self'}:${status || 'all'}:${type || 'all'}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}`;
     },
     ttl: 60,
-    tags: ['finance', 'ledger'],
+    tags: ['finance', 'withdrawals'],
   })
-  @ApiOperation({ summary: 'Get ledger account balance (Admin only)' })
-  @ApiParam({ name: 'id', description: 'Ledger account ID' })
-  @ApiResponse({ status: 200, description: 'Ledger account balance retrieved' })
-  async getLedgerAccountBalance(@Param('id') id: string) {
-    this.logger.log(`Get ledger account balance endpoint called: ${id}`);
-    return this.ledgerService.getLedgerAccountBalance(id);
-  }
-
-  @Get('ledger/journals')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:read')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      const { status, startDate, endDate, transactionId, paymentId } =
-        request.query;
-      return `ledger:journals:${status || 'all'}:${startDate || 'all'}:${endDate || 'all'}:${transactionId || 'all'}:${paymentId || 'all'}`;
-    },
-    ttl: 300,
-    tags: ['finance', 'ledger', 'journal'],
-  })
-  @ApiOperation({ summary: 'Get journal entries (Admin only)' })
+  @ApiOperation({ summary: 'Get withdrawal history' })
   @ApiQuery({
     name: 'status',
     required: false,
-    enum: ['DRAFT', 'POSTED', 'REVERSED', 'VOIDED'],
+    enum: ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED'],
   })
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    enum: ['USER', 'ORGANIZATION', 'PLATFORM'],
+  })
+  @ApiQuery({
+    name: 'organizationId',
+    required: false,
+    description:
+      'Organization wallet to query. Requires an active admin role within that organization scope.',
+  })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({
     name: 'startDate',
     required: false,
     description: 'Start date (ISO)',
   })
   @ApiQuery({ name: 'endDate', required: false, description: 'End date (ISO)' })
-  @ApiQuery({
-    name: 'transactionId',
-    required: false,
-    description: 'Filter by transaction ID',
-  })
-  @ApiQuery({
-    name: 'paymentId',
-    required: false,
-    description: 'Filter by payment ID',
-  })
-  @ApiResponse({ status: 200, description: 'Journal entries retrieved' })
-  async getJournalEntries(
-    @Query('status') status?: string,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
-    @Query('transactionId') transactionId?: string,
-    @Query('paymentId') paymentId?: string,
-  ) {
-    this.logger.log('Get journal entries endpoint called');
-    return this.ledgerService.getJournalEntries({
-      status,
-      startDate: startDate ? new Date(startDate) : undefined,
-      endDate: endDate ? new Date(endDate) : undefined,
-      transactionId,
-      paymentId,
-    });
-  }
-
-  @Get('ledger/journals/:id')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:read')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      return `ledger:journal:${request.params.id}`;
-    },
-    ttl: 300,
-    tags: ['finance', 'ledger', 'journal'],
-  })
-  @ApiOperation({ summary: 'Get journal entry by ID (Admin only)' })
-  @ApiParam({ name: 'id', description: 'Journal entry ID' })
-  @ApiResponse({ status: 200, description: 'Journal entry retrieved' })
-  async getJournalEntryById(@Param('id') id: string) {
-    this.logger.log(`Get journal entry by ID endpoint called: ${id}`);
-    return this.ledgerService.getJournalEntryById(id);
-  }
-
-  @Post('ledger/journals/:id/reverse')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:manage')
-  @InvalidateCache(['finance', 'ledger', 'journal'])
-  @ApiOperation({ summary: 'Reverse journal entry (Admin only)' })
-  @ApiParam({ name: 'id', description: 'Journal entry ID' })
-  @ApiBody({
-    schema: { type: 'object', properties: { reason: { type: 'string' } } },
-  })
-  @ApiResponse({ status: 200, description: 'Journal entry reversed' })
-  async reverseJournalEntry(
-    @Param('id') id: string,
+  @ApiResponse({ status: 200, description: 'Withdrawal history retrieved' })
+  async getWithdrawalHistory(
     @Request() req: any,
-    @Body() body: { reason: string },
+    @Query() filters: WithdrawalFilterDto,
   ) {
-    this.logger.log(`Reverse journal entry endpoint called: ${id}`);
-    return this.ledgerService.reverseJournalEntry(id, body.reason, req.user.id);
+    this.logger.log('Get withdrawal history endpoint called');
+    return this.financeService.getWithdrawalHistory(req.user.id, filters);
   }
 
-  @Post('ledger/reconcile')
+  @Get('withdrawals/admin')
   @UseGuards(AdminGuard)
-  @RequirePermission('finance:manage')
-  @InvalidateCache(['finance', 'ledger'])
-  @ApiOperation({ summary: 'Reconcile ledger accounts (Admin only)' })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        startDate: { type: 'string', format: 'date-time' },
-        endDate: { type: 'string', format: 'date-time' },
-      },
-      required: ['startDate', 'endDate'],
-    },
-  })
-  @ApiResponse({ status: 200, description: 'Reconciliation completed' })
-  async reconcileAccounts(
+  @RequireAdminType('PLATFORM_ADMIN')
+  @RequirePermission('finance:withdrawal:approve')
+  @ApiOperation({ summary: 'List withdrawal requests for platform review' })
+  async getAdminWithdrawalHistory(
     @Request() req: any,
-    @Body() body: { startDate: string; endDate: string },
+    @Query() filters: WithdrawalFilterDto,
   ) {
-    this.logger.log('Reconcile accounts endpoint called');
-    return this.ledgerService.reconcileAccounts(
-      new Date(body.startDate),
-      new Date(body.endDate),
-    );
+    return this.financeService.getWithdrawalHistory(req.user.id, filters, true);
+  }
+
+  @Get('withdrawals/:id')
+  @ApiOperation({ summary: 'Get withdrawal by ID' })
+  @ApiParam({ name: 'id', description: 'Withdrawal ID' })
+  @ApiResponse({ status: 200, description: 'Withdrawal retrieved' })
+  async getWithdrawalById(@Param('id') id: string, @Request() req: any) {
+    this.logger.log('Get withdrawal by ID endpoint called');
+    return this.financeService.getWithdrawalById(id, req.user.id);
   }
 
   // ============================================
-  // CHARGES CALCULATION
-  // ============================================
-
-  @Get('charges/calculate')
-  @ApiOperation({ summary: 'Calculate charges for a payment amount' })
-  @ApiQuery({ name: 'amount', description: 'Amount in Kobo' })
-  async calculateCharges(@Query('amount') amount: string) {
-    const amountNum = parseInt(amount, 10);
-    if (isNaN(amountNum) || amountNum <= 0) {
-      throw new BadRequestException('Invalid amount');
-    }
-
-    const charges = this.ledgerService.calculatePaymentCharges(amountNum);
-
-    return {
-      amount: {
-        kobo: amountNum,
-        naira: (amountNum / 100).toFixed(2),
-        formatted: `₦${(amountNum / 100).toFixed(2)}`,
-      },
-      charges: {
-        platformFee: {
-          kobo: charges.platformFee,
-          naira: (charges.platformFee / 100).toFixed(2),
-          formatted: `₦${(charges.platformFee / 100).toFixed(2)}`,
-          percentage: '2%',
-        },
-        paystackFee: {
-          kobo: charges.paystackFee,
-          naira: (charges.paystackFee / 100).toFixed(2),
-          formatted: `₦${(charges.paystackFee / 100).toFixed(2)}`,
-          percentage: '1.5% + ₦100',
-        },
-        vat: {
-          kobo: charges.vat,
-          naira: (charges.vat / 100).toFixed(2),
-          formatted: `₦${(charges.vat / 100).toFixed(2)}`,
-          percentage: '7.5% (on platform fee)',
-        },
-        totalCharges: {
-          kobo: charges.totalCharges,
-          naira: (charges.totalCharges / 100).toFixed(2),
-          formatted: `₦${(charges.totalCharges / 100).toFixed(2)}`,
-        },
-      },
-      totalToPay: {
-        kobo: charges.totalAmount,
-        naira: (charges.totalAmount / 100).toFixed(2),
-        formatted: `₦${(charges.totalAmount / 100).toFixed(2)}`,
-      },
-      organizationReceives: {
-        kobo: charges.netToOrganization,
-        naira: (charges.netToOrganization / 100).toFixed(2),
-        formatted: `₦${(charges.netToOrganization / 100).toFixed(2)}`,
-      },
-    };
-  }
-
-  // ============================================
-  // REPORT ENDPOINTS
-  // ============================================
-
-  @Get('reports/overview')
-  @UseGuards(AdminGuard)
-  @RequirePermission('finance:reports')
-  @Cache({
-    key: (context) => {
-      const request = context.switchToHttp().getRequest();
-      return `reports:overview:${request.query.institutionId || 'all'}`;
-    },
-    ttl: 900,
-    tags: ['finance', 'reports'],
-  })
-  @ApiOperation({ summary: 'Get financial overview (Admin only)' })
-  @ApiQuery({
-    name: 'institutionId',
-    required: false,
-    description: 'Filter by institution',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Financial overview retrieved',
-  })
-  async getFinancialOverview(@Query('institutionId') institutionId?: string) {
-    this.logger.log('Get financial overview endpoint called');
-    return this.financeService.getFinancialOverview(institutionId);
-  }
-
-  // ============================================
-  // IDEMPOTENCY KEY GENERATION
+  // IDEMPOTENCY KEY ENDPOINT
   // ============================================
 
   @Post('idempotency-key')
   @ApiOperation({
     summary: 'Generate idempotency key',
-    description: 'Generates a unique idempotency key for payment requests',
+    description:
+      'Generates a unique idempotency key for payment processing to prevent duplicate payments.',
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.CREATED,
     description: 'Idempotency key generated',
     schema: {
       type: 'object',
       properties: {
-        idempotencyKey: { type: 'string' },
-        expiresIn: { type: 'number' },
-        message: { type: 'string' },
+        idempotencyKey: {
+          type: 'string',
+          example: 'pay_abc123def456',
+        },
+        expiresIn: {
+          type: 'number',
+          example: 3600,
+        },
+        message: {
+          type: 'string',
+          example: 'Idempotency key generated successfully',
+        },
       },
     },
   })
   async generateIdempotencyKey(@Request() req: any) {
-    const key = this.idempotencyService.generateKey();
-    return {
-      idempotencyKey: key,
-      expiresIn: 86400,
-      message:
-        'Use this key in the Idempotency-Key header of your payment request',
-    };
+    this.logger.log('Generate idempotency key endpoint called');
+    return this.financeService.generateIdempotencyKey(req.user.id);
   }
 
   // ============================================

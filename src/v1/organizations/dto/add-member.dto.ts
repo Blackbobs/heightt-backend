@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID, IsEnum, IsOptional, IsBoolean } from 'class-validator';
+import { IsString, IsEnum, IsOptional, IsBoolean } from 'class-validator';
 
 export class AddMemberDto {
   @ApiProperty({ example: 'user_123', description: 'User ID' })
-  @IsUUID()
+  @IsString()
   userId: string;
 
   @ApiProperty({
@@ -37,6 +37,6 @@ export class AddMemberDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   sessionId?: string;
 }

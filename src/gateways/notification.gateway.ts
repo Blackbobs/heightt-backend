@@ -22,11 +22,22 @@ interface AuthenticatedSocket extends Socket {
 }
 
 @WebSocketGateway({
-  cors: {
-    origin: process.env.FRONTEND_URL?.split(',') || [
-      'http://localhost:3000',
-      'http://localhost:3001',
-    ],
+    cors: {
+    origin: (origin: string, callback: (err: Error | null, allow: boolean) => void) => {
+      const rawOrigins =
+        process.env.CORS_ORIGIN ||
+        process.env.FRONTEND_URL ||
+        'http://localhost:3000,http://localhost:3001';
+      const allowedOrigins = rawOrigins
+        .split(',')
+        .map((o) => o.trim().replace(/\/+$/, ''))
+        .filter(Boolean);
+      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'), false);
+      }
+    },
     credentials: true,
   },
   namespace: 'notifications',
@@ -521,43 +532,30 @@ export class NotificationGateway
     });
   }
 
-  @OnEvent(SystemEvents.DUES_DUE_SOON)
-  async handleDuesDueSoon(data: any) {
-    this.logger.log(`Dues due soon: ${data.studentId}`);
+  @OnEvent(SystemEvents.WITHDRAWAL_COMPLETED)
+  async handleWithdrawalCompleted(data: any) {
+    this.logger.log(`Withdrawal completed: ${data.withdrawalId}`);
 
-    await this.sendToUser(data.userId, 'dues-due-soon', {
-      dueId: data.dueId,
+    await this.sendToUser(data.userId, 'withdrawal-completed', {
+      withdrawalId: data.withdrawalId,
       amount: data.amount,
-      dueDate: data.dueDate,
-      organizationId: data.organizationId,
-      daysUntilDue: data.daysUntilDue,
+      reference: data.reference,
+      completedAt: data.completedAt,
       timestamp: new Date().toISOString(),
     });
   }
 
-  @OnEvent(SystemEvents.DUES_OVERDUE)
-  async handleDuesOverdue(data: any) {
-    this.logger.log(`Dues overdue: ${data.studentId}`);
+  @OnEvent(SystemEvents.WITHDRAWAL_FAILED)
+  async handleWithdrawalFailed(data: any) {
+    this.logger.log(`Withdrawal failed: ${data.withdrawalId}`);
 
-    await this.sendToUser(data.userId, 'dues-overdue', {
-      dueId: data.dueId,
+    await this.sendToUser(data.userId, 'withdrawal-failed', {
+      withdrawalId: data.withdrawalId,
       amount: data.amount,
-      dueDate: data.dueDate,
-      organizationId: data.organizationId,
-      daysOverdue: data.daysOverdue,
+      reference: data.reference,
+      reason: data.reason,
       timestamp: new Date().toISOString(),
     });
-
-    // Notify organization admins
-    if (data.organizationId) {
-      await this.sendToOrganization(data.organizationId, 'dues-overdue', {
-        studentId: data.studentId,
-        dueId: data.dueId,
-        amount: data.amount,
-        daysOverdue: data.daysOverdue,
-        timestamp: new Date().toISOString(),
-      });
-    }
   }
 
   @OnEvent(SystemEvents.SAVINGS_GOAL_COMPLETED)

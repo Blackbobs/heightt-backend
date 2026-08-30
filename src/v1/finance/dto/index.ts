@@ -8,3 +8,5 @@ export * from './withdrawal-request.dto';
 export * from './create-savings-goal.dto';
 export * from './savings-deposit.dto';
 export * from './receipt-response.dto';
+export * from './bank-account.dto';
+export * from './withdrawal.dto';

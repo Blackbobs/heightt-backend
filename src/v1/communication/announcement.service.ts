@@ -1,4 +1,5 @@
 // src/v1/communication/announcement.service.ts
+
 import {
   Injectable,
   NotFoundException,
@@ -10,6 +11,7 @@ import { NotificationService } from './notification.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
 import { EventService, SystemEvents } from '../../events/event.service';
+import { PermissionService } from '../auth/permission.service';
 
 @Injectable()
 export class AnnouncementService {
@@ -20,7 +22,54 @@ export class AnnouncementService {
     private readonly cacheService: CacheService,
     private readonly notificationService: NotificationService,
     private readonly eventService: EventService,
+    private readonly permissionService: PermissionService,
   ) {}
+
+  // ============================================
+  // CHECK PERMISSION HELPER
+  // ============================================
+
+  private async hasAnnouncementPermission(
+    userId: string,
+    organizationId: string,
+  ): Promise<boolean> {
+    // Check if user is a Platform Admin
+    const isPlatformAdmin = await this.prisma.admin.findFirst({
+      where: {
+        userId,
+        status: 'ACTIVE',
+        adminType: 'PLATFORM_ADMIN',
+      },
+    });
+
+    if (isPlatformAdmin) {
+      return true;
+    }
+
+    // Check if user is an organization admin or staff
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: {
+        userId,
+        organizationId,
+        membershipType: { in: ['ADMIN', 'STAFF'] },
+        status: 'ACTIVE',
+      },
+    });
+
+    if (membership) {
+      return true;
+    }
+
+    // Check the RBAC admin-permission system (the same source AdminGuard
+    // checks). Users granted 'communication:create' (e.g. FACULTY_ADMIN)
+    // can manage announcements; resourceId scoping still applies when a
+    // grant specifies one.
+    return this.permissionService.checkPermission(
+      userId,
+      'communication:create',
+      organizationId,
+    );
+  }
 
   // ============================================
   // CREATE ANNOUNCEMENT
@@ -47,17 +96,13 @@ export class AnnouncementService {
       throw new NotFoundException('Organization not found');
     }
 
-    // Check if user has permission
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId: data.organizationId,
-        membershipType: { in: ['ADMIN', 'STAFF'] },
-        status: 'ACTIVE',
-      },
-    });
+    // Check if user has permission (Platform Admin OR Organization Admin/Staff)
+    const hasPermission = await this.hasAnnouncementPermission(
+      userId,
+      data.organizationId,
+    );
 
-    if (!membership) {
+    if (!hasPermission) {
       throw new ForbiddenException(
         'You do not have permission to create announcements',
       );
@@ -100,7 +145,45 @@ export class AnnouncementService {
   ) {
     const where: any = {};
     if (organizationId) {
-      where.organizationId = organizationId;
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: organizationId },
+        select: {
+          id: true,
+          type: true,
+          institutionId: true,
+          facultyId: true,
+          departmentId: true,
+        },
+      });
+      if (!organization) {
+        throw new NotFoundException('Organization not found');
+      }
+
+      // A hierarchy organization represents its whole scope. For example, a
+      // faculty feed includes announcements created by its level/department
+      // organizations as well as announcements created directly on faculty.
+      switch (organization.type) {
+        case 'INSTITUTION':
+          where.OR = [
+            { organizationId },
+            { organization: { institutionId: organization.institutionId } },
+          ];
+          break;
+        case 'FACULTY':
+          where.OR = [
+            { organizationId },
+            { organization: { facultyId: organization.facultyId } },
+          ];
+          break;
+        case 'DEPARTMENT':
+          where.OR = [
+            { organizationId },
+            { organization: { departmentId: organization.departmentId } },
+          ];
+          break;
+        default:
+          where.organizationId = organizationId;
+      }
     }
     if (filters?.isPublished !== undefined) {
       where.isPublished = filters.isPublished;
@@ -112,8 +195,8 @@ export class AnnouncementService {
       where.priority = filters.priority;
     }
 
-    // Only show non-expired announcements
-    where.OR = [{ expiresAt: null }, { expiresAt: { gt: new Date() } }];
+    // REMOVED: Expiration filter - now showing all announcements including expired ones
+    // where.OR = [{ expiresAt: null }, { expiresAt: { gt: new Date() } }];
 
     const skip = (page - 1) * limit;
     const [announcements, total] = await Promise.all([
@@ -143,7 +226,10 @@ export class AnnouncementService {
             },
           },
         },
-        orderBy: [{ priority: 'desc' }, { publishedAt: 'desc' }],
+        orderBy: [
+          { priority: 'desc' }, // URGENT first, then HIGH, NORMAL, LOW
+          { publishedAt: 'desc' }, // Newest first
+        ],
       }),
       this.prisma.announcement.count({ where }),
     ]);
@@ -200,7 +286,7 @@ export class AnnouncementService {
     // Cache for 10 minutes
     await this.cacheService.set(cacheKey, announcement, 600);
 
-    // Check if expired
+    // Check if expired (for informational purposes)
     if (announcement.expiresAt && announcement.expiresAt < new Date()) {
       return { ...announcement, isExpired: true };
     }
@@ -244,17 +330,13 @@ export class AnnouncementService {
       throw new NotFoundException('Announcement not found');
     }
 
-    // Check if user has permission
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId: announcement.organizationId,
-        membershipType: { in: ['ADMIN', 'STAFF'] },
-        status: 'ACTIVE',
-      },
-    });
+    // Check if user has permission (Platform Admin OR Organization Admin/Staff)
+    const hasPermission = await this.hasAnnouncementPermission(
+      userId,
+      announcement.organizationId,
+    );
 
-    if (!membership) {
+    if (!hasPermission) {
       throw new ForbiddenException(
         'You do not have permission to update this announcement',
       );
@@ -298,17 +380,13 @@ export class AnnouncementService {
       throw new BadRequestException('Announcement is already published');
     }
 
-    // Check if user has permission
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId: announcement.organizationId,
-        membershipType: { in: ['ADMIN', 'STAFF'] },
-        status: 'ACTIVE',
-      },
-    });
+    // Check if user has permission (Platform Admin OR Organization Admin/Staff)
+    const hasPermission = await this.hasAnnouncementPermission(
+      userId,
+      announcement.organizationId,
+    );
 
-    if (!membership) {
+    if (!hasPermission) {
       throw new ForbiddenException(
         'You do not have permission to publish this announcement',
       );
@@ -378,7 +456,9 @@ export class AnnouncementService {
       readAt: read.readAt,
     });
 
-    this.logger.log(`Announcement ${announcementId} marked as read by ${userId}`);
+    this.logger.log(
+      `Announcement ${announcementId} marked as read by ${userId}`,
+    );
     return read;
   }
 
@@ -398,26 +478,13 @@ export class AnnouncementService {
       throw new NotFoundException('Announcement not found');
     }
 
-    // Check if user has permission
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId: announcement.organizationId,
-        membershipType: { in: ['ADMIN', 'STAFF'] },
-        status: 'ACTIVE',
-      },
-    });
+    // Check if user has permission (Platform Admin OR Organization Admin/Staff)
+    const hasPermission = await this.hasAnnouncementPermission(
+      userId,
+      announcement.organizationId,
+    );
 
-    // Platform admins can delete any announcement
-    const isPlatformAdmin = await this.prisma.admin.findFirst({
-      where: {
-        userId,
-        status: 'ACTIVE',
-        adminType: 'PLATFORM_ADMIN',
-      },
-    });
-
-    if (!membership && !isPlatformAdmin) {
+    if (!hasPermission) {
       throw new ForbiddenException(
         'You do not have permission to delete this announcement',
       );
@@ -470,7 +537,8 @@ export class AnnouncementService {
       published,
       drafts,
       totalReads: reads,
-      engagementRate: published > 0 ? Math.round((reads / (published * 10)) * 100) : 0,
+      engagementRate:
+        published > 0 ? Math.round((reads / (published * 10)) * 100) : 0,
     };
 
     // Cache for 5 minutes
@@ -487,18 +555,22 @@ export class AnnouncementService {
       // Invalidate tags
       await this.cacheService.invalidateByTag('announcements');
       await this.cacheService.invalidateByTag('communication');
-      
+
       // Delete specific announcement if ID provided
       if (announcementId) {
         await this.cacheService.delete(`announcement:${announcementId}`);
       }
-      
+
       // Invalidate stats cache
       await this.cacheService.invalidatePattern('announcement:stats:*');
-      
-      this.logger.debug(`Announcement cache invalidated${announcementId ? ` for: ${announcementId}` : ''}`);
+
+      this.logger.debug(
+        `Announcement cache invalidated${announcementId ? ` for: ${announcementId}` : ''}`,
+      );
     } catch (error) {
-      this.logger.error(`Failed to invalidate announcement cache: ${error.message}`);
+      this.logger.error(
+        `Failed to invalidate announcement cache: ${error.message}`,
+      );
     }
   }
 }

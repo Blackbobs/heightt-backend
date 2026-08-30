@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model TicketPurchase
@@ -224,9 +224,9 @@ export type TicketPurchaseWhereInput = {
   amount?: Prisma.DecimalFilter<"TicketPurchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumTicketStatusFilter<"TicketPurchase"> | $Enums.TicketStatus
   purchasedAt?: Prisma.DateTimeFilter<"TicketPurchase"> | Date | string
+  registration?: Prisma.XOR<Prisma.EventRegistrationNullableScalarRelationFilter, Prisma.EventRegistrationWhereInput> | null
   ticket?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  registration?: Prisma.XOR<Prisma.EventRegistrationNullableScalarRelationFilter, Prisma.EventRegistrationWhereInput> | null
 }
 
 export type TicketPurchaseOrderByWithRelationInput = {
@@ -236,9 +236,9 @@ export type TicketPurchaseOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   purchasedAt?: Prisma.SortOrder
+  registration?: Prisma.EventRegistrationOrderByWithRelationInput
   ticket?: Prisma.TicketOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
-  registration?: Prisma.EventRegistrationOrderByWithRelationInput
 }
 
 export type TicketPurchaseWhereUniqueInput = Prisma.AtLeast<{
@@ -251,9 +251,9 @@ export type TicketPurchaseWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.DecimalFilter<"TicketPurchase"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumTicketStatusFilter<"TicketPurchase"> | $Enums.TicketStatus
   purchasedAt?: Prisma.DateTimeFilter<"TicketPurchase"> | Date | string
+  registration?: Prisma.XOR<Prisma.EventRegistrationNullableScalarRelationFilter, Prisma.EventRegistrationWhereInput> | null
   ticket?: Prisma.XOR<Prisma.TicketScalarRelationFilter, Prisma.TicketWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  registration?: Prisma.XOR<Prisma.EventRegistrationNullableScalarRelationFilter, Prisma.EventRegistrationWhereInput> | null
 }, "id" | "ticketId">
 
 export type TicketPurchaseOrderByWithAggregationInput = {
@@ -287,9 +287,9 @@ export type TicketPurchaseCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.TicketStatus
   purchasedAt?: Date | string
+  registration?: Prisma.EventRegistrationCreateNestedOneWithoutTicketPurchaseInput
   ticket: Prisma.TicketCreateNestedOneWithoutPurchaseInput
   user: Prisma.UserCreateNestedOneWithoutTicketPurchasesInput
-  registration?: Prisma.EventRegistrationCreateNestedOneWithoutTicketPurchaseInput
 }
 
 export type TicketPurchaseUncheckedCreateInput = {
@@ -307,9 +307,9 @@ export type TicketPurchaseUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registration?: Prisma.EventRegistrationUpdateOneWithoutTicketPurchaseNestedInput
   ticket?: Prisma.TicketUpdateOneRequiredWithoutPurchaseNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutTicketPurchasesNestedInput
-  registration?: Prisma.EventRegistrationUpdateOneWithoutTicketPurchaseNestedInput
 }
 
 export type TicketPurchaseUncheckedUpdateInput = {
@@ -496,8 +496,8 @@ export type TicketPurchaseCreateWithoutUserInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.TicketStatus
   purchasedAt?: Date | string
-  ticket: Prisma.TicketCreateNestedOneWithoutPurchaseInput
   registration?: Prisma.EventRegistrationCreateNestedOneWithoutTicketPurchaseInput
+  ticket: Prisma.TicketCreateNestedOneWithoutPurchaseInput
 }
 
 export type TicketPurchaseUncheckedCreateWithoutUserInput = {
@@ -552,8 +552,8 @@ export type TicketPurchaseCreateWithoutTicketInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: $Enums.TicketStatus
   purchasedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutTicketPurchasesInput
   registration?: Prisma.EventRegistrationCreateNestedOneWithoutTicketPurchaseInput
+  user: Prisma.UserCreateNestedOneWithoutTicketPurchasesInput
 }
 
 export type TicketPurchaseUncheckedCreateWithoutTicketInput = {
@@ -586,8 +586,8 @@ export type TicketPurchaseUpdateWithoutTicketInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutTicketPurchasesNestedInput
   registration?: Prisma.EventRegistrationUpdateOneWithoutTicketPurchaseNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutTicketPurchasesNestedInput
 }
 
 export type TicketPurchaseUncheckedUpdateWithoutTicketInput = {
@@ -664,8 +664,8 @@ export type TicketPurchaseUpdateWithoutUserInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.EnumTicketStatusFieldUpdateOperationsInput | $Enums.TicketStatus
   purchasedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ticket?: Prisma.TicketUpdateOneRequiredWithoutPurchaseNestedInput
   registration?: Prisma.EventRegistrationUpdateOneWithoutTicketPurchaseNestedInput
+  ticket?: Prisma.TicketUpdateOneRequiredWithoutPurchaseNestedInput
 }
 
 export type TicketPurchaseUncheckedUpdateWithoutUserInput = {
@@ -694,9 +694,9 @@ export type TicketPurchaseSelect<ExtArgs extends runtime.Types.Extensions.Intern
   amount?: boolean
   status?: boolean
   purchasedAt?: boolean
+  registration?: boolean | Prisma.TicketPurchase$registrationArgs<ExtArgs>
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  registration?: boolean | Prisma.TicketPurchase$registrationArgs<ExtArgs>
 }, ExtArgs["result"]["ticketPurchase"]>
 
 export type TicketPurchaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -732,9 +732,9 @@ export type TicketPurchaseSelectScalar = {
 
 export type TicketPurchaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ticketId" | "userId" | "amount" | "status" | "purchasedAt", ExtArgs["result"]["ticketPurchase"]>
 export type TicketPurchaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  registration?: boolean | Prisma.TicketPurchase$registrationArgs<ExtArgs>
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  registration?: boolean | Prisma.TicketPurchase$registrationArgs<ExtArgs>
 }
 export type TicketPurchaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ticket?: boolean | Prisma.TicketDefaultArgs<ExtArgs>
@@ -748,9 +748,9 @@ export type TicketPurchaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $TicketPurchasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "TicketPurchase"
   objects: {
+    registration: Prisma.$EventRegistrationPayload<ExtArgs> | null
     ticket: Prisma.$TicketPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
-    registration: Prisma.$EventRegistrationPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1153,9 +1153,9 @@ readonly fields: TicketPurchaseFieldRefs;
  */
 export interface Prisma__TicketPurchaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  registration<T extends Prisma.TicketPurchase$registrationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketPurchase$registrationArgs<ExtArgs>>): Prisma.Prisma__EventRegistrationClient<runtime.Types.Result.GetResult<Prisma.$EventRegistrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ticket<T extends Prisma.TicketDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketDefaultArgs<ExtArgs>>): Prisma.Prisma__TicketClient<runtime.Types.Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  registration<T extends Prisma.TicketPurchase$registrationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TicketPurchase$registrationArgs<ExtArgs>>): Prisma.Prisma__EventRegistrationClient<runtime.Types.Result.GetResult<Prisma.$EventRegistrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

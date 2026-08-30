@@ -65,7 +65,6 @@ export class DashboardService {
         studentId: student.id,
         isPaid: false,
         due: {
-          dueDate: { gt: new Date() },
           status: 'ACTIVE',
           organizationId: { in: organizationIds },
         },
@@ -78,7 +77,7 @@ export class DashboardService {
         },
       },
       take: 5,
-      orderBy: { due: { dueDate: 'asc' } },
+      orderBy: { createdAt: 'desc' },
     });
 
     // Get recent announcements
@@ -155,9 +154,7 @@ export class DashboardService {
           id: d.id,
           amount: Number(d.amount),
           formattedAmount: `₦${(Number(d.amount) / 100).toFixed(2)}`,
-          dueDate: d.due.dueDate,
           organization: d.due.organization?.name || 'Unknown',
-          isLate: d.due.dueDate < new Date(),
         })),
         totalUpcomingDues: upcomingDues.reduce(
           (sum, d) => sum + Number(d.amount),
@@ -208,23 +205,36 @@ export class DashboardService {
       return cached;
     }
 
-    // Check if user is an admin
-    const admin = await this.prisma.admin.findFirst({
+    const admins = await this.prisma.admin.findMany({
       where: {
         userId,
         status: 'ACTIVE',
       },
+      orderBy: {
+        assignedAt: 'asc',
+      },
     });
 
-    if (!admin) {
+    if (!admins.length) {
       throw new ForbiddenException('Admin access required');
     }
 
-    const isPlatformAdmin = admin.adminType === 'PLATFORM_ADMIN';
-    const institutionId = admin.institutionId;
+    const primaryAdmin = admins[0];
+    const organizationIds = [
+      ...new Set(
+        admins
+          .filter((admin) => admin.organizationId)
+          .map((admin) => admin.organizationId)
+          .filter(Boolean) as string[],
+      ),
+    ];
+    const isPlatformAdmin = primaryAdmin.adminType === 'PLATFORM_ADMIN';
+    const institutionId = primaryAdmin.institutionId;
 
     const where: any = {};
-    if (institutionId) {
+    if (organizationIds.length > 0) {
+      where.organizationId = { in: organizationIds };
+    } else if (institutionId) {
       where.institutionId = institutionId;
     }
 
@@ -269,7 +279,7 @@ export class DashboardService {
     // Get recent activities
     const recentActivities = await this.prisma.activityLog.findMany({
       where: {
-        OR: [{ userId: { in: await this.getUserIdsInScope(admin) } }],
+        OR: [{ userId: { in: await this.getUserIdsInScope(primaryAdmin) } }],
       },
       take: 10,
       orderBy: { createdAt: 'desc' },
@@ -305,12 +315,19 @@ export class DashboardService {
 
     const dashboard = {
       admin: {
-        type: admin.adminType,
-        scope: {
+        type: primaryAdmin.adminType,
+        scopes: admins.map((admin) => ({
+          adminType: admin.adminType,
           institutionId: admin.institutionId,
           facultyId: admin.facultyId,
           departmentId: admin.departmentId,
           organizationId: admin.organizationId,
+        })),
+        scope: {
+          institutionId: primaryAdmin.institutionId,
+          facultyId: primaryAdmin.facultyId,
+          departmentId: primaryAdmin.departmentId,
+          organizationId: primaryAdmin.organizationId,
         },
       },
       statistics: {
@@ -449,11 +466,14 @@ export class DashboardService {
   // CACHE INVALIDATION HELPERS
   // ============================================
 
-  async invalidateDashboardCache(userId?: string, dashboardType?: string): Promise<void> {
+  async invalidateDashboardCache(
+    userId?: string,
+    dashboardType?: string,
+  ): Promise<void> {
     try {
       // Invalidate all dashboard tags
       await this.cacheService.invalidateByTag('dashboard');
-      
+
       // Invalidate specific dashboard types
       if (dashboardType === 'student' || !dashboardType) {
         await this.cacheService.invalidateByTag('student');
@@ -464,7 +484,7 @@ export class DashboardService {
       if (dashboardType === 'platform' || !dashboardType) {
         await this.cacheService.invalidateByTag('platform');
       }
-      
+
       // Invalidate specific user dashboard
       if (userId) {
         await this.cacheService.invalidateByTag(`user:${userId}`);
@@ -473,15 +493,19 @@ export class DashboardService {
         await this.cacheService.delete(`dashboard:platform:${userId}`);
         await this.cacheService.invalidatePattern(`dashboard:*:${userId}`);
       }
-      
+
       // Invalidate all dashboard patterns if no specific target
       if (!userId && !dashboardType) {
         await this.cacheService.invalidatePattern('dashboard:*');
       }
-      
-      this.logger.log(`Dashboard cache invalidated${userId ? ` for user: ${userId}` : ''}${dashboardType ? ` for type: ${dashboardType}` : ''}`);
+
+      this.logger.log(
+        `Dashboard cache invalidated${userId ? ` for user: ${userId}` : ''}${dashboardType ? ` for type: ${dashboardType}` : ''}`,
+      );
     } catch (error) {
-      this.logger.error(`Failed to invalidate dashboard cache: ${error.message}`);
+      this.logger.error(
+        `Failed to invalidate dashboard cache: ${error.message}`,
+      );
     }
   }
 

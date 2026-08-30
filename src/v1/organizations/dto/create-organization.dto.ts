@@ -2,11 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsOptional,
-  IsUUID,
   IsEnum,
   MinLength,
   MaxLength,
   Matches,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateOrganizationDto {
@@ -39,6 +39,16 @@ export class CreateOrganizationDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiProperty({
+    example: 'https://res.cloudinary.com/demo/image/upload/logo.png',
+    description:
+      'Organization logo URL (upload via the files module, then pass the secure URL)',
+    required: false,
+  })
+  @IsOptional()
+  @IsUrl({ require_protocol: true })
+  logo?: string;
 
   @ApiProperty({
     enum: [
@@ -91,7 +101,7 @@ export class CreateOrganizationDto {
   scope: string;
 
   @ApiProperty({ example: 'inst_123', description: 'Institution ID' })
-  @IsUUID()
+  @IsString()
   institutionId: string;
 
   @ApiProperty({
@@ -100,7 +110,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   facultyId?: string;
 
   @ApiProperty({
@@ -109,7 +119,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   departmentId?: string;
 
   @ApiProperty({
@@ -118,7 +128,7 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   academicLevelId?: string;
 
   @ApiProperty({
@@ -127,6 +137,15 @@ export class CreateOrganizationDto {
     required: false,
   })
   @IsOptional()
-  @IsUUID()
+  @IsString()
   parentOrganizationId?: string;
+
+  @ApiProperty({
+    example: 'sess_123',
+    description: 'Academic session ID (optional)',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  academicSessionId?: string;
 }

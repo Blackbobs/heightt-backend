@@ -31,8 +31,6 @@ export enum SystemEvents {
 
   // Due Events
   DUES_ASSIGNED = 'dues.assigned',
-  DUES_DUE_SOON = 'dues.due_soon',
-  DUES_OVERDUE = 'dues.overdue',
   DUES_PAID = 'dues.paid',
 
   // Savings Events

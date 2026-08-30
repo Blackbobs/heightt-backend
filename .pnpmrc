@@ -1,0 +1,14 @@
+# Fix for pnpm linking issues in Docker on macOS
+package-import-method=clone-or-copy
+
+# Also add these for good measure
+node-linker=hoisted
+
+# Allow build scripts
+only-built-dependencies[0]=@prisma/engines
+only-built-dependencies[1]=prisma
+only-built-dependencies[2]=argon2
+only-built-dependencies[3]=msgpackr-extract
+only-built-dependencies[4]=unrs-resolver
+only-built-dependencies[5]=@scarf/scarf
+package-manager-strict=false

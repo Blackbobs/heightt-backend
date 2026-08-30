@@ -1,40 +1,36 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, MinLength, MaxLength } from 'class-validator';
 
 export class UpdateDepartmentDto {
-  @ApiProperty({
-    example: 'Department of Computer Science',
-    description: 'Department name',
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  @MinLength(2)
+  @MaxLength(255)
   name?: string;
 
-  @ApiProperty({
-    example: 'CSC',
-    description: 'Department code',
-    required: false,
-  })
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  @MinLength(2)
+  @MaxLength(20)
   code?: string;
 
-  @ApiProperty({
-    enum: ['AUTOMATIC', 'MANUAL'],
-    description: 'Promotion type',
-    required: false,
-  })
+  @ApiProperty({ enum: ['AUTOMATIC', 'MANUAL'], required: false })
   @IsOptional()
   @IsString()
   promotionType?: 'AUTOMATIC' | 'MANUAL';
 
-  @ApiProperty({
-    enum: ['ACTIVE', 'INACTIVE', 'ARCHIVED'],
-    description: 'Department status',
-    required: false,
-  })
+  @ApiProperty({ enum: ['ACTIVE', 'INACTIVE', 'ARCHIVED'], required: false })
   @IsOptional()
   @IsString()
   status?: 'ACTIVE' | 'INACTIVE' | 'ARCHIVED';
+
+  @ApiProperty({
+    required: false,
+    description: 'Department logo URL (upload via the files module, then pass the URL)',
+  })
+  @IsOptional()
+  @IsString()
+  logo?: string;
 }

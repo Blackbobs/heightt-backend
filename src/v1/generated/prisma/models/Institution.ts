@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Institution
@@ -294,12 +294,12 @@ export type InstitutionWhereInput = {
   deletedBy?: Prisma.StringNullableFilter<"Institution"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Institution"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Institution"> | Date | string
-  faculties?: Prisma.FacultyListRelationFilter
   sessions?: Prisma.AcademicSessionListRelationFilter
+  admins?: Prisma.AdminListRelationFilter
+  dues?: Prisma.DueListRelationFilter
+  faculties?: Prisma.FacultyListRelationFilter
   organizations?: Prisma.OrganizationListRelationFilter
   students?: Prisma.StudentProfileListRelationFilter
-  dues?: Prisma.DueListRelationFilter
-  admins?: Prisma.AdminListRelationFilter
 }
 
 export type InstitutionOrderByWithRelationInput = {
@@ -322,12 +322,12 @@ export type InstitutionOrderByWithRelationInput = {
   deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  faculties?: Prisma.FacultyOrderByRelationAggregateInput
   sessions?: Prisma.AcademicSessionOrderByRelationAggregateInput
+  admins?: Prisma.AdminOrderByRelationAggregateInput
+  dues?: Prisma.DueOrderByRelationAggregateInput
+  faculties?: Prisma.FacultyOrderByRelationAggregateInput
   organizations?: Prisma.OrganizationOrderByRelationAggregateInput
   students?: Prisma.StudentProfileOrderByRelationAggregateInput
-  dues?: Prisma.DueOrderByRelationAggregateInput
-  admins?: Prisma.AdminOrderByRelationAggregateInput
 }
 
 export type InstitutionWhereUniqueInput = Prisma.AtLeast<{
@@ -353,12 +353,12 @@ export type InstitutionWhereUniqueInput = Prisma.AtLeast<{
   deletedBy?: Prisma.StringNullableFilter<"Institution"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Institution"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Institution"> | Date | string
-  faculties?: Prisma.FacultyListRelationFilter
   sessions?: Prisma.AcademicSessionListRelationFilter
+  admins?: Prisma.AdminListRelationFilter
+  dues?: Prisma.DueListRelationFilter
+  faculties?: Prisma.FacultyListRelationFilter
   organizations?: Prisma.OrganizationListRelationFilter
   students?: Prisma.StudentProfileListRelationFilter
-  dues?: Prisma.DueListRelationFilter
-  admins?: Prisma.AdminListRelationFilter
 }, "id" | "code">
 
 export type InstitutionOrderByWithAggregationInput = {
@@ -431,12 +431,12 @@ export type InstitutionCreateInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateInput = {
@@ -459,12 +459,12 @@ export type InstitutionUncheckedCreateInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUpdateInput = {
@@ -487,12 +487,12 @@ export type InstitutionUpdateInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateInput = {
@@ -515,12 +515,12 @@ export type InstitutionUncheckedUpdateInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateManyInput = {
@@ -778,10 +778,10 @@ export type InstitutionCreateWithoutFacultiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutFacultiesInput = {
@@ -805,10 +805,10 @@ export type InstitutionUncheckedCreateWithoutFacultiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutFacultiesInput = {
@@ -848,10 +848,10 @@ export type InstitutionUpdateWithoutFacultiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutFacultiesInput = {
@@ -875,10 +875,10 @@ export type InstitutionUncheckedUpdateWithoutFacultiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutSessionsInput = {
@@ -901,11 +901,11 @@ export type InstitutionCreateWithoutSessionsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutSessionsInput = {
@@ -928,11 +928,11 @@ export type InstitutionUncheckedCreateWithoutSessionsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutSessionsInput = {
@@ -971,11 +971,11 @@ export type InstitutionUpdateWithoutSessionsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutSessionsInput = {
@@ -998,11 +998,11 @@ export type InstitutionUncheckedUpdateWithoutSessionsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutStudentsInput = {
@@ -1025,11 +1025,11 @@ export type InstitutionCreateWithoutStudentsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
-  organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutStudentsInput = {
@@ -1052,11 +1052,11 @@ export type InstitutionUncheckedCreateWithoutStudentsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
-  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutStudentsInput = {
@@ -1095,11 +1095,11 @@ export type InstitutionUpdateWithoutStudentsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
-  organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
+  organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutStudentsInput = {
@@ -1122,11 +1122,11 @@ export type InstitutionUncheckedUpdateWithoutStudentsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
-  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutOrganizationsInput = {
@@ -1149,11 +1149,11 @@ export type InstitutionCreateWithoutOrganizationsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
-  students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
+  students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutOrganizationsInput = {
@@ -1176,11 +1176,11 @@ export type InstitutionUncheckedCreateWithoutOrganizationsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
-  students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
+  students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutOrganizationsInput = {
@@ -1219,11 +1219,11 @@ export type InstitutionUpdateWithoutOrganizationsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
-  students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
+  students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutOrganizationsInput = {
@@ -1246,11 +1246,11 @@ export type InstitutionUncheckedUpdateWithoutOrganizationsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
-  students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
+  students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutAdminsInput = {
@@ -1273,11 +1273,11 @@ export type InstitutionCreateWithoutAdminsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutAdminsInput = {
@@ -1300,11 +1300,11 @@ export type InstitutionUncheckedCreateWithoutAdminsInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
-  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutAdminsInput = {
@@ -1343,11 +1343,11 @@ export type InstitutionUpdateWithoutAdminsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutAdminsInput = {
@@ -1370,11 +1370,11 @@ export type InstitutionUncheckedUpdateWithoutAdminsInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
-  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutDuesInput = {
@@ -1397,11 +1397,11 @@ export type InstitutionCreateWithoutDuesInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutDuesInput = {
@@ -1424,11 +1424,11 @@ export type InstitutionUncheckedCreateWithoutDuesInput = {
   deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
-  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutDuesInput = {
@@ -1467,11 +1467,11 @@ export type InstitutionUpdateWithoutDuesInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutDuesInput = {
@@ -1494,11 +1494,11 @@ export type InstitutionUncheckedUpdateWithoutDuesInput = {
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 
@@ -1507,21 +1507,21 @@ export type InstitutionUncheckedUpdateWithoutDuesInput = {
  */
 
 export type InstitutionCountOutputType = {
-  faculties: number
   sessions: number
+  admins: number
+  dues: number
+  faculties: number
   organizations: number
   students: number
-  dues: number
-  admins: number
 }
 
 export type InstitutionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  faculties?: boolean | InstitutionCountOutputTypeCountFacultiesArgs
   sessions?: boolean | InstitutionCountOutputTypeCountSessionsArgs
+  admins?: boolean | InstitutionCountOutputTypeCountAdminsArgs
+  dues?: boolean | InstitutionCountOutputTypeCountDuesArgs
+  faculties?: boolean | InstitutionCountOutputTypeCountFacultiesArgs
   organizations?: boolean | InstitutionCountOutputTypeCountOrganizationsArgs
   students?: boolean | InstitutionCountOutputTypeCountStudentsArgs
-  dues?: boolean | InstitutionCountOutputTypeCountDuesArgs
-  admins?: boolean | InstitutionCountOutputTypeCountAdminsArgs
 }
 
 /**
@@ -1537,15 +1537,29 @@ export type InstitutionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
 /**
  * InstitutionCountOutputType without action
  */
-export type InstitutionCountOutputTypeCountFacultiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FacultyWhereInput
+export type InstitutionCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AcademicSessionWhereInput
 }
 
 /**
  * InstitutionCountOutputType without action
  */
-export type InstitutionCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AcademicSessionWhereInput
+export type InstitutionCountOutputTypeCountAdminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminWhereInput
+}
+
+/**
+ * InstitutionCountOutputType without action
+ */
+export type InstitutionCountOutputTypeCountDuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DueWhereInput
+}
+
+/**
+ * InstitutionCountOutputType without action
+ */
+export type InstitutionCountOutputTypeCountFacultiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FacultyWhereInput
 }
 
 /**
@@ -1560,20 +1574,6 @@ export type InstitutionCountOutputTypeCountOrganizationsArgs<ExtArgs extends run
  */
 export type InstitutionCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.StudentProfileWhereInput
-}
-
-/**
- * InstitutionCountOutputType without action
- */
-export type InstitutionCountOutputTypeCountDuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DueWhereInput
-}
-
-/**
- * InstitutionCountOutputType without action
- */
-export type InstitutionCountOutputTypeCountAdminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AdminWhereInput
 }
 
 
@@ -1597,12 +1597,12 @@ export type InstitutionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   deletedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  faculties?: boolean | Prisma.Institution$facultiesArgs<ExtArgs>
   sessions?: boolean | Prisma.Institution$sessionsArgs<ExtArgs>
+  admins?: boolean | Prisma.Institution$adminsArgs<ExtArgs>
+  dues?: boolean | Prisma.Institution$duesArgs<ExtArgs>
+  faculties?: boolean | Prisma.Institution$facultiesArgs<ExtArgs>
   organizations?: boolean | Prisma.Institution$organizationsArgs<ExtArgs>
   students?: boolean | Prisma.Institution$studentsArgs<ExtArgs>
-  dues?: boolean | Prisma.Institution$duesArgs<ExtArgs>
-  admins?: boolean | Prisma.Institution$adminsArgs<ExtArgs>
   _count?: boolean | Prisma.InstitutionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["institution"]>
 
@@ -1674,12 +1674,12 @@ export type InstitutionSelectScalar = {
 
 export type InstitutionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "shortName" | "code" | "logo" | "website" | "email" | "phone" | "address" | "city" | "state" | "country" | "status" | "createdBy" | "updatedBy" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["institution"]>
 export type InstitutionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  faculties?: boolean | Prisma.Institution$facultiesArgs<ExtArgs>
   sessions?: boolean | Prisma.Institution$sessionsArgs<ExtArgs>
+  admins?: boolean | Prisma.Institution$adminsArgs<ExtArgs>
+  dues?: boolean | Prisma.Institution$duesArgs<ExtArgs>
+  faculties?: boolean | Prisma.Institution$facultiesArgs<ExtArgs>
   organizations?: boolean | Prisma.Institution$organizationsArgs<ExtArgs>
   students?: boolean | Prisma.Institution$studentsArgs<ExtArgs>
-  dues?: boolean | Prisma.Institution$duesArgs<ExtArgs>
-  admins?: boolean | Prisma.Institution$adminsArgs<ExtArgs>
   _count?: boolean | Prisma.InstitutionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstitutionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1688,12 +1688,12 @@ export type InstitutionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $InstitutionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Institution"
   objects: {
-    faculties: Prisma.$FacultyPayload<ExtArgs>[]
     sessions: Prisma.$AcademicSessionPayload<ExtArgs>[]
+    admins: Prisma.$AdminPayload<ExtArgs>[]
+    dues: Prisma.$DuePayload<ExtArgs>[]
+    faculties: Prisma.$FacultyPayload<ExtArgs>[]
     organizations: Prisma.$OrganizationPayload<ExtArgs>[]
     students: Prisma.$StudentProfilePayload<ExtArgs>[]
-    dues: Prisma.$DuePayload<ExtArgs>[]
-    admins: Prisma.$AdminPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2109,12 +2109,12 @@ readonly fields: InstitutionFieldRefs;
  */
 export interface Prisma__InstitutionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  faculties<T extends Prisma.Institution$facultiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$facultiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.Institution$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  admins<T extends Prisma.Institution$adminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dues<T extends Prisma.Institution$duesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$duesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  faculties<T extends Prisma.Institution$facultiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$facultiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organizations<T extends Prisma.Institution$organizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$organizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   students<T extends Prisma.Institution$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  dues<T extends Prisma.Institution$duesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$duesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  admins<T extends Prisma.Institution$adminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2556,30 +2556,6 @@ export type InstitutionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * Institution.faculties
- */
-export type Institution$facultiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Faculty
-   */
-  select?: Prisma.FacultySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Faculty
-   */
-  omit?: Prisma.FacultyOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FacultyInclude<ExtArgs> | null
-  where?: Prisma.FacultyWhereInput
-  orderBy?: Prisma.FacultyOrderByWithRelationInput | Prisma.FacultyOrderByWithRelationInput[]
-  cursor?: Prisma.FacultyWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FacultyScalarFieldEnum | Prisma.FacultyScalarFieldEnum[]
-}
-
-/**
  * Institution.sessions
  */
 export type Institution$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2601,6 +2577,78 @@ export type Institution$sessionsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.AcademicSessionScalarFieldEnum | Prisma.AcademicSessionScalarFieldEnum[]
+}
+
+/**
+ * Institution.admins
+ */
+export type Institution$adminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Admin
+   */
+  select?: Prisma.AdminSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Admin
+   */
+  omit?: Prisma.AdminOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminInclude<ExtArgs> | null
+  where?: Prisma.AdminWhereInput
+  orderBy?: Prisma.AdminOrderByWithRelationInput | Prisma.AdminOrderByWithRelationInput[]
+  cursor?: Prisma.AdminWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminScalarFieldEnum | Prisma.AdminScalarFieldEnum[]
+}
+
+/**
+ * Institution.dues
+ */
+export type Institution$duesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Due
+   */
+  select?: Prisma.DueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Due
+   */
+  omit?: Prisma.DueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DueInclude<ExtArgs> | null
+  where?: Prisma.DueWhereInput
+  orderBy?: Prisma.DueOrderByWithRelationInput | Prisma.DueOrderByWithRelationInput[]
+  cursor?: Prisma.DueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DueScalarFieldEnum | Prisma.DueScalarFieldEnum[]
+}
+
+/**
+ * Institution.faculties
+ */
+export type Institution$facultiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Faculty
+   */
+  select?: Prisma.FacultySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Faculty
+   */
+  omit?: Prisma.FacultyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FacultyInclude<ExtArgs> | null
+  where?: Prisma.FacultyWhereInput
+  orderBy?: Prisma.FacultyOrderByWithRelationInput | Prisma.FacultyOrderByWithRelationInput[]
+  cursor?: Prisma.FacultyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FacultyScalarFieldEnum | Prisma.FacultyScalarFieldEnum[]
 }
 
 /**
@@ -2649,54 +2697,6 @@ export type Institution$studentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.StudentProfileScalarFieldEnum | Prisma.StudentProfileScalarFieldEnum[]
-}
-
-/**
- * Institution.dues
- */
-export type Institution$duesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Due
-   */
-  select?: Prisma.DueSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Due
-   */
-  omit?: Prisma.DueOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.DueInclude<ExtArgs> | null
-  where?: Prisma.DueWhereInput
-  orderBy?: Prisma.DueOrderByWithRelationInput | Prisma.DueOrderByWithRelationInput[]
-  cursor?: Prisma.DueWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.DueScalarFieldEnum | Prisma.DueScalarFieldEnum[]
-}
-
-/**
- * Institution.admins
- */
-export type Institution$adminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Admin
-   */
-  select?: Prisma.AdminSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Admin
-   */
-  omit?: Prisma.AdminOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AdminInclude<ExtArgs> | null
-  where?: Prisma.AdminWhereInput
-  orderBy?: Prisma.AdminOrderByWithRelationInput | Prisma.AdminOrderByWithRelationInput[]
-  cursor?: Prisma.AdminWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AdminScalarFieldEnum | Prisma.AdminScalarFieldEnum[]
 }
 
 /**

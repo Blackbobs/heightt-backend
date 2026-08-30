@@ -10,13 +10,11 @@ export class CookieService {
 
   setAccessTokenCookie(response: Response, token: string): void {
     const isProduction = process.env.NODE_ENV === 'production';
-
-    // Get expiry in seconds from config, default to 900 (15 minutes)
     const expirySeconds = parseInt(
       this.configService.get('JWT_ACCESS_EXPIRY', '900'),
       10,
     );
-    const maxAgeMs = expirySeconds * 1000; // Convert to milliseconds
+    const maxAgeMs = expirySeconds * 1000;
 
     this.logger.debug(
       `Setting access token cookie with maxAge: ${maxAgeMs}ms (${expirySeconds}s)`,
@@ -25,20 +23,20 @@ export class CookieService {
     response.cookie('accessToken', token, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      maxAge: maxAgeMs, // Express expects milliseconds
+      maxAge: maxAgeMs,
     });
   }
 
   setRefreshTokenCookie(response: Response, token: string): void {
     const isProduction = process.env.NODE_ENV === 'production';
-    // Get expiry in seconds from config, default to 2592000 (30 days)
     const expirySeconds = parseInt(
       this.configService.get('JWT_REFRESH_EXPIRY', '2592000'),
       10,
     );
-    const maxAgeMs = expirySeconds * 1000; // Convert to milliseconds
+    const maxAgeMs = expirySeconds * 1000;
+
     this.logger.debug(
       `Setting refresh token cookie with maxAge: ${maxAgeMs}ms (${expirySeconds}s)`,
     );
@@ -46,30 +44,28 @@ export class CookieService {
     response.cookie('refreshToken', token, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'strict',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
-      maxAge: maxAgeMs, // Express expects milliseconds
+      maxAge: maxAgeMs,
     });
   }
 
   clearAccessTokenCookie(response: Response): void {
     const isProduction = process.env.NODE_ENV === 'production';
-
     response.clearCookie('accessToken', {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'strict',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     });
   }
 
   clearRefreshTokenCookie(response: Response): void {
     const isProduction = process.env.NODE_ENV === 'production';
-
     response.clearCookie('refreshToken', {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'strict',
+      sameSite: isProduction ? 'none' : 'lax',
       path: '/',
     });
   }

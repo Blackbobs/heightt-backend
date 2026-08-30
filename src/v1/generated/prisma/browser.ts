@@ -13,10 +13,10 @@
  * 🟢 You can import this file directly.
  */
 
-import * as Prisma from './internal/prismaNamespaceBrowser.js'
+import * as Prisma from './internal/prismaNamespaceBrowser'
 export { Prisma }
-export * as $Enums from './enums.js'
-export * from './enums.js';
+export * as $Enums from './enums'
+export * from './enums';
 /**
  * Model User
  * 
@@ -102,6 +102,11 @@ export type Organization = Prisma.OrganizationModel
  * 
  */
 export type OrganizationMembership = Prisma.OrganizationMembershipModel
+/**
+ * Model OrganizationJoinRequest
+ * 
+ */
+export type OrganizationJoinRequest = Prisma.OrganizationJoinRequestModel
 /**
  * Model Role
  * 
@@ -197,6 +202,16 @@ export type DuePayment = Prisma.DuePaymentModel
  * 
  */
 export type Withdrawal = Prisma.WithdrawalModel
+/**
+ * Model WithdrawalWebhook
+ * 
+ */
+export type WithdrawalWebhook = Prisma.WithdrawalWebhookModel
+/**
+ * Model BankAccount
+ * 
+ */
+export type BankAccount = Prisma.BankAccountModel
 /**
  * Model Refund
  * 

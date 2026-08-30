@@ -5,10 +5,15 @@ import {
   ForbiddenException,
   Logger,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
+import { EmailService } from '../../email/email.service';
 import { GenerateReceiptDto } from './dto';
 import { randomBytes } from 'crypto';
+import PDFDocument from 'pdfkit';
+import { v2 as cloudinary } from 'cloudinary';
+import axios from 'axios';
 
 @Injectable()
 export class ReceiptService {
@@ -17,6 +22,8 @@ export class ReceiptService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   // ============================================
@@ -122,6 +129,18 @@ export class ReceiptService {
     });
 
     this.logger.log(`Receipt generated: ${receipt.receiptNumber}`);
+
+    // Fire-and-forget: immediately render the branded PDF and email it to the
+    // payer. Kept outside the payment transaction so slow SMTP/HTTP calls
+    // never delay or fail the payment itself.
+    setImmediate(() => {
+      this.deliverReceiptPdf(receipt.id).catch((err: any) =>
+        this.logger.error(
+          `Receipt delivery failed for ${receipt.receiptNumber}: ${err.message}`,
+        ),
+      );
+    });
+
     return receipt;
   }
 
@@ -476,5 +495,432 @@ export class ReceiptService {
     };
 
     return this.generateReceipt(userId, dto);
+  }
+
+  // ============================================
+  // RECEIPT PDF GENERATION
+  // ============================================
+
+  /**
+   * Resolve the most specific available logo for an organization.
+   * Chain: organization logo -> department logo -> faculty logo -> institution logo.
+   */
+  private async getReceiptBranding(organizationId?: string | null): Promise<{
+    logoUrl?: string;
+    organizationName?: string;
+    institutionName?: string;
+  }> {
+    if (!organizationId) return {};
+    const org = (await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      include: {
+        institution: { select: { name: true, logo: true } },
+        faculty: { select: { name: true, logo: true } },
+        department: { select: { name: true, logo: true } },
+      },
+    })) as any;
+
+    if (!org) return {};
+    const logoUrl =
+      org.logo ||
+      org.department?.logo ||
+      org.faculty?.logo ||
+      org.institution?.logo ||
+      null;
+    return {
+      logoUrl: logoUrl || undefined,
+      organizationName: org.name,
+      institutionName: org.institution?.name,
+    };
+  }
+
+  /** Format Kobo into a NGN display string. */
+  private formatNaira(kobo: number): string {
+    const naira = (kobo || 0) / 100;
+    return `\u20A6${naira.toLocaleString('en-NG', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  /** Download a logo image (PNG/JPEG only - PDFKit cannot embed webp/svg). */
+  private async fetchImageBuffer(url: string): Promise<Buffer | null> {
+    try {
+      const lower = url.toLowerCase().split('?')[0];
+      const isRaster =
+        lower.endsWith('.png') ||
+        lower.endsWith('.jpg') ||
+        lower.endsWith('.jpeg');
+      let fetchUrl = url;
+      if (
+        !isRaster &&
+        lower.includes('res.cloudinary.com') &&
+        !lower.includes('/f_png/') &&
+        !lower.includes('/f_jpg/')
+      ) {
+        // Ask Cloudinary to convert non-raster formats to PNG.
+        fetchUrl = url.replace('/upload/', '/upload/f_png/');
+      }
+      const res = await axios.get(fetchUrl, {
+        responseType: 'arraybuffer',
+        timeout: 10000,
+      });
+      const type = String(res.headers['content-type'] || '');
+      if (!type.includes('image/png') && !type.includes('image/jpeg')) {
+        return null;
+      }
+      return Buffer.from(res.data);
+    } catch (err: any) {
+      this.logger.warn(`Could not load logo image: ${err.message}`);
+      return null;
+    }
+  }
+
+  /**
+   * Render a branded PDF receipt. Branding comes from the organization's
+   * own logo first, then its hierarchy: department -> faculty -> institution.
+   */
+  async generateReceiptPdf(
+    receiptId: string,
+  ): Promise<{ buffer: Buffer; filename: string }> {
+    const receipt = await this.prisma.receipt.findUnique({
+      where: { id: receiptId },
+      include: {
+        organization: {
+          include: {
+            institution: { select: { name: true, logo: true } },
+            faculty: { select: { name: true, logo: true } },
+            department: { select: { name: true, logo: true } },
+          },
+        },
+      },
+    });
+    if (!receipt) throw new NotFoundException('Receipt not found');
+
+    const duePayment = await this.prisma.duePayment.findFirst({
+      where: { paymentId: receipt.paymentId },
+      include: { assignment: { include: { due: true } } },
+    });
+    const dueName = (duePayment as any)?.assignment?.due?.name;
+
+    const org = receipt.organization as any;
+    const brandName = org?.name || receipt.organizationName || 'Heightt';
+    const subtitle =
+      org?.department?.name || org?.faculty?.name || org?.institution?.name;
+    const logoUrl =
+      org?.logo ||
+      org?.department?.logo ||
+      org?.faculty?.logo ||
+      org?.institution?.logo;
+
+    const doc = new PDFDocument({ size: 'A4', margin: 50 });
+    const chunks: Buffer[] = [];
+    doc.on('data', (c: Buffer) => chunks.push(c));
+    const rendered = new Promise<Buffer>((resolve, reject) => {
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+    });
+
+    const left = 50;
+    const right = 545;
+
+    // Header
+    if (logoUrl) {
+      const img = await this.fetchImageBuffer(logoUrl);
+      if (img) {
+        try {
+          doc.image(img, left, 40, { fit: [80, 80] });
+        } catch {
+          this.logger.warn('Logo was not embeddable in PDF, skipping');
+        }
+      }
+    }
+    const headerTextX = logoUrl ? 145 : left;
+    doc
+      .fillColor('#111827')
+      .font('Helvetica-Bold')
+      .fontSize(18)
+      .text(brandName, headerTextX, 48, { width: right - headerTextX });
+    if (subtitle && subtitle !== brandName) {
+      doc
+        .font('Helvetica')
+        .fontSize(10)
+        .fillColor('#6B7280')
+        .text(subtitle, headerTextX, 72);
+    }
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(16)
+      .fillColor('#4F46E5')
+      .text('PAYMENT RECEIPT', left, 135, {
+        align: 'right',
+        width: right - left,
+      });
+
+    // Meta box
+    const metaTop = 165;
+    doc.rect(left, metaTop, right - left, 92).fill('#F3F4F6');
+    const label = (t: string, x: number, y: number) =>
+      doc.font('Helvetica').fontSize(8).fillColor('#9CA3AF').text(t, x, y);
+    const value = (t: string, x: number, y: number) =>
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(10)
+        .fillColor('#111827')
+        .text(t, x, y + 11);
+
+    const col2 = left + (right - left) / 2 + 10;
+    label('RECEIPT NUMBER', left + 14, metaTop + 12);
+    value(receipt.receiptNumber, left + 14, metaTop + 12);
+    label('PAYMENT DATE', col2, metaTop + 12);
+    value(new Date(receipt.paymentDate).toDateString(), col2, metaTop + 12);
+    label('REFERENCE', left + 14, metaTop + 48);
+    value(receipt.reference || '-', left + 14, metaTop + 48);
+    label('METHOD', col2, metaTop + 48);
+    value(String(receipt.paymentMethod), col2, metaTop + 48);
+
+    // Payer
+    const py = metaTop + 118;
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(11)
+      .fillColor('#111827')
+      .text('Billed To', left, py);
+    doc
+      .font('Helvetica')
+      .fontSize(10)
+      .fillColor('#374151')
+      .text(String(receipt.payerName), left, py + 16)
+      .text(receipt.payerEmail || '-', left, py + 31);
+
+    // Items table
+    const tableTop = py + 60;
+    doc.rect(left, tableTop, right - left, 24).fill('#4F46E5');
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(9)
+      .fillColor('#FFFFFF')
+      .text('DESCRIPTION', left + 12, tableTop + 8)
+      .text('AMOUNT', left + 330, tableTop + 8, { width: 155, align: 'right' });
+
+    let rowY = tableTop + 24;
+    const drawRow = (desc: string, amount: string, shaded: boolean) => {
+      if (shaded) doc.rect(left, rowY, right - left, 26).fill('#F9FAFB');
+      doc
+        .font('Helvetica')
+        .fontSize(9)
+        .fillColor('#111827')
+        .text(desc.slice(0, 70), left + 12, rowY + 9)
+        .text(amount, left + 330, rowY + 9, { width: 155, align: 'right' });
+      rowY += 26;
+    };
+
+    const items = Array.isArray(receipt.items) ? (receipt.items as any[]) : [];
+    if (items.length > 0) {
+      items.forEach((it, i) =>
+        drawRow(
+          `${it.name}${Number(it.quantity) > 1 ? ` x${it.quantity}` : ''}`,
+          this.formatNaira(Number(it.price) * Number(it.quantity || 1)),
+          i % 2 === 1,
+        ),
+      );
+    } else {
+      const desc = dueName
+        ? `${dueName}${receipt.description ? ` - ${receipt.description}` : ''}`
+        : receipt.description || 'Payment';
+      drawRow(desc, this.formatNaira(receipt.amount), false);
+    }
+
+    // Totals
+    let ty = rowY + 18;
+    const totalRow = (k: string, v: string, bold = false) => {
+      doc
+        .font(bold ? 'Helvetica-Bold' : 'Helvetica')
+        .fontSize(bold ? 12 : 10)
+        .fillColor('#111827')
+        .text(k, left + 300, ty, { width: 110 })
+        .text(v, left + 330, ty, { width: 155, align: 'right' });
+      ty += bold ? 20 : 16;
+    };
+    totalRow('Amount', this.formatNaira(receipt.amount));
+    totalRow('Service Fee', this.formatNaira(receipt.serviceFee));
+    totalRow('Total Paid', this.formatNaira(receipt.totalAmount), true);
+
+    // Footer
+    doc
+      .font('Helvetica')
+      .fontSize(8)
+      .fillColor('#9CA3AF')
+      .text(
+        `Status: ${receipt.status}  |  Currency: ${receipt.currency}  |  Generated ${new Date().toISOString()}`,
+        left,
+        760,
+        { width: right - left, align: 'center' },
+      )
+      .text(
+        'This is an electronically generated receipt and does not require a signature.',
+        left,
+        776,
+        { width: right - left, align: 'center' },
+      );
+
+    doc.end();
+    const buffer = await rendered;
+    return { buffer, filename: `${receipt.receiptNumber}.pdf` };
+  }
+
+  /**
+   * Full delivery pipeline for a receipt:
+   * render PDF -> archive to Cloudinary -> link File record -> email payer
+   * with the PDF attached (and a download link as fallback).
+   */
+  async deliverReceiptPdf(receiptId: string): Promise<void> {
+    const receipt = await this.prisma.receipt.findUnique({
+      where: { id: receiptId },
+    });
+    if (!receipt) throw new NotFoundException('Receipt not found');
+
+    const { buffer, filename } = await this.generateReceiptPdf(receiptId);
+
+    // Archive the PDF so it stays downloadable even without attachment support.
+    let pdfUrl = (receipt.metadata as any)?.pdfUrl as string | undefined;
+    if (!pdfUrl) {
+      pdfUrl = await this.uploadPdfToCloudinary(buffer, filename).catch(
+        (err: any) => {
+          this.logger.warn(
+            `PDF archival skipped for ${filename}: ${err.message}`,
+          );
+          return undefined;
+        },
+      );
+      if (pdfUrl) {
+        await this.prisma.file.create({
+          data: {
+            filename,
+            originalName: filename,
+            mimeType: 'application/pdf',
+            size: buffer.length,
+            url: pdfUrl,
+            publicId: `${receipt.receiptNumber}-${randomBytes(4).toString('hex')}`,
+            folder: 'heightt/receipts',
+            purpose: 'receipt-pdf',
+            userId: receipt.userId,
+            organizationId: receipt.organizationId,
+            receiptId: receipt.id,
+            metadata: { generatedBy: 'receipt-service' },
+          },
+        });
+        await this.prisma.receipt.update({
+          where: { id: receipt.id },
+          data: {
+            metadata: { ...((receipt.metadata as any) || {}), pdfUrl },
+          },
+        });
+      }
+    }
+
+    if (!receipt.payerEmail) {
+      this.logger.warn(
+        `No payer email on receipt ${receipt.receiptNumber}; skipping email`,
+      );
+      return;
+    }
+
+    const html = this.buildReceiptEmailHtml(receipt as any, pdfUrl);
+    const sent = await this.emailService.sendEmail(
+      receipt.payerEmail,
+      `Payment Receipt ${receipt.receiptNumber} - Heightt`,
+      html,
+      [
+        {
+          filename,
+          contentType: 'application/pdf',
+          base64Content: buffer.toString('base64'),
+        },
+      ],
+    );
+    if (sent) {
+      this.logger.log(
+        `📨 Receipt ${receipt.receiptNumber} emailed to ${receipt.payerEmail}`,
+      );
+    } else {
+      this.logger.error(
+        `Failed to email receipt ${receipt.receiptNumber} to ${receipt.payerEmail}`,
+      );
+    }
+  }
+
+  /** Stream a receipt PDF for an authorized user (controller download). */
+  async getReceiptPdfForUser(
+    receiptId: string,
+    userId: string,
+  ): Promise<{ buffer: Buffer; filename: string }> {
+    // Enforces owner-or-admin permission rules.
+    await this.getReceiptById(receiptId, userId);
+    const result = await this.generateReceiptPdf(receiptId);
+    await this.prisma.receipt
+      .update({
+        where: { id: receiptId },
+        data: {
+          downloadCount: { increment: 1 },
+          lastDownloaded: new Date(),
+        },
+      })
+      .catch(() => null);
+    return result;
+  }
+
+  private async uploadPdfToCloudinary(
+    buffer: Buffer,
+    filename: string,
+  ): Promise<string> {
+    const cloudName = this.configService.get('CLOUDINARY_CLOUD_NAME');
+    const apiKey = this.configService.get('CLOUDINARY_API_KEY');
+    const apiSecret = this.configService.get('CLOUDINARY_API_SECRET');
+    if (!cloudName || !apiKey || !apiSecret) {
+      throw new Error('Missing Cloudinary configuration');
+    }
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+
+    const result = await new Promise<any>((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder: 'heightt/receipts',
+          resource_type: 'raw',
+          public_id: filename.replace(/\.pdf$/i, ''),
+          overwrite: true,
+        },
+        (err: any, res: any) => (err ? reject(err) : resolve(res)),
+      );
+      stream.end(buffer);
+    });
+    return result.secure_url;
+  }
+
+  private buildReceiptEmailHtml(receipt: any, pdfUrl?: string): string {
+    const money = (k: number) => this.formatNaira(k);
+    return `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">
+        <h2 style="color:#4F46E5">Payment Receipt</h2>
+        <p>Hi <strong>${receipt.payerName}</strong>,</p>
+        <p>Thank you for your payment. Your receipt <strong>${receipt.receiptNumber}</strong> is attached as a PDF.</p>
+        <table style="width:100%;border-collapse:collapse">
+          <tr><td style="padding:6px;color:#6B7280">Reference</td><td style="padding:6px;text-align:right">${receipt.reference || '-'}</td></tr>
+          <tr><td style="padding:6px;color:#6B7280">${receipt.description || 'Payment'}</td><td style="padding:6px;text-align:right">${money(receipt.amount)}</td></tr>
+          <tr><td style="padding:6px;color:#6B7280">Service fee</td><td style="padding:6px;text-align:right">${money(receipt.serviceFee)}</td></tr>
+          <tr><td style="padding:8px;border-top:2px solid #E5E7EB"><strong>Total Paid</strong></td>
+              <td style="padding:8px;border-top:2px solid #E5E7EB;text-align:right"><strong>${money(receipt.totalAmount)} ${receipt.currency}</strong></td></tr>
+        </table>
+        ${
+          pdfUrl
+            ? `<p style="margin-top:18px"><a href="${pdfUrl}" style="background:#4F46E5;color:#fff;padding:12px 22px;border-radius:6px;text-decoration:none">Download Receipt (PDF)</a></p>`
+            : ''
+        }
+        <p style="color:#9CA3AF;font-size:12px;margin-top:24px">&copy; ${new Date().getFullYear()} Heightt. Electronically generated receipt.</p>
+      </div>`;
   }
 }

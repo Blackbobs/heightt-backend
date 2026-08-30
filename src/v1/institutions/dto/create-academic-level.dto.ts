@@ -1,33 +1,35 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
-  IsUUID,
   IsNumber,
   Min,
   Max,
   MinLength,
   MaxLength,
+  IsNotEmpty,
 } from 'class-validator';
 
 export class CreateAcademicLevelDto {
-  @ApiProperty({ example: '100 Level', description: 'Level name' })
+  @ApiProperty({ example: '100 Level' })
   @IsString()
+  @IsNotEmpty()
   @MinLength(2)
   @MaxLength(50)
   name: string;
 
-  @ApiProperty({ example: 100, description: 'Numeric level (for sorting)' })
+  @ApiProperty({ example: 100 })
   @IsNumber()
   @Min(1)
   @Max(1000)
   numericLevel: number;
 
-  @ApiProperty({ example: 1, description: 'Display order' })
+  @ApiProperty({ example: 1 })
   @IsNumber()
   @Min(1)
   order: number;
 
-  @ApiProperty({ example: 'dept_123', description: 'Department ID' })
-  @IsUUID()
+  @ApiProperty({ example: 'cmsz2nuwd00002ptvprnzloq6' })
+  @IsString()
+  @IsNotEmpty()
   departmentId: string;
 }

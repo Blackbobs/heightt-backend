@@ -1,73 +1,54 @@
+// src/v1/auth/dto/auth-response.dto.ts
+
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserResponseDto {
-  @ApiProperty({
-    example: 'usr_abc123',
-    description: 'User ID',
-  })
+  @ApiProperty()
   id: string;
 
-  @ApiProperty({
-    example: 'john@example.com',
-    description: 'User email address',
-  })
+  @ApiProperty()
   email: string;
 
-  @ApiProperty({
-    example: 'john_doe',
-    description: 'User username',
-  })
+  @ApiProperty()
   username: string;
 
-  @ApiProperty({
-    example: 'John',
-    description: 'User first name',
-  })
-  firstName: string;
-
-  @ApiProperty({
-    example: 'Doe',
-    description: 'User last name',
-  })
-  lastName: string;
-
-  @ApiProperty({
-    example: true,
-    description: 'Whether email is verified',
-  })
+  @ApiProperty()
   emailVerified: boolean;
 
-  @ApiProperty({
-    example: false,
-    description: 'Whether onboarding is completed',
-  })
-  onboardingCompleted: boolean;
+  @ApiProperty({ enum: ['ACTIVE', 'INACTIVE', 'SUSPENDED', 'DELETED'] })
+  status: string;
+
+  @ApiProperty({ type: () => Object, required: false })
+  profile?: any;
+
+  @ApiProperty({ type: () => Object, required: false })
+  studentProfile?: any;
+
+  @ApiProperty({ required: false })
+  createdAt?: Date;
+
+  @ApiProperty({ required: false })
+  updatedAt?: Date;
+
+  @ApiProperty({ required: false })
+  lastLoginAt?: Date;
+
+  // Admin fields
+  @ApiProperty({ required: false, default: false })
+  isPlatformAdmin?: boolean;
+
+  @ApiProperty({ type: [String], required: false })
+  adminTypes?: string[];
 
   @ApiProperty({
-    example: 'VERIFIED',
-    description: 'Verification status',
-    enum: ['UNVERIFIED', 'PENDING', 'VERIFIED', 'REJECTED'],
+    enum: ['PLATFORM_ADMIN', 'ADMIN', 'USER', 'STUDENT'],
+    required: false,
+    default: 'USER',
   })
-  verificationStatus: string;
+  userType?: string;
 
-  @ApiProperty({
-    example: 'COMPLETED',
-    description: 'Current onboarding step',
-    enum: ['PERSONAL_INFO', 'INSTITUTION', 'INTERESTS', 'COMPLETED'],
-  })
-  onboardingStep: string;
-
-  @ApiProperty({
-    example: '2024-01-01T00:00:00.000Z',
-    description: 'Account creation date',
-  })
-  createdAt: Date;
-
-  @ApiProperty({
-    example: '2024-01-01T00:00:00.000Z',
-    description: 'Last update date',
-  })
-  updatedAt: Date;
+  @ApiProperty({ type: [String], required: false })
+  roles?: string[];
 }
 
 export class AuthResponseDto {
@@ -142,6 +123,94 @@ export class AuthResponseDto {
     required: false,
   })
   message?: string;
+
+  // Admin fields for login response
+  @ApiProperty({ required: false, default: false })
+  isPlatformAdmin?: boolean;
+
+  @ApiProperty({ type: [String], required: false })
+  adminTypes?: string[];
+
+  @ApiProperty({
+    enum: ['PLATFORM_ADMIN', 'ADMIN', 'USER', 'STUDENT'],
+    required: false,
+    default: 'USER',
+  })
+  userType?: string;
+
+  @ApiProperty({ type: [String], required: false })
+  roles?: string[];
+}
+
+export class AdminLoginResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  username: string;
+
+  @ApiProperty()
+  emailVerified: boolean;
+
+  @ApiProperty()
+  isPlatformAdmin: boolean;
+
+  @ApiProperty({ type: [String] })
+  adminTypes: string[];
+
+  @ApiProperty({
+    enum: [
+      'PLATFORM_ADMIN',
+      'INSTITUTION_ADMIN',
+      'ORGANIZATION_ADMIN',
+      'ADMIN',
+    ],
+  })
+  userType: string;
+
+  @ApiProperty({ type: [String] })
+  roles: string[];
+
+  @ApiProperty({
+    type: () => Object,
+    required: false,
+  })
+  adminScopes?: Array<{
+    adminType: string;
+    institutionId?: string;
+    facultyId?: string;
+    departmentId?: string;
+    organizationId?: string;
+    academicSessionId?: string;
+    institutionName?: string;
+    facultyName?: string;
+    departmentName?: string;
+    organizationName?: string;
+  }>;
+
+  @ApiProperty()
+  isAdminSession: boolean;
+
+  @ApiProperty()
+  highestAdminType: string;
+
+  @ApiProperty()
+  sessionId: string;
+
+  @ApiProperty()
+  accessToken: string;
+
+  @ApiProperty()
+  hasCompletedOnboarding: boolean;
+
+  @ApiProperty()
+  onboardingStep: string;
+
+  @ApiProperty({ type: () => Object, required: false })
+  profile?: any;
 }
 
 export class SessionResponseDto {

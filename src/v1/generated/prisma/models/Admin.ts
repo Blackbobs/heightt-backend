@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Admin
@@ -38,6 +38,7 @@ export type AdminMinAggregateOutputType = {
   status: $Enums.AdminStatus | null
   revokedAt: Date | null
   revokedReason: string | null
+  academicSessionId: string | null
 }
 
 export type AdminMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type AdminMaxAggregateOutputType = {
   status: $Enums.AdminStatus | null
   revokedAt: Date | null
   revokedReason: string | null
+  academicSessionId: string | null
 }
 
 export type AdminCountAggregateOutputType = {
@@ -70,6 +72,7 @@ export type AdminCountAggregateOutputType = {
   status: number
   revokedAt: number
   revokedReason: number
+  academicSessionId: number
   _all: number
 }
 
@@ -88,6 +91,7 @@ export type AdminMinAggregateInputType = {
   status?: true
   revokedAt?: true
   revokedReason?: true
+  academicSessionId?: true
 }
 
 export type AdminMaxAggregateInputType = {
@@ -104,6 +108,7 @@ export type AdminMaxAggregateInputType = {
   status?: true
   revokedAt?: true
   revokedReason?: true
+  academicSessionId?: true
 }
 
 export type AdminCountAggregateInputType = {
@@ -120,6 +125,7 @@ export type AdminCountAggregateInputType = {
   status?: true
   revokedAt?: true
   revokedReason?: true
+  academicSessionId?: true
   _all?: true
 }
 
@@ -209,6 +215,7 @@ export type AdminGroupByOutputType = {
   status: $Enums.AdminStatus
   revokedAt: Date | null
   revokedReason: string | null
+  academicSessionId: string | null
   _count: AdminCountAggregateOutputType | null
   _min: AdminMinAggregateOutputType | null
   _max: AdminMaxAggregateOutputType | null
@@ -246,12 +253,14 @@ export type AdminWhereInput = {
   status?: Prisma.EnumAdminStatusFilter<"Admin"> | $Enums.AdminStatus
   revokedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
   revokedReason?: Prisma.StringNullableFilter<"Admin"> | string | null
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
-  faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
-  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  academicSessionId?: Prisma.StringNullableFilter<"Admin"> | string | null
   permissions?: Prisma.AdminPermissionListRelationFilter
+  academicSession?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
+  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
+  faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
+  institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type AdminOrderByWithRelationInput = {
@@ -268,17 +277,19 @@ export type AdminOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   revokedReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  institution?: Prisma.InstitutionOrderByWithRelationInput
-  faculty?: Prisma.FacultyOrderByWithRelationInput
-  department?: Prisma.DepartmentOrderByWithRelationInput
-  organization?: Prisma.OrganizationOrderByWithRelationInput
+  academicSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   permissions?: Prisma.AdminPermissionOrderByRelationAggregateInput
+  academicSession?: Prisma.AcademicSessionOrderByWithRelationInput
+  department?: Prisma.DepartmentOrderByWithRelationInput
+  faculty?: Prisma.FacultyOrderByWithRelationInput
+  institution?: Prisma.InstitutionOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type AdminWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userId_adminType_institutionId_facultyId_departmentId_organizationId?: Prisma.AdminUserIdAdminTypeInstitutionIdFacultyIdDepartmentIdOrganizationIdCompoundUniqueInput
+  userId_adminType_institutionId_facultyId_departmentId_organizationId_academicSessionId?: Prisma.AdminUserIdAdminTypeInstitutionIdFacultyIdDepartmentIdOrganizationIdAcademicSessionIdCompoundUniqueInput
   AND?: Prisma.AdminWhereInput | Prisma.AdminWhereInput[]
   OR?: Prisma.AdminWhereInput[]
   NOT?: Prisma.AdminWhereInput | Prisma.AdminWhereInput[]
@@ -294,13 +305,15 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumAdminStatusFilter<"Admin"> | $Enums.AdminStatus
   revokedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
   revokedReason?: Prisma.StringNullableFilter<"Admin"> | string | null
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
-  faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
-  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
-  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  academicSessionId?: Prisma.StringNullableFilter<"Admin"> | string | null
   permissions?: Prisma.AdminPermissionListRelationFilter
-}, "id" | "userId_adminType_institutionId_facultyId_departmentId_organizationId">
+  academicSession?: Prisma.XOR<Prisma.AcademicSessionNullableScalarRelationFilter, Prisma.AcademicSessionWhereInput> | null
+  department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
+  faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
+  institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+}, "id" | "userId_adminType_institutionId_facultyId_departmentId_organizationId_academicSessionId">
 
 export type AdminOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -316,6 +329,7 @@ export type AdminOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   revokedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  academicSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AdminCountOrderByAggregateInput
   _max?: Prisma.AdminMaxOrderByAggregateInput
   _min?: Prisma.AdminMinOrderByAggregateInput
@@ -338,6 +352,7 @@ export type AdminScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumAdminStatusWithAggregatesFilter<"Admin"> | $Enums.AdminStatus
   revokedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Admin"> | Date | string | null
   revokedReason?: Prisma.StringNullableWithAggregatesFilter<"Admin"> | string | null
+  academicSessionId?: Prisma.StringNullableWithAggregatesFilter<"Admin"> | string | null
 }
 
 export type AdminCreateInput = {
@@ -349,12 +364,13 @@ export type AdminCreateInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAdminsInput
-  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
-  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
   permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateInput = {
@@ -371,6 +387,7 @@ export type AdminUncheckedCreateInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
   permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
 }
 
@@ -383,12 +400,13 @@ export type AdminUpdateInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
-  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
-  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
   permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateInput = {
@@ -405,6 +423,7 @@ export type AdminUncheckedUpdateInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
@@ -422,6 +441,7 @@ export type AdminCreateManyInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminUpdateManyMutationInput = {
@@ -449,6 +469,7 @@ export type AdminUncheckedUpdateManyInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdminListRelationFilter = {
@@ -461,13 +482,14 @@ export type AdminOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type AdminUserIdAdminTypeInstitutionIdFacultyIdDepartmentIdOrganizationIdCompoundUniqueInput = {
+export type AdminUserIdAdminTypeInstitutionIdFacultyIdDepartmentIdOrganizationIdAcademicSessionIdCompoundUniqueInput = {
   userId: string
   adminType: $Enums.AdminType
   institutionId: string
   facultyId: string
   departmentId: string
   organizationId: string
+  academicSessionId: string
 }
 
 export type AdminCountOrderByAggregateInput = {
@@ -484,6 +506,7 @@ export type AdminCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   revokedReason?: Prisma.SortOrder
+  academicSessionId?: Prisma.SortOrder
 }
 
 export type AdminMaxOrderByAggregateInput = {
@@ -500,6 +523,7 @@ export type AdminMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   revokedReason?: Prisma.SortOrder
+  academicSessionId?: Prisma.SortOrder
 }
 
 export type AdminMinOrderByAggregateInput = {
@@ -516,6 +540,7 @@ export type AdminMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   revokedReason?: Prisma.SortOrder
+  academicSessionId?: Prisma.SortOrder
 }
 
 export type AdminScalarRelationFilter = {
@@ -691,6 +716,48 @@ export type AdminUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
 }
 
+export type AdminCreateNestedManyWithoutAcademicSessionInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAcademicSessionInput, Prisma.AdminUncheckedCreateWithoutAcademicSessionInput> | Prisma.AdminCreateWithoutAcademicSessionInput[] | Prisma.AdminUncheckedCreateWithoutAcademicSessionInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAcademicSessionInput | Prisma.AdminCreateOrConnectWithoutAcademicSessionInput[]
+  createMany?: Prisma.AdminCreateManyAcademicSessionInputEnvelope
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+}
+
+export type AdminUncheckedCreateNestedManyWithoutAcademicSessionInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAcademicSessionInput, Prisma.AdminUncheckedCreateWithoutAcademicSessionInput> | Prisma.AdminCreateWithoutAcademicSessionInput[] | Prisma.AdminUncheckedCreateWithoutAcademicSessionInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAcademicSessionInput | Prisma.AdminCreateOrConnectWithoutAcademicSessionInput[]
+  createMany?: Prisma.AdminCreateManyAcademicSessionInputEnvelope
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+}
+
+export type AdminUpdateManyWithoutAcademicSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAcademicSessionInput, Prisma.AdminUncheckedCreateWithoutAcademicSessionInput> | Prisma.AdminCreateWithoutAcademicSessionInput[] | Prisma.AdminUncheckedCreateWithoutAcademicSessionInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAcademicSessionInput | Prisma.AdminCreateOrConnectWithoutAcademicSessionInput[]
+  upsert?: Prisma.AdminUpsertWithWhereUniqueWithoutAcademicSessionInput | Prisma.AdminUpsertWithWhereUniqueWithoutAcademicSessionInput[]
+  createMany?: Prisma.AdminCreateManyAcademicSessionInputEnvelope
+  set?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  disconnect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  delete?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  update?: Prisma.AdminUpdateWithWhereUniqueWithoutAcademicSessionInput | Prisma.AdminUpdateWithWhereUniqueWithoutAcademicSessionInput[]
+  updateMany?: Prisma.AdminUpdateManyWithWhereWithoutAcademicSessionInput | Prisma.AdminUpdateManyWithWhereWithoutAcademicSessionInput[]
+  deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+}
+
+export type AdminUncheckedUpdateManyWithoutAcademicSessionNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutAcademicSessionInput, Prisma.AdminUncheckedCreateWithoutAcademicSessionInput> | Prisma.AdminCreateWithoutAcademicSessionInput[] | Prisma.AdminUncheckedCreateWithoutAcademicSessionInput[]
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutAcademicSessionInput | Prisma.AdminCreateOrConnectWithoutAcademicSessionInput[]
+  upsert?: Prisma.AdminUpsertWithWhereUniqueWithoutAcademicSessionInput | Prisma.AdminUpsertWithWhereUniqueWithoutAcademicSessionInput[]
+  createMany?: Prisma.AdminCreateManyAcademicSessionInputEnvelope
+  set?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  disconnect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  delete?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  connect?: Prisma.AdminWhereUniqueInput | Prisma.AdminWhereUniqueInput[]
+  update?: Prisma.AdminUpdateWithWhereUniqueWithoutAcademicSessionInput | Prisma.AdminUpdateWithWhereUniqueWithoutAcademicSessionInput[]
+  updateMany?: Prisma.AdminUpdateManyWithWhereWithoutAcademicSessionInput | Prisma.AdminUpdateManyWithWhereWithoutAcademicSessionInput[]
+  deleteMany?: Prisma.AdminScalarWhereInput | Prisma.AdminScalarWhereInput[]
+}
+
 export type AdminCreateNestedManyWithoutOrganizationInput = {
   create?: Prisma.XOR<Prisma.AdminCreateWithoutOrganizationInput, Prisma.AdminUncheckedCreateWithoutOrganizationInput> | Prisma.AdminCreateWithoutOrganizationInput[] | Prisma.AdminUncheckedCreateWithoutOrganizationInput[]
   connectOrCreate?: Prisma.AdminCreateOrConnectWithoutOrganizationInput | Prisma.AdminCreateOrConnectWithoutOrganizationInput[]
@@ -764,11 +831,12 @@ export type AdminCreateWithoutUserInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
-  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
   permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateWithoutUserInput = {
@@ -784,6 +852,7 @@ export type AdminUncheckedCreateWithoutUserInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
   permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
 }
 
@@ -830,6 +899,7 @@ export type AdminScalarWhereInput = {
   status?: Prisma.EnumAdminStatusFilter<"Admin"> | $Enums.AdminStatus
   revokedAt?: Prisma.DateTimeNullableFilter<"Admin"> | Date | string | null
   revokedReason?: Prisma.StringNullableFilter<"Admin"> | string | null
+  academicSessionId?: Prisma.StringNullableFilter<"Admin"> | string | null
 }
 
 export type AdminCreateWithoutInstitutionInput = {
@@ -841,11 +911,12 @@ export type AdminCreateWithoutInstitutionInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAdminsInput
-  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
   permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateWithoutInstitutionInput = {
@@ -861,6 +932,7 @@ export type AdminUncheckedCreateWithoutInstitutionInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
   permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
 }
 
@@ -899,11 +971,12 @@ export type AdminCreateWithoutFacultyInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAdminsInput
-  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
   permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateWithoutFacultyInput = {
@@ -919,6 +992,7 @@ export type AdminUncheckedCreateWithoutFacultyInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
   permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
 }
 
@@ -957,11 +1031,12 @@ export type AdminCreateWithoutDepartmentInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAdminsInput
-  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
-  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
   permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateWithoutDepartmentInput = {
@@ -977,6 +1052,7 @@ export type AdminUncheckedCreateWithoutDepartmentInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
   permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
 }
 
@@ -1006,6 +1082,66 @@ export type AdminUpdateManyWithWhereWithoutDepartmentInput = {
   data: Prisma.XOR<Prisma.AdminUpdateManyMutationInput, Prisma.AdminUncheckedUpdateManyWithoutDepartmentInput>
 }
 
+export type AdminCreateWithoutAcademicSessionInput = {
+  id?: string
+  adminType: $Enums.AdminType
+  assignedBy?: string | null
+  assignedAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.AdminStatus
+  revokedAt?: Date | string | null
+  revokedReason?: string | null
+  permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
+}
+
+export type AdminUncheckedCreateWithoutAcademicSessionInput = {
+  id?: string
+  userId: string
+  adminType: $Enums.AdminType
+  institutionId?: string | null
+  facultyId?: string | null
+  departmentId?: string | null
+  organizationId?: string | null
+  assignedBy?: string | null
+  assignedAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.AdminStatus
+  revokedAt?: Date | string | null
+  revokedReason?: string | null
+  permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
+}
+
+export type AdminCreateOrConnectWithoutAcademicSessionInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAcademicSessionInput, Prisma.AdminUncheckedCreateWithoutAcademicSessionInput>
+}
+
+export type AdminCreateManyAcademicSessionInputEnvelope = {
+  data: Prisma.AdminCreateManyAcademicSessionInput | Prisma.AdminCreateManyAcademicSessionInput[]
+  skipDuplicates?: boolean
+}
+
+export type AdminUpsertWithWhereUniqueWithoutAcademicSessionInput = {
+  where: Prisma.AdminWhereUniqueInput
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutAcademicSessionInput, Prisma.AdminUncheckedUpdateWithoutAcademicSessionInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutAcademicSessionInput, Prisma.AdminUncheckedCreateWithoutAcademicSessionInput>
+}
+
+export type AdminUpdateWithWhereUniqueWithoutAcademicSessionInput = {
+  where: Prisma.AdminWhereUniqueInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutAcademicSessionInput, Prisma.AdminUncheckedUpdateWithoutAcademicSessionInput>
+}
+
+export type AdminUpdateManyWithWhereWithoutAcademicSessionInput = {
+  where: Prisma.AdminScalarWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateManyMutationInput, Prisma.AdminUncheckedUpdateManyWithoutAcademicSessionInput>
+}
+
 export type AdminCreateWithoutOrganizationInput = {
   id?: string
   adminType: $Enums.AdminType
@@ -1015,11 +1151,12 @@ export type AdminCreateWithoutOrganizationInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAdminsInput
-  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
-  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
-  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
   permissions?: Prisma.AdminPermissionCreateNestedManyWithoutAdminInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateWithoutOrganizationInput = {
@@ -1035,6 +1172,7 @@ export type AdminUncheckedCreateWithoutOrganizationInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
   permissions?: Prisma.AdminPermissionUncheckedCreateNestedManyWithoutAdminInput
 }
 
@@ -1073,11 +1211,12 @@ export type AdminCreateWithoutPermissionsInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
-  user: Prisma.UserCreateNestedOneWithoutAdminsInput
-  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
-  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutAdminsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutAdminsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutAdminsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutAdminsInput
   organization?: Prisma.OrganizationCreateNestedOneWithoutAdminsInput
+  user: Prisma.UserCreateNestedOneWithoutAdminsInput
 }
 
 export type AdminUncheckedCreateWithoutPermissionsInput = {
@@ -1094,6 +1233,7 @@ export type AdminUncheckedCreateWithoutPermissionsInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminCreateOrConnectWithoutPermissionsInput = {
@@ -1121,11 +1261,12 @@ export type AdminUpdateWithoutPermissionsInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
-  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
-  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
   organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutPermissionsInput = {
@@ -1142,6 +1283,7 @@ export type AdminUncheckedUpdateWithoutPermissionsInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdminCreateManyUserInput = {
@@ -1157,6 +1299,7 @@ export type AdminCreateManyUserInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminUpdateWithoutUserInput = {
@@ -1168,11 +1311,12 @@ export type AdminUpdateWithoutUserInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
-  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
   permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutUserInput = {
@@ -1188,6 +1332,7 @@ export type AdminUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
@@ -1204,6 +1349,7 @@ export type AdminUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdminCreateManyInstitutionInput = {
@@ -1219,6 +1365,7 @@ export type AdminCreateManyInstitutionInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminUpdateWithoutInstitutionInput = {
@@ -1230,11 +1377,12 @@ export type AdminUpdateWithoutInstitutionInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
-  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
   permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutInstitutionInput = {
@@ -1250,6 +1398,7 @@ export type AdminUncheckedUpdateWithoutInstitutionInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
@@ -1266,6 +1415,7 @@ export type AdminUncheckedUpdateManyWithoutInstitutionInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdminCreateManyFacultyInput = {
@@ -1281,6 +1431,7 @@ export type AdminCreateManyFacultyInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminUpdateWithoutFacultyInput = {
@@ -1292,11 +1443,12 @@ export type AdminUpdateWithoutFacultyInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
-  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
   permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutFacultyInput = {
@@ -1312,6 +1464,7 @@ export type AdminUncheckedUpdateWithoutFacultyInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
@@ -1328,6 +1481,7 @@ export type AdminUncheckedUpdateManyWithoutFacultyInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AdminCreateManyDepartmentInput = {
@@ -1343,6 +1497,7 @@ export type AdminCreateManyDepartmentInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminUpdateWithoutDepartmentInput = {
@@ -1354,11 +1509,12 @@ export type AdminUpdateWithoutDepartmentInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
-  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
-  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
   permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutDepartmentInput = {
@@ -1374,6 +1530,7 @@ export type AdminUncheckedUpdateWithoutDepartmentInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
@@ -1383,6 +1540,73 @@ export type AdminUncheckedUpdateManyWithoutDepartmentInput = {
   adminType?: Prisma.EnumAdminTypeFieldUpdateOperationsInput | $Enums.AdminType
   institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AdminCreateManyAcademicSessionInput = {
+  id?: string
+  userId: string
+  adminType: $Enums.AdminType
+  institutionId?: string | null
+  facultyId?: string | null
+  departmentId?: string | null
+  organizationId?: string | null
+  assignedBy?: string | null
+  assignedAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.AdminStatus
+  revokedAt?: Date | string | null
+  revokedReason?: string | null
+}
+
+export type AdminUpdateWithoutAcademicSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  adminType?: Prisma.EnumAdminTypeFieldUpdateOperationsInput | $Enums.AdminType
+  assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutAcademicSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  adminType?: Prisma.EnumAdminTypeFieldUpdateOperationsInput | $Enums.AdminType
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
+  revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
+}
+
+export type AdminUncheckedUpdateManyWithoutAcademicSessionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  adminType?: Prisma.EnumAdminTypeFieldUpdateOperationsInput | $Enums.AdminType
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1405,6 +1629,7 @@ export type AdminCreateManyOrganizationInput = {
   status?: $Enums.AdminStatus
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  academicSessionId?: string | null
 }
 
 export type AdminUpdateWithoutOrganizationInput = {
@@ -1416,11 +1641,12 @@ export type AdminUpdateWithoutOrganizationInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
-  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
-  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
-  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
   permissions?: Prisma.AdminPermissionUpdateManyWithoutAdminNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutAdminsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutAdminsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutAdminsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutAdminsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutAdminsNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutOrganizationInput = {
@@ -1436,6 +1662,7 @@ export type AdminUncheckedUpdateWithoutOrganizationInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.AdminPermissionUncheckedUpdateManyWithoutAdminNestedInput
 }
 
@@ -1452,6 +1679,7 @@ export type AdminUncheckedUpdateManyWithoutOrganizationInput = {
   status?: Prisma.EnumAdminStatusFieldUpdateOperationsInput | $Enums.AdminStatus
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1499,12 +1727,14 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
-  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
-  department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
-  organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  academicSessionId?: boolean
   permissions?: boolean | Prisma.Admin$permissionsArgs<ExtArgs>
+  academicSession?: boolean | Prisma.Admin$academicSessionArgs<ExtArgs>
+  department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
+  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
+  organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
@@ -1522,11 +1752,13 @@ export type AdminSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
-  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  academicSessionId?: boolean
+  academicSession?: boolean | Prisma.Admin$academicSessionArgs<ExtArgs>
   department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
+  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
   organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
 export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1543,11 +1775,13 @@ export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
-  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  academicSessionId?: boolean
+  academicSession?: boolean | Prisma.Admin$academicSessionArgs<ExtArgs>
   department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
+  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
   organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
 export type AdminSelectScalar = {
@@ -1564,42 +1798,47 @@ export type AdminSelectScalar = {
   status?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
+  academicSessionId?: boolean
 }
 
-export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "adminType" | "institutionId" | "facultyId" | "departmentId" | "organizationId" | "assignedBy" | "assignedAt" | "updatedAt" | "status" | "revokedAt" | "revokedReason", ExtArgs["result"]["admin"]>
+export type AdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "adminType" | "institutionId" | "facultyId" | "departmentId" | "organizationId" | "assignedBy" | "assignedAt" | "updatedAt" | "status" | "revokedAt" | "revokedReason" | "academicSessionId", ExtArgs["result"]["admin"]>
 export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
-  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
-  department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
-  organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
   permissions?: boolean | Prisma.Admin$permissionsArgs<ExtArgs>
+  academicSession?: boolean | Prisma.Admin$academicSessionArgs<ExtArgs>
+  department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
+  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
+  organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
-  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  academicSession?: boolean | Prisma.Admin$academicSessionArgs<ExtArgs>
   department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
+  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
   organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type AdminIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
-  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  academicSession?: boolean | Prisma.Admin$academicSessionArgs<ExtArgs>
   department?: boolean | Prisma.Admin$departmentArgs<ExtArgs>
+  faculty?: boolean | Prisma.Admin$facultyArgs<ExtArgs>
+  institution?: boolean | Prisma.Admin$institutionArgs<ExtArgs>
   organization?: boolean | Prisma.Admin$organizationArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Admin"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    institution: Prisma.$InstitutionPayload<ExtArgs> | null
-    faculty: Prisma.$FacultyPayload<ExtArgs> | null
-    department: Prisma.$DepartmentPayload<ExtArgs> | null
-    organization: Prisma.$OrganizationPayload<ExtArgs> | null
     permissions: Prisma.$AdminPermissionPayload<ExtArgs>[]
+    academicSession: Prisma.$AcademicSessionPayload<ExtArgs> | null
+    department: Prisma.$DepartmentPayload<ExtArgs> | null
+    faculty: Prisma.$FacultyPayload<ExtArgs> | null
+    institution: Prisma.$InstitutionPayload<ExtArgs> | null
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1615,6 +1854,7 @@ export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     status: $Enums.AdminStatus
     revokedAt: Date | null
     revokedReason: string | null
+    academicSessionId: string | null
   }, ExtArgs["result"]["admin"]>
   composites: {}
 }
@@ -2009,12 +2249,13 @@ readonly fields: AdminFieldRefs;
  */
 export interface Prisma__AdminClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  institution<T extends Prisma.Admin$institutionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$institutionArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  faculty<T extends Prisma.Admin$facultyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$facultyArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  department<T extends Prisma.Admin$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  organization<T extends Prisma.Admin$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   permissions<T extends Prisma.Admin$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  academicSession<T extends Prisma.Admin$academicSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$academicSessionArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  department<T extends Prisma.Admin$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  faculty<T extends Prisma.Admin$facultyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$facultyArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  institution<T extends Prisma.Admin$institutionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$institutionArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.Admin$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2057,6 +2298,7 @@ export interface AdminFieldRefs {
   readonly status: Prisma.FieldRef<"Admin", 'AdminStatus'>
   readonly revokedAt: Prisma.FieldRef<"Admin", 'DateTime'>
   readonly revokedReason: Prisma.FieldRef<"Admin", 'String'>
+  readonly academicSessionId: Prisma.FieldRef<"Admin", 'String'>
 }
     
 
@@ -2458,41 +2700,46 @@ export type AdminDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Admin.institution
+ * Admin.permissions
  */
-export type Admin$institutionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Admin$permissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Institution
+   * Select specific fields to fetch from the AdminPermission
    */
-  select?: Prisma.InstitutionSelect<ExtArgs> | null
+  select?: Prisma.AdminPermissionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Institution
+   * Omit specific fields from the AdminPermission
    */
-  omit?: Prisma.InstitutionOmit<ExtArgs> | null
+  omit?: Prisma.AdminPermissionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.InstitutionInclude<ExtArgs> | null
-  where?: Prisma.InstitutionWhereInput
+  include?: Prisma.AdminPermissionInclude<ExtArgs> | null
+  where?: Prisma.AdminPermissionWhereInput
+  orderBy?: Prisma.AdminPermissionOrderByWithRelationInput | Prisma.AdminPermissionOrderByWithRelationInput[]
+  cursor?: Prisma.AdminPermissionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminPermissionScalarFieldEnum | Prisma.AdminPermissionScalarFieldEnum[]
 }
 
 /**
- * Admin.faculty
+ * Admin.academicSession
  */
-export type Admin$facultyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Admin$academicSessionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Faculty
+   * Select specific fields to fetch from the AcademicSession
    */
-  select?: Prisma.FacultySelect<ExtArgs> | null
+  select?: Prisma.AcademicSessionSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Faculty
+   * Omit specific fields from the AcademicSession
    */
-  omit?: Prisma.FacultyOmit<ExtArgs> | null
+  omit?: Prisma.AcademicSessionOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FacultyInclude<ExtArgs> | null
-  where?: Prisma.FacultyWhereInput
+  include?: Prisma.AcademicSessionInclude<ExtArgs> | null
+  where?: Prisma.AcademicSessionWhereInput
 }
 
 /**
@@ -2515,6 +2762,44 @@ export type Admin$departmentArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
+ * Admin.faculty
+ */
+export type Admin$facultyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Faculty
+   */
+  select?: Prisma.FacultySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Faculty
+   */
+  omit?: Prisma.FacultyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FacultyInclude<ExtArgs> | null
+  where?: Prisma.FacultyWhereInput
+}
+
+/**
+ * Admin.institution
+ */
+export type Admin$institutionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Institution
+   */
+  select?: Prisma.InstitutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Institution
+   */
+  omit?: Prisma.InstitutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InstitutionInclude<ExtArgs> | null
+  where?: Prisma.InstitutionWhereInput
+}
+
+/**
  * Admin.organization
  */
 export type Admin$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2531,30 +2816,6 @@ export type Admin$organizationArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.OrganizationInclude<ExtArgs> | null
   where?: Prisma.OrganizationWhereInput
-}
-
-/**
- * Admin.permissions
- */
-export type Admin$permissionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AdminPermission
-   */
-  select?: Prisma.AdminPermissionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AdminPermission
-   */
-  omit?: Prisma.AdminPermissionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AdminPermissionInclude<ExtArgs> | null
-  where?: Prisma.AdminPermissionWhereInput
-  orderBy?: Prisma.AdminPermissionOrderByWithRelationInput | Prisma.AdminPermissionOrderByWithRelationInput[]
-  cursor?: Prisma.AdminPermissionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AdminPermissionScalarFieldEnum | Prisma.AdminPermissionScalarFieldEnum[]
 }
 
 /**

@@ -1,4 +1,5 @@
 // src/v1/organizations/organizations.controller.ts
+
 import {
   Controller,
   Get,
@@ -14,6 +15,7 @@ import {
   HttpStatus,
   Logger,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -40,11 +42,8 @@ import {
   OrganizationResponseDto,
   OrganizationListResponseDto,
 } from './dto';
-// Import cache decorators
 import {
   Cache,
-  Cacheable,
-  CacheKey,
   InvalidateCache,
 } from '../../common/decorators/cache.decorator';
 
@@ -104,10 +103,11 @@ export class OrganizationsController {
         scope,
         search,
         parentId,
+        academicSessionId,
       } = request.query;
-      return `organizations:${page || 1}:${limit || 10}:${institutionId || 'all'}:${status || 'all'}:${type || 'all'}:${scope || 'all'}:${search || 'all'}:${parentId || 'all'}`;
+      return `organizations:${page || 1}:${limit || 10}:${institutionId || 'all'}:${status || 'all'}:${type || 'all'}:${scope || 'all'}:${search || 'all'}:${parentId || 'all'}:${academicSessionId || 'all'}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['organizations'],
   })
   @ApiOperation({ summary: 'Get all organizations (Public)' })
@@ -117,6 +117,11 @@ export class OrganizationsController {
     name: 'institutionId',
     required: false,
     description: 'Filter by institution',
+  })
+  @ApiQuery({
+    name: 'academicSessionId',
+    required: false,
+    description: 'Filter by academic session',
   })
   @ApiQuery({
     name: 'status',
@@ -177,6 +182,7 @@ export class OrganizationsController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @Query('institutionId') institutionId?: string,
+    @Query('academicSessionId') academicSessionId?: string,
     @Query('status') status?: string,
     @Query('type') type?: string,
     @Query('scope') scope?: string,
@@ -187,7 +193,15 @@ export class OrganizationsController {
     return this.organizationsService.getAllOrganizations(
       parseInt(page, 10),
       parseInt(limit, 10),
-      { institutionId, status, type, scope, search, parentId },
+      {
+        institutionId,
+        status,
+        type,
+        scope,
+        search,
+        parentId,
+        academicSessionId,
+      },
     );
   }
 
@@ -197,7 +211,7 @@ export class OrganizationsController {
       const request = context.switchToHttp().getRequest();
       return `organization:${request.params.id}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['organizations'],
   })
   @ApiOperation({ summary: 'Get organization by ID (Public)' })
@@ -224,7 +238,7 @@ export class OrganizationsController {
       const { institutionId } = request.query;
       return `organization:slug:${slug}:${institutionId}`;
     },
-    ttl: 300, // 5 minutes
+    ttl: 300,
     tags: ['organizations'],
   })
   @ApiOperation({ summary: 'Get organization by slug (Public)' })
@@ -386,7 +400,7 @@ export class OrganizationsController {
       const { page, limit, status, membershipType, search } = request.query;
       return `organization:${id}:members:${page || 1}:${limit || 10}:${status || 'all'}:${membershipType || 'all'}:${search || 'all'}`;
     },
-    ttl: 120, // 2 minutes
+    ttl: 120,
     tags: ['organizations', 'members'],
   })
   @ApiOperation({ summary: 'Get organization members (Public)' })
@@ -505,6 +519,301 @@ export class OrganizationsController {
   }
 
   // ============================================
+  // ORGANIZATION JOIN REQUEST ENDPOINTS
+  // ============================================
+
+  @Post(':id/join-request')
+  @ApiOperation({
+    summary: 'Request to join an organization',
+    description:
+      'Submit a request to join an organization. Admins will review and approve/reject.',
+  })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        membershipType: {
+          type: 'string',
+          enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+          default: 'STUDENT',
+        },
+        message: {
+          type: 'string',
+          description: 'Optional message to the admins',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Join request submitted successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'User already has a pending request or is already a member',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Organization not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Organization is not active or student profile missing',
+  })
+  async requestToJoin(
+    @Param('id') organizationId: string,
+    @Request() req: any,
+    @Body() body: { membershipType?: string; message?: string },
+  ) {
+    this.logger.log(
+      `Request to join organization endpoint called: ${organizationId}`,
+    );
+    return this.organizationsService.requestToJoin(
+      req.user.id,
+      organizationId,
+      (body.membershipType as any) || 'STUDENT',
+      body.message,
+    );
+  }
+
+  @Post(':id/join')
+  @ApiOperation({
+    summary: 'Join an organization',
+    description:
+      'Allows any authenticated user to directly join an organization.',
+  })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        membershipType: {
+          type: 'string',
+          enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+          default: 'STUDENT',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Successfully joined organization',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Organization not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.CONFLICT,
+    description: 'User is already a member',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Organization is not active or student profile missing',
+  })
+  async joinOrganization(
+    @Param('id') organizationId: string,
+    @Request() req: any,
+    @Body() body: { membershipType?: string },
+  ) {
+    this.logger.log(`Join organization endpoint called: ${organizationId}`);
+    return this.organizationsService.requestToJoin(
+      req.user.id,
+      organizationId,
+      (body.membershipType as any) || 'STUDENT',
+    );
+  }
+
+  @Get(':id/join-requests/pending')
+  @UseGuards(AdminGuard)
+  @RequirePermission('organization:manage_members', 'id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      const { id } = request.params;
+      const { page, limit } = request.query;
+      return `organization:${id}:join-requests:pending:${page || 1}:${limit || 10}`;
+    },
+    ttl: 60,
+    tags: ['organizations', 'members'],
+  })
+  @ApiOperation({
+    summary: 'Get pending join requests for an organization (Admin only)',
+    description:
+      'Returns all pending join requests for an organization. Requires manage_members permission.',
+  })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Pending join requests retrieved',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Insufficient permissions',
+  })
+  async getPendingJoinRequests(
+    @Param('id') organizationId: string,
+    @Request() req: any,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    this.logger.log(
+      `Get pending join requests for organization: ${organizationId}`,
+    );
+    return this.organizationsService.getPendingJoinRequests(
+      organizationId,
+      req.user.id,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+    );
+  }
+
+  @Patch('join-requests/:requestId/review')
+  @UseGuards(AdminGuard)
+  @RequirePermission('organization:manage_members')
+  @InvalidateCache(['organizations', 'members'])
+  @ApiOperation({
+    summary: 'Review a join request (Admin only)',
+    description:
+      'Approve or reject a pending join request. Requires manage_members permission.',
+  })
+  @ApiParam({ name: 'requestId', description: 'Join Request ID' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['status'],
+      properties: {
+        status: {
+          type: 'string',
+          enum: ['APPROVED', 'REJECTED'],
+        },
+        rejectionReason: {
+          type: 'string',
+          description: 'Required when status is REJECTED',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Join request reviewed successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Insufficient permissions',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Join request not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Request already reviewed or invalid status',
+  })
+  async reviewJoinRequest(
+    @Param('requestId') requestId: string,
+    @Request() req: any,
+    @Body() body: { status: 'APPROVED' | 'REJECTED'; rejectionReason?: string },
+  ) {
+    this.logger.log(`Review join request endpoint called: ${requestId}`);
+
+    if (body.status === 'REJECTED' && !body.rejectionReason) {
+      throw new BadRequestException(
+        'Rejection reason is required when rejecting a request',
+      );
+    }
+
+    return this.organizationsService.reviewJoinRequest(
+      requestId,
+      req.user.id,
+      body.status,
+      body.rejectionReason,
+    );
+  }
+
+  @Get('my/join-requests')
+  @ApiOperation({
+    summary: "Get current user's join requests",
+    description: 'Returns all join requests made by the authenticated user',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User join requests retrieved',
+  })
+  async getUserJoinRequests(@Request() req: any) {
+    this.logger.log(`Get user join requests for: ${req.user.id}`);
+    return this.organizationsService.getUserJoinRequests(req.user.id);
+  }
+
+  @Delete('join-requests/:requestId')
+  @ApiOperation({
+    summary: 'Cancel a join request',
+    description:
+      'Cancel a pending join request. Only the request owner can cancel.',
+  })
+  @ApiParam({ name: 'requestId', description: 'Join Request ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Join request cancelled successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'You can only cancel your own join requests',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Request is already processed',
+  })
+  async cancelJoinRequest(
+    @Param('requestId') requestId: string,
+    @Request() req: any,
+  ) {
+    this.logger.log(`Cancel join request endpoint called: ${requestId}`);
+    return this.organizationsService.cancelJoinRequest(req.user.id, requestId);
+  }
+
+  @Get(':id/join-requests/stats')
+  @UseGuards(AdminGuard)
+  @RequirePermission('organization:manage_members', 'id')
+  @Cache({
+    key: (context) => {
+      const request = context.switchToHttp().getRequest();
+      return `organization:${request.params.id}:join-requests:stats`;
+    },
+    ttl: 300,
+    tags: ['organizations', 'members', 'stats'],
+  })
+  @ApiOperation({
+    summary: 'Get join request statistics for an organization (Admin only)',
+    description:
+      'Returns counts of pending, approved, and rejected join requests',
+  })
+  @ApiParam({ name: 'id', description: 'Organization ID' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Join request statistics retrieved',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Insufficient permissions',
+  })
+  async getOrganizationJoinRequestStats(
+    @Param('id') organizationId: string,
+    @Request() req: any,
+  ) {
+    this.logger.log(
+      `Get join request stats for organization: ${organizationId}`,
+    );
+    return this.organizationsService.getOrganizationJoinRequestStats(
+      organizationId,
+      req.user.id,
+    );
+  }
+
+  // ============================================
   // ORGANIZATION STATISTICS
   // ============================================
 
@@ -514,9 +823,9 @@ export class OrganizationsController {
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      return `organizations:stats:${request.query.institutionId || 'all'}`;
+      return `organizations:stats:${request.query.institutionId || 'all'}:${request.query.academicSessionId || 'all'}`;
     },
-    ttl: 900, // 15 minutes
+    ttl: 900,
     tags: ['organizations', 'stats'],
   })
   @ApiOperation({ summary: 'Get organization statistics (Admin only)' })
@@ -524,6 +833,11 @@ export class OrganizationsController {
     name: 'institutionId',
     required: false,
     description: 'Filter by institution',
+  })
+  @ApiQuery({
+    name: 'academicSessionId',
+    required: false,
+    description: 'Filter by academic session',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -533,9 +847,15 @@ export class OrganizationsController {
     status: HttpStatus.FORBIDDEN,
     description: 'Insufficient permissions',
   })
-  async getStats(@Query('institutionId') institutionId?: string) {
+  async getStats(
+    @Query('institutionId') institutionId?: string,
+    @Query('academicSessionId') academicSessionId?: string,
+  ) {
     this.logger.log('Get organization statistics endpoint called');
-    return this.organizationsService.getOrganizationStats(institutionId);
+    return this.organizationsService.getOrganizationStats(
+      institutionId,
+      academicSessionId,
+    );
   }
 
   // ============================================

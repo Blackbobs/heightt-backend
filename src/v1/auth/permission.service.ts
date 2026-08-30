@@ -1,3 +1,5 @@
+// src/v1/auth/permission.service.ts
+
 import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
@@ -57,6 +59,7 @@ export class PermissionService {
 
     // Finance permissions
     FINANCE_READ: 'finance:read',
+    FINANCE_WITHDRAWAL_CREATE: 'finance:withdrawal:create',
     FINANCE_CREATE: 'finance:create',
     FINANCE_UPDATE: 'finance:update',
     FINANCE_DELETE: 'finance:delete',
@@ -123,7 +126,8 @@ export class PermissionService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Check if a user has a specific permission
+   * Check if a user has a specific permission for a specific resource
+   * THIS IS THE CRITICAL FIX - Ensures permissions are scoped correctly
    */
   async checkPermission(
     userId: string,
@@ -131,7 +135,8 @@ export class PermissionService {
     resourceId?: string,
   ): Promise<boolean> {
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      // Get all active admins for this user
+      const admins = await this.prisma.admin.findMany({
         where: {
           userId,
           status: 'ACTIVE',
@@ -141,31 +146,207 @@ export class PermissionService {
         },
       });
 
-      if (!admin) {
+      if (!admins.length) {
         return false;
       }
 
       // Platform admins have all permissions
-      if (admin.adminType === 'PLATFORM_ADMIN') {
+      if (admins.some((admin) => admin.adminType === 'PLATFORM_ADMIN')) {
         return true;
       }
 
-      // Check if admin has the specific permission
-      const hasPermission = admin.permissions.some((perm: any) => {
-        if (perm.permissionKey === permissionKey) {
+      // Check each admin's permissions
+      for (const admin of admins) {
+        // Check if this admin has the required permission
+        const hasPermission = admin.permissions.some((perm) => {
+          if (perm.permissionKey !== permissionKey) {
+            return false;
+          }
+
+          // If resourceId is provided, check if the permission applies to this resource
           if (resourceId) {
-            return perm.resourceId === resourceId || perm.resourceId === null;
+            // Check if the permission has no resource restriction or matches the resource
+            return perm.resourceId === null || perm.resourceId === resourceId;
+          }
+
+          return true;
+        });
+
+        if (hasPermission) {
+          // Also verify the admin's scope includes the resource
+          if (resourceId) {
+            const isInScope = await this.isResourceInAdminScope(
+              admin,
+              resourceId,
+            );
+            if (!isInScope) {
+              continue; // Try next admin
+            }
           }
           return true;
         }
-        return false;
-      });
+      }
 
-      return hasPermission;
+      return false;
     } catch (error) {
       this.logger.error(`Permission check failed: ${error.message}`);
       return false;
     }
+  }
+
+  /**
+   * Check if a resource is within an admin's scope
+   */
+  private async isResourceInAdminScope(
+    admin: any,
+    resourceId: string,
+  ): Promise<boolean> {
+    // Platform admins have access to everything
+    if (admin.adminType === 'PLATFORM_ADMIN') {
+      return true;
+    }
+
+    // Check based on admin type
+    switch (admin.adminType) {
+      case 'INSTITUTION_ADMIN':
+        return await this.isResourceInInstitution(
+          admin.institutionId,
+          resourceId,
+        );
+
+      case 'FACULTY_ADMIN':
+        return await this.isResourceInFaculty(admin.facultyId, resourceId);
+
+      case 'DEPARTMENT_ADMIN':
+        return await this.isResourceInDepartment(
+          admin.departmentId,
+          resourceId,
+        );
+
+      case 'ORGANIZATION_ADMIN':
+      case 'CLUB_ADMIN':
+        return await this.isResourceInOrganization(
+          admin.organizationId,
+          resourceId,
+        );
+
+      default:
+        return false;
+    }
+  }
+
+  private async isResourceInInstitution(
+    institutionId: string,
+    resourceId: string,
+  ): Promise<boolean> {
+    if (institutionId === resourceId) return true;
+
+    // Check if resource is a faculty in this institution
+    const faculty = await this.prisma.faculty.findFirst({
+      where: { id: resourceId, institutionId },
+    });
+    if (faculty) return true;
+
+    // Check if resource is a department in this institution
+    const department = await this.prisma.department.findFirst({
+      where: { id: resourceId, faculty: { institutionId } },
+    });
+    if (department) return true;
+
+    // Check if resource is an organization in this institution
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: resourceId, institutionId },
+    });
+    if (organization) return true;
+
+    // Check if resource is a student in this institution
+    const student = await this.prisma.studentProfile.findFirst({
+      where: { id: resourceId, institutionId },
+    });
+    if (student) return true;
+
+    return false;
+  }
+
+  private async isResourceInFaculty(
+    facultyId: string,
+    resourceId: string,
+  ): Promise<boolean> {
+    if (facultyId === resourceId) return true;
+
+    // Check if resource is a department in this faculty
+    const department = await this.prisma.department.findFirst({
+      where: { id: resourceId, facultyId },
+    });
+    if (department) return true;
+
+    // Check if resource is an organization in this faculty
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: resourceId, facultyId },
+    });
+    if (organization) return true;
+
+    // Check if resource is a student in this faculty
+    const student = await this.prisma.studentProfile.findFirst({
+      where: { id: resourceId, facultyId },
+    });
+    if (student) return true;
+
+    return false;
+  }
+
+  private async isResourceInDepartment(
+    departmentId: string,
+    resourceId: string,
+  ): Promise<boolean> {
+    if (departmentId === resourceId) return true;
+
+    // Check if resource is an organization in this department
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: resourceId, departmentId },
+    });
+    if (organization) return true;
+
+    // Check if resource is a student in this department
+    const student = await this.prisma.studentProfile.findFirst({
+      where: { id: resourceId, departmentId },
+    });
+    if (student) return true;
+
+    return false;
+  }
+
+  private async isResourceInOrganization(
+    organizationId: string,
+    resourceId: string,
+  ): Promise<boolean> {
+    if (organizationId === resourceId) return true;
+
+    // Check if resource is a membership in this organization
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: { id: resourceId, organizationId },
+    });
+    if (membership) return true;
+
+    // Check if resource is a due in this organization
+    const due = await this.prisma.due.findFirst({
+      where: { id: resourceId, organizationId },
+    });
+    if (due) return true;
+
+    // Check if resource is an event in this organization
+    const event = await this.prisma.event.findFirst({
+      where: { id: resourceId, organizationId },
+    });
+    if (event) return true;
+
+    // Check if resource is an announcement in this organization
+    const announcement = await this.prisma.announcement.findFirst({
+      where: { id: resourceId, organizationId },
+    });
+    if (announcement) return true;
+
+    return false;
   }
 
   /**
@@ -200,11 +381,11 @@ export class PermissionService {
   }
 
   /**
-   * Get all permissions for a user
+   * Get all permissions for a user with scope context
    */
   async getUserPermissions(userId: string): Promise<string[]> {
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admins = await this.prisma.admin.findMany({
         where: {
           userId,
           status: 'ACTIVE',
@@ -214,16 +395,19 @@ export class PermissionService {
         },
       });
 
-      if (!admin) {
+      if (!admins.length) {
         return [];
       }
 
       // Platform admins get all permissions
-      if (admin.adminType === 'PLATFORM_ADMIN') {
+      if (admins.some((admin) => admin.adminType === 'PLATFORM_ADMIN')) {
         return Object.values(PermissionService.PERMISSIONS);
       }
 
-      return admin.permissions.map((perm: any) => perm.permissionKey);
+      const permissions = admins.flatMap((admin) => admin.permissions || []);
+      return Array.from(
+        new Set(permissions.map((perm: any) => String(perm.permissionKey))),
+      );
     } catch (error) {
       this.logger.error(`Failed to get user permissions: ${error.message}`);
       return [];
@@ -231,9 +415,68 @@ export class PermissionService {
   }
 
   /**
-   * Get user's admin scope
+   * Get user admin scopes - THIS IS CRITICAL for proper scope isolation
+   */
+  async getUserAdminScopes(userId: string): Promise<
+    Array<{
+      id: string;
+      adminType?: string;
+      institutionId?: string;
+      facultyId?: string;
+      departmentId?: string;
+      organizationId?: string;
+      academicSessionId?: string;
+      status?: string;
+    }>
+  > {
+    try {
+      const admins = await this.prisma.admin.findMany({
+        where: {
+          userId,
+          status: 'ACTIVE',
+        },
+        include: {
+          institution: true,
+          faculty: {
+            include: {
+              institution: true,
+            },
+          },
+          department: {
+            include: {
+              faculty: {
+                include: {
+                  institution: true,
+                },
+              },
+            },
+          },
+          organization: true,
+          academicSession: true,
+        },
+      });
+
+      return admins.map((admin: any) => ({
+        id: admin.id,
+        adminType: admin.adminType,
+        institutionId: admin.institutionId || undefined,
+        facultyId: admin.facultyId || undefined,
+        departmentId: admin.departmentId || undefined,
+        organizationId: admin.organizationId || undefined,
+        academicSessionId: admin.academicSessionId || undefined,
+        status: admin.status,
+      }));
+    } catch (error) {
+      this.logger.error(`Failed to get user admin scopes: ${error.message}`);
+      return [];
+    }
+  }
+
+  /**
+   * Get user's primary admin scope
    */
   async getUserAdminScope(userId: string): Promise<{
+    id?: string;
     adminType?: string;
     institutionId?: string;
     facultyId?: string;
@@ -241,7 +484,7 @@ export class PermissionService {
     organizationId?: string;
   } | null> {
     try {
-      const admin = await (this.prisma as any).admin.findFirst({
+      const admin = await this.prisma.admin.findFirst({
         where: {
           userId,
           status: 'ACTIVE',
@@ -253,6 +496,7 @@ export class PermissionService {
       }
 
       return {
+        id: admin.id,
         adminType: admin.adminType,
         institutionId: admin.institutionId || undefined,
         facultyId: admin.facultyId || undefined,
@@ -266,7 +510,7 @@ export class PermissionService {
   }
 
   /**
-   * Assign admin role to a user
+   * Assign admin role to a user with proper scoping
    */
   async assignAdminRole(
     assignerId: string,
@@ -302,11 +546,11 @@ export class PermissionService {
       );
     }
 
-    // Create admin record
-    const admin = await (this.prisma as any).admin.create({
+    // Create admin record with proper scope - convert adminType to proper enum
+    const admin = await this.prisma.admin.create({
       data: {
         userId,
-        adminType,
+        adminType: adminType as any, // Cast to any to handle enum
         institutionId: scope?.institutionId,
         facultyId: scope?.facultyId,
         departmentId: scope?.departmentId,
@@ -329,7 +573,7 @@ export class PermissionService {
     await this.assignDefaultPermissions(admin.id, adminType);
 
     this.logger.log(
-      `Admin role ${adminType} assigned to user ${userId} by ${assignerId}`,
+      `Admin role ${adminType} assigned to user ${userId} by ${assignerId} with scope: ${JSON.stringify(scope)}`,
     );
 
     return admin;
@@ -357,6 +601,7 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ORGANIZATION_CREATE,
           PermissionService.PERMISSIONS.ORGANIZATION_UPDATE,
           PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.STUDENT_READ,
           PermissionService.PERMISSIONS.STUDENT_UPDATE,
           PermissionService.PERMISSIONS.ACADEMIC_READ,
@@ -372,6 +617,8 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ACADEMIC_READ,
           PermissionService.PERMISSIONS.ORGANIZATION_READ,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
+          PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
         ];
         break;
       case 'DEPARTMENT_ADMIN':
@@ -380,6 +627,7 @@ export class PermissionService {
           PermissionService.PERMISSIONS.STUDENT_READ,
           PermissionService.PERMISSIONS.ACADEMIC_READ,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
         ];
         break;
       case 'ORGANIZATION_ADMIN':
@@ -389,7 +637,9 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ORGANIZATION_UPDATE,
           PermissionService.PERMISSIONS.ORGANIZATION_MANAGE,
           PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
+          PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.EVENT_CREATE,
           PermissionService.PERMISSIONS.GOVERNANCE_READ,
         ];
@@ -407,16 +657,16 @@ export class PermissionService {
         defaultPermissions = [PermissionService.PERMISSIONS.USER_READ];
     }
 
-    // Create permission records - add required fields
+    // Create permission records with proper enum types
     const permissionData = defaultPermissions.map((permissionKey) => ({
       adminId,
       permissionKey,
       grantedBy: 'system',
-      permissionCategory: 'SYSTEM', // Add required field
-      permissionAction: 'MANAGE', // Add required field
+      permissionCategory: 'SYSTEM' as any, // Cast to any to handle enum
+      permissionAction: 'MANAGE' as any, // Cast to any to handle enum
     }));
 
-    await (this.prisma as any).adminPermission.createMany({
+    await this.prisma.adminPermission.createMany({
       data: permissionData,
     });
   }
@@ -429,7 +679,7 @@ export class PermissionService {
     adminId: string,
     reason?: string,
   ): Promise<void> {
-    const admin = await (this.prisma as any).admin.findUnique({
+    const admin = await this.prisma.admin.findUnique({
       where: { id: adminId },
     });
 
@@ -446,7 +696,7 @@ export class PermissionService {
       );
     }
 
-    await (this.prisma as any).admin.update({
+    await this.prisma.admin.update({
       where: { id: adminId },
       data: {
         status: 'REVOKED',
@@ -464,7 +714,7 @@ export class PermissionService {
    * Get all admins
    */
   async getAllAdmins() {
-    return (this.prisma as any).admin.findMany({
+    return this.prisma.admin.findMany({
       include: {
         user: {
           select: {
@@ -487,7 +737,7 @@ export class PermissionService {
    * Get admin by ID
    */
   async getAdminById(adminId: string) {
-    return (this.prisma as any).admin.findUnique({
+    return this.prisma.admin.findUnique({
       where: { id: adminId },
       include: {
         user: {

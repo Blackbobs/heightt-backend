@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model User
@@ -27,43 +27,43 @@ export type AggregateUser = {
 export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
-  username: string | null
   passwordHash: string | null
   emailVerified: boolean | null
-  status: $Enums.UserStatus | null
   lastLoginAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  username: string | null
   deletedAt: Date | null
   deletedBy: string | null
+  status: $Enums.UserStatus | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
-  username: string | null
   passwordHash: string | null
   emailVerified: boolean | null
-  status: $Enums.UserStatus | null
   lastLoginAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  username: string | null
   deletedAt: Date | null
   deletedBy: string | null
+  status: $Enums.UserStatus | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
   email: number
-  username: number
   passwordHash: number
   emailVerified: number
-  status: number
   lastLoginAt: number
   createdAt: number
   updatedAt: number
+  username: number
   deletedAt: number
   deletedBy: number
+  status: number
   _all: number
 }
 
@@ -71,43 +71,43 @@ export type UserCountAggregateOutputType = {
 export type UserMinAggregateInputType = {
   id?: true
   email?: true
-  username?: true
   passwordHash?: true
   emailVerified?: true
-  status?: true
   lastLoginAt?: true
   createdAt?: true
   updatedAt?: true
+  username?: true
   deletedAt?: true
   deletedBy?: true
+  status?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
   email?: true
-  username?: true
   passwordHash?: true
   emailVerified?: true
-  status?: true
   lastLoginAt?: true
   createdAt?: true
   updatedAt?: true
+  username?: true
   deletedAt?: true
   deletedBy?: true
+  status?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
   email?: true
-  username?: true
   passwordHash?: true
   emailVerified?: true
-  status?: true
   lastLoginAt?: true
   createdAt?: true
   updatedAt?: true
+  username?: true
   deletedAt?: true
   deletedBy?: true
+  status?: true
   _all?: true
 }
 
@@ -186,15 +186,15 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   id: string
   email: string
-  username: string
   passwordHash: string
   emailVerified: boolean
-  status: $Enums.UserStatus
   lastLoginAt: Date | null
   createdAt: Date
   updatedAt: Date
+  username: string
   deletedAt: Date | null
   deletedBy: string | null
+  status: $Enums.UserStatus
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -221,91 +221,97 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  username?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
-  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  username?: Prisma.StringFilter<"User"> | string
   deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   deletedBy?: Prisma.StringNullableFilter<"User"> | string | null
-  profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
-  sessions?: Prisma.SessionListRelationFilter
-  passwordResets?: Prisma.PasswordResetListRelationFilter
-  emailVerifications?: Prisma.EmailVerificationListRelationFilter
-  studentProfile?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
-  auditLogs?: Prisma.AuditLogListRelationFilter
-  operationalAuditLogs?: Prisma.OperationalAuditLogListRelationFilter
+  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogListRelationFilter
-  createdOrganizations?: Prisma.OrganizationListRelationFilter
-  notifications?: Prisma.NotificationListRelationFilter
-  announcementReads?: Prisma.AnnouncementReadListRelationFilter
-  eventRegistrations?: Prisma.EventRegistrationListRelationFilter
-  votes?: Prisma.VoteListRelationFilter
-  candidates?: Prisma.CandidateListRelationFilter
-  ticketPurchases?: Prisma.TicketPurchaseListRelationFilter
-  payments?: Prisma.PaymentListRelationFilter
-  withdrawals?: Prisma.WithdrawalListRelationFilter
-  savingsGoals?: Prisma.SavingsGoalListRelationFilter
-  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
-  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
-  executiveMembers?: Prisma.ExecutiveMemberListRelationFilter
-  announcementAuthor?: Prisma.AnnouncementListRelationFilter
-  notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
-  pushQueues?: Prisma.PushQueueListRelationFilter
-  organizationMemberships?: Prisma.OrganizationMembershipListRelationFilter
   admins?: Prisma.AdminListRelationFilter
-  createdEvents?: Prisma.EventListRelationFilter
+  announcementReads?: Prisma.AnnouncementReadListRelationFilter
+  announcementAuthor?: Prisma.AnnouncementListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
+  candidates?: Prisma.CandidateListRelationFilter
+  emailVerifications?: Prisma.EmailVerificationListRelationFilter
+  eventRegistrations?: Prisma.EventRegistrationListRelationFilter
   approvedEvents?: Prisma.EventListRelationFilter
-  receipts?: Prisma.ReceiptListRelationFilter
+  createdEvents?: Prisma.EventListRelationFilter
+  executiveMembers?: Prisma.ExecutiveMemberListRelationFilter
+  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
   files?: Prisma.FileListRelationFilter
+  notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  operationalAuditLogs?: Prisma.OperationalAuditLogListRelationFilter
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
+  joinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
+  organizationMemberships?: Prisma.OrganizationMembershipListRelationFilter
+  createdOrganizations?: Prisma.OrganizationListRelationFilter
+  passwordResets?: Prisma.PasswordResetListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
   pendingPayments?: Prisma.PendingPaymentListRelationFilter
+  pushQueues?: Prisma.PushQueueListRelationFilter
+  receipts?: Prisma.ReceiptListRelationFilter
+  savingsGoals?: Prisma.SavingsGoalListRelationFilter
+  sessions?: Prisma.SessionListRelationFilter
+  studentProfile?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
+  ticketPurchases?: Prisma.TicketPurchaseListRelationFilter
+  profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
+  votes?: Prisma.VoteListRelationFilter
+  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
+  withdrawals?: Prisma.WithdrawalListRelationFilter
+  bankAccounts?: Prisma.BankAccountListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  profile?: Prisma.UserProfileOrderByWithRelationInput
-  sessions?: Prisma.SessionOrderByRelationAggregateInput
-  passwordResets?: Prisma.PasswordResetOrderByRelationAggregateInput
-  emailVerifications?: Prisma.EmailVerificationOrderByRelationAggregateInput
-  studentProfile?: Prisma.StudentProfileOrderByWithRelationInput
-  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogOrderByRelationAggregateInput
+  status?: Prisma.SortOrder
   activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
-  createdOrganizations?: Prisma.OrganizationOrderByRelationAggregateInput
-  notifications?: Prisma.NotificationOrderByRelationAggregateInput
-  announcementReads?: Prisma.AnnouncementReadOrderByRelationAggregateInput
-  eventRegistrations?: Prisma.EventRegistrationOrderByRelationAggregateInput
-  votes?: Prisma.VoteOrderByRelationAggregateInput
-  candidates?: Prisma.CandidateOrderByRelationAggregateInput
-  ticketPurchases?: Prisma.TicketPurchaseOrderByRelationAggregateInput
-  payments?: Prisma.PaymentOrderByRelationAggregateInput
-  withdrawals?: Prisma.WithdrawalOrderByRelationAggregateInput
-  savingsGoals?: Prisma.SavingsGoalOrderByRelationAggregateInput
-  wallet?: Prisma.WalletOrderByWithRelationInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetOrderByRelationAggregateInput
-  executiveMembers?: Prisma.ExecutiveMemberOrderByRelationAggregateInput
-  announcementAuthor?: Prisma.AnnouncementOrderByRelationAggregateInput
-  notificationPreferences?: Prisma.NotificationPreferenceOrderByRelationAggregateInput
-  pushQueues?: Prisma.PushQueueOrderByRelationAggregateInput
-  organizationMemberships?: Prisma.OrganizationMembershipOrderByRelationAggregateInput
   admins?: Prisma.AdminOrderByRelationAggregateInput
-  createdEvents?: Prisma.EventOrderByRelationAggregateInput
+  announcementReads?: Prisma.AnnouncementReadOrderByRelationAggregateInput
+  announcementAuthor?: Prisma.AnnouncementOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  candidates?: Prisma.CandidateOrderByRelationAggregateInput
+  emailVerifications?: Prisma.EmailVerificationOrderByRelationAggregateInput
+  eventRegistrations?: Prisma.EventRegistrationOrderByRelationAggregateInput
   approvedEvents?: Prisma.EventOrderByRelationAggregateInput
-  receipts?: Prisma.ReceiptOrderByRelationAggregateInput
+  createdEvents?: Prisma.EventOrderByRelationAggregateInput
+  executiveMembers?: Prisma.ExecutiveMemberOrderByRelationAggregateInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetOrderByRelationAggregateInput
   files?: Prisma.FileOrderByRelationAggregateInput
+  notificationPreferences?: Prisma.NotificationPreferenceOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogOrderByRelationAggregateInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestOrderByRelationAggregateInput
+  joinRequests?: Prisma.OrganizationJoinRequestOrderByRelationAggregateInput
+  organizationMemberships?: Prisma.OrganizationMembershipOrderByRelationAggregateInput
+  createdOrganizations?: Prisma.OrganizationOrderByRelationAggregateInput
+  passwordResets?: Prisma.PasswordResetOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
   pendingPayments?: Prisma.PendingPaymentOrderByRelationAggregateInput
+  pushQueues?: Prisma.PushQueueOrderByRelationAggregateInput
+  receipts?: Prisma.ReceiptOrderByRelationAggregateInput
+  savingsGoals?: Prisma.SavingsGoalOrderByRelationAggregateInput
+  sessions?: Prisma.SessionOrderByRelationAggregateInput
+  studentProfile?: Prisma.StudentProfileOrderByWithRelationInput
+  ticketPurchases?: Prisma.TicketPurchaseOrderByRelationAggregateInput
+  profile?: Prisma.UserProfileOrderByWithRelationInput
+  votes?: Prisma.VoteOrderByRelationAggregateInput
+  wallet?: Prisma.WalletOrderByWithRelationInput
+  withdrawals?: Prisma.WithdrawalOrderByRelationAggregateInput
+  bankAccounts?: Prisma.BankAccountOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -317,57 +323,60 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   passwordHash?: Prisma.StringFilter<"User"> | string
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
-  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   deletedBy?: Prisma.StringNullableFilter<"User"> | string | null
-  profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
-  sessions?: Prisma.SessionListRelationFilter
-  passwordResets?: Prisma.PasswordResetListRelationFilter
-  emailVerifications?: Prisma.EmailVerificationListRelationFilter
-  studentProfile?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
-  auditLogs?: Prisma.AuditLogListRelationFilter
-  operationalAuditLogs?: Prisma.OperationalAuditLogListRelationFilter
+  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogListRelationFilter
-  createdOrganizations?: Prisma.OrganizationListRelationFilter
-  notifications?: Prisma.NotificationListRelationFilter
-  announcementReads?: Prisma.AnnouncementReadListRelationFilter
-  eventRegistrations?: Prisma.EventRegistrationListRelationFilter
-  votes?: Prisma.VoteListRelationFilter
-  candidates?: Prisma.CandidateListRelationFilter
-  ticketPurchases?: Prisma.TicketPurchaseListRelationFilter
-  payments?: Prisma.PaymentListRelationFilter
-  withdrawals?: Prisma.WithdrawalListRelationFilter
-  savingsGoals?: Prisma.SavingsGoalListRelationFilter
-  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
-  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
-  executiveMembers?: Prisma.ExecutiveMemberListRelationFilter
-  announcementAuthor?: Prisma.AnnouncementListRelationFilter
-  notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
-  pushQueues?: Prisma.PushQueueListRelationFilter
-  organizationMemberships?: Prisma.OrganizationMembershipListRelationFilter
   admins?: Prisma.AdminListRelationFilter
-  createdEvents?: Prisma.EventListRelationFilter
+  announcementReads?: Prisma.AnnouncementReadListRelationFilter
+  announcementAuthor?: Prisma.AnnouncementListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
+  candidates?: Prisma.CandidateListRelationFilter
+  emailVerifications?: Prisma.EmailVerificationListRelationFilter
+  eventRegistrations?: Prisma.EventRegistrationListRelationFilter
   approvedEvents?: Prisma.EventListRelationFilter
-  receipts?: Prisma.ReceiptListRelationFilter
+  createdEvents?: Prisma.EventListRelationFilter
+  executiveMembers?: Prisma.ExecutiveMemberListRelationFilter
+  featureFlagTargets?: Prisma.FeatureFlagTargetListRelationFilter
   files?: Prisma.FileListRelationFilter
+  notificationPreferences?: Prisma.NotificationPreferenceListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  operationalAuditLogs?: Prisma.OperationalAuditLogListRelationFilter
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
+  joinRequests?: Prisma.OrganizationJoinRequestListRelationFilter
+  organizationMemberships?: Prisma.OrganizationMembershipListRelationFilter
+  createdOrganizations?: Prisma.OrganizationListRelationFilter
+  passwordResets?: Prisma.PasswordResetListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
   pendingPayments?: Prisma.PendingPaymentListRelationFilter
+  pushQueues?: Prisma.PushQueueListRelationFilter
+  receipts?: Prisma.ReceiptListRelationFilter
+  savingsGoals?: Prisma.SavingsGoalListRelationFilter
+  sessions?: Prisma.SessionListRelationFilter
+  studentProfile?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
+  ticketPurchases?: Prisma.TicketPurchaseListRelationFilter
+  profile?: Prisma.XOR<Prisma.UserProfileNullableScalarRelationFilter, Prisma.UserProfileWhereInput> | null
+  votes?: Prisma.VoteListRelationFilter
+  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
+  withdrawals?: Prisma.WithdrawalListRelationFilter
+  bankAccounts?: Prisma.BankAccountListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -379,279 +388,291 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  username?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  username?: Prisma.StringWithAggregatesFilter<"User"> | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   deletedBy?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
 }
 
 export type UserCreateInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
+  status?: $Enums.UserStatus
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   deletedBy?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   deletedBy?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  username?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  username?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   deletedBy?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -672,10 +693,6 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type EnumUserStatusFieldUpdateOperationsInput = {
-  set?: $Enums.UserStatus
-}
-
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
@@ -686,6 +703,10 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type EnumUserStatusFieldUpdateOperationsInput = {
+  set?: $Enums.UserStatus
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -788,6 +809,36 @@ export type UserUpdateOneRequiredWithoutOrganizationMembershipsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrganizationMembershipsInput, Prisma.UserUpdateWithoutOrganizationMembershipsInput>, Prisma.UserUncheckedUpdateWithoutOrganizationMembershipsInput>
 }
 
+export type UserCreateNestedOneWithoutReviewedJoinRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedJoinRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutJoinRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJoinRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutReviewedJoinRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedJoinRequestsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedJoinRequestsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedJoinRequestsInput, Prisma.UserUpdateWithoutReviewedJoinRequestsInput>, Prisma.UserUncheckedUpdateWithoutReviewedJoinRequestsInput>
+}
+
+export type UserUpdateOneRequiredWithoutJoinRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJoinRequestsInput
+  upsert?: Prisma.UserUpsertWithoutJoinRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJoinRequestsInput, Prisma.UserUpdateWithoutJoinRequestsInput>, Prisma.UserUncheckedUpdateWithoutJoinRequestsInput>
+}
+
 export type UserCreateNestedOneWithoutAdminsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAdminsInput, Prisma.UserUncheckedCreateWithoutAdminsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminsInput
@@ -844,6 +895,20 @@ export type UserUpdateOneRequiredWithoutWithdrawalsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutWithdrawalsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWithdrawalsInput, Prisma.UserUpdateWithoutWithdrawalsInput>, Prisma.UserUncheckedUpdateWithoutWithdrawalsInput>
+}
+
+export type UserCreateNestedOneWithoutBankAccountsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBankAccountsInput, Prisma.UserUncheckedCreateWithoutBankAccountsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBankAccountsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBankAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBankAccountsInput, Prisma.UserUncheckedCreateWithoutBankAccountsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBankAccountsInput
+  upsert?: Prisma.UserUpsertWithoutBankAccountsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBankAccountsInput, Prisma.UserUpdateWithoutBankAccountsInput>, Prisma.UserUncheckedUpdateWithoutBankAccountsInput>
 }
 
 export type UserCreateNestedOneWithoutSavingsGoalsInput = {
@@ -1052,24 +1117,16 @@ export type UserUpdateOneRequiredWithoutExecutiveMembersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutExecutiveMembersInput, Prisma.UserUpdateWithoutExecutiveMembersInput>, Prisma.UserUncheckedUpdateWithoutExecutiveMembersInput>
 }
 
-export type UserCreateNestedOneWithoutCreatedEventsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedEventsInput, Prisma.UserUncheckedCreateWithoutCreatedEventsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedEventsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
 export type UserCreateNestedOneWithoutApprovedEventsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutApprovedEventsInput, Prisma.UserUncheckedCreateWithoutApprovedEventsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutApprovedEventsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutCreatedEventsNestedInput = {
+export type UserCreateNestedOneWithoutCreatedEventsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedEventsInput, Prisma.UserUncheckedCreateWithoutCreatedEventsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedEventsInput
-  upsert?: Prisma.UserUpsertWithoutCreatedEventsInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedEventsInput, Prisma.UserUpdateWithoutCreatedEventsInput>, Prisma.UserUncheckedUpdateWithoutCreatedEventsInput>
 }
 
 export type UserUpdateOneWithoutApprovedEventsNestedInput = {
@@ -1080,6 +1137,14 @@ export type UserUpdateOneWithoutApprovedEventsNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApprovedEventsInput, Prisma.UserUpdateWithoutApprovedEventsInput>, Prisma.UserUncheckedUpdateWithoutApprovedEventsInput>
+}
+
+export type UserUpdateOneRequiredWithoutCreatedEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedEventsInput, Prisma.UserUncheckedCreateWithoutCreatedEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedEventsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedEventsInput, Prisma.UserUpdateWithoutCreatedEventsInput>, Prisma.UserUncheckedUpdateWithoutCreatedEventsInput>
 }
 
 export type UserCreateNestedOneWithoutTicketPurchasesInput = {
@@ -1143,89 +1208,95 @@ export type UserUpdateOneWithoutFilesNestedInput = {
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1247,177 +1318,189 @@ export type UserUpdateToOneWithWhereWithoutSessionsInput = {
 export type UserUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -1439,177 +1522,189 @@ export type UserUpdateToOneWithWhereWithoutPasswordResetsInput = {
 export type UserUpdateWithoutPasswordResetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmailVerificationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmailVerificationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmailVerificationsInput = {
@@ -1631,177 +1726,189 @@ export type UserUpdateToOneWithWhereWithoutEmailVerificationsInput = {
 export type UserUpdateWithoutEmailVerificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProfileInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -1823,177 +1930,189 @@ export type UserUpdateToOneWithWhereWithoutProfileInput = {
 export type UserUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStudentProfileInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutStudentProfileInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -2015,177 +2134,189 @@ export type UserUpdateToOneWithWhereWithoutStudentProfileInput = {
 export type UserUpdateWithoutStudentProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentProfileInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCreatedOrganizationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedOrganizationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedOrganizationsInput = {
@@ -2207,177 +2338,189 @@ export type UserUpdateToOneWithWhereWithoutCreatedOrganizationsInput = {
 export type UserUpdateWithoutCreatedOrganizationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedOrganizationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrganizationMembershipsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationMembershipsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationMembershipsInput = {
@@ -2399,177 +2542,597 @@ export type UserUpdateToOneWithWhereWithoutOrganizationMembershipsInput = {
 export type UserUpdateWithoutOrganizationMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutReviewedJoinRequestsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReviewedJoinRequestsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReviewedJoinRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+}
+
+export type UserCreateWithoutJoinRequestsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutJoinRequestsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutJoinRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+}
+
+export type UserUpsertWithoutReviewedJoinRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutReviewedJoinRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedJoinRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedJoinRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutReviewedJoinRequestsInput>
+}
+
+export type UserUpdateWithoutReviewedJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutJoinRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutJoinRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJoinRequestsInput, Prisma.UserUncheckedCreateWithoutJoinRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJoinRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJoinRequestsInput, Prisma.UserUncheckedUpdateWithoutJoinRequestsInput>
+}
+
+export type UserUpdateWithoutJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutJoinRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAdminsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
   announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdminsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
   announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdminsInput = {
@@ -2591,177 +3154,189 @@ export type UserUpdateToOneWithWhereWithoutAdminsInput = {
 export type UserUpdateWithoutAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
   announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
   announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWalletInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWalletInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWalletInput = {
@@ -2783,177 +3358,189 @@ export type UserUpdateToOneWithWhereWithoutWalletInput = {
 export type UserUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -2975,177 +3562,189 @@ export type UserUpdateToOneWithWhereWithoutPaymentsInput = {
 export type UserUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWithdrawalsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWithdrawalsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWithdrawalsInput = {
@@ -3167,177 +3766,393 @@ export type UserUpdateToOneWithWhereWithoutWithdrawalsInput = {
 export type UserUpdateWithoutWithdrawalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWithdrawalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBankAccountsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBankAccountsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBankAccountsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBankAccountsInput, Prisma.UserUncheckedCreateWithoutBankAccountsInput>
+}
+
+export type UserUpsertWithoutBankAccountsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBankAccountsInput, Prisma.UserUncheckedUpdateWithoutBankAccountsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBankAccountsInput, Prisma.UserUncheckedCreateWithoutBankAccountsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBankAccountsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBankAccountsInput, Prisma.UserUncheckedUpdateWithoutBankAccountsInput>
+}
+
+export type UserUpdateWithoutBankAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBankAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavingsGoalsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavingsGoalsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavingsGoalsInput = {
@@ -3359,177 +4174,189 @@ export type UserUpdateToOneWithWhereWithoutSavingsGoalsInput = {
 export type UserUpdateWithoutSavingsGoalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavingsGoalsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReceiptsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceiptsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceiptsInput = {
@@ -3551,177 +4378,189 @@ export type UserUpdateToOneWithWhereWithoutReceiptsInput = {
 export type UserUpdateWithoutReceiptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceiptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAnnouncementAuthorInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementAuthorInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementAuthorInput = {
@@ -3743,177 +4582,189 @@ export type UserUpdateToOneWithWhereWithoutAnnouncementAuthorInput = {
 export type UserUpdateWithoutAnnouncementAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementAuthorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAnnouncementReadsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementReadsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementReadsInput = {
@@ -3935,177 +4786,189 @@ export type UserUpdateToOneWithWhereWithoutAnnouncementReadsInput = {
 export type UserUpdateWithoutAnnouncementReadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementReadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -4127,177 +4990,189 @@ export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
 export type UserUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -4319,177 +5194,189 @@ export type UserUpdateToOneWithWhereWithoutNotificationPreferencesInput = {
 export type UserUpdateWithoutNotificationPreferencesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushQueuesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushQueuesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushQueuesInput = {
@@ -4511,177 +5398,189 @@ export type UserUpdateToOneWithWhereWithoutPushQueuesInput = {
 export type UserUpdateWithoutPushQueuesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushQueuesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeatureFlagTargetsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeatureFlagTargetsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeatureFlagTargetsInput = {
@@ -4703,177 +5602,189 @@ export type UserUpdateToOneWithWhereWithoutFeatureFlagTargetsInput = {
 export type UserUpdateWithoutFeatureFlagTargetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOperationalAuditLogsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOperationalAuditLogsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOperationalAuditLogsInput = {
@@ -4895,177 +5806,189 @@ export type UserUpdateToOneWithWhereWithoutOperationalAuditLogsInput = {
 export type UserUpdateWithoutOperationalAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOperationalAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -5087,177 +6010,189 @@ export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
 export type UserUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutActivityLogsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutActivityLogsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutActivityLogsInput = {
@@ -5279,177 +6214,189 @@ export type UserUpdateToOneWithWhereWithoutActivityLogsInput = {
 export type UserUpdateWithoutActivityLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivityLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCandidatesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCandidatesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCandidatesInput = {
@@ -5471,177 +6418,189 @@ export type UserUpdateToOneWithWhereWithoutCandidatesInput = {
 export type UserUpdateWithoutCandidatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCandidatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVotesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVotesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVotesInput = {
@@ -5663,177 +6622,189 @@ export type UserUpdateToOneWithWhereWithoutVotesInput = {
 export type UserUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutExecutiveMembersInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutExecutiveMembersInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutExecutiveMembersInput = {
@@ -5855,270 +6826,189 @@ export type UserUpdateToOneWithWhereWithoutExecutiveMembersInput = {
 export type UserUpdateWithoutExecutiveMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExecutiveMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
-}
-
-export type UserCreateWithoutCreatedEventsInput = {
-  id?: string
-  email: string
-  username: string
-  passwordHash: string
-  emailVerified?: boolean
-  status?: $Enums.UserStatus
-  lastLoginAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
-  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
-  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
-  files?: Prisma.FileCreateNestedManyWithoutUserInput
-  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutCreatedEventsInput = {
-  id?: string
-  email: string
-  username: string
-  passwordHash: string
-  emailVerified?: boolean
-  status?: $Enums.UserStatus
-  lastLoginAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  deletedAt?: Date | string | null
-  deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
-  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
-  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
-  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
-  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutCreatedEventsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedEventsInput, Prisma.UserUncheckedCreateWithoutCreatedEventsInput>
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutApprovedEventsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApprovedEventsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApprovedEventsInput = {
@@ -6126,103 +7016,103 @@ export type UserCreateOrConnectWithoutApprovedEventsInput = {
   create: Prisma.XOR<Prisma.UserCreateWithoutApprovedEventsInput, Prisma.UserUncheckedCreateWithoutApprovedEventsInput>
 }
 
-export type UserUpsertWithoutCreatedEventsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedEventsInput, Prisma.UserUncheckedUpdateWithoutCreatedEventsInput>
+export type UserCreateWithoutCreatedEventsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatedEventsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatedEventsInput = {
+  where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutCreatedEventsInput, Prisma.UserUncheckedCreateWithoutCreatedEventsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutCreatedEventsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedEventsInput, Prisma.UserUncheckedUpdateWithoutCreatedEventsInput>
-}
-
-export type UserUpdateWithoutCreatedEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
-  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
-  files?: Prisma.FileUpdateManyWithoutUserNestedInput
-  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutCreatedEventsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
-  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
-  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
-  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutApprovedEventsInput = {
@@ -6239,177 +7129,294 @@ export type UserUpdateToOneWithWhereWithoutApprovedEventsInput = {
 export type UserUpdateWithoutApprovedEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutCreatedEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedEventsInput, Prisma.UserUncheckedUpdateWithoutCreatedEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedEventsInput, Prisma.UserUncheckedCreateWithoutCreatedEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedEventsInput, Prisma.UserUncheckedUpdateWithoutCreatedEventsInput>
+}
+
+export type UserUpdateWithoutCreatedEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTicketPurchasesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTicketPurchasesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTicketPurchasesInput = {
@@ -6431,177 +7438,189 @@ export type UserUpdateToOneWithWhereWithoutTicketPurchasesInput = {
 export type UserUpdateWithoutTicketPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketPurchasesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventRegistrationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventRegistrationsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventRegistrationsInput = {
@@ -6623,177 +7642,189 @@ export type UserUpdateToOneWithWhereWithoutEventRegistrationsInput = {
 export type UserUpdateWithoutEventRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPendingPaymentsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPendingPaymentsInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPendingPaymentsInput = {
@@ -6815,177 +7846,189 @@ export type UserUpdateToOneWithWhereWithoutPendingPaymentsInput = {
 export type UserUpdateWithoutPendingPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPendingPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFilesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFilesInput = {
   id?: string
   email: string
-  username: string
   passwordHash: string
   emailVerified?: boolean
-  status?: $Enums.UserStatus
   lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  username: string
   deletedAt?: Date | string | null
   deletedBy?: string | null
-  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
-  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  status?: $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
-  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
-  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
-  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
-  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
-  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
-  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
   approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
-  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
   pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFilesInput = {
@@ -7007,89 +8050,95 @@ export type UserUpdateToOneWithWhereWithoutFilesInput = {
 export type UserUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  username?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
-  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
-  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
-  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
-  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
-  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
-  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
-  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
-  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
-  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
-  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
-  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
-  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
-  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
-  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
-  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
-  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
-  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
-  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
-  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
   approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
-  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
   pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -7098,65 +8147,71 @@ export type UserUncheckedUpdateWithoutFilesInput = {
  */
 
 export type UserCountOutputType = {
-  sessions: number
-  passwordResets: number
-  emailVerifications: number
-  auditLogs: number
-  operationalAuditLogs: number
   activityLogs: number
-  createdOrganizations: number
-  notifications: number
-  announcementReads: number
-  eventRegistrations: number
-  votes: number
-  candidates: number
-  ticketPurchases: number
-  payments: number
-  withdrawals: number
-  savingsGoals: number
-  featureFlagTargets: number
-  executiveMembers: number
-  announcementAuthor: number
-  notificationPreferences: number
-  pushQueues: number
-  organizationMemberships: number
   admins: number
-  createdEvents: number
+  announcementReads: number
+  announcementAuthor: number
+  auditLogs: number
+  candidates: number
+  emailVerifications: number
+  eventRegistrations: number
   approvedEvents: number
-  receipts: number
+  createdEvents: number
+  executiveMembers: number
+  featureFlagTargets: number
   files: number
+  notificationPreferences: number
+  notifications: number
+  operationalAuditLogs: number
+  reviewedJoinRequests: number
+  joinRequests: number
+  organizationMemberships: number
+  createdOrganizations: number
+  passwordResets: number
+  payments: number
   pendingPayments: number
+  pushQueues: number
+  receipts: number
+  savingsGoals: number
+  sessions: number
+  ticketPurchases: number
+  votes: number
+  withdrawals: number
+  bankAccounts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  sessions?: boolean | UserCountOutputTypeCountSessionsArgs
-  passwordResets?: boolean | UserCountOutputTypeCountPasswordResetsArgs
-  emailVerifications?: boolean | UserCountOutputTypeCountEmailVerificationsArgs
-  auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
-  operationalAuditLogs?: boolean | UserCountOutputTypeCountOperationalAuditLogsArgs
   activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
-  createdOrganizations?: boolean | UserCountOutputTypeCountCreatedOrganizationsArgs
-  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
-  announcementReads?: boolean | UserCountOutputTypeCountAnnouncementReadsArgs
-  eventRegistrations?: boolean | UserCountOutputTypeCountEventRegistrationsArgs
-  votes?: boolean | UserCountOutputTypeCountVotesArgs
-  candidates?: boolean | UserCountOutputTypeCountCandidatesArgs
-  ticketPurchases?: boolean | UserCountOutputTypeCountTicketPurchasesArgs
-  payments?: boolean | UserCountOutputTypeCountPaymentsArgs
-  withdrawals?: boolean | UserCountOutputTypeCountWithdrawalsArgs
-  savingsGoals?: boolean | UserCountOutputTypeCountSavingsGoalsArgs
-  featureFlagTargets?: boolean | UserCountOutputTypeCountFeatureFlagTargetsArgs
-  executiveMembers?: boolean | UserCountOutputTypeCountExecutiveMembersArgs
-  announcementAuthor?: boolean | UserCountOutputTypeCountAnnouncementAuthorArgs
-  notificationPreferences?: boolean | UserCountOutputTypeCountNotificationPreferencesArgs
-  pushQueues?: boolean | UserCountOutputTypeCountPushQueuesArgs
-  organizationMemberships?: boolean | UserCountOutputTypeCountOrganizationMembershipsArgs
   admins?: boolean | UserCountOutputTypeCountAdminsArgs
-  createdEvents?: boolean | UserCountOutputTypeCountCreatedEventsArgs
+  announcementReads?: boolean | UserCountOutputTypeCountAnnouncementReadsArgs
+  announcementAuthor?: boolean | UserCountOutputTypeCountAnnouncementAuthorArgs
+  auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  candidates?: boolean | UserCountOutputTypeCountCandidatesArgs
+  emailVerifications?: boolean | UserCountOutputTypeCountEmailVerificationsArgs
+  eventRegistrations?: boolean | UserCountOutputTypeCountEventRegistrationsArgs
   approvedEvents?: boolean | UserCountOutputTypeCountApprovedEventsArgs
-  receipts?: boolean | UserCountOutputTypeCountReceiptsArgs
+  createdEvents?: boolean | UserCountOutputTypeCountCreatedEventsArgs
+  executiveMembers?: boolean | UserCountOutputTypeCountExecutiveMembersArgs
+  featureFlagTargets?: boolean | UserCountOutputTypeCountFeatureFlagTargetsArgs
   files?: boolean | UserCountOutputTypeCountFilesArgs
+  notificationPreferences?: boolean | UserCountOutputTypeCountNotificationPreferencesArgs
+  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  operationalAuditLogs?: boolean | UserCountOutputTypeCountOperationalAuditLogsArgs
+  reviewedJoinRequests?: boolean | UserCountOutputTypeCountReviewedJoinRequestsArgs
+  joinRequests?: boolean | UserCountOutputTypeCountJoinRequestsArgs
+  organizationMemberships?: boolean | UserCountOutputTypeCountOrganizationMembershipsArgs
+  createdOrganizations?: boolean | UserCountOutputTypeCountCreatedOrganizationsArgs
+  passwordResets?: boolean | UserCountOutputTypeCountPasswordResetsArgs
+  payments?: boolean | UserCountOutputTypeCountPaymentsArgs
   pendingPayments?: boolean | UserCountOutputTypeCountPendingPaymentsArgs
+  pushQueues?: boolean | UserCountOutputTypeCountPushQueuesArgs
+  receipts?: boolean | UserCountOutputTypeCountReceiptsArgs
+  savingsGoals?: boolean | UserCountOutputTypeCountSavingsGoalsArgs
+  sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+  ticketPurchases?: boolean | UserCountOutputTypeCountTicketPurchasesArgs
+  votes?: boolean | UserCountOutputTypeCountVotesArgs
+  withdrawals?: boolean | UserCountOutputTypeCountWithdrawalsArgs
+  bankAccounts?: boolean | UserCountOutputTypeCountBankAccountsArgs
 }
 
 /**
@@ -7172,155 +8227,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SessionWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountPasswordResetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PasswordResetWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountEmailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EmailVerificationWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AuditLogWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountOperationalAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OperationalAuditLogWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ActivityLogWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountCreatedOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OrganizationWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.NotificationWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountAnnouncementReadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AnnouncementReadWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountEventRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EventRegistrationWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.VoteWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountCandidatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CandidateWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountTicketPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TicketPurchaseWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PaymentWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountWithdrawalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WithdrawalWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountSavingsGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SavingsGoalWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountFeatureFlagTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FeatureFlagTargetWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountExecutiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ExecutiveMemberWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountAnnouncementAuthorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AnnouncementWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountNotificationPreferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.NotificationPreferenceWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountPushQueuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.PushQueueWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountOrganizationMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OrganizationMembershipWhereInput
 }
 
 /**
@@ -7333,8 +8241,43 @@ export type UserCountOutputTypeCountAdminsArgs<ExtArgs extends runtime.Types.Ext
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountCreatedEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.EventWhereInput
+export type UserCountOutputTypeCountAnnouncementReadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AnnouncementReadWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAnnouncementAuthorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AnnouncementWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCandidatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CandidateWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEmailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmailVerificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEventRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EventRegistrationWhereInput
 }
 
 /**
@@ -7347,8 +8290,22 @@ export type UserCountOutputTypeCountApprovedEventsArgs<ExtArgs extends runtime.T
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ReceiptWhereInput
+export type UserCountOutputTypeCountCreatedEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EventWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountExecutiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExecutiveMemberWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFeatureFlagTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeatureFlagTargetWhereInput
 }
 
 /**
@@ -7361,132 +8318,257 @@ export type UserCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Exte
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountNotificationPreferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationPreferenceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOperationalAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OperationalAuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewedJoinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationJoinRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountJoinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationJoinRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOrganizationMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationMembershipWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPasswordResetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PendingPaymentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPushQueuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PushQueueWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReceiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReceiptWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSavingsGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavingsGoalWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTicketPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TicketPurchaseWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.VoteWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWithdrawalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WithdrawalWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BankAccountWhereInput
 }
 
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
-  username?: boolean
   passwordHash?: boolean
   emailVerified?: boolean
-  status?: boolean
   lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  username?: boolean
   deletedAt?: boolean
   deletedBy?: boolean
-  profile?: boolean | Prisma.User$profileArgs<ExtArgs>
-  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
-  emailVerifications?: boolean | Prisma.User$emailVerificationsArgs<ExtArgs>
-  studentProfile?: boolean | Prisma.User$studentProfileArgs<ExtArgs>
-  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
-  operationalAuditLogs?: boolean | Prisma.User$operationalAuditLogsArgs<ExtArgs>
+  status?: boolean
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
-  createdOrganizations?: boolean | Prisma.User$createdOrganizationsArgs<ExtArgs>
-  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
-  announcementReads?: boolean | Prisma.User$announcementReadsArgs<ExtArgs>
-  eventRegistrations?: boolean | Prisma.User$eventRegistrationsArgs<ExtArgs>
-  votes?: boolean | Prisma.User$votesArgs<ExtArgs>
-  candidates?: boolean | Prisma.User$candidatesArgs<ExtArgs>
-  ticketPurchases?: boolean | Prisma.User$ticketPurchasesArgs<ExtArgs>
-  payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
-  withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
-  savingsGoals?: boolean | Prisma.User$savingsGoalsArgs<ExtArgs>
-  wallet?: boolean | Prisma.User$walletArgs<ExtArgs>
-  featureFlagTargets?: boolean | Prisma.User$featureFlagTargetsArgs<ExtArgs>
-  executiveMembers?: boolean | Prisma.User$executiveMembersArgs<ExtArgs>
-  announcementAuthor?: boolean | Prisma.User$announcementAuthorArgs<ExtArgs>
-  notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
-  pushQueues?: boolean | Prisma.User$pushQueuesArgs<ExtArgs>
-  organizationMemberships?: boolean | Prisma.User$organizationMembershipsArgs<ExtArgs>
   admins?: boolean | Prisma.User$adminsArgs<ExtArgs>
-  createdEvents?: boolean | Prisma.User$createdEventsArgs<ExtArgs>
+  announcementReads?: boolean | Prisma.User$announcementReadsArgs<ExtArgs>
+  announcementAuthor?: boolean | Prisma.User$announcementAuthorArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  candidates?: boolean | Prisma.User$candidatesArgs<ExtArgs>
+  emailVerifications?: boolean | Prisma.User$emailVerificationsArgs<ExtArgs>
+  eventRegistrations?: boolean | Prisma.User$eventRegistrationsArgs<ExtArgs>
   approvedEvents?: boolean | Prisma.User$approvedEventsArgs<ExtArgs>
-  receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
+  createdEvents?: boolean | Prisma.User$createdEventsArgs<ExtArgs>
+  executiveMembers?: boolean | Prisma.User$executiveMembersArgs<ExtArgs>
+  featureFlagTargets?: boolean | Prisma.User$featureFlagTargetsArgs<ExtArgs>
   files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  operationalAuditLogs?: boolean | Prisma.User$operationalAuditLogsArgs<ExtArgs>
+  reviewedJoinRequests?: boolean | Prisma.User$reviewedJoinRequestsArgs<ExtArgs>
+  joinRequests?: boolean | Prisma.User$joinRequestsArgs<ExtArgs>
+  organizationMemberships?: boolean | Prisma.User$organizationMembershipsArgs<ExtArgs>
+  createdOrganizations?: boolean | Prisma.User$createdOrganizationsArgs<ExtArgs>
+  passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
+  payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   pendingPayments?: boolean | Prisma.User$pendingPaymentsArgs<ExtArgs>
+  pushQueues?: boolean | Prisma.User$pushQueuesArgs<ExtArgs>
+  receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
+  savingsGoals?: boolean | Prisma.User$savingsGoalsArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  studentProfile?: boolean | Prisma.User$studentProfileArgs<ExtArgs>
+  ticketPurchases?: boolean | Prisma.User$ticketPurchasesArgs<ExtArgs>
+  profile?: boolean | Prisma.User$profileArgs<ExtArgs>
+  votes?: boolean | Prisma.User$votesArgs<ExtArgs>
+  wallet?: boolean | Prisma.User$walletArgs<ExtArgs>
+  withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
+  bankAccounts?: boolean | Prisma.User$bankAccountsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
-  username?: boolean
   passwordHash?: boolean
   emailVerified?: boolean
-  status?: boolean
   lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  username?: boolean
   deletedAt?: boolean
   deletedBy?: boolean
+  status?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
-  username?: boolean
   passwordHash?: boolean
   emailVerified?: boolean
-  status?: boolean
   lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  username?: boolean
   deletedAt?: boolean
   deletedBy?: boolean
+  status?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
   email?: boolean
-  username?: boolean
   passwordHash?: boolean
   emailVerified?: boolean
-  status?: boolean
   lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  username?: boolean
   deletedAt?: boolean
   deletedBy?: boolean
+  status?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "username" | "passwordHash" | "emailVerified" | "status" | "lastLoginAt" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "emailVerified" | "lastLoginAt" | "createdAt" | "updatedAt" | "username" | "deletedAt" | "deletedBy" | "status", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  profile?: boolean | Prisma.User$profileArgs<ExtArgs>
-  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
-  passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
-  emailVerifications?: boolean | Prisma.User$emailVerificationsArgs<ExtArgs>
-  studentProfile?: boolean | Prisma.User$studentProfileArgs<ExtArgs>
-  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
-  operationalAuditLogs?: boolean | Prisma.User$operationalAuditLogsArgs<ExtArgs>
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
-  createdOrganizations?: boolean | Prisma.User$createdOrganizationsArgs<ExtArgs>
-  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
-  announcementReads?: boolean | Prisma.User$announcementReadsArgs<ExtArgs>
-  eventRegistrations?: boolean | Prisma.User$eventRegistrationsArgs<ExtArgs>
-  votes?: boolean | Prisma.User$votesArgs<ExtArgs>
-  candidates?: boolean | Prisma.User$candidatesArgs<ExtArgs>
-  ticketPurchases?: boolean | Prisma.User$ticketPurchasesArgs<ExtArgs>
-  payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
-  withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
-  savingsGoals?: boolean | Prisma.User$savingsGoalsArgs<ExtArgs>
-  wallet?: boolean | Prisma.User$walletArgs<ExtArgs>
-  featureFlagTargets?: boolean | Prisma.User$featureFlagTargetsArgs<ExtArgs>
-  executiveMembers?: boolean | Prisma.User$executiveMembersArgs<ExtArgs>
-  announcementAuthor?: boolean | Prisma.User$announcementAuthorArgs<ExtArgs>
-  notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
-  pushQueues?: boolean | Prisma.User$pushQueuesArgs<ExtArgs>
-  organizationMemberships?: boolean | Prisma.User$organizationMembershipsArgs<ExtArgs>
   admins?: boolean | Prisma.User$adminsArgs<ExtArgs>
-  createdEvents?: boolean | Prisma.User$createdEventsArgs<ExtArgs>
+  announcementReads?: boolean | Prisma.User$announcementReadsArgs<ExtArgs>
+  announcementAuthor?: boolean | Prisma.User$announcementAuthorArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  candidates?: boolean | Prisma.User$candidatesArgs<ExtArgs>
+  emailVerifications?: boolean | Prisma.User$emailVerificationsArgs<ExtArgs>
+  eventRegistrations?: boolean | Prisma.User$eventRegistrationsArgs<ExtArgs>
   approvedEvents?: boolean | Prisma.User$approvedEventsArgs<ExtArgs>
-  receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
+  createdEvents?: boolean | Prisma.User$createdEventsArgs<ExtArgs>
+  executiveMembers?: boolean | Prisma.User$executiveMembersArgs<ExtArgs>
+  featureFlagTargets?: boolean | Prisma.User$featureFlagTargetsArgs<ExtArgs>
   files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  operationalAuditLogs?: boolean | Prisma.User$operationalAuditLogsArgs<ExtArgs>
+  reviewedJoinRequests?: boolean | Prisma.User$reviewedJoinRequestsArgs<ExtArgs>
+  joinRequests?: boolean | Prisma.User$joinRequestsArgs<ExtArgs>
+  organizationMemberships?: boolean | Prisma.User$organizationMembershipsArgs<ExtArgs>
+  createdOrganizations?: boolean | Prisma.User$createdOrganizationsArgs<ExtArgs>
+  passwordResets?: boolean | Prisma.User$passwordResetsArgs<ExtArgs>
+  payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   pendingPayments?: boolean | Prisma.User$pendingPaymentsArgs<ExtArgs>
+  pushQueues?: boolean | Prisma.User$pushQueuesArgs<ExtArgs>
+  receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
+  savingsGoals?: boolean | Prisma.User$savingsGoalsArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  studentProfile?: boolean | Prisma.User$studentProfileArgs<ExtArgs>
+  ticketPurchases?: boolean | Prisma.User$ticketPurchasesArgs<ExtArgs>
+  profile?: boolean | Prisma.User$profileArgs<ExtArgs>
+  votes?: boolean | Prisma.User$votesArgs<ExtArgs>
+  wallet?: boolean | Prisma.User$walletArgs<ExtArgs>
+  withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
+  bankAccounts?: boolean | Prisma.User$bankAccountsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -7495,50 +8577,53 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    profile: Prisma.$UserProfilePayload<ExtArgs> | null
-    sessions: Prisma.$SessionPayload<ExtArgs>[]
-    passwordResets: Prisma.$PasswordResetPayload<ExtArgs>[]
-    emailVerifications: Prisma.$EmailVerificationPayload<ExtArgs>[]
-    studentProfile: Prisma.$StudentProfilePayload<ExtArgs> | null
-    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
-    operationalAuditLogs: Prisma.$OperationalAuditLogPayload<ExtArgs>[]
     activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
-    createdOrganizations: Prisma.$OrganizationPayload<ExtArgs>[]
-    notifications: Prisma.$NotificationPayload<ExtArgs>[]
-    announcementReads: Prisma.$AnnouncementReadPayload<ExtArgs>[]
-    eventRegistrations: Prisma.$EventRegistrationPayload<ExtArgs>[]
-    votes: Prisma.$VotePayload<ExtArgs>[]
-    candidates: Prisma.$CandidatePayload<ExtArgs>[]
-    ticketPurchases: Prisma.$TicketPurchasePayload<ExtArgs>[]
-    payments: Prisma.$PaymentPayload<ExtArgs>[]
-    withdrawals: Prisma.$WithdrawalPayload<ExtArgs>[]
-    savingsGoals: Prisma.$SavingsGoalPayload<ExtArgs>[]
-    wallet: Prisma.$WalletPayload<ExtArgs> | null
-    featureFlagTargets: Prisma.$FeatureFlagTargetPayload<ExtArgs>[]
-    executiveMembers: Prisma.$ExecutiveMemberPayload<ExtArgs>[]
-    announcementAuthor: Prisma.$AnnouncementPayload<ExtArgs>[]
-    notificationPreferences: Prisma.$NotificationPreferencePayload<ExtArgs>[]
-    pushQueues: Prisma.$PushQueuePayload<ExtArgs>[]
-    organizationMemberships: Prisma.$OrganizationMembershipPayload<ExtArgs>[]
     admins: Prisma.$AdminPayload<ExtArgs>[]
-    createdEvents: Prisma.$EventPayload<ExtArgs>[]
+    announcementReads: Prisma.$AnnouncementReadPayload<ExtArgs>[]
+    announcementAuthor: Prisma.$AnnouncementPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    candidates: Prisma.$CandidatePayload<ExtArgs>[]
+    emailVerifications: Prisma.$EmailVerificationPayload<ExtArgs>[]
+    eventRegistrations: Prisma.$EventRegistrationPayload<ExtArgs>[]
     approvedEvents: Prisma.$EventPayload<ExtArgs>[]
-    receipts: Prisma.$ReceiptPayload<ExtArgs>[]
+    createdEvents: Prisma.$EventPayload<ExtArgs>[]
+    executiveMembers: Prisma.$ExecutiveMemberPayload<ExtArgs>[]
+    featureFlagTargets: Prisma.$FeatureFlagTargetPayload<ExtArgs>[]
     files: Prisma.$FilePayload<ExtArgs>[]
+    notificationPreferences: Prisma.$NotificationPreferencePayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    operationalAuditLogs: Prisma.$OperationalAuditLogPayload<ExtArgs>[]
+    reviewedJoinRequests: Prisma.$OrganizationJoinRequestPayload<ExtArgs>[]
+    joinRequests: Prisma.$OrganizationJoinRequestPayload<ExtArgs>[]
+    organizationMemberships: Prisma.$OrganizationMembershipPayload<ExtArgs>[]
+    createdOrganizations: Prisma.$OrganizationPayload<ExtArgs>[]
+    passwordResets: Prisma.$PasswordResetPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
     pendingPayments: Prisma.$PendingPaymentPayload<ExtArgs>[]
+    pushQueues: Prisma.$PushQueuePayload<ExtArgs>[]
+    receipts: Prisma.$ReceiptPayload<ExtArgs>[]
+    savingsGoals: Prisma.$SavingsGoalPayload<ExtArgs>[]
+    sessions: Prisma.$SessionPayload<ExtArgs>[]
+    studentProfile: Prisma.$StudentProfilePayload<ExtArgs> | null
+    ticketPurchases: Prisma.$TicketPurchasePayload<ExtArgs>[]
+    profile: Prisma.$UserProfilePayload<ExtArgs> | null
+    votes: Prisma.$VotePayload<ExtArgs>[]
+    wallet: Prisma.$WalletPayload<ExtArgs> | null
+    withdrawals: Prisma.$WithdrawalPayload<ExtArgs>[]
+    bankAccounts: Prisma.$BankAccountPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
-    username: string
     passwordHash: string
     emailVerified: boolean
-    status: $Enums.UserStatus
     lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
+    username: string
     deletedAt: Date | null
     deletedBy: string | null
+    status: $Enums.UserStatus
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -7933,37 +9018,40 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__UserProfileClient<runtime.Types.Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  passwordResets<T extends Prisma.User$passwordResetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  emailVerifications<T extends Prisma.User$emailVerificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emailVerificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  studentProfile<T extends Prisma.User$studentProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentProfileArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  operationalAuditLogs<T extends Prisma.User$operationalAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$operationalAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OperationalAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activityLogs<T extends Prisma.User$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  createdOrganizations<T extends Prisma.User$createdOrganizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdOrganizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  announcementReads<T extends Prisma.User$announcementReadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementReadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  eventRegistrations<T extends Prisma.User$eventRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  votes<T extends Prisma.User$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  candidates<T extends Prisma.User$candidatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$candidatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  ticketPurchases<T extends Prisma.User$ticketPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ticketPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  withdrawals<T extends Prisma.User$withdrawalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$withdrawalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  savingsGoals<T extends Prisma.User$savingsGoalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savingsGoalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavingsGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  wallet<T extends Prisma.User$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$walletArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  featureFlagTargets<T extends Prisma.User$featureFlagTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$featureFlagTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeatureFlagTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  executiveMembers<T extends Prisma.User$executiveMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$executiveMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExecutiveMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  announcementAuthor<T extends Prisma.User$announcementAuthorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementAuthorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  notificationPreferences<T extends Prisma.User$notificationPreferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationPreferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  pushQueues<T extends Prisma.User$pushQueuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushQueuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  organizationMemberships<T extends Prisma.User$organizationMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizationMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   admins<T extends Prisma.User$adminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  createdEvents<T extends Prisma.User$createdEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  announcementReads<T extends Prisma.User$announcementReadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementReadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  announcementAuthor<T extends Prisma.User$announcementAuthorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementAuthorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  candidates<T extends Prisma.User$candidatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$candidatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  emailVerifications<T extends Prisma.User$emailVerificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emailVerificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  eventRegistrations<T extends Prisma.User$eventRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   approvedEvents<T extends Prisma.User$approvedEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$approvedEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  receipts<T extends Prisma.User$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdEvents<T extends Prisma.User$createdEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  executiveMembers<T extends Prisma.User$executiveMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$executiveMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExecutiveMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  featureFlagTargets<T extends Prisma.User$featureFlagTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$featureFlagTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeatureFlagTargetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.User$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notificationPreferences<T extends Prisma.User$notificationPreferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationPreferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  operationalAuditLogs<T extends Prisma.User$operationalAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$operationalAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OperationalAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedJoinRequests<T extends Prisma.User$reviewedJoinRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedJoinRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationJoinRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  joinRequests<T extends Prisma.User$joinRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$joinRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationJoinRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organizationMemberships<T extends Prisma.User$organizationMembershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizationMembershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdOrganizations<T extends Prisma.User$createdOrganizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdOrganizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  passwordResets<T extends Prisma.User$passwordResetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pendingPayments<T extends Prisma.User$pendingPaymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pendingPaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PendingPaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pushQueues<T extends Prisma.User$pushQueuesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pushQueuesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PushQueuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receipts<T extends Prisma.User$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savingsGoals<T extends Prisma.User$savingsGoalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savingsGoalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavingsGoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentProfile<T extends Prisma.User$studentProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentProfileArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ticketPurchases<T extends Prisma.User$ticketPurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ticketPurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TicketPurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  profile<T extends Prisma.User$profileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$profileArgs<ExtArgs>>): Prisma.Prisma__UserProfileClient<runtime.Types.Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  votes<T extends Prisma.User$votesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$votesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  wallet<T extends Prisma.User$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$walletArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  withdrawals<T extends Prisma.User$withdrawalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$withdrawalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bankAccounts<T extends Prisma.User$bankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7995,15 +9083,15 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly username: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
-  readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly username: Prisma.FieldRef<"User", 'String'>
   readonly deletedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly deletedBy: Prisma.FieldRef<"User", 'String'>
+  readonly status: Prisma.FieldRef<"User", 'UserStatus'>
 }
     
 
@@ -8397,164 +9485,6 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.profile
- */
-export type User$profileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the UserProfile
-   */
-  select?: Prisma.UserProfileSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the UserProfile
-   */
-  omit?: Prisma.UserProfileOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.UserProfileInclude<ExtArgs> | null
-  where?: Prisma.UserProfileWhereInput
-}
-
-/**
- * User.sessions
- */
-export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Session
-   */
-  select?: Prisma.SessionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Session
-   */
-  omit?: Prisma.SessionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SessionInclude<ExtArgs> | null
-  where?: Prisma.SessionWhereInput
-  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
-  cursor?: Prisma.SessionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
-}
-
-/**
- * User.passwordResets
- */
-export type User$passwordResetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PasswordReset
-   */
-  select?: Prisma.PasswordResetSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PasswordReset
-   */
-  omit?: Prisma.PasswordResetOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PasswordResetInclude<ExtArgs> | null
-  where?: Prisma.PasswordResetWhereInput
-  orderBy?: Prisma.PasswordResetOrderByWithRelationInput | Prisma.PasswordResetOrderByWithRelationInput[]
-  cursor?: Prisma.PasswordResetWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PasswordResetScalarFieldEnum | Prisma.PasswordResetScalarFieldEnum[]
-}
-
-/**
- * User.emailVerifications
- */
-export type User$emailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the EmailVerification
-   */
-  select?: Prisma.EmailVerificationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the EmailVerification
-   */
-  omit?: Prisma.EmailVerificationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EmailVerificationInclude<ExtArgs> | null
-  where?: Prisma.EmailVerificationWhereInput
-  orderBy?: Prisma.EmailVerificationOrderByWithRelationInput | Prisma.EmailVerificationOrderByWithRelationInput[]
-  cursor?: Prisma.EmailVerificationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EmailVerificationScalarFieldEnum | Prisma.EmailVerificationScalarFieldEnum[]
-}
-
-/**
- * User.studentProfile
- */
-export type User$studentProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentProfile
-   */
-  select?: Prisma.StudentProfileSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentProfile
-   */
-  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentProfileInclude<ExtArgs> | null
-  where?: Prisma.StudentProfileWhereInput
-}
-
-/**
- * User.auditLogs
- */
-export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AuditLog
-   */
-  select?: Prisma.AuditLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AuditLog
-   */
-  omit?: Prisma.AuditLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AuditLogInclude<ExtArgs> | null
-  where?: Prisma.AuditLogWhereInput
-  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
-  cursor?: Prisma.AuditLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
-}
-
-/**
- * User.operationalAuditLogs
- */
-export type User$operationalAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OperationalAuditLog
-   */
-  select?: Prisma.OperationalAuditLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the OperationalAuditLog
-   */
-  omit?: Prisma.OperationalAuditLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OperationalAuditLogInclude<ExtArgs> | null
-  where?: Prisma.OperationalAuditLogWhereInput
-  orderBy?: Prisma.OperationalAuditLogOrderByWithRelationInput | Prisma.OperationalAuditLogOrderByWithRelationInput[]
-  cursor?: Prisma.OperationalAuditLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.OperationalAuditLogScalarFieldEnum | Prisma.OperationalAuditLogScalarFieldEnum[]
-}
-
-/**
  * User.activityLogs
  */
 export type User$activityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -8576,409 +9506,6 @@ export type User$activityLogsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ActivityLogScalarFieldEnum | Prisma.ActivityLogScalarFieldEnum[]
-}
-
-/**
- * User.createdOrganizations
- */
-export type User$createdOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Organization
-   */
-  select?: Prisma.OrganizationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Organization
-   */
-  omit?: Prisma.OrganizationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OrganizationInclude<ExtArgs> | null
-  where?: Prisma.OrganizationWhereInput
-  orderBy?: Prisma.OrganizationOrderByWithRelationInput | Prisma.OrganizationOrderByWithRelationInput[]
-  cursor?: Prisma.OrganizationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.OrganizationScalarFieldEnum | Prisma.OrganizationScalarFieldEnum[]
-}
-
-/**
- * User.notifications
- */
-export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Notification
-   */
-  select?: Prisma.NotificationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Notification
-   */
-  omit?: Prisma.NotificationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.NotificationInclude<ExtArgs> | null
-  where?: Prisma.NotificationWhereInput
-  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
-  cursor?: Prisma.NotificationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
-}
-
-/**
- * User.announcementReads
- */
-export type User$announcementReadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AnnouncementRead
-   */
-  select?: Prisma.AnnouncementReadSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AnnouncementRead
-   */
-  omit?: Prisma.AnnouncementReadOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AnnouncementReadInclude<ExtArgs> | null
-  where?: Prisma.AnnouncementReadWhereInput
-  orderBy?: Prisma.AnnouncementReadOrderByWithRelationInput | Prisma.AnnouncementReadOrderByWithRelationInput[]
-  cursor?: Prisma.AnnouncementReadWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AnnouncementReadScalarFieldEnum | Prisma.AnnouncementReadScalarFieldEnum[]
-}
-
-/**
- * User.eventRegistrations
- */
-export type User$eventRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the EventRegistration
-   */
-  select?: Prisma.EventRegistrationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the EventRegistration
-   */
-  omit?: Prisma.EventRegistrationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.EventRegistrationInclude<ExtArgs> | null
-  where?: Prisma.EventRegistrationWhereInput
-  orderBy?: Prisma.EventRegistrationOrderByWithRelationInput | Prisma.EventRegistrationOrderByWithRelationInput[]
-  cursor?: Prisma.EventRegistrationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.EventRegistrationScalarFieldEnum | Prisma.EventRegistrationScalarFieldEnum[]
-}
-
-/**
- * User.votes
- */
-export type User$votesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Vote
-   */
-  select?: Prisma.VoteSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Vote
-   */
-  omit?: Prisma.VoteOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.VoteInclude<ExtArgs> | null
-  where?: Prisma.VoteWhereInput
-  orderBy?: Prisma.VoteOrderByWithRelationInput | Prisma.VoteOrderByWithRelationInput[]
-  cursor?: Prisma.VoteWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.VoteScalarFieldEnum | Prisma.VoteScalarFieldEnum[]
-}
-
-/**
- * User.candidates
- */
-export type User$candidatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Candidate
-   */
-  select?: Prisma.CandidateSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Candidate
-   */
-  omit?: Prisma.CandidateOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CandidateInclude<ExtArgs> | null
-  where?: Prisma.CandidateWhereInput
-  orderBy?: Prisma.CandidateOrderByWithRelationInput | Prisma.CandidateOrderByWithRelationInput[]
-  cursor?: Prisma.CandidateWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.CandidateScalarFieldEnum | Prisma.CandidateScalarFieldEnum[]
-}
-
-/**
- * User.ticketPurchases
- */
-export type User$ticketPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TicketPurchase
-   */
-  select?: Prisma.TicketPurchaseSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TicketPurchase
-   */
-  omit?: Prisma.TicketPurchaseOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TicketPurchaseInclude<ExtArgs> | null
-  where?: Prisma.TicketPurchaseWhereInput
-  orderBy?: Prisma.TicketPurchaseOrderByWithRelationInput | Prisma.TicketPurchaseOrderByWithRelationInput[]
-  cursor?: Prisma.TicketPurchaseWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TicketPurchaseScalarFieldEnum | Prisma.TicketPurchaseScalarFieldEnum[]
-}
-
-/**
- * User.payments
- */
-export type User$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Payment
-   */
-  select?: Prisma.PaymentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Payment
-   */
-  omit?: Prisma.PaymentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PaymentInclude<ExtArgs> | null
-  where?: Prisma.PaymentWhereInput
-  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
-  cursor?: Prisma.PaymentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
-}
-
-/**
- * User.withdrawals
- */
-export type User$withdrawalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Withdrawal
-   */
-  select?: Prisma.WithdrawalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Withdrawal
-   */
-  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.WithdrawalInclude<ExtArgs> | null
-  where?: Prisma.WithdrawalWhereInput
-  orderBy?: Prisma.WithdrawalOrderByWithRelationInput | Prisma.WithdrawalOrderByWithRelationInput[]
-  cursor?: Prisma.WithdrawalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.WithdrawalScalarFieldEnum | Prisma.WithdrawalScalarFieldEnum[]
-}
-
-/**
- * User.savingsGoals
- */
-export type User$savingsGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the SavingsGoal
-   */
-  select?: Prisma.SavingsGoalSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the SavingsGoal
-   */
-  omit?: Prisma.SavingsGoalOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SavingsGoalInclude<ExtArgs> | null
-  where?: Prisma.SavingsGoalWhereInput
-  orderBy?: Prisma.SavingsGoalOrderByWithRelationInput | Prisma.SavingsGoalOrderByWithRelationInput[]
-  cursor?: Prisma.SavingsGoalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.SavingsGoalScalarFieldEnum | Prisma.SavingsGoalScalarFieldEnum[]
-}
-
-/**
- * User.wallet
- */
-export type User$walletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Wallet
-   */
-  select?: Prisma.WalletSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Wallet
-   */
-  omit?: Prisma.WalletOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.WalletInclude<ExtArgs> | null
-  where?: Prisma.WalletWhereInput
-}
-
-/**
- * User.featureFlagTargets
- */
-export type User$featureFlagTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeatureFlagTarget
-   */
-  select?: Prisma.FeatureFlagTargetSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeatureFlagTarget
-   */
-  omit?: Prisma.FeatureFlagTargetOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeatureFlagTargetInclude<ExtArgs> | null
-  where?: Prisma.FeatureFlagTargetWhereInput
-  orderBy?: Prisma.FeatureFlagTargetOrderByWithRelationInput | Prisma.FeatureFlagTargetOrderByWithRelationInput[]
-  cursor?: Prisma.FeatureFlagTargetWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.FeatureFlagTargetScalarFieldEnum | Prisma.FeatureFlagTargetScalarFieldEnum[]
-}
-
-/**
- * User.executiveMembers
- */
-export type User$executiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExecutiveMember
-   */
-  select?: Prisma.ExecutiveMemberSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExecutiveMember
-   */
-  omit?: Prisma.ExecutiveMemberOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExecutiveMemberInclude<ExtArgs> | null
-  where?: Prisma.ExecutiveMemberWhereInput
-  orderBy?: Prisma.ExecutiveMemberOrderByWithRelationInput | Prisma.ExecutiveMemberOrderByWithRelationInput[]
-  cursor?: Prisma.ExecutiveMemberWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.ExecutiveMemberScalarFieldEnum | Prisma.ExecutiveMemberScalarFieldEnum[]
-}
-
-/**
- * User.announcementAuthor
- */
-export type User$announcementAuthorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Announcement
-   */
-  select?: Prisma.AnnouncementSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Announcement
-   */
-  omit?: Prisma.AnnouncementOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AnnouncementInclude<ExtArgs> | null
-  where?: Prisma.AnnouncementWhereInput
-  orderBy?: Prisma.AnnouncementOrderByWithRelationInput | Prisma.AnnouncementOrderByWithRelationInput[]
-  cursor?: Prisma.AnnouncementWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.AnnouncementScalarFieldEnum | Prisma.AnnouncementScalarFieldEnum[]
-}
-
-/**
- * User.notificationPreferences
- */
-export type User$notificationPreferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the NotificationPreference
-   */
-  select?: Prisma.NotificationPreferenceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the NotificationPreference
-   */
-  omit?: Prisma.NotificationPreferenceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.NotificationPreferenceInclude<ExtArgs> | null
-  where?: Prisma.NotificationPreferenceWhereInput
-  orderBy?: Prisma.NotificationPreferenceOrderByWithRelationInput | Prisma.NotificationPreferenceOrderByWithRelationInput[]
-  cursor?: Prisma.NotificationPreferenceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.NotificationPreferenceScalarFieldEnum | Prisma.NotificationPreferenceScalarFieldEnum[]
-}
-
-/**
- * User.pushQueues
- */
-export type User$pushQueuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the PushQueue
-   */
-  select?: Prisma.PushQueueSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the PushQueue
-   */
-  omit?: Prisma.PushQueueOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PushQueueInclude<ExtArgs> | null
-  where?: Prisma.PushQueueWhereInput
-  orderBy?: Prisma.PushQueueOrderByWithRelationInput | Prisma.PushQueueOrderByWithRelationInput[]
-  cursor?: Prisma.PushQueueWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PushQueueScalarFieldEnum | Prisma.PushQueueScalarFieldEnum[]
-}
-
-/**
- * User.organizationMemberships
- */
-export type User$organizationMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the OrganizationMembership
-   */
-  select?: Prisma.OrganizationMembershipSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the OrganizationMembership
-   */
-  omit?: Prisma.OrganizationMembershipOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OrganizationMembershipInclude<ExtArgs> | null
-  where?: Prisma.OrganizationMembershipWhereInput
-  orderBy?: Prisma.OrganizationMembershipOrderByWithRelationInput | Prisma.OrganizationMembershipOrderByWithRelationInput[]
-  cursor?: Prisma.OrganizationMembershipWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.OrganizationMembershipScalarFieldEnum | Prisma.OrganizationMembershipScalarFieldEnum[]
 }
 
 /**
@@ -9006,27 +9533,147 @@ export type User$adminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 }
 
 /**
- * User.createdEvents
+ * User.announcementReads
  */
-export type User$createdEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$announcementReadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Event
+   * Select specific fields to fetch from the AnnouncementRead
    */
-  select?: Prisma.EventSelect<ExtArgs> | null
+  select?: Prisma.AnnouncementReadSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Event
+   * Omit specific fields from the AnnouncementRead
    */
-  omit?: Prisma.EventOmit<ExtArgs> | null
+  omit?: Prisma.AnnouncementReadOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.EventInclude<ExtArgs> | null
-  where?: Prisma.EventWhereInput
-  orderBy?: Prisma.EventOrderByWithRelationInput | Prisma.EventOrderByWithRelationInput[]
-  cursor?: Prisma.EventWhereUniqueInput
+  include?: Prisma.AnnouncementReadInclude<ExtArgs> | null
+  where?: Prisma.AnnouncementReadWhereInput
+  orderBy?: Prisma.AnnouncementReadOrderByWithRelationInput | Prisma.AnnouncementReadOrderByWithRelationInput[]
+  cursor?: Prisma.AnnouncementReadWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+  distinct?: Prisma.AnnouncementReadScalarFieldEnum | Prisma.AnnouncementReadScalarFieldEnum[]
+}
+
+/**
+ * User.announcementAuthor
+ */
+export type User$announcementAuthorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Announcement
+   */
+  select?: Prisma.AnnouncementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Announcement
+   */
+  omit?: Prisma.AnnouncementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AnnouncementInclude<ExtArgs> | null
+  where?: Prisma.AnnouncementWhereInput
+  orderBy?: Prisma.AnnouncementOrderByWithRelationInput | Prisma.AnnouncementOrderByWithRelationInput[]
+  cursor?: Prisma.AnnouncementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AnnouncementScalarFieldEnum | Prisma.AnnouncementScalarFieldEnum[]
+}
+
+/**
+ * User.auditLogs
+ */
+export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.candidates
+ */
+export type User$candidatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Candidate
+   */
+  select?: Prisma.CandidateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Candidate
+   */
+  omit?: Prisma.CandidateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CandidateInclude<ExtArgs> | null
+  where?: Prisma.CandidateWhereInput
+  orderBy?: Prisma.CandidateOrderByWithRelationInput | Prisma.CandidateOrderByWithRelationInput[]
+  cursor?: Prisma.CandidateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CandidateScalarFieldEnum | Prisma.CandidateScalarFieldEnum[]
+}
+
+/**
+ * User.emailVerifications
+ */
+export type User$emailVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmailVerification
+   */
+  select?: Prisma.EmailVerificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmailVerification
+   */
+  omit?: Prisma.EmailVerificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmailVerificationInclude<ExtArgs> | null
+  where?: Prisma.EmailVerificationWhereInput
+  orderBy?: Prisma.EmailVerificationOrderByWithRelationInput | Prisma.EmailVerificationOrderByWithRelationInput[]
+  cursor?: Prisma.EmailVerificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmailVerificationScalarFieldEnum | Prisma.EmailVerificationScalarFieldEnum[]
+}
+
+/**
+ * User.eventRegistrations
+ */
+export type User$eventRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EventRegistration
+   */
+  select?: Prisma.EventRegistrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EventRegistration
+   */
+  omit?: Prisma.EventRegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EventRegistrationInclude<ExtArgs> | null
+  where?: Prisma.EventRegistrationWhereInput
+  orderBy?: Prisma.EventRegistrationOrderByWithRelationInput | Prisma.EventRegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.EventRegistrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EventRegistrationScalarFieldEnum | Prisma.EventRegistrationScalarFieldEnum[]
 }
 
 /**
@@ -9054,27 +9701,75 @@ export type User$approvedEventsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * User.receipts
+ * User.createdEvents
  */
-export type User$receiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$createdEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Receipt
+   * Select specific fields to fetch from the Event
    */
-  select?: Prisma.ReceiptSelect<ExtArgs> | null
+  select?: Prisma.EventSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Receipt
+   * Omit specific fields from the Event
    */
-  omit?: Prisma.ReceiptOmit<ExtArgs> | null
+  omit?: Prisma.EventOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.ReceiptInclude<ExtArgs> | null
-  where?: Prisma.ReceiptWhereInput
-  orderBy?: Prisma.ReceiptOrderByWithRelationInput | Prisma.ReceiptOrderByWithRelationInput[]
-  cursor?: Prisma.ReceiptWhereUniqueInput
+  include?: Prisma.EventInclude<ExtArgs> | null
+  where?: Prisma.EventWhereInput
+  orderBy?: Prisma.EventOrderByWithRelationInput | Prisma.EventOrderByWithRelationInput[]
+  cursor?: Prisma.EventWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.ReceiptScalarFieldEnum | Prisma.ReceiptScalarFieldEnum[]
+  distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+}
+
+/**
+ * User.executiveMembers
+ */
+export type User$executiveMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExecutiveMember
+   */
+  select?: Prisma.ExecutiveMemberSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExecutiveMember
+   */
+  omit?: Prisma.ExecutiveMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExecutiveMemberInclude<ExtArgs> | null
+  where?: Prisma.ExecutiveMemberWhereInput
+  orderBy?: Prisma.ExecutiveMemberOrderByWithRelationInput | Prisma.ExecutiveMemberOrderByWithRelationInput[]
+  cursor?: Prisma.ExecutiveMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExecutiveMemberScalarFieldEnum | Prisma.ExecutiveMemberScalarFieldEnum[]
+}
+
+/**
+ * User.featureFlagTargets
+ */
+export type User$featureFlagTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeatureFlagTarget
+   */
+  select?: Prisma.FeatureFlagTargetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeatureFlagTarget
+   */
+  omit?: Prisma.FeatureFlagTargetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeatureFlagTargetInclude<ExtArgs> | null
+  where?: Prisma.FeatureFlagTargetWhereInput
+  orderBy?: Prisma.FeatureFlagTargetOrderByWithRelationInput | Prisma.FeatureFlagTargetOrderByWithRelationInput[]
+  cursor?: Prisma.FeatureFlagTargetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeatureFlagTargetScalarFieldEnum | Prisma.FeatureFlagTargetScalarFieldEnum[]
 }
 
 /**
@@ -9102,6 +9797,222 @@ export type User$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }
 
 /**
+ * User.notificationPreferences
+ */
+export type User$notificationPreferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the NotificationPreference
+   */
+  select?: Prisma.NotificationPreferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the NotificationPreference
+   */
+  omit?: Prisma.NotificationPreferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationPreferenceInclude<ExtArgs> | null
+  where?: Prisma.NotificationPreferenceWhereInput
+  orderBy?: Prisma.NotificationPreferenceOrderByWithRelationInput | Prisma.NotificationPreferenceOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationPreferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationPreferenceScalarFieldEnum | Prisma.NotificationPreferenceScalarFieldEnum[]
+}
+
+/**
+ * User.notifications
+ */
+export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.operationalAuditLogs
+ */
+export type User$operationalAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OperationalAuditLog
+   */
+  select?: Prisma.OperationalAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OperationalAuditLog
+   */
+  omit?: Prisma.OperationalAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OperationalAuditLogInclude<ExtArgs> | null
+  where?: Prisma.OperationalAuditLogWhereInput
+  orderBy?: Prisma.OperationalAuditLogOrderByWithRelationInput | Prisma.OperationalAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.OperationalAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OperationalAuditLogScalarFieldEnum | Prisma.OperationalAuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedJoinRequests
+ */
+export type User$reviewedJoinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationJoinRequest
+   */
+  select?: Prisma.OrganizationJoinRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationJoinRequest
+   */
+  omit?: Prisma.OrganizationJoinRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationJoinRequestInclude<ExtArgs> | null
+  where?: Prisma.OrganizationJoinRequestWhereInput
+  orderBy?: Prisma.OrganizationJoinRequestOrderByWithRelationInput | Prisma.OrganizationJoinRequestOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationJoinRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationJoinRequestScalarFieldEnum | Prisma.OrganizationJoinRequestScalarFieldEnum[]
+}
+
+/**
+ * User.joinRequests
+ */
+export type User$joinRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationJoinRequest
+   */
+  select?: Prisma.OrganizationJoinRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationJoinRequest
+   */
+  omit?: Prisma.OrganizationJoinRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationJoinRequestInclude<ExtArgs> | null
+  where?: Prisma.OrganizationJoinRequestWhereInput
+  orderBy?: Prisma.OrganizationJoinRequestOrderByWithRelationInput | Prisma.OrganizationJoinRequestOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationJoinRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationJoinRequestScalarFieldEnum | Prisma.OrganizationJoinRequestScalarFieldEnum[]
+}
+
+/**
+ * User.organizationMemberships
+ */
+export type User$organizationMembershipsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationMembership
+   */
+  select?: Prisma.OrganizationMembershipSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationMembership
+   */
+  omit?: Prisma.OrganizationMembershipOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationMembershipInclude<ExtArgs> | null
+  where?: Prisma.OrganizationMembershipWhereInput
+  orderBy?: Prisma.OrganizationMembershipOrderByWithRelationInput | Prisma.OrganizationMembershipOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationMembershipWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationMembershipScalarFieldEnum | Prisma.OrganizationMembershipScalarFieldEnum[]
+}
+
+/**
+ * User.createdOrganizations
+ */
+export type User$createdOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
+  orderBy?: Prisma.OrganizationOrderByWithRelationInput | Prisma.OrganizationOrderByWithRelationInput[]
+  cursor?: Prisma.OrganizationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrganizationScalarFieldEnum | Prisma.OrganizationScalarFieldEnum[]
+}
+
+/**
+ * User.passwordResets
+ */
+export type User$passwordResetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordReset
+   */
+  select?: Prisma.PasswordResetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordReset
+   */
+  omit?: Prisma.PasswordResetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetWhereInput
+  orderBy?: Prisma.PasswordResetOrderByWithRelationInput | Prisma.PasswordResetOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetScalarFieldEnum | Prisma.PasswordResetScalarFieldEnum[]
+}
+
+/**
+ * User.payments
+ */
+export type User$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
  * User.pendingPayments
  */
 export type User$pendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -9123,6 +10034,255 @@ export type User$pendingPaymentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.PendingPaymentScalarFieldEnum | Prisma.PendingPaymentScalarFieldEnum[]
+}
+
+/**
+ * User.pushQueues
+ */
+export type User$pushQueuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PushQueue
+   */
+  select?: Prisma.PushQueueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PushQueue
+   */
+  omit?: Prisma.PushQueueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PushQueueInclude<ExtArgs> | null
+  where?: Prisma.PushQueueWhereInput
+  orderBy?: Prisma.PushQueueOrderByWithRelationInput | Prisma.PushQueueOrderByWithRelationInput[]
+  cursor?: Prisma.PushQueueWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PushQueueScalarFieldEnum | Prisma.PushQueueScalarFieldEnum[]
+}
+
+/**
+ * User.receipts
+ */
+export type User$receiptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Receipt
+   */
+  select?: Prisma.ReceiptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Receipt
+   */
+  omit?: Prisma.ReceiptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReceiptInclude<ExtArgs> | null
+  where?: Prisma.ReceiptWhereInput
+  orderBy?: Prisma.ReceiptOrderByWithRelationInput | Prisma.ReceiptOrderByWithRelationInput[]
+  cursor?: Prisma.ReceiptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReceiptScalarFieldEnum | Prisma.ReceiptScalarFieldEnum[]
+}
+
+/**
+ * User.savingsGoals
+ */
+export type User$savingsGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavingsGoal
+   */
+  select?: Prisma.SavingsGoalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavingsGoal
+   */
+  omit?: Prisma.SavingsGoalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavingsGoalInclude<ExtArgs> | null
+  where?: Prisma.SavingsGoalWhereInput
+  orderBy?: Prisma.SavingsGoalOrderByWithRelationInput | Prisma.SavingsGoalOrderByWithRelationInput[]
+  cursor?: Prisma.SavingsGoalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavingsGoalScalarFieldEnum | Prisma.SavingsGoalScalarFieldEnum[]
+}
+
+/**
+ * User.sessions
+ */
+export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Session
+   */
+  select?: Prisma.SessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Session
+   */
+  omit?: Prisma.SessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
+  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
+  cursor?: Prisma.SessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
+}
+
+/**
+ * User.studentProfile
+ */
+export type User$studentProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentProfile
+   */
+  select?: Prisma.StudentProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentProfile
+   */
+  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentProfileInclude<ExtArgs> | null
+  where?: Prisma.StudentProfileWhereInput
+}
+
+/**
+ * User.ticketPurchases
+ */
+export type User$ticketPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TicketPurchase
+   */
+  select?: Prisma.TicketPurchaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TicketPurchase
+   */
+  omit?: Prisma.TicketPurchaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TicketPurchaseInclude<ExtArgs> | null
+  where?: Prisma.TicketPurchaseWhereInput
+  orderBy?: Prisma.TicketPurchaseOrderByWithRelationInput | Prisma.TicketPurchaseOrderByWithRelationInput[]
+  cursor?: Prisma.TicketPurchaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TicketPurchaseScalarFieldEnum | Prisma.TicketPurchaseScalarFieldEnum[]
+}
+
+/**
+ * User.profile
+ */
+export type User$profileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserProfile
+   */
+  select?: Prisma.UserProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserProfile
+   */
+  omit?: Prisma.UserProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserProfileInclude<ExtArgs> | null
+  where?: Prisma.UserProfileWhereInput
+}
+
+/**
+ * User.votes
+ */
+export type User$votesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Vote
+   */
+  select?: Prisma.VoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Vote
+   */
+  omit?: Prisma.VoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VoteInclude<ExtArgs> | null
+  where?: Prisma.VoteWhereInput
+  orderBy?: Prisma.VoteOrderByWithRelationInput | Prisma.VoteOrderByWithRelationInput[]
+  cursor?: Prisma.VoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.VoteScalarFieldEnum | Prisma.VoteScalarFieldEnum[]
+}
+
+/**
+ * User.wallet
+ */
+export type User$walletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Wallet
+   */
+  select?: Prisma.WalletSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Wallet
+   */
+  omit?: Prisma.WalletOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WalletInclude<ExtArgs> | null
+  where?: Prisma.WalletWhereInput
+}
+
+/**
+ * User.withdrawals
+ */
+export type User$withdrawalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Withdrawal
+   */
+  select?: Prisma.WithdrawalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Withdrawal
+   */
+  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WithdrawalInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalWhereInput
+  orderBy?: Prisma.WithdrawalOrderByWithRelationInput | Prisma.WithdrawalOrderByWithRelationInput[]
+  cursor?: Prisma.WithdrawalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WithdrawalScalarFieldEnum | Prisma.WithdrawalScalarFieldEnum[]
+}
+
+/**
+ * User.bankAccounts
+ */
+export type User$bankAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BankAccount
+   */
+  select?: Prisma.BankAccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BankAccount
+   */
+  omit?: Prisma.BankAccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BankAccountInclude<ExtArgs> | null
+  where?: Prisma.BankAccountWhereInput
+  orderBy?: Prisma.BankAccountOrderByWithRelationInput | Prisma.BankAccountOrderByWithRelationInput[]
+  cursor?: Prisma.BankAccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BankAccountScalarFieldEnum | Prisma.BankAccountScalarFieldEnum[]
 }
 
 /**

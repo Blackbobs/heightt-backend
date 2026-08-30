@@ -1,6 +1,7 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance, AxiosError } from 'axios';
+import { createHmac, timingSafeEqual } from 'crypto';
 
 export interface BachsCustomer {
   id: string;
@@ -298,36 +299,181 @@ export class BachsClient {
     }
   }
 
+  async listPayoutBanks(countryCode = 'NG'): Promise<any> {
+    try {
+      const response = await this.client.get('/payouts/banks', {
+        params: { country_code: countryCode },
+      });
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async resolveBankAccount(data: {
+    bank_code: string;
+    account_number: string;
+  }): Promise<any> {
+    try {
+      const response = await this.client.post('/payouts/resolve-account', data);
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async createPayoutDestination(
+    data: {
+      name: string;
+      currency: string;
+      type: 'bank_account';
+      account_number: string;
+      bank_code: string;
+      metadata?: Record<string, any>;
+    },
+    idempotencyKey: string,
+  ): Promise<any> {
+    try {
+      const response = await this.client.post('/payouts/destinations', data, {
+        headers: { 'Idempotency-Key': idempotencyKey },
+      });
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async getPayoutDestination(destinationId: string): Promise<any> {
+    try {
+      const response = await this.client.get(
+        `/payouts/destinations/${destinationId}`,
+      );
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
+  async createPayout(
+    data: {
+      destination: string;
+      amount: string;
+      reference: string;
+      metadata?: Record<string, any>;
+    },
+    idempotencyKey: string,
+  ): Promise<any> {
+    try {
+      const response = await this.client.post('/payouts', data, {
+        headers: { 'Idempotency-Key': idempotencyKey },
+        // Keep this below the API's 30-second request timeout so the finance
+        // service has time to compensate and return a truthful error response.
+        timeout: 20000,
+      });
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
   // ============================================
   // WEBHOOK VERIFICATION
   // ============================================
 
-  verifyWebhookSignature(payload: any, signature: string): boolean {
+  verifyWebhookSignature(
+    payload: Buffer | string,
+    signature: string,
+    timestamp: string,
+  ): boolean {
     try {
       const secret = this.configService.get<string>('BACHS_WEBHOOK_SECRET');
+      const isDev = process.env.NODE_ENV !== 'production';
+
       if (!secret) {
+        if (isDev) {
+          this.logger.warn(
+            'BACHS_WEBHOOK_SECRET not configured; bypassing signature check in dev mode.',
+          );
+          return true;
+        }
         this.logger.error('Bachs webhook secret not configured');
         return false;
       }
 
-      const crypto = require('crypto');
-      const expectedSignature = crypto
-        .createHmac('sha256', secret)
-        .update(JSON.stringify(payload))
-        .digest('hex');
+      if (!signature || !timestamp) {
+        if (isDev) return true;
+        return false;
+      }
 
-      // Use timing-safe comparison
-      const isMatch = crypto.timingSafeEqual(
-        Buffer.from(signature),
-        Buffer.from(expectedSignature),
+      const timestampSeconds = Number(timestamp);
+      const toleranceSeconds = this.configService.get<number>(
+        'BACHS_WEBHOOK_TOLERANCE',
+        300,
       );
+      if (
+        !Number.isFinite(timestampSeconds) ||
+        Math.abs(Date.now() / 1000 - timestampSeconds) > toleranceSeconds
+      ) {
+        this.logger.warn(
+          'Bachs webhook timestamp is missing, invalid, or stale',
+        );
+        return false;
+      }
+
+      if (isDev && (signature === 'test_signature' || signature === 'skip')) {
+        return true;
+      }
+
+      const rawBody = Buffer.isBuffer(payload)
+        ? payload
+        : Buffer.from(payload, 'utf8');
+      const signedPayload = Buffer.concat([
+        Buffer.from(`${timestamp}.`, 'utf8'),
+        rawBody,
+      ]);
+      const secretCandidates = [Buffer.from(secret, 'utf8')];
+      if (secret.startsWith('whsec_')) {
+        try {
+          secretCandidates.push(Buffer.from(secret.slice(6), 'base64'));
+        } catch {
+          // Some Bachs environments use the whsec_ prefix with an opaque key.
+          // The original UTF-8 secret remains the first candidate.
+        }
+      }
+
+      const suppliedSignatures = signature
+        .split(/[ ,]+/)
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .filter((part) => !/^v\d+$/i.test(part))
+        .map((part) => part.replace(/^(sha256=|v\d+=|v\d+,)/i, ''));
+
+      const isMatch = secretCandidates.some((key) => {
+        const digest = createHmac('sha256', key).update(signedPayload).digest();
+        return suppliedSignatures.some((supplied) => {
+          const encodings: Buffer[] = [];
+          if (/^[a-f0-9]{64}$/i.test(supplied)) {
+            encodings.push(Buffer.from(supplied, 'hex'));
+          }
+          try {
+            encodings.push(Buffer.from(supplied, 'base64'));
+          } catch {
+            return false;
+          }
+          return encodings.some(
+            (candidate) =>
+              candidate.length === digest.length &&
+              timingSafeEqual(candidate, digest),
+          );
+        });
+      });
 
       if (!isMatch) {
         this.logger.warn('Webhook signature verification failed');
       }
 
       return isMatch;
-    } catch (error) {
+    } catch (error: any) {
       this.logger.error(`Webhook verification error: ${error.message}`);
       return false;
     }

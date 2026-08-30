@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model StudentPromotion
@@ -206,10 +206,10 @@ export type StudentPromotionWhereInput = {
   promotedBy?: Prisma.StringNullableFilter<"StudentPromotion"> | string | null
   promotionDate?: Prisma.DateTimeFilter<"StudentPromotion"> | Date | string
   notes?: Prisma.StringNullableFilter<"StudentPromotion"> | string | null
-  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
   fromLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
-  toLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
   session?: Prisma.XOR<Prisma.AcademicSessionScalarRelationFilter, Prisma.AcademicSessionWhereInput>
+  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
+  toLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
 }
 
 export type StudentPromotionOrderByWithRelationInput = {
@@ -221,10 +221,10 @@ export type StudentPromotionOrderByWithRelationInput = {
   promotedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   promotionDate?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
-  student?: Prisma.StudentProfileOrderByWithRelationInput
   fromLevel?: Prisma.AcademicLevelOrderByWithRelationInput
-  toLevel?: Prisma.AcademicLevelOrderByWithRelationInput
   session?: Prisma.AcademicSessionOrderByWithRelationInput
+  student?: Prisma.StudentProfileOrderByWithRelationInput
+  toLevel?: Prisma.AcademicLevelOrderByWithRelationInput
 }
 
 export type StudentPromotionWhereUniqueInput = Prisma.AtLeast<{
@@ -239,10 +239,10 @@ export type StudentPromotionWhereUniqueInput = Prisma.AtLeast<{
   promotedBy?: Prisma.StringNullableFilter<"StudentPromotion"> | string | null
   promotionDate?: Prisma.DateTimeFilter<"StudentPromotion"> | Date | string
   notes?: Prisma.StringNullableFilter<"StudentPromotion"> | string | null
-  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
   fromLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
-  toLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
   session?: Prisma.XOR<Prisma.AcademicSessionScalarRelationFilter, Prisma.AcademicSessionWhereInput>
+  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
+  toLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
 }, "id">
 
 export type StudentPromotionOrderByWithAggregationInput = {
@@ -278,10 +278,10 @@ export type StudentPromotionCreateInput = {
   promotedBy?: string | null
   promotionDate?: Date | string
   notes?: string | null
-  student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
   fromLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsFromInput
-  toLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsToInput
   session: Prisma.AcademicSessionCreateNestedOneWithoutPromotionsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
+  toLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsToInput
 }
 
 export type StudentPromotionUncheckedCreateInput = {
@@ -300,10 +300,10 @@ export type StudentPromotionUpdateInput = {
   promotedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
   fromLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsFromNestedInput
-  toLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsToNestedInput
   session?: Prisma.AcademicSessionUpdateOneRequiredWithoutPromotionsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
+  toLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsToNestedInput
 }
 
 export type StudentPromotionUncheckedUpdateInput = {
@@ -562,9 +562,9 @@ export type StudentPromotionCreateWithoutFromLevelInput = {
   promotedBy?: string | null
   promotionDate?: Date | string
   notes?: string | null
+  session: Prisma.AcademicSessionCreateNestedOneWithoutPromotionsInput
   student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
   toLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsToInput
-  session: Prisma.AcademicSessionCreateNestedOneWithoutPromotionsInput
 }
 
 export type StudentPromotionUncheckedCreateWithoutFromLevelInput = {
@@ -592,9 +592,9 @@ export type StudentPromotionCreateWithoutToLevelInput = {
   promotedBy?: string | null
   promotionDate?: Date | string
   notes?: string | null
-  student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
   fromLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsFromInput
   session: Prisma.AcademicSessionCreateNestedOneWithoutPromotionsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
 }
 
 export type StudentPromotionUncheckedCreateWithoutToLevelInput = {
@@ -668,8 +668,8 @@ export type StudentPromotionCreateWithoutSessionInput = {
   promotedBy?: string | null
   promotionDate?: Date | string
   notes?: string | null
-  student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
   fromLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsFromInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutPromotionsInput
   toLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsToInput
 }
 
@@ -715,8 +715,8 @@ export type StudentPromotionCreateWithoutStudentInput = {
   promotionDate?: Date | string
   notes?: string | null
   fromLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsFromInput
-  toLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsToInput
   session: Prisma.AcademicSessionCreateNestedOneWithoutPromotionsInput
+  toLevel: Prisma.AcademicLevelCreateNestedOneWithoutPromotionsToInput
 }
 
 export type StudentPromotionUncheckedCreateWithoutStudentInput = {
@@ -780,9 +780,9 @@ export type StudentPromotionUpdateWithoutFromLevelInput = {
   promotedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutPromotionsNestedInput
   student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
   toLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsToNestedInput
-  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutPromotionsNestedInput
 }
 
 export type StudentPromotionUncheckedUpdateWithoutFromLevelInput = {
@@ -810,9 +810,9 @@ export type StudentPromotionUpdateWithoutToLevelInput = {
   promotedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
   fromLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsFromNestedInput
   session?: Prisma.AcademicSessionUpdateOneRequiredWithoutPromotionsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
 }
 
 export type StudentPromotionUncheckedUpdateWithoutToLevelInput = {
@@ -850,8 +850,8 @@ export type StudentPromotionUpdateWithoutSessionInput = {
   promotedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
   fromLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsFromNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutPromotionsNestedInput
   toLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsToNestedInput
 }
 
@@ -891,8 +891,8 @@ export type StudentPromotionUpdateWithoutStudentInput = {
   promotionDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fromLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsFromNestedInput
-  toLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsToNestedInput
   session?: Prisma.AcademicSessionUpdateOneRequiredWithoutPromotionsNestedInput
+  toLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutPromotionsToNestedInput
 }
 
 export type StudentPromotionUncheckedUpdateWithoutStudentInput = {
@@ -926,10 +926,10 @@ export type StudentPromotionSelect<ExtArgs extends runtime.Types.Extensions.Inte
   promotedBy?: boolean
   promotionDate?: boolean
   notes?: boolean
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   fromLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
-  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
   session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
+  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentPromotion"]>
 
 export type StudentPromotionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -941,10 +941,10 @@ export type StudentPromotionSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   promotedBy?: boolean
   promotionDate?: boolean
   notes?: boolean
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   fromLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
-  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
   session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
+  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentPromotion"]>
 
 export type StudentPromotionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -956,10 +956,10 @@ export type StudentPromotionSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   promotedBy?: boolean
   promotionDate?: boolean
   notes?: boolean
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   fromLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
-  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
   session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
+  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentPromotion"]>
 
 export type StudentPromotionSelectScalar = {
@@ -975,31 +975,31 @@ export type StudentPromotionSelectScalar = {
 
 export type StudentPromotionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "fromLevelId" | "toLevelId" | "sessionId" | "promotedBy" | "promotionDate" | "notes", ExtArgs["result"]["studentPromotion"]>
 export type StudentPromotionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   fromLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
-  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
   session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
+  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
 }
 export type StudentPromotionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   fromLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
-  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
   session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
+  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
 }
 export type StudentPromotionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
   fromLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
-  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
   session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
+  toLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
 }
 
 export type $StudentPromotionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StudentPromotion"
   objects: {
-    student: Prisma.$StudentProfilePayload<ExtArgs>
     fromLevel: Prisma.$AcademicLevelPayload<ExtArgs>
-    toLevel: Prisma.$AcademicLevelPayload<ExtArgs>
     session: Prisma.$AcademicSessionPayload<ExtArgs>
+    student: Prisma.$StudentProfilePayload<ExtArgs>
+    toLevel: Prisma.$AcademicLevelPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1404,10 +1404,10 @@ readonly fields: StudentPromotionFieldRefs;
  */
 export interface Prisma__StudentPromotionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  student<T extends Prisma.StudentProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   fromLevel<T extends Prisma.AcademicLevelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevelDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicLevelClient<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  toLevel<T extends Prisma.AcademicLevelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevelDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicLevelClient<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   session<T extends Prisma.AcademicSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  student<T extends Prisma.StudentProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  toLevel<T extends Prisma.AcademicLevelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevelDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicLevelClient<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

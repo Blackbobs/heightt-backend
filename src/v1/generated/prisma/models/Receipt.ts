@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Receipt
@@ -388,10 +388,10 @@ export type ReceiptWhereInput = {
   viewedAt?: Prisma.DateTimeNullableFilter<"Receipt"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
+  files?: Prisma.FileListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
-  files?: Prisma.FileListRelationFilter
 }
 
 export type ReceiptOrderByWithRelationInput = {
@@ -421,10 +421,10 @@ export type ReceiptOrderByWithRelationInput = {
   viewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  files?: Prisma.FileOrderByRelationAggregateInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
-  organization?: Prisma.OrganizationOrderByWithRelationInput
-  files?: Prisma.FileOrderByRelationAggregateInput
 }
 
 export type ReceiptWhereUniqueInput = Prisma.AtLeast<{
@@ -457,10 +457,10 @@ export type ReceiptWhereUniqueInput = Prisma.AtLeast<{
   viewedAt?: Prisma.DateTimeNullableFilter<"Receipt"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Receipt"> | Date | string
+  files?: Prisma.FileListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
-  files?: Prisma.FileListRelationFilter
 }, "id" | "paymentId" | "receiptNumber" | "reference">
 
 export type ReceiptOrderByWithAggregationInput = {
@@ -553,10 +553,10 @@ export type ReceiptCreateInput = {
   viewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  files?: Prisma.FileCreateNestedManyWithoutReceiptInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
   payment: Prisma.PaymentCreateNestedOneWithoutReceiptInput
   user: Prisma.UserCreateNestedOneWithoutReceiptsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
-  files?: Prisma.FileCreateNestedManyWithoutReceiptInput
 }
 
 export type ReceiptUncheckedCreateInput = {
@@ -613,10 +613,10 @@ export type ReceiptUpdateInput = {
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.FileUpdateManyWithoutReceiptNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutReceiptNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutReceiptsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
-  files?: Prisma.FileUpdateManyWithoutReceiptNestedInput
 }
 
 export type ReceiptUncheckedUpdateInput = {
@@ -1005,9 +1005,9 @@ export type ReceiptCreateWithoutUserInput = {
   viewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  payment: Prisma.PaymentCreateNestedOneWithoutReceiptInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
   files?: Prisma.FileCreateNestedManyWithoutReceiptInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
+  payment: Prisma.PaymentCreateNestedOneWithoutReceiptInput
 }
 
 export type ReceiptUncheckedCreateWithoutUserInput = {
@@ -1121,9 +1121,9 @@ export type ReceiptCreateWithoutOrganizationInput = {
   viewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  files?: Prisma.FileCreateNestedManyWithoutReceiptInput
   payment: Prisma.PaymentCreateNestedOneWithoutReceiptInput
   user: Prisma.UserCreateNestedOneWithoutReceiptsInput
-  files?: Prisma.FileCreateNestedManyWithoutReceiptInput
 }
 
 export type ReceiptUncheckedCreateWithoutOrganizationInput = {
@@ -1205,9 +1205,9 @@ export type ReceiptCreateWithoutPaymentInput = {
   viewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutReceiptsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
   files?: Prisma.FileCreateNestedManyWithoutReceiptInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
+  user: Prisma.UserCreateNestedOneWithoutReceiptsInput
 }
 
 export type ReceiptUncheckedCreateWithoutPaymentInput = {
@@ -1279,9 +1279,9 @@ export type ReceiptUpdateWithoutPaymentInput = {
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutReceiptsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
   files?: Prisma.FileUpdateManyWithoutReceiptNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutReceiptsNestedInput
 }
 
 export type ReceiptUncheckedUpdateWithoutPaymentInput = {
@@ -1337,9 +1337,9 @@ export type ReceiptCreateWithoutFilesInput = {
   viewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
   payment: Prisma.PaymentCreateNestedOneWithoutReceiptInput
   user: Prisma.UserCreateNestedOneWithoutReceiptsInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutReceiptsInput
 }
 
 export type ReceiptUncheckedCreateWithoutFilesInput = {
@@ -1411,9 +1411,9 @@ export type ReceiptUpdateWithoutFilesInput = {
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutReceiptNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutReceiptsNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
 }
 
 export type ReceiptUncheckedUpdateWithoutFilesInput = {
@@ -1497,9 +1497,9 @@ export type ReceiptUpdateWithoutUserInput = {
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payment?: Prisma.PaymentUpdateOneRequiredWithoutReceiptNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
   files?: Prisma.FileUpdateManyWithoutReceiptNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutReceiptsNestedInput
+  payment?: Prisma.PaymentUpdateOneRequiredWithoutReceiptNestedInput
 }
 
 export type ReceiptUncheckedUpdateWithoutUserInput = {
@@ -1611,9 +1611,9 @@ export type ReceiptUpdateWithoutOrganizationInput = {
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  files?: Prisma.FileUpdateManyWithoutReceiptNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutReceiptNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutReceiptsNestedInput
-  files?: Prisma.FileUpdateManyWithoutReceiptNestedInput
 }
 
 export type ReceiptUncheckedUpdateWithoutOrganizationInput = {
@@ -1731,10 +1731,10 @@ export type ReceiptSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   viewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  files?: boolean | Prisma.Receipt$filesArgs<ExtArgs>
+  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
-  files?: boolean | Prisma.Receipt$filesArgs<ExtArgs>
   _count?: boolean | Prisma.ReceiptCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["receipt"]>
 
@@ -1765,9 +1765,9 @@ export type ReceiptSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   viewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
 }, ExtArgs["result"]["receipt"]>
 
 export type ReceiptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1797,9 +1797,9 @@ export type ReceiptSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   viewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
 }, ExtArgs["result"]["receipt"]>
 
 export type ReceiptSelectScalar = {
@@ -1833,30 +1833,30 @@ export type ReceiptSelectScalar = {
 
 export type ReceiptOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "userId" | "organizationId" | "receiptNumber" | "reference" | "amount" | "serviceFee" | "totalAmount" | "currency" | "payerName" | "payerEmail" | "payerPhone" | "paymentMethod" | "paymentDate" | "description" | "organizationName" | "organizationSlug" | "metadata" | "items" | "status" | "downloadCount" | "lastDownloaded" | "viewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["receipt"]>
 export type ReceiptInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  files?: boolean | Prisma.Receipt$filesArgs<ExtArgs>
+  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
-  files?: boolean | Prisma.Receipt$filesArgs<ExtArgs>
   _count?: boolean | Prisma.ReceiptCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ReceiptIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
 }
 export type ReceiptIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
   payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  organization?: boolean | Prisma.Receipt$organizationArgs<ExtArgs>
 }
 
 export type $ReceiptPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Receipt"
   objects: {
+    files: Prisma.$FilePayload<ExtArgs>[]
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
     payment: Prisma.$PaymentPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
-    organization: Prisma.$OrganizationPayload<ExtArgs> | null
-    files: Prisma.$FilePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2279,10 +2279,10 @@ readonly fields: ReceiptFieldRefs;
  */
 export interface Prisma__ReceiptClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  files<T extends Prisma.Receipt$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organization<T extends Prisma.Receipt$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.PaymentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  organization<T extends Prisma.Receipt$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  files<T extends Prisma.Receipt$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Receipt$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2739,25 +2739,6 @@ export type ReceiptDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Receipt.organization
- */
-export type Receipt$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Organization
-   */
-  select?: Prisma.OrganizationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Organization
-   */
-  omit?: Prisma.OrganizationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OrganizationInclude<ExtArgs> | null
-  where?: Prisma.OrganizationWhereInput
-}
-
-/**
  * Receipt.files
  */
 export type Receipt$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2779,6 +2760,25 @@ export type Receipt$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.FileScalarFieldEnum | Prisma.FileScalarFieldEnum[]
+}
+
+/**
+ * Receipt.organization
+ */
+export type Receipt$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**

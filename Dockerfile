@@ -1,59 +1,54 @@
-# Dockerfile
-FROM node:20-alpine AS builder
-
-# Install pnpm
-RUN npm install -g pnpm
+# Build stage
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
 # Copy package files
-COPY package*.json pnpm-lock.yaml ./
+COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN npm install --legacy-peer-deps
 
 # Copy source code
 COPY . .
 
 # Generate Prisma client
-RUN pnpm prisma generate
+RUN npx prisma generate
 
 # Build the application
-RUN pnpm build
+RUN npm run build
+
+# Prune dev dependencies
+RUN npm prune --production
 
 # ============================================
 # Production stage
 # ============================================
-FROM node:20-alpine AS production
+FROM node:22-slim AS production
 
-# Install pnpm
-RUN npm install -g pnpm
+# Create non-root user
+RUN groupadd -r nodejs && useradd -r -g nodejs nodejs
 
 WORKDIR /app
 
-# Copy built application and dependencies
+# Install OpenSSL
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+# Copy from builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/pnpm-lock.yaml ./
 
-# Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
+# Fix permissions
+RUN chown -R nodejs:nodejs /app
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
+# Switch to non-root user
 USER nodejs
 
 # Expose port
 EXPOSE 3000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {r.statusCode === 200 ? process.exit(0) : process.exit(1)})"
-
-# Start the application
-CMD ["node", "dist/main"]
+# Just start the app - no migrations
+CMD ["node", "dist/src/main.js"]

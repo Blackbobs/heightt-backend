@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model StudentAcademicRecord
@@ -284,10 +284,10 @@ export type StudentAcademicRecordWhereInput = {
   status?: Prisma.EnumAcademicStatusFilter<"StudentAcademicRecord"> | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFilter<"StudentAcademicRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentAcademicRecord"> | Date | string
-  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
-  session?: Prisma.XOR<Prisma.AcademicSessionScalarRelationFilter, Prisma.AcademicSessionWhereInput>
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   academicLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
+  session?: Prisma.XOR<Prisma.AcademicSessionScalarRelationFilter, Prisma.AcademicSessionWhereInput>
+  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
 }
 
 export type StudentAcademicRecordOrderByWithRelationInput = {
@@ -303,10 +303,10 @@ export type StudentAcademicRecordOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  student?: Prisma.StudentProfileOrderByWithRelationInput
-  session?: Prisma.AcademicSessionOrderByWithRelationInput
-  department?: Prisma.DepartmentOrderByWithRelationInput
   academicLevel?: Prisma.AcademicLevelOrderByWithRelationInput
+  department?: Prisma.DepartmentOrderByWithRelationInput
+  session?: Prisma.AcademicSessionOrderByWithRelationInput
+  student?: Prisma.StudentProfileOrderByWithRelationInput
 }
 
 export type StudentAcademicRecordWhereUniqueInput = Prisma.AtLeast<{
@@ -326,10 +326,10 @@ export type StudentAcademicRecordWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumAcademicStatusFilter<"StudentAcademicRecord"> | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFilter<"StudentAcademicRecord"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentAcademicRecord"> | Date | string
-  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
-  session?: Prisma.XOR<Prisma.AcademicSessionScalarRelationFilter, Prisma.AcademicSessionWhereInput>
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
   academicLevel?: Prisma.XOR<Prisma.AcademicLevelScalarRelationFilter, Prisma.AcademicLevelWhereInput>
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
+  session?: Prisma.XOR<Prisma.AcademicSessionScalarRelationFilter, Prisma.AcademicSessionWhereInput>
+  student?: Prisma.XOR<Prisma.StudentProfileScalarRelationFilter, Prisma.StudentProfileWhereInput>
 }, "id" | "studentId_sessionId">
 
 export type StudentAcademicRecordOrderByWithAggregationInput = {
@@ -379,10 +379,10 @@ export type StudentAcademicRecordCreateInput = {
   status?: $Enums.AcademicStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
-  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
   academicLevel: Prisma.AcademicLevelCreateNestedOneWithoutAcademicRecordsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
+  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
 }
 
 export type StudentAcademicRecordUncheckedCreateInput = {
@@ -409,10 +409,10 @@ export type StudentAcademicRecordUpdateInput = {
   status?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
   academicLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutAcademicRecordsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
+  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
 }
 
 export type StudentAcademicRecordUncheckedUpdateInput = {
@@ -738,9 +738,9 @@ export type StudentAcademicRecordCreateWithoutDepartmentInput = {
   status?: $Enums.AcademicStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
-  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
   academicLevel: Prisma.AcademicLevelCreateNestedOneWithoutAcademicRecordsInput
+  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
 }
 
 export type StudentAcademicRecordUncheckedCreateWithoutDepartmentInput = {
@@ -810,9 +810,9 @@ export type StudentAcademicRecordCreateWithoutAcademicLevelInput = {
   status?: $Enums.AcademicStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
-  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
   department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
+  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
 }
 
 export type StudentAcademicRecordUncheckedCreateWithoutAcademicLevelInput = {
@@ -864,9 +864,9 @@ export type StudentAcademicRecordCreateWithoutSessionInput = {
   status?: $Enums.AcademicStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
   academicLevel: Prisma.AcademicLevelCreateNestedOneWithoutAcademicRecordsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
+  student: Prisma.StudentProfileCreateNestedOneWithoutAcademicRecordsInput
 }
 
 export type StudentAcademicRecordUncheckedCreateWithoutSessionInput = {
@@ -918,9 +918,9 @@ export type StudentAcademicRecordCreateWithoutStudentInput = {
   status?: $Enums.AcademicStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
   academicLevel: Prisma.AcademicLevelCreateNestedOneWithoutAcademicRecordsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentsInput
+  session: Prisma.AcademicSessionCreateNestedOneWithoutStudentRecordsInput
 }
 
 export type StudentAcademicRecordUncheckedCreateWithoutStudentInput = {
@@ -986,9 +986,9 @@ export type StudentAcademicRecordUpdateWithoutDepartmentInput = {
   status?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
   academicLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutAcademicRecordsNestedInput
+  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
 }
 
 export type StudentAcademicRecordUncheckedUpdateWithoutDepartmentInput = {
@@ -1042,9 +1042,9 @@ export type StudentAcademicRecordUpdateWithoutAcademicLevelInput = {
   status?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
-  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
   department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
+  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
 }
 
 export type StudentAcademicRecordUncheckedUpdateWithoutAcademicLevelInput = {
@@ -1098,9 +1098,9 @@ export type StudentAcademicRecordUpdateWithoutSessionInput = {
   status?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
   academicLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutAcademicRecordsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
+  student?: Prisma.StudentProfileUpdateOneRequiredWithoutAcademicRecordsNestedInput
 }
 
 export type StudentAcademicRecordUncheckedUpdateWithoutSessionInput = {
@@ -1154,9 +1154,9 @@ export type StudentAcademicRecordUpdateWithoutStudentInput = {
   status?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
   academicLevel?: Prisma.AcademicLevelUpdateOneRequiredWithoutAcademicRecordsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentsNestedInput
+  session?: Prisma.AcademicSessionUpdateOneRequiredWithoutStudentRecordsNestedInput
 }
 
 export type StudentAcademicRecordUncheckedUpdateWithoutStudentInput = {
@@ -1202,10 +1202,10 @@ export type StudentAcademicRecordSelect<ExtArgs extends runtime.Types.Extensions
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   academicLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentAcademicRecord"]>
 
 export type StudentAcademicRecordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1221,10 +1221,10 @@ export type StudentAcademicRecordSelectCreateManyAndReturn<ExtArgs extends runti
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   academicLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentAcademicRecord"]>
 
 export type StudentAcademicRecordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1240,10 +1240,10 @@ export type StudentAcademicRecordSelectUpdateManyAndReturn<ExtArgs extends runti
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   academicLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentAcademicRecord"]>
 
 export type StudentAcademicRecordSelectScalar = {
@@ -1263,31 +1263,31 @@ export type StudentAcademicRecordSelectScalar = {
 
 export type StudentAcademicRecordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "sessionId" | "departmentId" | "academicLevelId" | "gpa" | "cgpa" | "creditsAttempted" | "creditsEarned" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["studentAcademicRecord"]>
 export type StudentAcademicRecordInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   academicLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
 }
 export type StudentAcademicRecordIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   academicLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
 }
 export type StudentAcademicRecordIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
-  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   academicLevel?: boolean | Prisma.AcademicLevelDefaultArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  session?: boolean | Prisma.AcademicSessionDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.StudentProfileDefaultArgs<ExtArgs>
 }
 
 export type $StudentAcademicRecordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StudentAcademicRecord"
   objects: {
-    student: Prisma.$StudentProfilePayload<ExtArgs>
-    session: Prisma.$AcademicSessionPayload<ExtArgs>
-    department: Prisma.$DepartmentPayload<ExtArgs>
     academicLevel: Prisma.$AcademicLevelPayload<ExtArgs>
+    department: Prisma.$DepartmentPayload<ExtArgs>
+    session: Prisma.$AcademicSessionPayload<ExtArgs>
+    student: Prisma.$StudentProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1696,10 +1696,10 @@ readonly fields: StudentAcademicRecordFieldRefs;
  */
 export interface Prisma__StudentAcademicRecordClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  student<T extends Prisma.StudentProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  session<T extends Prisma.AcademicSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   academicLevel<T extends Prisma.AcademicLevelDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevelDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicLevelClient<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  session<T extends Prisma.AcademicSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__AcademicSessionClient<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  student<T extends Prisma.StudentProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

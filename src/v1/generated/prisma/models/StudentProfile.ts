@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model StudentProfile
@@ -262,17 +262,17 @@ export type StudentProfileWhereInput = {
   verifiedAt?: Prisma.DateTimeNullableFilter<"StudentProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentProfile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  institution?: Prisma.XOR<Prisma.InstitutionScalarRelationFilter, Prisma.InstitutionWhereInput>
-  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
-  currentAcademicLevel?: Prisma.XOR<Prisma.AcademicLevelNullableScalarRelationFilter, Prisma.AcademicLevelWhereInput> | null
-  academicRecords?: Prisma.StudentAcademicRecordListRelationFilter
-  promotions?: Prisma.StudentPromotionListRelationFilter
-  enrollments?: Prisma.StudentEnrollmentListRelationFilter
-  verifications?: Prisma.StudentVerificationListRelationFilter
   dueAssignments?: Prisma.DueAssignmentListRelationFilter
   files?: Prisma.FileListRelationFilter
+  academicRecords?: Prisma.StudentAcademicRecordListRelationFilter
+  enrollments?: Prisma.StudentEnrollmentListRelationFilter
+  currentAcademicLevel?: Prisma.XOR<Prisma.AcademicLevelNullableScalarRelationFilter, Prisma.AcademicLevelWhereInput> | null
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
+  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
+  institution?: Prisma.XOR<Prisma.InstitutionScalarRelationFilter, Prisma.InstitutionWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  promotions?: Prisma.StudentPromotionListRelationFilter
+  verifications?: Prisma.StudentVerificationListRelationFilter
 }
 
 export type StudentProfileOrderByWithRelationInput = {
@@ -291,17 +291,17 @@ export type StudentProfileOrderByWithRelationInput = {
   verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
-  institution?: Prisma.InstitutionOrderByWithRelationInput
-  faculty?: Prisma.FacultyOrderByWithRelationInput
-  department?: Prisma.DepartmentOrderByWithRelationInput
-  currentAcademicLevel?: Prisma.AcademicLevelOrderByWithRelationInput
-  academicRecords?: Prisma.StudentAcademicRecordOrderByRelationAggregateInput
-  promotions?: Prisma.StudentPromotionOrderByRelationAggregateInput
-  enrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
-  verifications?: Prisma.StudentVerificationOrderByRelationAggregateInput
   dueAssignments?: Prisma.DueAssignmentOrderByRelationAggregateInput
   files?: Prisma.FileOrderByRelationAggregateInput
+  academicRecords?: Prisma.StudentAcademicRecordOrderByRelationAggregateInput
+  enrollments?: Prisma.StudentEnrollmentOrderByRelationAggregateInput
+  currentAcademicLevel?: Prisma.AcademicLevelOrderByWithRelationInput
+  department?: Prisma.DepartmentOrderByWithRelationInput
+  faculty?: Prisma.FacultyOrderByWithRelationInput
+  institution?: Prisma.InstitutionOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
+  promotions?: Prisma.StudentPromotionOrderByRelationAggregateInput
+  verifications?: Prisma.StudentVerificationOrderByRelationAggregateInput
 }
 
 export type StudentProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -323,17 +323,17 @@ export type StudentProfileWhereUniqueInput = Prisma.AtLeast<{
   verifiedAt?: Prisma.DateTimeNullableFilter<"StudentProfile"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentProfile"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  institution?: Prisma.XOR<Prisma.InstitutionScalarRelationFilter, Prisma.InstitutionWhereInput>
-  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
-  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
-  currentAcademicLevel?: Prisma.XOR<Prisma.AcademicLevelNullableScalarRelationFilter, Prisma.AcademicLevelWhereInput> | null
-  academicRecords?: Prisma.StudentAcademicRecordListRelationFilter
-  promotions?: Prisma.StudentPromotionListRelationFilter
-  enrollments?: Prisma.StudentEnrollmentListRelationFilter
-  verifications?: Prisma.StudentVerificationListRelationFilter
   dueAssignments?: Prisma.DueAssignmentListRelationFilter
   files?: Prisma.FileListRelationFilter
+  academicRecords?: Prisma.StudentAcademicRecordListRelationFilter
+  enrollments?: Prisma.StudentEnrollmentListRelationFilter
+  currentAcademicLevel?: Prisma.XOR<Prisma.AcademicLevelNullableScalarRelationFilter, Prisma.AcademicLevelWhereInput> | null
+  department?: Prisma.XOR<Prisma.DepartmentScalarRelationFilter, Prisma.DepartmentWhereInput>
+  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
+  institution?: Prisma.XOR<Prisma.InstitutionScalarRelationFilter, Prisma.InstitutionWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  promotions?: Prisma.StudentPromotionListRelationFilter
+  verifications?: Prisma.StudentVerificationListRelationFilter
 }, "id" | "userId">
 
 export type StudentProfileOrderByWithAggregationInput = {
@@ -389,17 +389,17 @@ export type StudentProfileCreateInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateInput = {
@@ -418,12 +418,12 @@ export type StudentProfileUncheckedCreateInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUpdateInput = {
@@ -437,17 +437,17 @@ export type StudentProfileUpdateInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateInput = {
@@ -466,12 +466,12 @@ export type StudentProfileUncheckedUpdateInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateManyInput = {
@@ -898,16 +898,16 @@ export type StudentProfileCreateWithoutUserInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutUserInput = {
@@ -925,12 +925,12 @@ export type StudentProfileUncheckedCreateWithoutUserInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutUserInput = {
@@ -960,16 +960,16 @@ export type StudentProfileUpdateWithoutUserInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutUserInput = {
@@ -987,12 +987,12 @@ export type StudentProfileUncheckedUpdateWithoutUserInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateWithoutInstitutionInput = {
@@ -1006,16 +1006,16 @@ export type StudentProfileCreateWithoutInstitutionInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutInstitutionInput = {
@@ -1033,12 +1033,12 @@ export type StudentProfileUncheckedCreateWithoutInstitutionInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutInstitutionInput = {
@@ -1099,16 +1099,16 @@ export type StudentProfileCreateWithoutFacultyInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutFacultyInput = {
@@ -1126,12 +1126,12 @@ export type StudentProfileUncheckedCreateWithoutFacultyInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutFacultyInput = {
@@ -1171,16 +1171,16 @@ export type StudentProfileCreateWithoutDepartmentInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutDepartmentInput = {
@@ -1198,12 +1198,12 @@ export type StudentProfileUncheckedCreateWithoutDepartmentInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutDepartmentInput = {
@@ -1243,16 +1243,16 @@ export type StudentProfileCreateWithoutCurrentAcademicLevelInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutCurrentAcademicLevelInput = {
@@ -1270,12 +1270,12 @@ export type StudentProfileUncheckedCreateWithoutCurrentAcademicLevelInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutCurrentAcademicLevelInput = {
@@ -1315,16 +1315,16 @@ export type StudentProfileCreateWithoutAcademicRecordsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutAcademicRecordsInput = {
@@ -1343,11 +1343,11 @@ export type StudentProfileUncheckedCreateWithoutAcademicRecordsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutAcademicRecordsInput = {
@@ -1377,16 +1377,16 @@ export type StudentProfileUpdateWithoutAcademicRecordsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutAcademicRecordsInput = {
@@ -1405,11 +1405,11 @@ export type StudentProfileUncheckedUpdateWithoutAcademicRecordsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateWithoutPromotionsInput = {
@@ -1423,16 +1423,16 @@ export type StudentProfileCreateWithoutPromotionsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutPromotionsInput = {
@@ -1451,11 +1451,11 @@ export type StudentProfileUncheckedCreateWithoutPromotionsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
   academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
   enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
   verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
-  dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
-  files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutPromotionsInput = {
@@ -1485,16 +1485,16 @@ export type StudentProfileUpdateWithoutPromotionsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutPromotionsInput = {
@@ -1513,11 +1513,11 @@ export type StudentProfileUncheckedUpdateWithoutPromotionsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
   academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
   enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
   verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
-  dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
-  files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateWithoutEnrollmentsInput = {
@@ -1531,16 +1531,16 @@ export type StudentProfileCreateWithoutEnrollmentsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutEnrollmentsInput = {
@@ -1559,11 +1559,11 @@ export type StudentProfileUncheckedCreateWithoutEnrollmentsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
   academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
   promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
   verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
-  dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
-  files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutEnrollmentsInput = {
@@ -1593,16 +1593,16 @@ export type StudentProfileUpdateWithoutEnrollmentsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutEnrollmentsInput = {
@@ -1621,11 +1621,11 @@ export type StudentProfileUncheckedUpdateWithoutEnrollmentsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
   academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
   promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
   verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
-  dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
-  files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateWithoutVerificationsInput = {
@@ -1639,16 +1639,16 @@ export type StudentProfileCreateWithoutVerificationsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutVerificationsInput = {
@@ -1667,11 +1667,11 @@ export type StudentProfileUncheckedCreateWithoutVerificationsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutVerificationsInput = {
@@ -1701,16 +1701,16 @@ export type StudentProfileUpdateWithoutVerificationsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutVerificationsInput = {
@@ -1729,11 +1729,11 @@ export type StudentProfileUncheckedUpdateWithoutVerificationsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateWithoutDueAssignmentsInput = {
@@ -1747,16 +1747,16 @@ export type StudentProfileCreateWithoutDueAssignmentsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   files?: Prisma.FileCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutDueAssignmentsInput = {
@@ -1775,11 +1775,11 @@ export type StudentProfileUncheckedCreateWithoutDueAssignmentsInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutDueAssignmentsInput = {
@@ -1809,16 +1809,16 @@ export type StudentProfileUpdateWithoutDueAssignmentsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutDueAssignmentsInput = {
@@ -1837,11 +1837,11 @@ export type StudentProfileUncheckedUpdateWithoutDueAssignmentsInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateWithoutFilesInput = {
@@ -1855,16 +1855,16 @@ export type StudentProfileCreateWithoutFilesInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
-  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
-  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
-  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
-  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutStudentInput
+  currentAcademicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutStudentsInput
+  department: Prisma.DepartmentCreateNestedOneWithoutStudentProfilesInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutStudentsInput
+  institution: Prisma.InstitutionCreateNestedOneWithoutStudentsInput
+  user: Prisma.UserCreateNestedOneWithoutStudentProfileInput
+  promotions?: Prisma.StudentPromotionCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileUncheckedCreateWithoutFilesInput = {
@@ -1883,11 +1883,11 @@ export type StudentProfileUncheckedCreateWithoutFilesInput = {
   verifiedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
-  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
-  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
   dueAssignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutStudentInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutStudentInput
+  promotions?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutStudentInput
+  verifications?: Prisma.StudentVerificationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentProfileCreateOrConnectWithoutFilesInput = {
@@ -1917,16 +1917,16 @@ export type StudentProfileUpdateWithoutFilesInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutFilesInput = {
@@ -1945,11 +1945,11 @@ export type StudentProfileUncheckedUpdateWithoutFilesInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileCreateManyInstitutionInput = {
@@ -1980,16 +1980,16 @@ export type StudentProfileUpdateWithoutInstitutionInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutInstitutionInput = {
@@ -2007,12 +2007,12 @@ export type StudentProfileUncheckedUpdateWithoutInstitutionInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateManyWithoutInstitutionInput = {
@@ -2060,16 +2060,16 @@ export type StudentProfileUpdateWithoutFacultyInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutFacultyInput = {
@@ -2087,12 +2087,12 @@ export type StudentProfileUncheckedUpdateWithoutFacultyInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateManyWithoutFacultyInput = {
@@ -2140,16 +2140,16 @@ export type StudentProfileUpdateWithoutDepartmentInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  currentAcademicLevel?: Prisma.AcademicLevelUpdateOneWithoutStudentsNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutDepartmentInput = {
@@ -2167,12 +2167,12 @@ export type StudentProfileUncheckedUpdateWithoutDepartmentInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateManyWithoutDepartmentInput = {
@@ -2220,16 +2220,16 @@ export type StudentProfileUpdateWithoutCurrentAcademicLevelInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
-  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
-  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUpdateManyWithoutStudentNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutStudentProfilesNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutStudentsNestedInput
+  institution?: Prisma.InstitutionUpdateOneRequiredWithoutStudentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentProfileNestedInput
+  promotions?: Prisma.StudentPromotionUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateWithoutCurrentAcademicLevelInput = {
@@ -2247,12 +2247,12 @@ export type StudentProfileUncheckedUpdateWithoutCurrentAcademicLevelInput = {
   verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
-  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
-  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
-  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
   dueAssignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutStudentNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutStudentNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  enrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutStudentNestedInput
+  promotions?: Prisma.StudentPromotionUncheckedUpdateManyWithoutStudentNestedInput
+  verifications?: Prisma.StudentVerificationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelInput = {
@@ -2278,21 +2278,21 @@ export type StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelInput = 
  */
 
 export type StudentProfileCountOutputType = {
-  academicRecords: number
-  promotions: number
-  enrollments: number
-  verifications: number
   dueAssignments: number
   files: number
+  academicRecords: number
+  enrollments: number
+  promotions: number
+  verifications: number
 }
 
 export type StudentProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  academicRecords?: boolean | StudentProfileCountOutputTypeCountAcademicRecordsArgs
-  promotions?: boolean | StudentProfileCountOutputTypeCountPromotionsArgs
-  enrollments?: boolean | StudentProfileCountOutputTypeCountEnrollmentsArgs
-  verifications?: boolean | StudentProfileCountOutputTypeCountVerificationsArgs
   dueAssignments?: boolean | StudentProfileCountOutputTypeCountDueAssignmentsArgs
   files?: boolean | StudentProfileCountOutputTypeCountFilesArgs
+  academicRecords?: boolean | StudentProfileCountOutputTypeCountAcademicRecordsArgs
+  enrollments?: boolean | StudentProfileCountOutputTypeCountEnrollmentsArgs
+  promotions?: boolean | StudentProfileCountOutputTypeCountPromotionsArgs
+  verifications?: boolean | StudentProfileCountOutputTypeCountVerificationsArgs
 }
 
 /**
@@ -2308,15 +2308,22 @@ export type StudentProfileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Typ
 /**
  * StudentProfileCountOutputType without action
  */
-export type StudentProfileCountOutputTypeCountAcademicRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StudentAcademicRecordWhereInput
+export type StudentProfileCountOutputTypeCountDueAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DueAssignmentWhereInput
 }
 
 /**
  * StudentProfileCountOutputType without action
  */
-export type StudentProfileCountOutputTypeCountPromotionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StudentPromotionWhereInput
+export type StudentProfileCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FileWhereInput
+}
+
+/**
+ * StudentProfileCountOutputType without action
+ */
+export type StudentProfileCountOutputTypeCountAcademicRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentAcademicRecordWhereInput
 }
 
 /**
@@ -2329,22 +2336,15 @@ export type StudentProfileCountOutputTypeCountEnrollmentsArgs<ExtArgs extends ru
 /**
  * StudentProfileCountOutputType without action
  */
+export type StudentProfileCountOutputTypeCountPromotionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentPromotionWhereInput
+}
+
+/**
+ * StudentProfileCountOutputType without action
+ */
 export type StudentProfileCountOutputTypeCountVerificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.StudentVerificationWhereInput
-}
-
-/**
- * StudentProfileCountOutputType without action
- */
-export type StudentProfileCountOutputTypeCountDueAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.DueAssignmentWhereInput
-}
-
-/**
- * StudentProfileCountOutputType without action
- */
-export type StudentProfileCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FileWhereInput
 }
 
 
@@ -2364,17 +2364,17 @@ export type StudentProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   verifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
-  currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
-  academicRecords?: boolean | Prisma.StudentProfile$academicRecordsArgs<ExtArgs>
-  promotions?: boolean | Prisma.StudentProfile$promotionsArgs<ExtArgs>
-  enrollments?: boolean | Prisma.StudentProfile$enrollmentsArgs<ExtArgs>
-  verifications?: boolean | Prisma.StudentProfile$verificationsArgs<ExtArgs>
   dueAssignments?: boolean | Prisma.StudentProfile$dueAssignmentsArgs<ExtArgs>
   files?: boolean | Prisma.StudentProfile$filesArgs<ExtArgs>
+  academicRecords?: boolean | Prisma.StudentProfile$academicRecordsArgs<ExtArgs>
+  enrollments?: boolean | Prisma.StudentProfile$enrollmentsArgs<ExtArgs>
+  currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  promotions?: boolean | Prisma.StudentProfile$promotionsArgs<ExtArgs>
+  verifications?: boolean | Prisma.StudentProfile$verificationsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentProfile"]>
 
@@ -2394,11 +2394,11 @@ export type StudentProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   verifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentProfile"]>
 
 export type StudentProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2417,11 +2417,11 @@ export type StudentProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   verifiedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentProfile"]>
 
 export type StudentProfileSelectScalar = {
@@ -2444,48 +2444,48 @@ export type StudentProfileSelectScalar = {
 
 export type StudentProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "institutionId" | "facultyId" | "departmentId" | "currentAcademicLevelId" | "matricNumber" | "academicStatus" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
 export type StudentProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
-  currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
-  academicRecords?: boolean | Prisma.StudentProfile$academicRecordsArgs<ExtArgs>
-  promotions?: boolean | Prisma.StudentProfile$promotionsArgs<ExtArgs>
-  enrollments?: boolean | Prisma.StudentProfile$enrollmentsArgs<ExtArgs>
-  verifications?: boolean | Prisma.StudentProfile$verificationsArgs<ExtArgs>
   dueAssignments?: boolean | Prisma.StudentProfile$dueAssignmentsArgs<ExtArgs>
   files?: boolean | Prisma.StudentProfile$filesArgs<ExtArgs>
+  academicRecords?: boolean | Prisma.StudentProfile$academicRecordsArgs<ExtArgs>
+  enrollments?: boolean | Prisma.StudentProfile$enrollmentsArgs<ExtArgs>
+  currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  promotions?: boolean | Prisma.StudentProfile$promotionsArgs<ExtArgs>
+  verifications?: boolean | Prisma.StudentProfile$verificationsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type StudentProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
-  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
   currentAcademicLevel?: boolean | Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>
+  department?: boolean | Prisma.DepartmentDefaultArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $StudentProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StudentProfile"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
-    institution: Prisma.$InstitutionPayload<ExtArgs>
-    faculty: Prisma.$FacultyPayload<ExtArgs>
-    department: Prisma.$DepartmentPayload<ExtArgs>
-    currentAcademicLevel: Prisma.$AcademicLevelPayload<ExtArgs> | null
-    academicRecords: Prisma.$StudentAcademicRecordPayload<ExtArgs>[]
-    promotions: Prisma.$StudentPromotionPayload<ExtArgs>[]
-    enrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
-    verifications: Prisma.$StudentVerificationPayload<ExtArgs>[]
     dueAssignments: Prisma.$DueAssignmentPayload<ExtArgs>[]
     files: Prisma.$FilePayload<ExtArgs>[]
+    academicRecords: Prisma.$StudentAcademicRecordPayload<ExtArgs>[]
+    enrollments: Prisma.$StudentEnrollmentPayload<ExtArgs>[]
+    currentAcademicLevel: Prisma.$AcademicLevelPayload<ExtArgs> | null
+    department: Prisma.$DepartmentPayload<ExtArgs>
+    faculty: Prisma.$FacultyPayload<ExtArgs>
+    institution: Prisma.$InstitutionPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
+    promotions: Prisma.$StudentPromotionPayload<ExtArgs>[]
+    verifications: Prisma.$StudentVerificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2897,17 +2897,17 @@ readonly fields: StudentProfileFieldRefs;
  */
 export interface Prisma__StudentProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  institution<T extends Prisma.InstitutionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstitutionDefaultArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  faculty<T extends Prisma.FacultyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacultyDefaultArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  currentAcademicLevel<T extends Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>>): Prisma.Prisma__AcademicLevelClient<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  academicRecords<T extends Prisma.StudentProfile$academicRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$academicRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentAcademicRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  promotions<T extends Prisma.StudentProfile$promotionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$promotionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  enrollments<T extends Prisma.StudentProfile$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  verifications<T extends Prisma.StudentProfile$verificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$verificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dueAssignments<T extends Prisma.StudentProfile$dueAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$dueAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DueAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   files<T extends Prisma.StudentProfile$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  academicRecords<T extends Prisma.StudentProfile$academicRecordsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$academicRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentAcademicRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  enrollments<T extends Prisma.StudentProfile$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentEnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  currentAcademicLevel<T extends Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$currentAcademicLevelArgs<ExtArgs>>): Prisma.Prisma__AcademicLevelClient<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  department<T extends Prisma.DepartmentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DepartmentDefaultArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  faculty<T extends Prisma.FacultyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacultyDefaultArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  institution<T extends Prisma.InstitutionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstitutionDefaultArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  promotions<T extends Prisma.StudentProfile$promotionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$promotionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  verifications<T extends Prisma.StudentProfile$verificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentProfile$verificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3353,121 +3353,6 @@ export type StudentProfileDeleteManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * StudentProfile.currentAcademicLevel
- */
-export type StudentProfile$currentAcademicLevelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the AcademicLevel
-   */
-  select?: Prisma.AcademicLevelSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the AcademicLevel
-   */
-  omit?: Prisma.AcademicLevelOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.AcademicLevelInclude<ExtArgs> | null
-  where?: Prisma.AcademicLevelWhereInput
-}
-
-/**
- * StudentProfile.academicRecords
- */
-export type StudentProfile$academicRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentAcademicRecord
-   */
-  select?: Prisma.StudentAcademicRecordSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentAcademicRecord
-   */
-  omit?: Prisma.StudentAcademicRecordOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentAcademicRecordInclude<ExtArgs> | null
-  where?: Prisma.StudentAcademicRecordWhereInput
-  orderBy?: Prisma.StudentAcademicRecordOrderByWithRelationInput | Prisma.StudentAcademicRecordOrderByWithRelationInput[]
-  cursor?: Prisma.StudentAcademicRecordWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StudentAcademicRecordScalarFieldEnum | Prisma.StudentAcademicRecordScalarFieldEnum[]
-}
-
-/**
- * StudentProfile.promotions
- */
-export type StudentProfile$promotionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentPromotion
-   */
-  select?: Prisma.StudentPromotionSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentPromotion
-   */
-  omit?: Prisma.StudentPromotionOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentPromotionInclude<ExtArgs> | null
-  where?: Prisma.StudentPromotionWhereInput
-  orderBy?: Prisma.StudentPromotionOrderByWithRelationInput | Prisma.StudentPromotionOrderByWithRelationInput[]
-  cursor?: Prisma.StudentPromotionWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StudentPromotionScalarFieldEnum | Prisma.StudentPromotionScalarFieldEnum[]
-}
-
-/**
- * StudentProfile.enrollments
- */
-export type StudentProfile$enrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentEnrollment
-   */
-  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentEnrollment
-   */
-  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
-  where?: Prisma.StudentEnrollmentWhereInput
-  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
-  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
-}
-
-/**
- * StudentProfile.verifications
- */
-export type StudentProfile$verificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentVerification
-   */
-  select?: Prisma.StudentVerificationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentVerification
-   */
-  omit?: Prisma.StudentVerificationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentVerificationInclude<ExtArgs> | null
-  where?: Prisma.StudentVerificationWhereInput
-  orderBy?: Prisma.StudentVerificationOrderByWithRelationInput | Prisma.StudentVerificationOrderByWithRelationInput[]
-  cursor?: Prisma.StudentVerificationWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StudentVerificationScalarFieldEnum | Prisma.StudentVerificationScalarFieldEnum[]
-}
-
-/**
  * StudentProfile.dueAssignments
  */
 export type StudentProfile$dueAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3513,6 +3398,121 @@ export type StudentProfile$filesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.FileScalarFieldEnum | Prisma.FileScalarFieldEnum[]
+}
+
+/**
+ * StudentProfile.academicRecords
+ */
+export type StudentProfile$academicRecordsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentAcademicRecord
+   */
+  select?: Prisma.StudentAcademicRecordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentAcademicRecord
+   */
+  omit?: Prisma.StudentAcademicRecordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentAcademicRecordInclude<ExtArgs> | null
+  where?: Prisma.StudentAcademicRecordWhereInput
+  orderBy?: Prisma.StudentAcademicRecordOrderByWithRelationInput | Prisma.StudentAcademicRecordOrderByWithRelationInput[]
+  cursor?: Prisma.StudentAcademicRecordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentAcademicRecordScalarFieldEnum | Prisma.StudentAcademicRecordScalarFieldEnum[]
+}
+
+/**
+ * StudentProfile.enrollments
+ */
+export type StudentProfile$enrollmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentEnrollment
+   */
+  select?: Prisma.StudentEnrollmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentEnrollment
+   */
+  omit?: Prisma.StudentEnrollmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentEnrollmentInclude<ExtArgs> | null
+  where?: Prisma.StudentEnrollmentWhereInput
+  orderBy?: Prisma.StudentEnrollmentOrderByWithRelationInput | Prisma.StudentEnrollmentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentEnrollmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentEnrollmentScalarFieldEnum | Prisma.StudentEnrollmentScalarFieldEnum[]
+}
+
+/**
+ * StudentProfile.currentAcademicLevel
+ */
+export type StudentProfile$currentAcademicLevelArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AcademicLevel
+   */
+  select?: Prisma.AcademicLevelSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AcademicLevel
+   */
+  omit?: Prisma.AcademicLevelOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AcademicLevelInclude<ExtArgs> | null
+  where?: Prisma.AcademicLevelWhereInput
+}
+
+/**
+ * StudentProfile.promotions
+ */
+export type StudentProfile$promotionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentPromotion
+   */
+  select?: Prisma.StudentPromotionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentPromotion
+   */
+  omit?: Prisma.StudentPromotionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentPromotionInclude<ExtArgs> | null
+  where?: Prisma.StudentPromotionWhereInput
+  orderBy?: Prisma.StudentPromotionOrderByWithRelationInput | Prisma.StudentPromotionOrderByWithRelationInput[]
+  cursor?: Prisma.StudentPromotionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentPromotionScalarFieldEnum | Prisma.StudentPromotionScalarFieldEnum[]
+}
+
+/**
+ * StudentProfile.verifications
+ */
+export type StudentProfile$verificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentVerification
+   */
+  select?: Prisma.StudentVerificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentVerification
+   */
+  omit?: Prisma.StudentVerificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentVerificationInclude<ExtArgs> | null
+  where?: Prisma.StudentVerificationWhereInput
+  orderBy?: Prisma.StudentVerificationOrderByWithRelationInput | Prisma.StudentVerificationOrderByWithRelationInput[]
+  cursor?: Prisma.StudentVerificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentVerificationScalarFieldEnum | Prisma.StudentVerificationScalarFieldEnum[]
 }
 
 /**

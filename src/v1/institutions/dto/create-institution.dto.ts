@@ -1,69 +1,120 @@
+// src/v1/institutions/dto/create-institution.dto.ts
+
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsOptional,
-  IsEmail,
-  IsUrl,
+  IsArray,
+  ValidateNested,
   IsEnum,
+  IsBoolean,
+  IsDateString,
   MinLength,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class CreateInstitutionDto {
+export class CreateSessionDto {
   @ApiProperty({
-    example: 'Lagos State University',
-    description: 'Institution name',
+    example: '2026/2027',
+    description: 'Session name (format: YYYY/YYYY)',
   })
   @IsString()
-  @MinLength(2)
-  @MaxLength(255)
+  @MinLength(9)
+  @MaxLength(9)
   name: string;
 
   @ApiProperty({
-    example: 'LASU',
-    description: 'Institution short name/abbreviation',
+    example: '2026-09-01T00:00:00.000Z',
+    description: 'Start date',
+  })
+  @IsDateString()
+  startDate: string;
+
+  @ApiProperty({
+    example: '2027-08-31T23:59:59.000Z',
+    description: 'End date',
+  })
+  @IsDateString()
+  endDate: string;
+
+  @ApiProperty({
+    enum: ['UPCOMING', 'ACTIVE', 'COMPLETED', 'ARCHIVED'],
+    default: 'UPCOMING',
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(['UPCOMING', 'ACTIVE', 'COMPLETED', 'ARCHIVED'])
+  status?: string;
+
+  @ApiProperty({
+    default: false,
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isCurrent?: boolean;
+}
+
+export class CreateInstitutionDto {
+  @ApiProperty({
+    example: 'Federal University of Agriculture, Abeokuta',
+    description: 'Institution name',
+  })
+  @IsString()
+  @MinLength(3)
+  @MaxLength(200)
+  name: string;
+
+  @ApiProperty({
+    example: 'FUNAAB',
+    description: 'Short name',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  shortName?: string;
+
+  @ApiProperty({
+    example: 'FUNAAB',
+    description: 'Institution code (must be unique)',
   })
   @IsString()
   @MinLength(2)
-  @MaxLength(50)
-  shortName: string;
-
-  @ApiProperty({ example: 'LASU001', description: 'Institution unique code' })
-  @IsString()
-  @MinLength(3)
   @MaxLength(20)
   code: string;
 
   @ApiProperty({
-    example: 'https://lasu.edu.ng/logo.png',
-    description: 'Institution logo URL',
+    example: 'https://example.com/logo.png',
+    description: 'Logo URL',
     required: false,
   })
   @IsOptional()
-  @IsUrl()
+  @IsString()
   logo?: string;
 
   @ApiProperty({
-    example: 'https://lasu.edu.ng',
-    description: 'Institution website',
+    example: 'https://example.edu',
+    description: 'Website URL',
     required: false,
   })
   @IsOptional()
-  @IsUrl()
+  @IsString()
   website?: string;
 
   @ApiProperty({
-    example: 'info@lasu.edu.ng',
-    description: 'Institution email',
+    example: 'info@example.edu',
+    description: 'Email address',
     required: false,
   })
   @IsOptional()
-  @IsEmail()
+  @IsString()
   email?: string;
 
   @ApiProperty({
     example: '+2348012345678',
-    description: 'Institution phone number',
+    description: 'Phone number',
     required: false,
   })
   @IsOptional()
@@ -71,21 +122,25 @@ export class CreateInstitutionDto {
   phone?: string;
 
   @ApiProperty({
-    example: 'Ojo, Lagos',
-    description: 'Institution address',
+    example: '123 University Road',
+    description: 'Address',
     required: false,
   })
   @IsOptional()
   @IsString()
   address?: string;
 
-  @ApiProperty({ example: 'Lagos', description: 'City', required: false })
+  @ApiProperty({
+    example: 'Abeokuta',
+    description: 'City',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   city?: string;
 
   @ApiProperty({
-    example: 'Lagos State',
+    example: 'Ogun',
     description: 'State',
     required: false,
   })
@@ -93,8 +148,23 @@ export class CreateInstitutionDto {
   @IsString()
   state?: string;
 
-  @ApiProperty({ example: 'Nigeria', description: 'Country', required: false })
+  @ApiProperty({
+    example: 'Nigeria',
+    description: 'Country',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   country?: string;
+
+  @ApiProperty({
+    type: [CreateSessionDto],
+    description: 'Academic sessions',
+    required: false,
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateSessionDto)
+  sessions?: CreateSessionDto[];
 }

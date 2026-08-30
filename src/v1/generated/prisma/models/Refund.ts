@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Refund
@@ -42,9 +42,9 @@ export type RefundMinAggregateOutputType = {
   reason: string | null
   status: $Enums.RefundStatus | null
   transactionId: string | null
-  journalEntryId: string | null
   createdAt: Date | null
   processedAt: Date | null
+  journalEntryId: string | null
 }
 
 export type RefundMaxAggregateOutputType = {
@@ -55,9 +55,9 @@ export type RefundMaxAggregateOutputType = {
   reason: string | null
   status: $Enums.RefundStatus | null
   transactionId: string | null
-  journalEntryId: string | null
   createdAt: Date | null
   processedAt: Date | null
+  journalEntryId: string | null
 }
 
 export type RefundCountAggregateOutputType = {
@@ -68,9 +68,9 @@ export type RefundCountAggregateOutputType = {
   reason: number
   status: number
   transactionId: number
-  journalEntryId: number
   createdAt: number
   processedAt: number
+  journalEntryId: number
   _all: number
 }
 
@@ -91,9 +91,9 @@ export type RefundMinAggregateInputType = {
   reason?: true
   status?: true
   transactionId?: true
-  journalEntryId?: true
   createdAt?: true
   processedAt?: true
+  journalEntryId?: true
 }
 
 export type RefundMaxAggregateInputType = {
@@ -104,9 +104,9 @@ export type RefundMaxAggregateInputType = {
   reason?: true
   status?: true
   transactionId?: true
-  journalEntryId?: true
   createdAt?: true
   processedAt?: true
+  journalEntryId?: true
 }
 
 export type RefundCountAggregateInputType = {
@@ -117,9 +117,9 @@ export type RefundCountAggregateInputType = {
   reason?: true
   status?: true
   transactionId?: true
-  journalEntryId?: true
   createdAt?: true
   processedAt?: true
+  journalEntryId?: true
   _all?: true
 }
 
@@ -217,9 +217,9 @@ export type RefundGroupByOutputType = {
   reason: string | null
   status: $Enums.RefundStatus
   transactionId: string | null
-  journalEntryId: string | null
   createdAt: Date
   processedAt: Date | null
+  journalEntryId: string | null
   _count: RefundCountAggregateOutputType | null
   _avg: RefundAvgAggregateOutputType | null
   _sum: RefundSumAggregateOutputType | null
@@ -253,13 +253,13 @@ export type RefundWhereInput = {
   reason?: Prisma.StringNullableFilter<"Refund"> | string | null
   status?: Prisma.EnumRefundStatusFilter<"Refund"> | $Enums.RefundStatus
   transactionId?: Prisma.StringNullableFilter<"Refund"> | string | null
-  journalEntryId?: Prisma.StringNullableFilter<"Refund"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Refund"> | Date | string
   processedAt?: Prisma.DateTimeNullableFilter<"Refund"> | Date | string | null
-  payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
-  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
-  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  journalEntryId?: Prisma.StringNullableFilter<"Refund"> | string | null
   journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
+  payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
+  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }
 
 export type RefundOrderByWithRelationInput = {
@@ -270,13 +270,13 @@ export type RefundOrderByWithRelationInput = {
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   transactionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   processedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  payment?: Prisma.PaymentOrderByWithRelationInput
-  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
-  transaction?: Prisma.TransactionOrderByWithRelationInput
+  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   journalEntry?: Prisma.JournalEntryOrderByWithRelationInput
+  payment?: Prisma.PaymentOrderByWithRelationInput
+  transaction?: Prisma.TransactionOrderByWithRelationInput
+  withdrawal?: Prisma.WithdrawalOrderByWithRelationInput
 }
 
 export type RefundWhereUniqueInput = Prisma.AtLeast<{
@@ -293,10 +293,10 @@ export type RefundWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumRefundStatusFilter<"Refund"> | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFilter<"Refund"> | Date | string
   processedAt?: Prisma.DateTimeNullableFilter<"Refund"> | Date | string | null
-  payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
-  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
-  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
   journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
+  payment?: Prisma.XOR<Prisma.PaymentScalarRelationFilter, Prisma.PaymentWhereInput>
+  transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
+  withdrawal?: Prisma.XOR<Prisma.WithdrawalNullableScalarRelationFilter, Prisma.WithdrawalWhereInput> | null
 }, "id" | "paymentId" | "withdrawalId" | "transactionId" | "journalEntryId">
 
 export type RefundOrderByWithAggregationInput = {
@@ -307,9 +307,9 @@ export type RefundOrderByWithAggregationInput = {
   reason?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   transactionId?: Prisma.SortOrderInput | Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   processedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.RefundCountOrderByAggregateInput
   _avg?: Prisma.RefundAvgOrderByAggregateInput
   _max?: Prisma.RefundMaxOrderByAggregateInput
@@ -328,9 +328,9 @@ export type RefundScalarWhereWithAggregatesInput = {
   reason?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
   status?: Prisma.EnumRefundStatusWithAggregatesFilter<"Refund"> | $Enums.RefundStatus
   transactionId?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
-  journalEntryId?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Refund"> | Date | string
   processedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Refund"> | Date | string | null
+  journalEntryId?: Prisma.StringNullableWithAggregatesFilter<"Refund"> | string | null
 }
 
 export type RefundCreateInput = {
@@ -340,10 +340,10 @@ export type RefundCreateInput = {
   status?: $Enums.RefundStatus
   createdAt?: Date | string
   processedAt?: Date | string | null
-  payment: Prisma.PaymentCreateNestedOneWithoutRefundInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutRefundInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutRefundInput
+  payment: Prisma.PaymentCreateNestedOneWithoutRefundInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutRefundInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
 }
 
 export type RefundUncheckedCreateInput = {
@@ -354,9 +354,9 @@ export type RefundUncheckedCreateInput = {
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
-  journalEntryId?: string | null
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntryId?: string | null
 }
 
 export type RefundUpdateInput = {
@@ -366,10 +366,10 @@ export type RefundUpdateInput = {
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutRefundNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutRefundNestedInput
+  payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutRefundNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
 }
 
 export type RefundUncheckedUpdateInput = {
@@ -380,9 +380,9 @@ export type RefundUncheckedUpdateInput = {
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RefundCreateManyInput = {
@@ -393,9 +393,9 @@ export type RefundCreateManyInput = {
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
-  journalEntryId?: string | null
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntryId?: string | null
 }
 
 export type RefundUpdateManyMutationInput = {
@@ -415,9 +415,9 @@ export type RefundUncheckedUpdateManyInput = {
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RefundNullableScalarRelationFilter = {
@@ -433,9 +433,9 @@ export type RefundCountOrderByAggregateInput = {
   reason?: Prisma.SortOrder
   status?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   processedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrder
 }
 
 export type RefundAvgOrderByAggregateInput = {
@@ -450,9 +450,9 @@ export type RefundMaxOrderByAggregateInput = {
   reason?: Prisma.SortOrder
   status?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   processedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrder
 }
 
 export type RefundMinOrderByAggregateInput = {
@@ -463,9 +463,9 @@ export type RefundMinOrderByAggregateInput = {
   reason?: Prisma.SortOrder
   status?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
-  journalEntryId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   processedAt?: Prisma.SortOrder
+  journalEntryId?: Prisma.SortOrder
 }
 
 export type RefundSumOrderByAggregateInput = {
@@ -612,8 +612,8 @@ export type RefundCreateWithoutJournalEntryInput = {
   createdAt?: Date | string
   processedAt?: Date | string | null
   payment: Prisma.PaymentCreateNestedOneWithoutRefundInput
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutRefundInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
 }
 
 export type RefundUncheckedCreateWithoutJournalEntryInput = {
@@ -652,8 +652,8 @@ export type RefundUpdateWithoutJournalEntryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundNestedInput
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutRefundNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
 }
 
 export type RefundUncheckedUpdateWithoutJournalEntryInput = {
@@ -675,9 +675,9 @@ export type RefundCreateWithoutTransactionInput = {
   status?: $Enums.RefundStatus
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutRefundInput
   payment: Prisma.PaymentCreateNestedOneWithoutRefundInput
   withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutRefundInput
 }
 
 export type RefundUncheckedCreateWithoutTransactionInput = {
@@ -687,9 +687,9 @@ export type RefundUncheckedCreateWithoutTransactionInput = {
   amount: number
   reason?: string | null
   status?: $Enums.RefundStatus
-  journalEntryId?: string | null
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntryId?: string | null
 }
 
 export type RefundCreateOrConnectWithoutTransactionInput = {
@@ -715,9 +715,9 @@ export type RefundUpdateWithoutTransactionInput = {
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutRefundNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundNestedInput
   withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutRefundNestedInput
 }
 
 export type RefundUncheckedUpdateWithoutTransactionInput = {
@@ -727,9 +727,9 @@ export type RefundUncheckedUpdateWithoutTransactionInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RefundCreateWithoutPaymentInput = {
@@ -739,9 +739,9 @@ export type RefundCreateWithoutPaymentInput = {
   status?: $Enums.RefundStatus
   createdAt?: Date | string
   processedAt?: Date | string | null
-  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
-  transaction?: Prisma.TransactionCreateNestedOneWithoutRefundInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutRefundInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutRefundInput
+  withdrawal?: Prisma.WithdrawalCreateNestedOneWithoutRefundInput
 }
 
 export type RefundUncheckedCreateWithoutPaymentInput = {
@@ -751,9 +751,9 @@ export type RefundUncheckedCreateWithoutPaymentInput = {
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
-  journalEntryId?: string | null
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntryId?: string | null
 }
 
 export type RefundCreateOrConnectWithoutPaymentInput = {
@@ -779,9 +779,9 @@ export type RefundUpdateWithoutPaymentInput = {
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
-  transaction?: Prisma.TransactionUpdateOneWithoutRefundNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutRefundNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutRefundNestedInput
+  withdrawal?: Prisma.WithdrawalUpdateOneWithoutRefundNestedInput
 }
 
 export type RefundUncheckedUpdateWithoutPaymentInput = {
@@ -791,9 +791,9 @@ export type RefundUncheckedUpdateWithoutPaymentInput = {
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type RefundCreateWithoutWithdrawalInput = {
@@ -803,9 +803,9 @@ export type RefundCreateWithoutWithdrawalInput = {
   status?: $Enums.RefundStatus
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutRefundInput
   payment: Prisma.PaymentCreateNestedOneWithoutRefundInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutRefundInput
-  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutRefundInput
 }
 
 export type RefundUncheckedCreateWithoutWithdrawalInput = {
@@ -815,9 +815,9 @@ export type RefundUncheckedCreateWithoutWithdrawalInput = {
   reason?: string | null
   status?: $Enums.RefundStatus
   transactionId?: string | null
-  journalEntryId?: string | null
   createdAt?: Date | string
   processedAt?: Date | string | null
+  journalEntryId?: string | null
 }
 
 export type RefundCreateOrConnectWithoutWithdrawalInput = {
@@ -843,9 +843,9 @@ export type RefundUpdateWithoutWithdrawalInput = {
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutRefundNestedInput
   payment?: Prisma.PaymentUpdateOneRequiredWithoutRefundNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutRefundNestedInput
-  journalEntry?: Prisma.JournalEntryUpdateOneWithoutRefundNestedInput
 }
 
 export type RefundUncheckedUpdateWithoutWithdrawalInput = {
@@ -855,9 +855,9 @@ export type RefundUncheckedUpdateWithoutWithdrawalInput = {
   reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumRefundStatusFieldUpdateOperationsInput | $Enums.RefundStatus
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   processedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -870,13 +870,13 @@ export type RefundSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   reason?: boolean
   status?: boolean
   transactionId?: boolean
-  journalEntryId?: boolean
   createdAt?: boolean
   processedAt?: boolean
-  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
-  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  journalEntryId?: boolean
   journalEntry?: boolean | Prisma.Refund$journalEntryArgs<ExtArgs>
+  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
+  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
 }, ExtArgs["result"]["refund"]>
 
 export type RefundSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -887,13 +887,13 @@ export type RefundSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   reason?: boolean
   status?: boolean
   transactionId?: boolean
-  journalEntryId?: boolean
   createdAt?: boolean
   processedAt?: boolean
-  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
-  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  journalEntryId?: boolean
   journalEntry?: boolean | Prisma.Refund$journalEntryArgs<ExtArgs>
+  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
+  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
 }, ExtArgs["result"]["refund"]>
 
 export type RefundSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -904,13 +904,13 @@ export type RefundSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   reason?: boolean
   status?: boolean
   transactionId?: boolean
-  journalEntryId?: boolean
   createdAt?: boolean
   processedAt?: boolean
-  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
-  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  journalEntryId?: boolean
   journalEntry?: boolean | Prisma.Refund$journalEntryArgs<ExtArgs>
+  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
+  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
 }, ExtArgs["result"]["refund"]>
 
 export type RefundSelectScalar = {
@@ -921,38 +921,38 @@ export type RefundSelectScalar = {
   reason?: boolean
   status?: boolean
   transactionId?: boolean
-  journalEntryId?: boolean
   createdAt?: boolean
   processedAt?: boolean
+  journalEntryId?: boolean
 }
 
-export type RefundOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "withdrawalId" | "amount" | "reason" | "status" | "transactionId" | "journalEntryId" | "createdAt" | "processedAt", ExtArgs["result"]["refund"]>
+export type RefundOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "paymentId" | "withdrawalId" | "amount" | "reason" | "status" | "transactionId" | "createdAt" | "processedAt" | "journalEntryId", ExtArgs["result"]["refund"]>
 export type RefundInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
-  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Refund$journalEntryArgs<ExtArgs>
+  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
+  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
 }
 export type RefundIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
-  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Refund$journalEntryArgs<ExtArgs>
+  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
+  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
 }
 export type RefundIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
-  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
-  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Refund$journalEntryArgs<ExtArgs>
+  payment?: boolean | Prisma.PaymentDefaultArgs<ExtArgs>
+  transaction?: boolean | Prisma.Refund$transactionArgs<ExtArgs>
+  withdrawal?: boolean | Prisma.Refund$withdrawalArgs<ExtArgs>
 }
 
 export type $RefundPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Refund"
   objects: {
-    payment: Prisma.$PaymentPayload<ExtArgs>
-    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
-    transaction: Prisma.$TransactionPayload<ExtArgs> | null
     journalEntry: Prisma.$JournalEntryPayload<ExtArgs> | null
+    payment: Prisma.$PaymentPayload<ExtArgs>
+    transaction: Prisma.$TransactionPayload<ExtArgs> | null
+    withdrawal: Prisma.$WithdrawalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -962,9 +962,9 @@ export type $RefundPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     reason: string | null
     status: $Enums.RefundStatus
     transactionId: string | null
-    journalEntryId: string | null
     createdAt: Date
     processedAt: Date | null
+    journalEntryId: string | null
   }, ExtArgs["result"]["refund"]>
   composites: {}
 }
@@ -1359,10 +1359,10 @@ readonly fields: RefundFieldRefs;
  */
 export interface Prisma__RefundClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  payment<T extends Prisma.PaymentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  withdrawal<T extends Prisma.Refund$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Refund$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  transaction<T extends Prisma.Refund$transactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Refund$transactionArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   journalEntry<T extends Prisma.Refund$journalEntryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Refund$journalEntryArgs<ExtArgs>>): Prisma.Prisma__JournalEntryClient<runtime.Types.Result.GetResult<Prisma.$JournalEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  payment<T extends Prisma.PaymentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaymentDefaultArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  transaction<T extends Prisma.Refund$transactionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Refund$transactionArgs<ExtArgs>>): Prisma.Prisma__TransactionClient<runtime.Types.Result.GetResult<Prisma.$TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  withdrawal<T extends Prisma.Refund$withdrawalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Refund$withdrawalArgs<ExtArgs>>): Prisma.Prisma__WithdrawalClient<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1399,9 +1399,9 @@ export interface RefundFieldRefs {
   readonly reason: Prisma.FieldRef<"Refund", 'String'>
   readonly status: Prisma.FieldRef<"Refund", 'RefundStatus'>
   readonly transactionId: Prisma.FieldRef<"Refund", 'String'>
-  readonly journalEntryId: Prisma.FieldRef<"Refund", 'String'>
   readonly createdAt: Prisma.FieldRef<"Refund", 'DateTime'>
   readonly processedAt: Prisma.FieldRef<"Refund", 'DateTime'>
+  readonly journalEntryId: Prisma.FieldRef<"Refund", 'String'>
 }
     
 
@@ -1803,22 +1803,22 @@ export type RefundDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * Refund.withdrawal
+ * Refund.journalEntry
  */
-export type Refund$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Refund$journalEntryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Withdrawal
+   * Select specific fields to fetch from the JournalEntry
    */
-  select?: Prisma.WithdrawalSelect<ExtArgs> | null
+  select?: Prisma.JournalEntrySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Withdrawal
+   * Omit specific fields from the JournalEntry
    */
-  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
+  omit?: Prisma.JournalEntryOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WithdrawalInclude<ExtArgs> | null
-  where?: Prisma.WithdrawalWhereInput
+  include?: Prisma.JournalEntryInclude<ExtArgs> | null
+  where?: Prisma.JournalEntryWhereInput
 }
 
 /**
@@ -1841,22 +1841,22 @@ export type Refund$transactionArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Refund.journalEntry
+ * Refund.withdrawal
  */
-export type Refund$journalEntryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Refund$withdrawalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the JournalEntry
+   * Select specific fields to fetch from the Withdrawal
    */
-  select?: Prisma.JournalEntrySelect<ExtArgs> | null
+  select?: Prisma.WithdrawalSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the JournalEntry
+   * Omit specific fields from the Withdrawal
    */
-  omit?: Prisma.JournalEntryOmit<ExtArgs> | null
+  omit?: Prisma.WithdrawalOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.JournalEntryInclude<ExtArgs> | null
-  where?: Prisma.JournalEntryWhereInput
+  include?: Prisma.WithdrawalInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalWhereInput
 }
 
 /**

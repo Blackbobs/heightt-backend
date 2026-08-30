@@ -10,13 +10,19 @@ import {
 import cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import csurf from 'csurf';
 import { ConfigService } from '@nestjs/config';
+import {
+  createCsrfMiddleware,
+  CSRF_HEADER,
+} from './common/middleware/csrf.middleware';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
   const app = await NestFactory.create(AppModule, {
+    // Payment providers sign the exact bytes sent over HTTP. Keep those bytes
+    // available so webhook verification does not depend on JSON re-serialization.
+    rawBody: true,
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
 
@@ -36,7 +42,11 @@ async function bootstrap() {
           scriptSrc: ["'self'"],
           imgSrc: ["'self'", 'data:', 'https:'],
           fontSrc: ["'self'", 'https:'],
-          connectSrc: ["'self'", 'https://api.paystack.co'],
+          connectSrc: [
+            "'self'",
+            'https://api.paystack.co',
+            'https://*.bachs.io',
+          ],
           frameAncestors: ["'none'"],
           formAction: ["'self'"],
         },
@@ -66,21 +76,83 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // ============================================
-  // 3. CSRF Protection (only in production)
+  // 3. CSRF Protection - FIXED
   // ============================================
-  if (isProduction) {
-    app.use(
-      csurf({
-        cookie: {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'strict',
-        },
-        ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
-      }),
-    );
-    logger.log('🔒 CSRF protection enabled');
-  }
+  // IMPORTANT: CSRF protection must be applied after cookie parser
+  // but before routes are handled
+
+  // if (isProduction) {
+  //   // Create CSRF protection middleware
+  //   // const csrfProtection = csurf({
+  //   //   cookie: {
+  //   //     httpOnly: true,
+  //   //     secure: true,
+  //   //     sameSite: 'strict',
+  //   //   },
+  //   //   ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+  //   // });
+
+  //   // app.use((req: any, res: any, next: any) => {
+  //   //   const path = req.path;
+
+  //   //   // Payment-provider webhooks are authenticated
+  //   //   // using their own cryptographic signatures.
+  //   //   if (
+  //   //     req.method === 'POST' &&
+  //   //     (path === '/api/webhooks/bachs' || path === '/api/v1/webhooks/bachs')
+  //   //   ) {
+  //   //     logger.debug(`Skipping CSRF for Bachs webhook: ${path}`);
+  //   //     return next();
+  //   //   }
+
+  //   //   return csrfProtection(req, res, next);
+  //   // });
+
+  //   const csrfProtection = csurf({
+  //     cookie: {
+  //       httpOnly: true,
+  //       secure: isProduction,
+  //       sameSite: 'strict',
+  //     },
+  //     ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],
+  //   });
+
+  //   // Apply CSRF protection with proper exclusions
+  //   app.use((req: any, res: any, next: any) => {
+  //     const path = req.path;
+  //     const method = req.method;
+
+  //     // Log for debugging
+  //     if (process.env.NODE_ENV !== 'production') {
+  //       logger.debug(`CSRF Check - Path: ${path}, Method: ${method}`);
+  //     }
+
+  //     // Exclude webhooks
+  //     if (method === 'POST' && path.includes('/api/v1/webhooks/bachs')) {
+  //       logger.debug(`Skipping CSRF for webhook: ${path}`);
+  //       return next();
+  //     }
+
+  //     // Exclude the CSRF token endpoint itself (GET)
+  //     if (path.includes('/auth/csrf-token')) {
+  //       logger.debug(`Skipping CSRF for CSRF token endpoint: ${path}`);
+  //       return next();
+  //     }
+
+  //     // Exclude health checks
+  //     if (path.includes('/health')) {
+  //       return next();
+  //     }
+
+  //     // Apply CSRF protection for all other routes
+  //     return csrfProtection(req, res, next);
+  //   });
+
+  //   logger.log('🔒 CSRF protection enabled (webhooks excluded)');
+  // } else {
+  //   // In development, log that CSRF is disabled
+  //   logger.log('⚠️ CSRF protection disabled (development mode)');
+  // }
 
   // ============================================
   // 4. Global Validation Pipe (Enhanced)
@@ -114,9 +186,20 @@ async function bootstrap() {
   // ============================================
   // 5. CORS Configuration (Enhanced)
   // ============================================
-  const allowedOrigins = configService
-    .get('FRONTEND_URL', 'http://localhost:3000,http://localhost:3001')
-    .split(',');
+  // Use dedicated CORS_ORIGIN env var if available; fall back to FRONTEND_URL.
+  // FRONTEND_URL may be a single URL (also used for redirect URLs in Bachs),
+  // while CORS_ORIGIN is a comma-separated list designed for CORS.
+  const rawOrigins =
+    configService.get<string>('CORS_ORIGIN') ||
+    configService.get<string>(
+      'FRONTEND_URL',
+      'http://localhost:3000,http://localhost:3001',
+    );
+
+  const allowedOrigins = rawOrigins
+    .split(',')
+    .map((origin) => origin.trim().replace(/\/+$/, '')) // strip trailing slashes
+    .filter(Boolean);
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -138,6 +221,9 @@ async function bootstrap() {
       'X-CSRF-Token',
       'Accept',
       'Origin',
+      'Idempotency-Key',
+      'X-Bachs-Signature', // Add Bachs webhook signature header
+      'X-Request-ID', // Add Bachs request ID header
     ],
     exposedHeaders: [
       'Set-Cookie',
@@ -148,6 +234,13 @@ async function bootstrap() {
     credentials: true,
     maxAge: 86400, // 24 hours
   });
+
+  // CORS runs first so an allowed browser origin can read CSRF failures.
+  // This remains enabled locally so development reproduces production.
+  app.use(createCsrfMiddleware(isProduction));
+  logger.log(
+    `🔒 CSRF protection enabled in ${isProduction ? 'production' : 'development'} (${CSRF_HEADER})`,
+  );
 
   // ============================================
   // 6. Global Prefix & Versioning
@@ -177,7 +270,7 @@ async function bootstrap() {
         '- Auth endpoints: 5 requests per minute\n\n' +
         '## Security\n' +
         '- All endpoints are protected with Helmet.js\n' +
-        '- CSRF protection enabled in production\n' +
+        '- CSRF protection enabled in all environments\n' +
         '- Input validation and sanitization applied globally',
     )
     .setVersion('1.0')
@@ -287,7 +380,6 @@ async function bootstrap() {
   logger.log(
     `⏱️  Rate Limit: ${configService.get('THROTTLE_LIMIT', 100)} requests per minute`,
   );
-  logger.log('═══════════════════════════════════════════════════════');
 
   // Log security status
   if (isProduction) {

@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model LedgerAccount
@@ -39,68 +39,68 @@ export type LedgerAccountSumAggregateOutputType = {
 export type LedgerAccountMinAggregateOutputType = {
   id: string | null
   organizationId: string | null
-  walletId: string | null
-  code: string | null
   name: string | null
-  description: string | null
+  code: string | null
   type: $Enums.LedgerAccountType | null
-  category: $Enums.LedgerAccountCategory | null
-  ownerType: $Enums.LedgerAccountOwnerType | null
-  ownerId: string | null
   balance: number | null
-  pendingBalance: number | null
   currency: string | null
   isActive: boolean | null
-  isSystem: boolean | null
-  parentId: string | null
-  createdBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  category: $Enums.LedgerAccountCategory | null
+  description: string | null
+  isSystem: boolean | null
+  ownerId: string | null
+  ownerType: $Enums.LedgerAccountOwnerType | null
+  parentId: string | null
+  pendingBalance: number | null
+  walletId: string | null
+  createdBy: string | null
 }
 
 export type LedgerAccountMaxAggregateOutputType = {
   id: string | null
   organizationId: string | null
-  walletId: string | null
-  code: string | null
   name: string | null
-  description: string | null
+  code: string | null
   type: $Enums.LedgerAccountType | null
-  category: $Enums.LedgerAccountCategory | null
-  ownerType: $Enums.LedgerAccountOwnerType | null
-  ownerId: string | null
   balance: number | null
-  pendingBalance: number | null
   currency: string | null
   isActive: boolean | null
-  isSystem: boolean | null
-  parentId: string | null
-  createdBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  category: $Enums.LedgerAccountCategory | null
+  description: string | null
+  isSystem: boolean | null
+  ownerId: string | null
+  ownerType: $Enums.LedgerAccountOwnerType | null
+  parentId: string | null
+  pendingBalance: number | null
+  walletId: string | null
+  createdBy: string | null
 }
 
 export type LedgerAccountCountAggregateOutputType = {
   id: number
   organizationId: number
-  walletId: number
-  code: number
   name: number
-  description: number
+  code: number
   type: number
-  category: number
-  ownerType: number
-  ownerId: number
   balance: number
-  pendingBalance: number
   currency: number
   isActive: number
-  isSystem: number
-  parentId: number
-  createdBy: number
-  metadata: number
   createdAt: number
   updatedAt: number
+  category: number
+  description: number
+  isSystem: number
+  ownerId: number
+  ownerType: number
+  parentId: number
+  pendingBalance: number
+  walletId: number
+  createdBy: number
+  metadata: number
   _all: number
 }
 
@@ -118,68 +118,68 @@ export type LedgerAccountSumAggregateInputType = {
 export type LedgerAccountMinAggregateInputType = {
   id?: true
   organizationId?: true
-  walletId?: true
-  code?: true
   name?: true
-  description?: true
+  code?: true
   type?: true
-  category?: true
-  ownerType?: true
-  ownerId?: true
   balance?: true
-  pendingBalance?: true
   currency?: true
   isActive?: true
-  isSystem?: true
-  parentId?: true
-  createdBy?: true
   createdAt?: true
   updatedAt?: true
+  category?: true
+  description?: true
+  isSystem?: true
+  ownerId?: true
+  ownerType?: true
+  parentId?: true
+  pendingBalance?: true
+  walletId?: true
+  createdBy?: true
 }
 
 export type LedgerAccountMaxAggregateInputType = {
   id?: true
   organizationId?: true
-  walletId?: true
-  code?: true
   name?: true
-  description?: true
+  code?: true
   type?: true
-  category?: true
-  ownerType?: true
-  ownerId?: true
   balance?: true
-  pendingBalance?: true
   currency?: true
   isActive?: true
-  isSystem?: true
-  parentId?: true
-  createdBy?: true
   createdAt?: true
   updatedAt?: true
+  category?: true
+  description?: true
+  isSystem?: true
+  ownerId?: true
+  ownerType?: true
+  parentId?: true
+  pendingBalance?: true
+  walletId?: true
+  createdBy?: true
 }
 
 export type LedgerAccountCountAggregateInputType = {
   id?: true
   organizationId?: true
-  walletId?: true
-  code?: true
   name?: true
-  description?: true
+  code?: true
   type?: true
-  category?: true
-  ownerType?: true
-  ownerId?: true
   balance?: true
-  pendingBalance?: true
   currency?: true
   isActive?: true
-  isSystem?: true
-  parentId?: true
-  createdBy?: true
-  metadata?: true
   createdAt?: true
   updatedAt?: true
+  category?: true
+  description?: true
+  isSystem?: true
+  ownerId?: true
+  ownerType?: true
+  parentId?: true
+  pendingBalance?: true
+  walletId?: true
+  createdBy?: true
+  metadata?: true
   _all?: true
 }
 
@@ -272,24 +272,24 @@ export type LedgerAccountGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type LedgerAccountGroupByOutputType = {
   id: string
   organizationId: string | null
-  walletId: string | null
-  code: string
   name: string
-  description: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category: $Enums.LedgerAccountCategory | null
-  ownerType: $Enums.LedgerAccountOwnerType
-  ownerId: string | null
   balance: number
-  pendingBalance: number
   currency: string
   isActive: boolean
-  isSystem: boolean
-  parentId: string | null
-  createdBy: string | null
-  metadata: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
+  category: $Enums.LedgerAccountCategory | null
+  description: string | null
+  isSystem: boolean
+  ownerId: string | null
+  ownerType: $Enums.LedgerAccountOwnerType
+  parentId: string | null
+  pendingBalance: number
+  walletId: string | null
+  createdBy: string | null
+  metadata: runtime.JsonValue | null
   _count: LedgerAccountCountAggregateOutputType | null
   _avg: LedgerAccountAvgAggregateOutputType | null
   _sum: LedgerAccountSumAggregateOutputType | null
@@ -318,115 +318,115 @@ export type LedgerAccountWhereInput = {
   NOT?: Prisma.LedgerAccountWhereInput | Prisma.LedgerAccountWhereInput[]
   id?: Prisma.StringFilter<"LedgerAccount"> | string
   organizationId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  walletId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  code?: Prisma.StringFilter<"LedgerAccount"> | string
   name?: Prisma.StringFilter<"LedgerAccount"> | string
-  description?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  code?: Prisma.StringFilter<"LedgerAccount"> | string
   type?: Prisma.EnumLedgerAccountTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountType
-  category?: Prisma.EnumLedgerAccountCategoryNullableFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   balance?: Prisma.IntFilter<"LedgerAccount"> | number
-  pendingBalance?: Prisma.IntFilter<"LedgerAccount"> | number
   currency?: Prisma.StringFilter<"LedgerAccount"> | string
   isActive?: Prisma.BoolFilter<"LedgerAccount"> | boolean
-  isSystem?: Prisma.BoolFilter<"LedgerAccount"> | boolean
-  parentId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  createdBy?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  metadata?: Prisma.JsonNullableFilter<"LedgerAccount">
   createdAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
+  category?: Prisma.EnumLedgerAccountCategoryNullableFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
+  description?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  isSystem?: Prisma.BoolFilter<"LedgerAccount"> | boolean
+  ownerId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  pendingBalance?: Prisma.IntFilter<"LedgerAccount"> | number
+  walletId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  createdBy?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"LedgerAccount">
+  journalLines?: Prisma.JournalLineListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   parent?: Prisma.XOR<Prisma.LedgerAccountNullableScalarRelationFilter, Prisma.LedgerAccountWhereInput> | null
   children?: Prisma.LedgerAccountListRelationFilter
-  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
-  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
-  journalLines?: Prisma.JournalLineListRelationFilter
   ledgerEntries?: Prisma.LedgerEntryListRelationFilter
+  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
 }
 
 export type LedgerAccountOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
-  walletId?: Prisma.SortOrderInput | Prisma.SortOrder
-  code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  category?: Prisma.SortOrderInput | Prisma.SortOrder
-  ownerType?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   balance?: Prisma.SortOrder
-  pendingBalance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  isSystem?: Prisma.SortOrder
-  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerType?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pendingBalance?: Prisma.SortOrder
+  walletId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
+  journalLines?: Prisma.JournalLineOrderByRelationAggregateInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   parent?: Prisma.LedgerAccountOrderByWithRelationInput
   children?: Prisma.LedgerAccountOrderByRelationAggregateInput
-  organization?: Prisma.OrganizationOrderByWithRelationInput
-  wallet?: Prisma.WalletOrderByWithRelationInput
-  journalLines?: Prisma.JournalLineOrderByRelationAggregateInput
   ledgerEntries?: Prisma.LedgerEntryOrderByRelationAggregateInput
+  wallet?: Prisma.WalletOrderByWithRelationInput
 }
 
 export type LedgerAccountWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  walletId?: string
   code?: string
+  walletId?: string
   ownerType_ownerId_code?: Prisma.LedgerAccountOwnerTypeOwnerIdCodeCompoundUniqueInput
   AND?: Prisma.LedgerAccountWhereInput | Prisma.LedgerAccountWhereInput[]
   OR?: Prisma.LedgerAccountWhereInput[]
   NOT?: Prisma.LedgerAccountWhereInput | Prisma.LedgerAccountWhereInput[]
   organizationId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   name?: Prisma.StringFilter<"LedgerAccount"> | string
-  description?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   type?: Prisma.EnumLedgerAccountTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountType
-  category?: Prisma.EnumLedgerAccountCategoryNullableFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   balance?: Prisma.IntFilter<"LedgerAccount"> | number
-  pendingBalance?: Prisma.IntFilter<"LedgerAccount"> | number
   currency?: Prisma.StringFilter<"LedgerAccount"> | string
   isActive?: Prisma.BoolFilter<"LedgerAccount"> | boolean
-  isSystem?: Prisma.BoolFilter<"LedgerAccount"> | boolean
-  parentId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  createdBy?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  metadata?: Prisma.JsonNullableFilter<"LedgerAccount">
   createdAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
+  category?: Prisma.EnumLedgerAccountCategoryNullableFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
+  description?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  isSystem?: Prisma.BoolFilter<"LedgerAccount"> | boolean
+  ownerId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  pendingBalance?: Prisma.IntFilter<"LedgerAccount"> | number
+  createdBy?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"LedgerAccount">
+  journalLines?: Prisma.JournalLineListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   parent?: Prisma.XOR<Prisma.LedgerAccountNullableScalarRelationFilter, Prisma.LedgerAccountWhereInput> | null
   children?: Prisma.LedgerAccountListRelationFilter
-  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
-  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
-  journalLines?: Prisma.JournalLineListRelationFilter
   ledgerEntries?: Prisma.LedgerEntryListRelationFilter
-}, "id" | "walletId" | "code" | "ownerType_ownerId_code">
+  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
+}, "id" | "code" | "walletId" | "ownerType_ownerId_code">
 
 export type LedgerAccountOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
-  walletId?: Prisma.SortOrderInput | Prisma.SortOrder
-  code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  category?: Prisma.SortOrderInput | Prisma.SortOrder
-  ownerType?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   balance?: Prisma.SortOrder
-  pendingBalance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  isSystem?: Prisma.SortOrder
-  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrderInput | Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  ownerType?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pendingBalance?: Prisma.SortOrder
+  walletId?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.LedgerAccountCountOrderByAggregateInput
   _avg?: Prisma.LedgerAccountAvgOrderByAggregateInput
   _max?: Prisma.LedgerAccountMaxOrderByAggregateInput
@@ -440,199 +440,199 @@ export type LedgerAccountScalarWhereWithAggregatesInput = {
   NOT?: Prisma.LedgerAccountScalarWhereWithAggregatesInput | Prisma.LedgerAccountScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LedgerAccount"> | string
   organizationId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
-  walletId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
-  code?: Prisma.StringWithAggregatesFilter<"LedgerAccount"> | string
   name?: Prisma.StringWithAggregatesFilter<"LedgerAccount"> | string
-  description?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
+  code?: Prisma.StringWithAggregatesFilter<"LedgerAccount"> | string
   type?: Prisma.EnumLedgerAccountTypeWithAggregatesFilter<"LedgerAccount"> | $Enums.LedgerAccountType
-  category?: Prisma.EnumLedgerAccountCategoryNullableWithAggregatesFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeWithAggregatesFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
   balance?: Prisma.IntWithAggregatesFilter<"LedgerAccount"> | number
-  pendingBalance?: Prisma.IntWithAggregatesFilter<"LedgerAccount"> | number
   currency?: Prisma.StringWithAggregatesFilter<"LedgerAccount"> | string
   isActive?: Prisma.BoolWithAggregatesFilter<"LedgerAccount"> | boolean
-  isSystem?: Prisma.BoolWithAggregatesFilter<"LedgerAccount"> | boolean
-  parentId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
-  createdBy?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
-  metadata?: Prisma.JsonNullableWithAggregatesFilter<"LedgerAccount">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LedgerAccount"> | Date | string
+  category?: Prisma.EnumLedgerAccountCategoryNullableWithAggregatesFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
+  description?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
+  isSystem?: Prisma.BoolWithAggregatesFilter<"LedgerAccount"> | boolean
+  ownerId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeWithAggregatesFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
+  pendingBalance?: Prisma.IntWithAggregatesFilter<"LedgerAccount"> | number
+  walletId?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
+  createdBy?: Prisma.StringNullableWithAggregatesFilter<"LedgerAccount"> | string | null
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"LedgerAccount">
 }
 
 export type LedgerAccountCreateInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
   parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
   children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
-  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUncheckedCreateInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
+  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
   parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
-  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
+  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountCreateManyInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type LedgerAccountUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type LedgerAccountUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type LedgerAccountListRelationFilter = {
@@ -659,24 +659,24 @@ export type LedgerAccountOwnerTypeOwnerIdCodeCompoundUniqueInput = {
 export type LedgerAccountCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  walletId?: Prisma.SortOrder
-  code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  ownerType?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
   balance?: Prisma.SortOrder
-  pendingBalance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  isSystem?: Prisma.SortOrder
-  parentId?: Prisma.SortOrder
-  createdBy?: Prisma.SortOrder
-  metadata?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  ownerType?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  pendingBalance?: Prisma.SortOrder
+  walletId?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
+  metadata?: Prisma.SortOrder
 }
 
 export type LedgerAccountAvgOrderByAggregateInput = {
@@ -687,45 +687,45 @@ export type LedgerAccountAvgOrderByAggregateInput = {
 export type LedgerAccountMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  walletId?: Prisma.SortOrder
-  code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  ownerType?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
   balance?: Prisma.SortOrder
-  pendingBalance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  isSystem?: Prisma.SortOrder
-  parentId?: Prisma.SortOrder
-  createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  ownerType?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  pendingBalance?: Prisma.SortOrder
+  walletId?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
 }
 
 export type LedgerAccountMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
-  walletId?: Prisma.SortOrder
-  code?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  code?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  category?: Prisma.SortOrder
-  ownerType?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
   balance?: Prisma.SortOrder
-  pendingBalance?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
-  isSystem?: Prisma.SortOrder
-  parentId?: Prisma.SortOrder
-  createdBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  isSystem?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  ownerType?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
+  pendingBalance?: Prisma.SortOrder
+  walletId?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrder
 }
 
 export type LedgerAccountSumOrderByAggregateInput = {
@@ -896,54 +896,54 @@ export type LedgerAccountUpdateOneRequiredWithoutJournalLinesNestedInput = {
 
 export type LedgerAccountCreateWithoutOrganizationInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
   parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
   children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
-  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUncheckedCreateWithoutOrganizationInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
+  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountCreateOrConnectWithoutOrganizationInput = {
@@ -978,75 +978,75 @@ export type LedgerAccountScalarWhereInput = {
   NOT?: Prisma.LedgerAccountScalarWhereInput | Prisma.LedgerAccountScalarWhereInput[]
   id?: Prisma.StringFilter<"LedgerAccount"> | string
   organizationId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  walletId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  code?: Prisma.StringFilter<"LedgerAccount"> | string
   name?: Prisma.StringFilter<"LedgerAccount"> | string
-  description?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  code?: Prisma.StringFilter<"LedgerAccount"> | string
   type?: Prisma.EnumLedgerAccountTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountType
-  category?: Prisma.EnumLedgerAccountCategoryNullableFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
   balance?: Prisma.IntFilter<"LedgerAccount"> | number
-  pendingBalance?: Prisma.IntFilter<"LedgerAccount"> | number
   currency?: Prisma.StringFilter<"LedgerAccount"> | string
   isActive?: Prisma.BoolFilter<"LedgerAccount"> | boolean
-  isSystem?: Prisma.BoolFilter<"LedgerAccount"> | boolean
-  parentId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  createdBy?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
-  metadata?: Prisma.JsonNullableFilter<"LedgerAccount">
   createdAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LedgerAccount"> | Date | string
+  category?: Prisma.EnumLedgerAccountCategoryNullableFilter<"LedgerAccount"> | $Enums.LedgerAccountCategory | null
+  description?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  isSystem?: Prisma.BoolFilter<"LedgerAccount"> | boolean
+  ownerId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFilter<"LedgerAccount"> | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  pendingBalance?: Prisma.IntFilter<"LedgerAccount"> | number
+  walletId?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  createdBy?: Prisma.StringNullableFilter<"LedgerAccount"> | string | null
+  metadata?: Prisma.JsonNullableFilter<"LedgerAccount">
 }
 
 export type LedgerAccountCreateWithoutWalletInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
   parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
   children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
-  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutAccountInput
 }
 
 export type LedgerAccountUncheckedCreateWithoutWalletInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
+  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutAccountInput
 }
 
@@ -1068,106 +1068,106 @@ export type LedgerAccountUpdateToOneWithWhereWithoutWalletInput = {
 
 export type LedgerAccountUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
   parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
-  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
+  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type LedgerAccountCreateWithoutChildrenInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
+  parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUncheckedCreateWithoutChildrenInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountCreateOrConnectWithoutChildrenInput = {
@@ -1177,54 +1177,54 @@ export type LedgerAccountCreateOrConnectWithoutChildrenInput = {
 
 export type LedgerAccountCreateWithoutParentInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
+  children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUncheckedCreateWithoutParentInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
-  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
+  children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountCreateOrConnectWithoutParentInput = {
@@ -1250,54 +1250,54 @@ export type LedgerAccountUpdateToOneWithWhereWithoutChildrenInput = {
 
 export type LedgerAccountUpdateWithoutChildrenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
+  parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateWithoutChildrenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUpsertWithWhereUniqueWithoutParentInput = {
@@ -1318,54 +1318,54 @@ export type LedgerAccountUpdateManyWithWhereWithoutParentInput = {
 
 export type LedgerAccountCreateWithoutLedgerEntriesInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
   parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
   children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
   wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
-  journalLines?: Prisma.JournalLineCreateNestedManyWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUncheckedCreateWithoutLedgerEntriesInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
   children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
-  journalLines?: Prisma.JournalLineUncheckedCreateNestedManyWithoutLedgerAccountInput
 }
 
 export type LedgerAccountCreateOrConnectWithoutLedgerEntriesInput = {
@@ -1386,106 +1386,106 @@ export type LedgerAccountUpdateToOneWithWhereWithoutLedgerEntriesInput = {
 
 export type LedgerAccountUpdateWithoutLedgerEntriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
   parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
   wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
-  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateWithoutLedgerEntriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
   children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
-  journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountCreateWithoutJournalLinesInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
   parent?: Prisma.LedgerAccountCreateNestedOneWithoutChildrenInput
   children?: Prisma.LedgerAccountCreateNestedManyWithoutParentInput
-  organization?: Prisma.OrganizationCreateNestedOneWithoutLedgerAccountsInput
-  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
   ledgerEntries?: Prisma.LedgerEntryCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountUncheckedCreateWithoutJournalLinesInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   children?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutParentInput
-  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedCreateNestedManyWithoutAccountInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutLedgerAccountInput
 }
 
 export type LedgerAccountCreateOrConnectWithoutJournalLinesInput = {
@@ -1506,246 +1506,246 @@ export type LedgerAccountUpdateToOneWithWhereWithoutJournalLinesInput = {
 
 export type LedgerAccountUpdateWithoutJournalLinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
   parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateWithoutJournalLinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountCreateManyOrganizationInput = {
   id?: string
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: string | null
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  parentId?: string | null
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type LedgerAccountUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
   parent?: Prisma.LedgerAccountUpdateOneWithoutChildrenNestedInput
   children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
-  journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
+  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type LedgerAccountCreateManyParentInput = {
   id?: string
   organizationId?: string | null
-  walletId?: string | null
-  code: string
   name: string
-  description?: string | null
+  code: string
   type: $Enums.LedgerAccountType
-  category?: $Enums.LedgerAccountCategory | null
-  ownerType?: $Enums.LedgerAccountOwnerType
-  ownerId?: string | null
   balance?: number
-  pendingBalance?: number
   currency?: string
   isActive?: boolean
-  isSystem?: boolean
-  createdBy?: string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  category?: $Enums.LedgerAccountCategory | null
+  description?: string | null
+  isSystem?: boolean
+  ownerId?: string | null
+  ownerType?: $Enums.LedgerAccountOwnerType
+  pendingBalance?: number
+  walletId?: string | null
+  createdBy?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type LedgerAccountUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
-  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
-  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUpdateManyWithoutLedgerAccountNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutLedgerAccountsNestedInput
+  children?: Prisma.LedgerAccountUpdateManyWithoutParentNestedInput
   ledgerEntries?: Prisma.LedgerEntryUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
-  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   journalLines?: Prisma.JournalLineUncheckedUpdateManyWithoutLedgerAccountNestedInput
+  children?: Prisma.LedgerAccountUncheckedUpdateManyWithoutParentNestedInput
   ledgerEntries?: Prisma.LedgerEntryUncheckedUpdateManyWithoutAccountNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutLedgerAccountNestedInput
 }
 
 export type LedgerAccountUncheckedUpdateManyWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  code?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  code?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumLedgerAccountTypeFieldUpdateOperationsInput | $Enums.LedgerAccountType
-  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
-  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   balance?: Prisma.IntFieldUpdateOperationsInput | number
-  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.NullableEnumLedgerAccountCategoryFieldUpdateOperationsInput | $Enums.LedgerAccountCategory | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isSystem?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerType?: Prisma.EnumLedgerAccountOwnerTypeFieldUpdateOperationsInput | $Enums.LedgerAccountOwnerType
+  pendingBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  walletId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -1754,14 +1754,14 @@ export type LedgerAccountUncheckedUpdateManyWithoutParentInput = {
  */
 
 export type LedgerAccountCountOutputType = {
-  children: number
   journalLines: number
+  children: number
   ledgerEntries: number
 }
 
 export type LedgerAccountCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  children?: boolean | LedgerAccountCountOutputTypeCountChildrenArgs
   journalLines?: boolean | LedgerAccountCountOutputTypeCountJournalLinesArgs
+  children?: boolean | LedgerAccountCountOutputTypeCountChildrenArgs
   ledgerEntries?: boolean | LedgerAccountCountOutputTypeCountLedgerEntriesArgs
 }
 
@@ -1778,15 +1778,15 @@ export type LedgerAccountCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
 /**
  * LedgerAccountCountOutputType without action
  */
-export type LedgerAccountCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.LedgerAccountWhereInput
+export type LedgerAccountCountOutputTypeCountJournalLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JournalLineWhereInput
 }
 
 /**
  * LedgerAccountCountOutputType without action
  */
-export type LedgerAccountCountOutputTypeCountJournalLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.JournalLineWhereInput
+export type LedgerAccountCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LedgerAccountWhereInput
 }
 
 /**
@@ -1800,156 +1800,156 @@ export type LedgerAccountCountOutputTypeCountLedgerEntriesArgs<ExtArgs extends r
 export type LedgerAccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
-  walletId?: boolean
-  code?: boolean
   name?: boolean
-  description?: boolean
+  code?: boolean
   type?: boolean
-  category?: boolean
-  ownerType?: boolean
-  ownerId?: boolean
   balance?: boolean
-  pendingBalance?: boolean
   currency?: boolean
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: boolean
-  createdBy?: boolean
-  metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  category?: boolean
+  description?: boolean
+  isSystem?: boolean
+  ownerId?: boolean
+  ownerType?: boolean
+  parentId?: boolean
+  pendingBalance?: boolean
+  walletId?: boolean
+  createdBy?: boolean
+  metadata?: boolean
+  journalLines?: boolean | Prisma.LedgerAccount$journalLinesArgs<ExtArgs>
+  organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
   parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
   children?: boolean | Prisma.LedgerAccount$childrenArgs<ExtArgs>
-  organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
-  wallet?: boolean | Prisma.LedgerAccount$walletArgs<ExtArgs>
-  journalLines?: boolean | Prisma.LedgerAccount$journalLinesArgs<ExtArgs>
   ledgerEntries?: boolean | Prisma.LedgerAccount$ledgerEntriesArgs<ExtArgs>
+  wallet?: boolean | Prisma.LedgerAccount$walletArgs<ExtArgs>
   _count?: boolean | Prisma.LedgerAccountCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ledgerAccount"]>
 
 export type LedgerAccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
-  walletId?: boolean
-  code?: boolean
   name?: boolean
-  description?: boolean
+  code?: boolean
   type?: boolean
-  category?: boolean
-  ownerType?: boolean
-  ownerId?: boolean
   balance?: boolean
-  pendingBalance?: boolean
   currency?: boolean
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: boolean
-  createdBy?: boolean
-  metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
+  category?: boolean
+  description?: boolean
+  isSystem?: boolean
+  ownerId?: boolean
+  ownerType?: boolean
+  parentId?: boolean
+  pendingBalance?: boolean
+  walletId?: boolean
+  createdBy?: boolean
+  metadata?: boolean
   organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
+  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
 }, ExtArgs["result"]["ledgerAccount"]>
 
 export type LedgerAccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   organizationId?: boolean
-  walletId?: boolean
-  code?: boolean
   name?: boolean
-  description?: boolean
+  code?: boolean
   type?: boolean
-  category?: boolean
-  ownerType?: boolean
-  ownerId?: boolean
   balance?: boolean
-  pendingBalance?: boolean
   currency?: boolean
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: boolean
-  createdBy?: boolean
-  metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
+  category?: boolean
+  description?: boolean
+  isSystem?: boolean
+  ownerId?: boolean
+  ownerType?: boolean
+  parentId?: boolean
+  pendingBalance?: boolean
+  walletId?: boolean
+  createdBy?: boolean
+  metadata?: boolean
   organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
+  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
 }, ExtArgs["result"]["ledgerAccount"]>
 
 export type LedgerAccountSelectScalar = {
   id?: boolean
   organizationId?: boolean
-  walletId?: boolean
-  code?: boolean
   name?: boolean
-  description?: boolean
+  code?: boolean
   type?: boolean
-  category?: boolean
-  ownerType?: boolean
-  ownerId?: boolean
   balance?: boolean
-  pendingBalance?: boolean
   currency?: boolean
   isActive?: boolean
-  isSystem?: boolean
-  parentId?: boolean
-  createdBy?: boolean
-  metadata?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  category?: boolean
+  description?: boolean
+  isSystem?: boolean
+  ownerId?: boolean
+  ownerType?: boolean
+  parentId?: boolean
+  pendingBalance?: boolean
+  walletId?: boolean
+  createdBy?: boolean
+  metadata?: boolean
 }
 
-export type LedgerAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "walletId" | "code" | "name" | "description" | "type" | "category" | "ownerType" | "ownerId" | "balance" | "pendingBalance" | "currency" | "isActive" | "isSystem" | "parentId" | "createdBy" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["ledgerAccount"]>
+export type LedgerAccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "name" | "code" | "type" | "balance" | "currency" | "isActive" | "createdAt" | "updatedAt" | "category" | "description" | "isSystem" | "ownerId" | "ownerType" | "parentId" | "pendingBalance" | "walletId" | "createdBy" | "metadata", ExtArgs["result"]["ledgerAccount"]>
 export type LedgerAccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  journalLines?: boolean | Prisma.LedgerAccount$journalLinesArgs<ExtArgs>
+  organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
   parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
   children?: boolean | Prisma.LedgerAccount$childrenArgs<ExtArgs>
-  organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
-  wallet?: boolean | Prisma.LedgerAccount$walletArgs<ExtArgs>
-  journalLines?: boolean | Prisma.LedgerAccount$journalLinesArgs<ExtArgs>
   ledgerEntries?: boolean | Prisma.LedgerAccount$ledgerEntriesArgs<ExtArgs>
+  wallet?: boolean | Prisma.LedgerAccount$walletArgs<ExtArgs>
   _count?: boolean | Prisma.LedgerAccountCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LedgerAccountIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
   organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
+  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
 }
 export type LedgerAccountIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
   organization?: boolean | Prisma.LedgerAccount$organizationArgs<ExtArgs>
+  parent?: boolean | Prisma.LedgerAccount$parentArgs<ExtArgs>
 }
 
 export type $LedgerAccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "LedgerAccount"
   objects: {
+    journalLines: Prisma.$JournalLinePayload<ExtArgs>[]
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
     parent: Prisma.$LedgerAccountPayload<ExtArgs> | null
     children: Prisma.$LedgerAccountPayload<ExtArgs>[]
-    organization: Prisma.$OrganizationPayload<ExtArgs> | null
-    wallet: Prisma.$WalletPayload<ExtArgs> | null
-    journalLines: Prisma.$JournalLinePayload<ExtArgs>[]
     ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
+    wallet: Prisma.$WalletPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     organizationId: string | null
-    walletId: string | null
-    code: string
     name: string
-    description: string | null
+    code: string
     type: $Enums.LedgerAccountType
-    category: $Enums.LedgerAccountCategory | null
-    ownerType: $Enums.LedgerAccountOwnerType
-    ownerId: string | null
     balance: number
-    pendingBalance: number
     currency: string
     isActive: boolean
-    isSystem: boolean
-    parentId: string | null
-    createdBy: string | null
-    metadata: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
+    category: $Enums.LedgerAccountCategory | null
+    description: string | null
+    isSystem: boolean
+    ownerId: string | null
+    ownerType: $Enums.LedgerAccountOwnerType
+    parentId: string | null
+    pendingBalance: number
+    walletId: string | null
+    createdBy: string | null
+    metadata: runtime.JsonValue | null
   }, ExtArgs["result"]["ledgerAccount"]>
   composites: {}
 }
@@ -2344,12 +2344,12 @@ readonly fields: LedgerAccountFieldRefs;
  */
 export interface Prisma__LedgerAccountClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  journalLines<T extends Prisma.LedgerAccount$journalLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$journalLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JournalLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organization<T extends Prisma.LedgerAccount$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.LedgerAccount$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$parentArgs<ExtArgs>>): Prisma.Prisma__LedgerAccountClient<runtime.Types.Result.GetResult<Prisma.$LedgerAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.LedgerAccount$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  organization<T extends Prisma.LedgerAccount$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  wallet<T extends Prisma.LedgerAccount$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$walletArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  journalLines<T extends Prisma.LedgerAccount$journalLinesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$journalLinesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JournalLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ledgerEntries<T extends Prisma.LedgerAccount$ledgerEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  wallet<T extends Prisma.LedgerAccount$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LedgerAccount$walletArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2381,24 +2381,24 @@ export interface Prisma__LedgerAccountClient<T, Null = never, ExtArgs extends ru
 export interface LedgerAccountFieldRefs {
   readonly id: Prisma.FieldRef<"LedgerAccount", 'String'>
   readonly organizationId: Prisma.FieldRef<"LedgerAccount", 'String'>
-  readonly walletId: Prisma.FieldRef<"LedgerAccount", 'String'>
-  readonly code: Prisma.FieldRef<"LedgerAccount", 'String'>
   readonly name: Prisma.FieldRef<"LedgerAccount", 'String'>
-  readonly description: Prisma.FieldRef<"LedgerAccount", 'String'>
+  readonly code: Prisma.FieldRef<"LedgerAccount", 'String'>
   readonly type: Prisma.FieldRef<"LedgerAccount", 'LedgerAccountType'>
-  readonly category: Prisma.FieldRef<"LedgerAccount", 'LedgerAccountCategory'>
-  readonly ownerType: Prisma.FieldRef<"LedgerAccount", 'LedgerAccountOwnerType'>
-  readonly ownerId: Prisma.FieldRef<"LedgerAccount", 'String'>
   readonly balance: Prisma.FieldRef<"LedgerAccount", 'Int'>
-  readonly pendingBalance: Prisma.FieldRef<"LedgerAccount", 'Int'>
   readonly currency: Prisma.FieldRef<"LedgerAccount", 'String'>
   readonly isActive: Prisma.FieldRef<"LedgerAccount", 'Boolean'>
-  readonly isSystem: Prisma.FieldRef<"LedgerAccount", 'Boolean'>
-  readonly parentId: Prisma.FieldRef<"LedgerAccount", 'String'>
-  readonly createdBy: Prisma.FieldRef<"LedgerAccount", 'String'>
-  readonly metadata: Prisma.FieldRef<"LedgerAccount", 'Json'>
   readonly createdAt: Prisma.FieldRef<"LedgerAccount", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LedgerAccount", 'DateTime'>
+  readonly category: Prisma.FieldRef<"LedgerAccount", 'LedgerAccountCategory'>
+  readonly description: Prisma.FieldRef<"LedgerAccount", 'String'>
+  readonly isSystem: Prisma.FieldRef<"LedgerAccount", 'Boolean'>
+  readonly ownerId: Prisma.FieldRef<"LedgerAccount", 'String'>
+  readonly ownerType: Prisma.FieldRef<"LedgerAccount", 'LedgerAccountOwnerType'>
+  readonly parentId: Prisma.FieldRef<"LedgerAccount", 'String'>
+  readonly pendingBalance: Prisma.FieldRef<"LedgerAccount", 'Int'>
+  readonly walletId: Prisma.FieldRef<"LedgerAccount", 'String'>
+  readonly createdBy: Prisma.FieldRef<"LedgerAccount", 'String'>
+  readonly metadata: Prisma.FieldRef<"LedgerAccount", 'Json'>
 }
     
 
@@ -2800,6 +2800,49 @@ export type LedgerAccountDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * LedgerAccount.journalLines
+ */
+export type LedgerAccount$journalLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JournalLine
+   */
+  select?: Prisma.JournalLineSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JournalLine
+   */
+  omit?: Prisma.JournalLineOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JournalLineInclude<ExtArgs> | null
+  where?: Prisma.JournalLineWhereInput
+  orderBy?: Prisma.JournalLineOrderByWithRelationInput | Prisma.JournalLineOrderByWithRelationInput[]
+  cursor?: Prisma.JournalLineWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JournalLineScalarFieldEnum | Prisma.JournalLineScalarFieldEnum[]
+}
+
+/**
+ * LedgerAccount.organization
+ */
+export type LedgerAccount$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
+}
+
+/**
  * LedgerAccount.parent
  */
 export type LedgerAccount$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2843,68 +2886,6 @@ export type LedgerAccount$childrenArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * LedgerAccount.organization
- */
-export type LedgerAccount$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Organization
-   */
-  select?: Prisma.OrganizationSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Organization
-   */
-  omit?: Prisma.OrganizationOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.OrganizationInclude<ExtArgs> | null
-  where?: Prisma.OrganizationWhereInput
-}
-
-/**
- * LedgerAccount.wallet
- */
-export type LedgerAccount$walletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Wallet
-   */
-  select?: Prisma.WalletSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Wallet
-   */
-  omit?: Prisma.WalletOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.WalletInclude<ExtArgs> | null
-  where?: Prisma.WalletWhereInput
-}
-
-/**
- * LedgerAccount.journalLines
- */
-export type LedgerAccount$journalLinesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the JournalLine
-   */
-  select?: Prisma.JournalLineSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the JournalLine
-   */
-  omit?: Prisma.JournalLineOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.JournalLineInclude<ExtArgs> | null
-  where?: Prisma.JournalLineWhereInput
-  orderBy?: Prisma.JournalLineOrderByWithRelationInput | Prisma.JournalLineOrderByWithRelationInput[]
-  cursor?: Prisma.JournalLineWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.JournalLineScalarFieldEnum | Prisma.JournalLineScalarFieldEnum[]
-}
-
-/**
  * LedgerAccount.ledgerEntries
  */
 export type LedgerAccount$ledgerEntriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2926,6 +2907,25 @@ export type LedgerAccount$ledgerEntriesArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.LedgerEntryScalarFieldEnum | Prisma.LedgerEntryScalarFieldEnum[]
+}
+
+/**
+ * LedgerAccount.wallet
+ */
+export type LedgerAccount$walletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Wallet
+   */
+  select?: Prisma.WalletSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Wallet
+   */
+  omit?: Prisma.WalletOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WalletInclude<ExtArgs> | null
+  where?: Prisma.WalletWhereInput
 }
 
 /**

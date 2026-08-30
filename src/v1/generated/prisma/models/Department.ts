@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums.js"
-import type * as Prisma from "../internal/prismaNamespace.js"
+import type * as $Enums from "../enums"
+import type * as Prisma from "../internal/prismaNamespace"
 
 /**
  * Model Department
@@ -29,6 +29,7 @@ export type DepartmentMinAggregateOutputType = {
   facultyId: string | null
   name: string | null
   code: string | null
+  logo: string | null
   promotionType: $Enums.PromotionType | null
   status: $Enums.DepartmentStatus | null
   createdBy: string | null
@@ -42,6 +43,7 @@ export type DepartmentMaxAggregateOutputType = {
   facultyId: string | null
   name: string | null
   code: string | null
+  logo: string | null
   promotionType: $Enums.PromotionType | null
   status: $Enums.DepartmentStatus | null
   createdBy: string | null
@@ -55,6 +57,7 @@ export type DepartmentCountAggregateOutputType = {
   facultyId: number
   name: number
   code: number
+  logo: number
   promotionType: number
   status: number
   createdBy: number
@@ -70,6 +73,7 @@ export type DepartmentMinAggregateInputType = {
   facultyId?: true
   name?: true
   code?: true
+  logo?: true
   promotionType?: true
   status?: true
   createdBy?: true
@@ -83,6 +87,7 @@ export type DepartmentMaxAggregateInputType = {
   facultyId?: true
   name?: true
   code?: true
+  logo?: true
   promotionType?: true
   status?: true
   createdBy?: true
@@ -96,6 +101,7 @@ export type DepartmentCountAggregateInputType = {
   facultyId?: true
   name?: true
   code?: true
+  logo?: true
   promotionType?: true
   status?: true
   createdBy?: true
@@ -182,6 +188,7 @@ export type DepartmentGroupByOutputType = {
   facultyId: string
   name: string
   code: string
+  logo: string | null
   promotionType: $Enums.PromotionType
   status: $Enums.DepartmentStatus
   createdBy: string | null
@@ -216,18 +223,20 @@ export type DepartmentWhereInput = {
   facultyId?: Prisma.StringFilter<"Department"> | string
   name?: Prisma.StringFilter<"Department"> | string
   code?: Prisma.StringFilter<"Department"> | string
+  logo?: Prisma.StringNullableFilter<"Department"> | string | null
   promotionType?: Prisma.EnumPromotionTypeFilter<"Department"> | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFilter<"Department"> | $Enums.DepartmentStatus
   createdBy?: Prisma.StringNullableFilter<"Department"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"Department"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Department"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Department"> | Date | string
-  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
   academicLevels?: Prisma.AcademicLevelListRelationFilter
-  organizations?: Prisma.OrganizationListRelationFilter
-  studentProfiles?: Prisma.StudentProfileListRelationFilter
-  students?: Prisma.StudentAcademicRecordListRelationFilter
+  academicSessions?: Prisma.AcademicSessionListRelationFilter
   admins?: Prisma.AdminListRelationFilter
+  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
+  organizations?: Prisma.OrganizationListRelationFilter
+  students?: Prisma.StudentAcademicRecordListRelationFilter
+  studentProfiles?: Prisma.StudentProfileListRelationFilter
 }
 
 export type DepartmentOrderByWithRelationInput = {
@@ -235,18 +244,20 @@ export type DepartmentOrderByWithRelationInput = {
   facultyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
   promotionType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  faculty?: Prisma.FacultyOrderByWithRelationInput
   academicLevels?: Prisma.AcademicLevelOrderByRelationAggregateInput
-  organizations?: Prisma.OrganizationOrderByRelationAggregateInput
-  studentProfiles?: Prisma.StudentProfileOrderByRelationAggregateInput
-  students?: Prisma.StudentAcademicRecordOrderByRelationAggregateInput
+  academicSessions?: Prisma.AcademicSessionOrderByRelationAggregateInput
   admins?: Prisma.AdminOrderByRelationAggregateInput
+  faculty?: Prisma.FacultyOrderByWithRelationInput
+  organizations?: Prisma.OrganizationOrderByRelationAggregateInput
+  students?: Prisma.StudentAcademicRecordOrderByRelationAggregateInput
+  studentProfiles?: Prisma.StudentProfileOrderByRelationAggregateInput
 }
 
 export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -258,18 +269,20 @@ export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
   facultyId?: Prisma.StringFilter<"Department"> | string
   name?: Prisma.StringFilter<"Department"> | string
   code?: Prisma.StringFilter<"Department"> | string
+  logo?: Prisma.StringNullableFilter<"Department"> | string | null
   promotionType?: Prisma.EnumPromotionTypeFilter<"Department"> | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFilter<"Department"> | $Enums.DepartmentStatus
   createdBy?: Prisma.StringNullableFilter<"Department"> | string | null
   updatedBy?: Prisma.StringNullableFilter<"Department"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Department"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Department"> | Date | string
-  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
   academicLevels?: Prisma.AcademicLevelListRelationFilter
-  organizations?: Prisma.OrganizationListRelationFilter
-  studentProfiles?: Prisma.StudentProfileListRelationFilter
-  students?: Prisma.StudentAcademicRecordListRelationFilter
+  academicSessions?: Prisma.AcademicSessionListRelationFilter
   admins?: Prisma.AdminListRelationFilter
+  faculty?: Prisma.XOR<Prisma.FacultyScalarRelationFilter, Prisma.FacultyWhereInput>
+  organizations?: Prisma.OrganizationListRelationFilter
+  students?: Prisma.StudentAcademicRecordListRelationFilter
+  studentProfiles?: Prisma.StudentProfileListRelationFilter
 }, "id" | "facultyId_code">
 
 export type DepartmentOrderByWithAggregationInput = {
@@ -277,6 +290,7 @@ export type DepartmentOrderByWithAggregationInput = {
   facultyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  logo?: Prisma.SortOrderInput | Prisma.SortOrder
   promotionType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -296,6 +310,7 @@ export type DepartmentScalarWhereWithAggregatesInput = {
   facultyId?: Prisma.StringWithAggregatesFilter<"Department"> | string
   name?: Prisma.StringWithAggregatesFilter<"Department"> | string
   code?: Prisma.StringWithAggregatesFilter<"Department"> | string
+  logo?: Prisma.StringNullableWithAggregatesFilter<"Department"> | string | null
   promotionType?: Prisma.EnumPromotionTypeWithAggregatesFilter<"Department"> | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusWithAggregatesFilter<"Department"> | $Enums.DepartmentStatus
   createdBy?: Prisma.StringNullableWithAggregatesFilter<"Department"> | string | null
@@ -308,18 +323,20 @@ export type DepartmentCreateInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
-  organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateInput = {
@@ -327,6 +344,7 @@ export type DepartmentUncheckedCreateInput = {
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -334,28 +352,31 @@ export type DepartmentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
-  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
-  organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
+  organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateInput = {
@@ -363,6 +384,7 @@ export type DepartmentUncheckedUpdateInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -370,10 +392,11 @@ export type DepartmentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
-  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateManyInput = {
@@ -381,6 +404,7 @@ export type DepartmentCreateManyInput = {
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -393,6 +417,7 @@ export type DepartmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -406,6 +431,7 @@ export type DepartmentUncheckedUpdateManyInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -434,6 +460,7 @@ export type DepartmentCountOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   promotionType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -447,6 +474,7 @@ export type DepartmentMaxOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   promotionType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -460,6 +488,7 @@ export type DepartmentMinOrderByAggregateInput = {
   facultyId?: Prisma.SortOrder
   name?: Prisma.SortOrder
   code?: Prisma.SortOrder
+  logo?: Prisma.SortOrder
   promotionType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -542,6 +571,22 @@ export type DepartmentUpdateOneRequiredWithoutAcademicLevelsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutAcademicLevelsInput, Prisma.DepartmentUpdateWithoutAcademicLevelsInput>, Prisma.DepartmentUncheckedUpdateWithoutAcademicLevelsInput>
 }
 
+export type DepartmentCreateNestedOneWithoutAcademicSessionsInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutAcademicSessionsInput, Prisma.DepartmentUncheckedCreateWithoutAcademicSessionsInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutAcademicSessionsInput
+  connect?: Prisma.DepartmentWhereUniqueInput
+}
+
+export type DepartmentUpdateOneWithoutAcademicSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.DepartmentCreateWithoutAcademicSessionsInput, Prisma.DepartmentUncheckedCreateWithoutAcademicSessionsInput>
+  connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutAcademicSessionsInput
+  upsert?: Prisma.DepartmentUpsertWithoutAcademicSessionsInput
+  disconnect?: Prisma.DepartmentWhereInput | boolean
+  delete?: Prisma.DepartmentWhereInput | boolean
+  connect?: Prisma.DepartmentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DepartmentUpdateToOneWithWhereWithoutAcademicSessionsInput, Prisma.DepartmentUpdateWithoutAcademicSessionsInput>, Prisma.DepartmentUncheckedUpdateWithoutAcademicSessionsInput>
+}
+
 export type DepartmentCreateNestedOneWithoutStudentProfilesInput = {
   create?: Prisma.XOR<Prisma.DepartmentCreateWithoutStudentProfilesInput, Prisma.DepartmentUncheckedCreateWithoutStudentProfilesInput>
   connectOrCreate?: Prisma.DepartmentCreateOrConnectWithoutStudentProfilesInput
@@ -606,6 +651,7 @@ export type DepartmentCreateWithoutFacultyInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -613,16 +659,18 @@ export type DepartmentCreateWithoutFacultyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
-  organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutFacultyInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -630,10 +678,11 @@ export type DepartmentUncheckedCreateWithoutFacultyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
-  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutFacultyInput = {
@@ -670,6 +719,7 @@ export type DepartmentScalarWhereInput = {
   facultyId?: Prisma.StringFilter<"Department"> | string
   name?: Prisma.StringFilter<"Department"> | string
   code?: Prisma.StringFilter<"Department"> | string
+  logo?: Prisma.StringNullableFilter<"Department"> | string | null
   promotionType?: Prisma.EnumPromotionTypeFilter<"Department"> | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFilter<"Department"> | $Enums.DepartmentStatus
   createdBy?: Prisma.StringNullableFilter<"Department"> | string | null
@@ -682,17 +732,19 @@ export type DepartmentCreateWithoutAcademicLevelsInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
+  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
   faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
   students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
-  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutAcademicLevelsInput = {
@@ -700,16 +752,18 @@ export type DepartmentUncheckedCreateWithoutAcademicLevelsInput = {
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutAcademicLevelsInput = {
@@ -732,17 +786,19 @@ export type DepartmentUpdateWithoutAcademicLevelsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
   faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
   students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutAcademicLevelsInput = {
@@ -750,40 +806,45 @@ export type DepartmentUncheckedUpdateWithoutAcademicLevelsInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
-export type DepartmentCreateWithoutStudentProfilesInput = {
+export type DepartmentCreateWithoutAcademicSessionsInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
+  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
   students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
-  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
 }
 
-export type DepartmentUncheckedCreateWithoutStudentProfilesInput = {
+export type DepartmentUncheckedCreateWithoutAcademicSessionsInput = {
   id?: string
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -791,9 +852,102 @@ export type DepartmentUncheckedCreateWithoutStudentProfilesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
   students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentCreateOrConnectWithoutAcademicSessionsInput = {
+  where: Prisma.DepartmentWhereUniqueInput
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutAcademicSessionsInput, Prisma.DepartmentUncheckedCreateWithoutAcademicSessionsInput>
+}
+
+export type DepartmentUpsertWithoutAcademicSessionsInput = {
+  update: Prisma.XOR<Prisma.DepartmentUpdateWithoutAcademicSessionsInput, Prisma.DepartmentUncheckedUpdateWithoutAcademicSessionsInput>
+  create: Prisma.XOR<Prisma.DepartmentCreateWithoutAcademicSessionsInput, Prisma.DepartmentUncheckedCreateWithoutAcademicSessionsInput>
+  where?: Prisma.DepartmentWhereInput
+}
+
+export type DepartmentUpdateToOneWithWhereWithoutAcademicSessionsInput = {
+  where?: Prisma.DepartmentWhereInput
+  data: Prisma.XOR<Prisma.DepartmentUpdateWithoutAcademicSessionsInput, Prisma.DepartmentUncheckedUpdateWithoutAcademicSessionsInput>
+}
+
+export type DepartmentUpdateWithoutAcademicSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
+  status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
+  organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentUncheckedUpdateWithoutAcademicSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  facultyId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
+  status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
+}
+
+export type DepartmentCreateWithoutStudentProfilesInput = {
+  id?: string
+  name: string
+  code: string
+  logo?: string | null
+  promotionType: $Enums.PromotionType
+  status?: $Enums.DepartmentStatus
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
+  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+}
+
+export type DepartmentUncheckedCreateWithoutStudentProfilesInput = {
+  id?: string
+  facultyId: string
+  name: string
+  code: string
+  logo?: string | null
+  promotionType: $Enums.PromotionType
+  status?: $Enums.DepartmentStatus
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutStudentProfilesInput = {
@@ -816,17 +970,19 @@ export type DepartmentUpdateWithoutStudentProfilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
   students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutStudentProfilesInput = {
@@ -834,6 +990,7 @@ export type DepartmentUncheckedUpdateWithoutStudentProfilesInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -841,26 +998,29 @@ export type DepartmentUncheckedUpdateWithoutStudentProfilesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
   students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutStudentsInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
+  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
   studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
-  admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutStudentsInput = {
@@ -868,6 +1028,7 @@ export type DepartmentUncheckedCreateWithoutStudentsInput = {
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -875,9 +1036,10 @@ export type DepartmentUncheckedCreateWithoutStudentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
   studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
-  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutStudentsInput = {
@@ -900,17 +1062,19 @@ export type DepartmentUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
   studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
-  admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutStudentsInput = {
@@ -918,6 +1082,7 @@ export type DepartmentUncheckedUpdateWithoutStudentsInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -925,26 +1090,29 @@ export type DepartmentUncheckedUpdateWithoutStudentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
   studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
-  admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutOrganizationsInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminCreateNestedManyWithoutDepartmentInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
+  students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutOrganizationsInput = {
@@ -952,6 +1120,7 @@ export type DepartmentUncheckedCreateWithoutOrganizationsInput = {
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -959,9 +1128,10 @@ export type DepartmentUncheckedCreateWithoutOrganizationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
-  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutDepartmentInput
+  students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutOrganizationsInput = {
@@ -984,17 +1154,19 @@ export type DepartmentUpdateWithoutOrganizationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
+  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutOrganizationsInput = {
@@ -1002,6 +1174,7 @@ export type DepartmentUncheckedUpdateWithoutOrganizationsInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1009,26 +1182,29 @@ export type DepartmentUncheckedUpdateWithoutOrganizationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateWithoutAdminsInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
   updatedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   academicLevels?: Prisma.AcademicLevelCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutDepartmentInput
+  faculty: Prisma.FacultyCreateNestedOneWithoutDepartmentsInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
   students?: Prisma.StudentAcademicRecordCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentUncheckedCreateWithoutAdminsInput = {
@@ -1036,6 +1212,7 @@ export type DepartmentUncheckedCreateWithoutAdminsInput = {
   facultyId: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -1043,9 +1220,10 @@ export type DepartmentUncheckedCreateWithoutAdminsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedCreateNestedManyWithoutDepartmentInput
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutDepartmentInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDepartmentInput
-  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
   students?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutDepartmentInput
+  studentProfiles?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutDepartmentInput
 }
 
 export type DepartmentCreateOrConnectWithoutAdminsInput = {
@@ -1068,17 +1246,19 @@ export type DepartmentUpdateWithoutAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
+  faculty?: Prisma.FacultyUpdateOneRequiredWithoutDepartmentsNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
   students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutAdminsInput = {
@@ -1086,6 +1266,7 @@ export type DepartmentUncheckedUpdateWithoutAdminsInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1093,15 +1274,17 @@ export type DepartmentUncheckedUpdateWithoutAdminsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
   students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentCreateManyFacultyInput = {
   id?: string
   name: string
   code: string
+  logo?: string | null
   promotionType: $Enums.PromotionType
   status?: $Enums.DepartmentStatus
   createdBy?: string | null
@@ -1114,6 +1297,7 @@ export type DepartmentUpdateWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1121,16 +1305,18 @@ export type DepartmentUpdateWithoutFacultyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUpdateManyWithoutDepartmentNestedInput
-  organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUpdateManyWithoutDepartmentNestedInput
+  organizations?: Prisma.OrganizationUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1138,16 +1324,18 @@ export type DepartmentUncheckedUpdateWithoutFacultyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   academicLevels?: Prisma.AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput
-  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
-  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
-  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutDepartmentNestedInput
   admins?: Prisma.AdminUncheckedUpdateManyWithoutDepartmentNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDepartmentNestedInput
+  students?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutDepartmentNestedInput
+  studentProfiles?: Prisma.StudentProfileUncheckedUpdateManyWithoutDepartmentNestedInput
 }
 
 export type DepartmentUncheckedUpdateManyWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promotionType?: Prisma.EnumPromotionTypeFieldUpdateOperationsInput | $Enums.PromotionType
   status?: Prisma.EnumDepartmentStatusFieldUpdateOperationsInput | $Enums.DepartmentStatus
   createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1163,18 +1351,20 @@ export type DepartmentUncheckedUpdateManyWithoutFacultyInput = {
 
 export type DepartmentCountOutputType = {
   academicLevels: number
-  organizations: number
-  studentProfiles: number
-  students: number
+  academicSessions: number
   admins: number
+  organizations: number
+  students: number
+  studentProfiles: number
 }
 
 export type DepartmentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   academicLevels?: boolean | DepartmentCountOutputTypeCountAcademicLevelsArgs
-  organizations?: boolean | DepartmentCountOutputTypeCountOrganizationsArgs
-  studentProfiles?: boolean | DepartmentCountOutputTypeCountStudentProfilesArgs
-  students?: boolean | DepartmentCountOutputTypeCountStudentsArgs
+  academicSessions?: boolean | DepartmentCountOutputTypeCountAcademicSessionsArgs
   admins?: boolean | DepartmentCountOutputTypeCountAdminsArgs
+  organizations?: boolean | DepartmentCountOutputTypeCountOrganizationsArgs
+  students?: boolean | DepartmentCountOutputTypeCountStudentsArgs
+  studentProfiles?: boolean | DepartmentCountOutputTypeCountStudentProfilesArgs
 }
 
 /**
@@ -1197,15 +1387,22 @@ export type DepartmentCountOutputTypeCountAcademicLevelsArgs<ExtArgs extends run
 /**
  * DepartmentCountOutputType without action
  */
-export type DepartmentCountOutputTypeCountOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.OrganizationWhereInput
+export type DepartmentCountOutputTypeCountAcademicSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AcademicSessionWhereInput
 }
 
 /**
  * DepartmentCountOutputType without action
  */
-export type DepartmentCountOutputTypeCountStudentProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.StudentProfileWhereInput
+export type DepartmentCountOutputTypeCountAdminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminWhereInput
+}
+
+/**
+ * DepartmentCountOutputType without action
+ */
+export type DepartmentCountOutputTypeCountOrganizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**
@@ -1218,8 +1415,8 @@ export type DepartmentCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.T
 /**
  * DepartmentCountOutputType without action
  */
-export type DepartmentCountOutputTypeCountAdminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.AdminWhereInput
+export type DepartmentCountOutputTypeCountStudentProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentProfileWhereInput
 }
 
 
@@ -1228,18 +1425,20 @@ export type DepartmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   facultyId?: boolean
   name?: boolean
   code?: boolean
+  logo?: boolean
   promotionType?: boolean
   status?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
   academicLevels?: boolean | Prisma.Department$academicLevelsArgs<ExtArgs>
-  organizations?: boolean | Prisma.Department$organizationsArgs<ExtArgs>
-  studentProfiles?: boolean | Prisma.Department$studentProfilesArgs<ExtArgs>
-  students?: boolean | Prisma.Department$studentsArgs<ExtArgs>
+  academicSessions?: boolean | Prisma.Department$academicSessionsArgs<ExtArgs>
   admins?: boolean | Prisma.Department$adminsArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  organizations?: boolean | Prisma.Department$organizationsArgs<ExtArgs>
+  students?: boolean | Prisma.Department$studentsArgs<ExtArgs>
+  studentProfiles?: boolean | Prisma.Department$studentProfilesArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["department"]>
 
@@ -1248,6 +1447,7 @@ export type DepartmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   facultyId?: boolean
   name?: boolean
   code?: boolean
+  logo?: boolean
   promotionType?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1262,6 +1462,7 @@ export type DepartmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   facultyId?: boolean
   name?: boolean
   code?: boolean
+  logo?: boolean
   promotionType?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1276,6 +1477,7 @@ export type DepartmentSelectScalar = {
   facultyId?: boolean
   name?: boolean
   code?: boolean
+  logo?: boolean
   promotionType?: boolean
   status?: boolean
   createdBy?: boolean
@@ -1284,14 +1486,15 @@ export type DepartmentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DepartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "facultyId" | "name" | "code" | "promotionType" | "status" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
+export type DepartmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "facultyId" | "name" | "code" | "logo" | "promotionType" | "status" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["department"]>
 export type DepartmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
   academicLevels?: boolean | Prisma.Department$academicLevelsArgs<ExtArgs>
-  organizations?: boolean | Prisma.Department$organizationsArgs<ExtArgs>
-  studentProfiles?: boolean | Prisma.Department$studentProfilesArgs<ExtArgs>
-  students?: boolean | Prisma.Department$studentsArgs<ExtArgs>
+  academicSessions?: boolean | Prisma.Department$academicSessionsArgs<ExtArgs>
   admins?: boolean | Prisma.Department$adminsArgs<ExtArgs>
+  faculty?: boolean | Prisma.FacultyDefaultArgs<ExtArgs>
+  organizations?: boolean | Prisma.Department$organizationsArgs<ExtArgs>
+  students?: boolean | Prisma.Department$studentsArgs<ExtArgs>
+  studentProfiles?: boolean | Prisma.Department$studentProfilesArgs<ExtArgs>
   _count?: boolean | Prisma.DepartmentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1304,18 +1507,20 @@ export type DepartmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $DepartmentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Department"
   objects: {
-    faculty: Prisma.$FacultyPayload<ExtArgs>
     academicLevels: Prisma.$AcademicLevelPayload<ExtArgs>[]
-    organizations: Prisma.$OrganizationPayload<ExtArgs>[]
-    studentProfiles: Prisma.$StudentProfilePayload<ExtArgs>[]
-    students: Prisma.$StudentAcademicRecordPayload<ExtArgs>[]
+    academicSessions: Prisma.$AcademicSessionPayload<ExtArgs>[]
     admins: Prisma.$AdminPayload<ExtArgs>[]
+    faculty: Prisma.$FacultyPayload<ExtArgs>
+    organizations: Prisma.$OrganizationPayload<ExtArgs>[]
+    students: Prisma.$StudentAcademicRecordPayload<ExtArgs>[]
+    studentProfiles: Prisma.$StudentProfilePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     facultyId: string
     name: string
     code: string
+    logo: string | null
     promotionType: $Enums.PromotionType
     status: $Enums.DepartmentStatus
     createdBy: string | null
@@ -1716,12 +1921,13 @@ readonly fields: DepartmentFieldRefs;
  */
 export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  faculty<T extends Prisma.FacultyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacultyDefaultArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   academicLevels<T extends Prisma.Department$academicLevelsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$academicLevelsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AcademicLevelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  organizations<T extends Prisma.Department$organizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$organizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  studentProfiles<T extends Prisma.Department$studentProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$studentProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  students<T extends Prisma.Department$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentAcademicRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  academicSessions<T extends Prisma.Department$academicSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$academicSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AcademicSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   admins<T extends Prisma.Department$adminsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$adminsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  faculty<T extends Prisma.FacultyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.FacultyDefaultArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  organizations<T extends Prisma.Department$organizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$organizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  students<T extends Prisma.Department$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentAcademicRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentProfiles<T extends Prisma.Department$studentProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Department$studentProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1755,6 +1961,7 @@ export interface DepartmentFieldRefs {
   readonly facultyId: Prisma.FieldRef<"Department", 'String'>
   readonly name: Prisma.FieldRef<"Department", 'String'>
   readonly code: Prisma.FieldRef<"Department", 'String'>
+  readonly logo: Prisma.FieldRef<"Department", 'String'>
   readonly promotionType: Prisma.FieldRef<"Department", 'PromotionType'>
   readonly status: Prisma.FieldRef<"Department", 'DepartmentStatus'>
   readonly createdBy: Prisma.FieldRef<"Department", 'String'>
@@ -2186,6 +2393,54 @@ export type Department$academicLevelsArgs<ExtArgs extends runtime.Types.Extensio
 }
 
 /**
+ * Department.academicSessions
+ */
+export type Department$academicSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AcademicSession
+   */
+  select?: Prisma.AcademicSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AcademicSession
+   */
+  omit?: Prisma.AcademicSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AcademicSessionInclude<ExtArgs> | null
+  where?: Prisma.AcademicSessionWhereInput
+  orderBy?: Prisma.AcademicSessionOrderByWithRelationInput | Prisma.AcademicSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AcademicSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AcademicSessionScalarFieldEnum | Prisma.AcademicSessionScalarFieldEnum[]
+}
+
+/**
+ * Department.admins
+ */
+export type Department$adminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Admin
+   */
+  select?: Prisma.AdminSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Admin
+   */
+  omit?: Prisma.AdminOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminInclude<ExtArgs> | null
+  where?: Prisma.AdminWhereInput
+  orderBy?: Prisma.AdminOrderByWithRelationInput | Prisma.AdminOrderByWithRelationInput[]
+  cursor?: Prisma.AdminWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminScalarFieldEnum | Prisma.AdminScalarFieldEnum[]
+}
+
+/**
  * Department.organizations
  */
 export type Department$organizationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2207,30 +2462,6 @@ export type Department$organizationsArgs<ExtArgs extends runtime.Types.Extension
   take?: number
   skip?: number
   distinct?: Prisma.OrganizationScalarFieldEnum | Prisma.OrganizationScalarFieldEnum[]
-}
-
-/**
- * Department.studentProfiles
- */
-export type Department$studentProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentProfile
-   */
-  select?: Prisma.StudentProfileSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentProfile
-   */
-  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentProfileInclude<ExtArgs> | null
-  where?: Prisma.StudentProfileWhereInput
-  orderBy?: Prisma.StudentProfileOrderByWithRelationInput | Prisma.StudentProfileOrderByWithRelationInput[]
-  cursor?: Prisma.StudentProfileWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.StudentProfileScalarFieldEnum | Prisma.StudentProfileScalarFieldEnum[]
 }
 
 /**
@@ -2258,27 +2489,27 @@ export type Department$studentsArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * Department.admins
+ * Department.studentProfiles
  */
-export type Department$adminsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Department$studentProfilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Admin
+   * Select specific fields to fetch from the StudentProfile
    */
-  select?: Prisma.AdminSelect<ExtArgs> | null
+  select?: Prisma.StudentProfileSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Admin
+   * Omit specific fields from the StudentProfile
    */
-  omit?: Prisma.AdminOmit<ExtArgs> | null
+  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.AdminInclude<ExtArgs> | null
-  where?: Prisma.AdminWhereInput
-  orderBy?: Prisma.AdminOrderByWithRelationInput | Prisma.AdminOrderByWithRelationInput[]
-  cursor?: Prisma.AdminWhereUniqueInput
+  include?: Prisma.StudentProfileInclude<ExtArgs> | null
+  where?: Prisma.StudentProfileWhereInput
+  orderBy?: Prisma.StudentProfileOrderByWithRelationInput | Prisma.StudentProfileOrderByWithRelationInput[]
+  cursor?: Prisma.StudentProfileWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.AdminScalarFieldEnum | Prisma.AdminScalarFieldEnum[]
+  distinct?: Prisma.StudentProfileScalarFieldEnum | Prisma.StudentProfileScalarFieldEnum[]
 }
 
 /**

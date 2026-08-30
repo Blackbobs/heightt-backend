@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 
 @Injectable()
 export class EmailService {
@@ -9,84 +10,125 @@ export class EmailService {
 
   /**
    * Send an email using SendLib service
-   * @param to - Recipient email address
-   * @param subject - Email subject
-   * @param html - HTML content of the email
-   * @returns Promise<boolean> - True if sent successfully, false otherwise
    */
-  async sendEmail(to: string, subject: string, html: string): Promise<boolean> {
-    try {
-      const apiKey = this.configService.get('SENDLIB_API_KEY');
-      const fromEmail = this.configService.get('SENDLIB_FROM_EMAIL');
+  async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+    attachments?: Array<{
+      filename: string;
+      contentType?: string;
+      base64Content: string;
+    }>,
+  ): Promise<boolean> {
+    if (attachments && attachments.length > 0) {
+      const sent = await this.trySend(to, subject, html, attachments);
+      if (sent) {
+        return true;
+      }
+      this.logger.warn(
+        `Retrying email to ${to} without attachments after failure`,
+      );
+      return this.trySend(to, subject, html);
+    }
+    return this.trySend(to, subject, html);
+  }
 
-      // Check if API key is configured
+  private async trySend(
+    to: string,
+    subject: string,
+    html: string,
+    attachments?: Array<{
+      filename: string;
+      contentType?: string;
+      base64Content: string;
+    }>,
+  ): Promise<boolean> {
+    try {
+      const apiKey = this.configService.get<string>('SENDLIB_API_KEY');
+      const fromEmail = this.configService.get<string>('SENDLIB_FROM_EMAIL');
+
+      this.logger.debug(
+        `Email configuration: API Key set: ${!!apiKey}, From: ${fromEmail || 'noreply@heightt.com'}`,
+      );
+
       if (!apiKey) {
-        this.logger.error(
-          'SendLib API key not configured. Please set SENDLIB_API_KEY in .env',
+        this.logger.warn(
+          'SendLib API key not configured. Falling back to development mode.',
         );
-        // In development, log the email instead of failing
         if (process.env.NODE_ENV === 'development') {
-          this.logger.warn(`[DEV MODE] Email would be sent to ${to}`);
-          this.logger.debug(`[DEV MODE] Subject: ${subject}`);
-          this.logger.debug(
-            `[DEV MODE] From: ${fromEmail || 'noreply@heightt.com'}`,
-          );
+          this.logger.log(`[DEV MODE] 📧 Email would be sent to ${to}`);
+          this.logger.log(`[DEV MODE] 📧 Subject: ${subject}`);
           return true;
         }
         return false;
       }
 
-      this.logger.log(`Attempting to send email to ${to}`);
-      this.logger.debug(`Using from: ${fromEmail || 'noreply@heightt.com'}`);
+      this.logger.log(`📧 Attempting to send email to ${to}`);
 
-      const response = await fetch('https://sendlib.samueltuoyo.com/api/send', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
+      const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
+
+      const requestBody: Record<string, any> = {
+        from: fromEmail?.trim() || 'noreply@heightt.com',
+        to: to.trim(),
+        subject: subject.trim(),
+        html: html,
+      };
+
+      if (attachments && attachments.length > 0) {
+        requestBody.attachments = attachments.map((a) => ({
+          filename: a.filename,
+          content_type: a.contentType || 'application/pdf',
+          content: a.base64Content,
+        }));
+      }
+
+      this.logger.debug(`Sending to SendLib with from: ${requestBody.from}`);
+
+      const response = await axios.post(
+        'https://sendlib.samueltuoyo.com/api/send',
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${cleanApiKey}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          timeout: 30000,
         },
-        body: JSON.stringify({
-          from: fromEmail || 'noreply@heightt.com',
-          to,
-          subject,
-          html,
-        }),
-      });
+      );
 
-      const responseText = await response.text();
-      this.logger.debug(`SendLib response: ${responseText}`);
+      this.logger.debug(`SendLib response: ${JSON.stringify(response.data)}`);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         this.logger.error(
-          `SendLib error (${response.status}): ${responseText}`,
+          `SendLib error (${response.status}): ${JSON.stringify(response.data)}`,
         );
         return false;
       }
 
       this.logger.log(`✅ Email sent successfully to ${to}`);
       return true;
-    } catch (error) {
-      this.logger.error(`❌ Error sending email: ${error.message}`);
+    } catch (error: any) {
+      this.logger.error(`❌ Error sending email to ${to}: ${error.message}`);
+
       if (process.env.NODE_ENV === 'development') {
-        this.logger.warn(`[DEV MODE] Email would have been sent to ${to}`);
-        return true; // Don't fail in development
+        this.logger.warn(`[DEV MODE] 📧 Email would have been sent to ${to}`);
+        this.logger.warn(`[DEV MODE] 📧 Subject: ${subject}`);
+        return true;
       }
       return false;
     }
   }
 
   /**
-   * Send email verification link to user
-   * @param email - User's email address
-   * @param username - User's username
-   * @returns Promise<boolean> - True if sent successfully
+   * Send verification email with a pre-generated link
    */
-  async sendVerificationEmail(
+  async sendVerificationEmailWithLink(
     email: string,
     username: string,
+    verificationLink: string,
   ): Promise<boolean> {
-    const verificationLink = `${this.configService.get('FRONTEND_URL')}/verify-email?email=${encodeURIComponent(email)}`;
-
     const html = this.getVerificationEmailTemplate(username, verificationLink);
 
     const result = await this.sendEmail(
@@ -96,7 +138,7 @@ export class EmailService {
     );
 
     if (result) {
-      this.logger.log(`Verification email sent to ${email}`);
+      this.logger.log(`Verification email with link sent to ${email}`);
     } else {
       this.logger.error(`Failed to send verification email to ${email}`);
     }
@@ -105,18 +147,33 @@ export class EmailService {
   }
 
   /**
-   * Send password reset link to user
-   * @param email - User's email address
-   * @param username - User's username
-   * @param token - Password reset token
-   * @returns Promise<boolean> - True if sent successfully
+   * Send welcome email after successful verification
+   */
+  async sendWelcomeEmail(email: string, username: string): Promise<boolean> {
+    const html = this.getWelcomeEmailTemplate(username);
+
+    const result = await this.sendEmail(email, 'Welcome to Heightt! 🎉', html);
+
+    if (result) {
+      this.logger.log(`Welcome email sent to ${email}`);
+    } else {
+      this.logger.error(`Failed to send welcome email to ${email}`);
+    }
+
+    return result;
+  }
+
+  /**
+   * Send password reset email
    */
   async sendPasswordResetEmail(
     email: string,
     username: string,
     token: string,
   ): Promise<boolean> {
-    const resetLink = `${this.configService.get('FRONTEND_URL')}/reset-password?token=${token}`;
+    const frontendUrl =
+      this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+    const resetLink = `${frontendUrl}/reset-password?token=${token}`;
 
     const html = this.getPasswordResetEmailTemplate(username, resetLink);
 
@@ -136,34 +193,33 @@ export class EmailService {
   }
 
   /**
-   * Send welcome email after successful verification
-   * @param email - User's email address
-   * @param username - User's username
-   * @returns Promise<boolean> - True if sent successfully
+   * Send OTP email
    */
-  async sendWelcomeEmail(email: string, username: string): Promise<boolean> {
-    const html = this.getWelcomeEmailTemplate(username);
+  async sendOTPEmail(
+    email: string,
+    otp: string,
+    username: string,
+    expiresInMinutes: number = 10,
+  ): Promise<boolean> {
+    const html = this.getOTPEmailTemplate(username, otp, expiresInMinutes);
 
-    const result = await this.sendEmail(email, 'Welcome to Heightt! 🎉', html);
+    const result = await this.sendEmail(
+      email,
+      'Your Heightt Verification Code',
+      html,
+    );
 
     if (result) {
-      this.logger.log(`Welcome email sent to ${email}`);
+      this.logger.log(`OTP email sent to ${email}`);
     } else {
-      this.logger.error(`Failed to send welcome email to ${email}`);
+      this.logger.error(`Failed to send OTP email to ${email}`);
     }
 
     return result;
   }
 
   /**
-   * Send email notification for new device login
-   * @param email - User's email address
-   * @param username - User's username
-   * @param deviceName - Name of the device
-   * @param location - Location of the login
-   * @param ipAddress - IP address of the login
-   * @param time - Time of login
-   * @returns Promise<boolean> - True if sent successfully
+   * Send new device login notification
    */
   async sendNewDeviceLoginEmail(
     email: string,
@@ -196,42 +252,8 @@ export class EmailService {
     return result;
   }
 
-  /**
-   * Send OTP for two-factor authentication
-   * @param email - User's email address
-   * @param otp - One-time password
-   * @param username - User's username
-   * @param expiresInMinutes - Expiry time in minutes
-   * @returns Promise<boolean> - True if sent successfully
-   */
-  async sendOTPEmail(
-    email: string,
-    otp: string,
-    username: string,
-    expiresInMinutes: number = 10,
-  ): Promise<boolean> {
-    const html = this.getOTPEmailTemplate(username, otp, expiresInMinutes);
-
-    const result = await this.sendEmail(
-      email,
-      'Your Heightt Verification Code',
-      html,
-    );
-
-    if (result) {
-      this.logger.log(`OTP email sent to ${email}`);
-    } else {
-      this.logger.error(`Failed to send OTP email to ${email}`);
-    }
-
-    return result;
-  }
-
   // ========== EMAIL TEMPLATES ==========
 
-  /**
-   * Verification email template
-   */
   private getVerificationEmailTemplate(
     username: string,
     verificationLink: string,
@@ -246,13 +268,11 @@ export class EmailService {
       </head>
       <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb; line-height: 1.6;">
         <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-          <!-- Header -->
           <div style="text-align: center; margin-bottom: 30px;">
             <h1 style="color: #4F46E5; margin: 0; font-size: 32px;">Heightt</h1>
             <p style="color: #6B7280; margin: 5px 0 0;">Financial Management for Students</p>
           </div>
           
-          <!-- Content -->
           <h2 style="color: #1F2937; font-size: 24px; margin-top: 0;">Welcome to Heightt!</h2>
           
           <p style="color: #374151; font-size: 16px;">
@@ -279,7 +299,6 @@ export class EmailService {
             </p>
           </div>
           
-          <!-- Footer -->
           <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;" />
           
           <p style="color: #9CA3AF; font-size: 12px; text-align: center; margin: 0;">
@@ -291,71 +310,6 @@ export class EmailService {
     `;
   }
 
-  /**
-   * Password reset email template
-   */
-  private getPasswordResetEmailTemplate(
-    username: string,
-    resetLink: string,
-  ): string {
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Reset Your Password</title>
-      </head>
-      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb; line-height: 1.6;">
-        <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-          <!-- Header -->
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #4F46E5; margin: 0; font-size: 32px;">Heightt</h1>
-            <p style="color: #6B7280; margin: 5px 0 0;">Financial Management for Students</p>
-          </div>
-          
-          <!-- Content -->
-          <h2 style="color: #1F2937; font-size: 24px; margin-top: 0;">Reset Your Password</h2>
-          
-          <p style="color: #374151; font-size: 16px;">
-            Hello <strong>${username}</strong>,
-          </p>
-          
-          <p style="color: #374151; font-size: 16px;">
-            We received a request to reset your password. Click the button below to create a new password:
-          </p>
-          
-          <div style="text-align: center; margin: 35px 0;">
-            <a href="${resetLink}" 
-               style="display: inline-block; padding: 14px 32px; background-color: #4F46E5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-              Reset Password
-            </a>
-          </div>
-          
-          <div style="background-color: #F3F4F6; padding: 15px; border-radius: 6px; margin: 20px 0;">
-            <p style="color: #6B7280; font-size: 14px; margin: 0;">
-              ⏰ This reset link will expire in <strong>1 hour</strong>.
-            </p>
-            <p style="color: #6B7280; font-size: 14px; margin: 5px 0 0;">
-              If you didn't request a password reset, you can safely ignore this email.
-            </p>
-          </div>
-          
-          <!-- Footer -->
-          <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;" />
-          
-          <p style="color: #9CA3AF; font-size: 12px; text-align: center; margin: 0;">
-            &copy; ${new Date().getFullYear()} Heightt. All rights reserved.
-          </p>
-        </div>
-      </body>
-      </html>
-    `;
-  }
-
-  /**
-   * Welcome email template
-   */
   private getWelcomeEmailTemplate(username: string): string {
     return `
       <!DOCTYPE html>
@@ -388,9 +342,57 @@ export class EmailService {
             <li style="margin-bottom: 10px;">📊 <strong>Track your finances</strong> - Monitor your spending and savings</li>
           </ul>
           
-          <p style="color: #374151; font-size: 16px;">
-            If you have any questions, feel free to reach out to our support team.
+          <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;" />
+          
+          <p style="color: #9CA3AF; font-size: 12px; text-align: center; margin: 0;">
+            &copy; ${new Date().getFullYear()} Heightt. All rights reserved.
           </p>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
+  private getPasswordResetEmailTemplate(
+    username: string,
+    resetLink: string,
+  ): string {
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reset Your Password</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb; line-height: 1.6;">
+        <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #4F46E5; margin: 0; font-size: 32px;">Heightt</h1>
+          </div>
+          
+          <h2 style="color: #1F2937; font-size: 24px; margin-top: 0;">Reset Your Password</h2>
+          
+          <p style="color: #374151; font-size: 16px;">
+            Hello <strong>${username}</strong>,
+          </p>
+          
+          <p style="color: #374151; font-size: 16px;">
+            We received a request to reset your password. Click the button below to create a new password:
+          </p>
+          
+          <div style="text-align: center; margin: 35px 0;">
+            <a href="${resetLink}" 
+               style="display: inline-block; padding: 14px 32px; background-color: #4F46E5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+              Reset Password
+            </a>
+          </div>
+          
+          <div style="background-color: #F3F4F6; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <p style="color: #6B7280; font-size: 14px; margin: 0;">
+              ⏰ This reset link will expire in <strong>1 hour</strong>.
+            </p>
+          </div>
           
           <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;" />
           
@@ -403,9 +405,58 @@ export class EmailService {
     `;
   }
 
-  /**
-   * New device login email template
-   */
+  private getOTPEmailTemplate(
+    username: string,
+    otp: string,
+    expiresInMinutes: number,
+  ): string {
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Verification Code</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb; line-height: 1.6;">
+        <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #4F46E5; margin: 0; font-size: 32px;">Heightt</h1>
+          </div>
+          
+          <h2 style="color: #1F2937; font-size: 24px; margin-top: 0;">Verification Code</h2>
+          
+          <p style="color: #374151; font-size: 16px;">
+            Hello <strong>${username}</strong>,
+          </p>
+          
+          <p style="color: #374151; font-size: 16px;">
+            Use the following code to complete your authentication:
+          </p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <div style="display: inline-block; background-color: #F3F4F6; padding: 20px 40px; border-radius: 8px; font-size: 36px; font-weight: 700; color: #4F46E5; letter-spacing: 8px;">
+              ${otp}
+            </div>
+          </div>
+          
+          <div style="background-color: #F3F4F6; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <p style="color: #6B7280; font-size: 14px; margin: 0;">
+              ⏰ This code will expire in <strong>${expiresInMinutes} minutes</strong>.
+            </p>
+          </div>
+          
+          <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;" />
+          
+          <p style="color: #9CA3AF; font-size: 12px; text-align: center; margin: 0;">
+            &copy; ${new Date().getFullYear()} Heightt. All rights reserved.
+          </p>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
   private getNewDeviceLoginTemplate(
     username: string,
     deviceName: string,
@@ -456,68 +507,6 @@ export class EmailService {
           <div style="background-color: #FEE2E2; padding: 15px; border-radius: 6px; margin: 20px 0;">
             <p style="color: #991B1B; font-size: 14px; margin: 0;">
               ⚠️ If this was not you, please secure your account immediately by changing your password.
-            </p>
-          </div>
-          
-          <p style="color: #374151; font-size: 16px;">
-            If this was you, no further action is needed.
-          </p>
-          
-          <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 30px 0;" />
-          
-          <p style="color: #9CA3AF; font-size: 12px; text-align: center; margin: 0;">
-            &copy; ${new Date().getFullYear()} Heightt. All rights reserved.
-          </p>
-        </div>
-      </body>
-      </html>
-    `;
-  }
-
-  /**
-   * OTP email template
-   */
-  private getOTPEmailTemplate(
-    username: string,
-    otp: string,
-    expiresInMinutes: number,
-  ): string {
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Your Verification Code</title>
-      </head>
-      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb; line-height: 1.6;">
-        <div style="background-color: #ffffff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #4F46E5; margin: 0; font-size: 32px;">Heightt</h1>
-          </div>
-          
-          <h2 style="color: #1F2937; font-size: 24px; margin-top: 0;">Verification Code</h2>
-          
-          <p style="color: #374151; font-size: 16px;">
-            Hello <strong>${username}</strong>,
-          </p>
-          
-          <p style="color: #374151; font-size: 16px;">
-            Use the following code to complete your authentication:
-          </p>
-          
-          <div style="text-align: center; margin: 30px 0;">
-            <div style="display: inline-block; background-color: #F3F4F6; padding: 20px 40px; border-radius: 8px; font-size: 36px; font-weight: 700; color: #4F46E5; letter-spacing: 8px;">
-              ${otp}
-            </div>
-          </div>
-          
-          <div style="background-color: #F3F4F6; padding: 15px; border-radius: 6px; margin: 20px 0;">
-            <p style="color: #6B7280; font-size: 14px; margin: 0;">
-              ⏰ This code will expire in <strong>${expiresInMinutes} minutes</strong>.
-            </p>
-            <p style="color: #6B7280; font-size: 14px; margin: 5px 0 0;">
-              If you didn't request this code, you can safely ignore this email.
             </p>
           </div>
           

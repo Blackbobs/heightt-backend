@@ -6,12 +6,12 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "build": "nest build",
+    "start": "node dist/src/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "NODE_ENV=production node dist/src/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -31,6 +31,8 @@
     "db:deploy": "npx prisma migrate deploy",
     "db:studio": "npx prisma studio",
     "db:generate": "npx prisma generate",
+    "db:seed-permissions": "node scripts/seed-permissions.js",
+    "db:sync-admin-permissions": "node scripts/seed-permissions.js --sync-defaults",
     "schema:merge": "node scripts/merge-schema.js",
     "docker:build": "docker build -t heightt-api:latest .",
     "docker:up": "docker compose up -d",
@@ -54,6 +56,7 @@
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-socket.io": "^11.1.28",
+    "@nestjs/schedule": "^6.1.3",
     "@nestjs/serve-static": "^5.0.5",
     "@nestjs/swagger": "^11.4.6",
     "@nestjs/throttler": "^6.5.0",
@@ -77,6 +80,7 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pdfkit": "^0.20.1",
     "pg": "^8.22.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
@@ -101,6 +105,7 @@
     "@types/node": "^24.0.0",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
+    "@types/pdfkit": "^0.17.6",
     "@types/pg": "^8.20.0",
     "@types/sanitize-html": "^2.16.1",
     "@types/supertest": "^7.0.0",
@@ -139,5 +144,12 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "packageManager": "pnpm@11.18.0+sha512.33d83c77da82f49fba836925c6f1b841181ec3132b670639bd012f7075f5c7cf634c5f870147c19aae7478fac01df09d8892e880454896edd23ee9b33757563c"
+  "allowScripts": {
+    "@prisma/engines@7.9.1": true,
+    "@scarf/scarf@1.4.0": true,
+    "argon2@0.45.1": true,
+    "msgpackr-extract@3.0.4": true,
+    "prisma@7.9.1": true,
+    "unrs-resolver@1.12.2": true
+  }
 }
