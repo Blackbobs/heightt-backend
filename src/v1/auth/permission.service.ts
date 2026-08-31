@@ -225,10 +225,7 @@ export class PermissionService {
 
       case 'ORGANIZATION_ADMIN':
       case 'CLUB_ADMIN':
-        return await this.isResourceInOrganization(
-          admin.organizationId,
-          resourceId,
-        );
+        return await this.isResourceInOrganizationSession(admin, resourceId);
 
       default:
         return false;
@@ -316,33 +313,54 @@ export class PermissionService {
     return false;
   }
 
-  private async isResourceInOrganization(
-    organizationId: string,
+  private async isResourceInOrganizationSession(
+    admin: any,
     resourceId: string,
   ): Promise<boolean> {
-    if (organizationId === resourceId) return true;
+    const organizationId = admin.organizationId;
+    const academicSessionId = admin.academicSessionId;
+    if (!organizationId || !academicSessionId) return false;
+
+    if (organizationId === resourceId) {
+      const organization = await this.prisma.organization.findFirst({
+        where: { id: resourceId, academicSessionId },
+      });
+      return !!organization;
+    }
 
     // Check if resource is a membership in this organization
     const membership = await this.prisma.organizationMembership.findFirst({
-      where: { id: resourceId, organizationId },
+      where: {
+        id: resourceId,
+        organizationId,
+        joinedSessionId: academicSessionId,
+      },
     });
     if (membership) return true;
 
     // Check if resource is a due in this organization
     const due = await this.prisma.due.findFirst({
-      where: { id: resourceId, organizationId },
+      where: { id: resourceId, organizationId, sessionId: academicSessionId },
     });
     if (due) return true;
 
     // Check if resource is an event in this organization
     const event = await this.prisma.event.findFirst({
-      where: { id: resourceId, organizationId },
+      where: {
+        id: resourceId,
+        organizationId,
+        organization: { academicSessionId },
+      },
     });
     if (event) return true;
 
     // Check if resource is an announcement in this organization
     const announcement = await this.prisma.announcement.findFirst({
-      where: { id: resourceId, organizationId },
+      where: {
+        id: resourceId,
+        organizationId,
+        organization: { academicSessionId },
+      },
     });
     if (announcement) return true;
 

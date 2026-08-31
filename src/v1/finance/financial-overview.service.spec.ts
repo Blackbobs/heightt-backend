@@ -22,16 +22,30 @@ describe('FinanceService financial overview', () => {
       journalLine: {
         aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 12_345 } }),
       },
+      withdrawal: {
+        aggregate: jest.fn().mockResolvedValue({
+          _sum: { amount: 2_000, fee: 50 },
+          _count: { _all: 1 },
+        }),
+      },
     };
 
-    const result = await service.getFinancialOverview('institution-1');
+    const result = await service.getFinancialOverview();
 
     expect(result.totalBalance).toBe(150_000);
     expect(result.platformEarnings).toEqual({
-      amount: 12_345,
-      amountFormatted: '₦123.45',
+      amount: 10_295,
+      amountFormatted: '₦102.95',
+      grossAmount: 12_345,
+      grossAmountFormatted: '₦123.45',
+      withdrawnAmount: 2_000,
+      withdrawnAmountFormatted: '₦20.00',
+      payoutProviderFees: 50,
+      payoutProviderFeesFormatted: '₦0.50',
+      withdrawalCount: 1,
       currency: 'NGN',
       currencyUnit: 'KOBO',
+      scope: 'PLATFORM_NET',
     });
     expect((service as any).prisma.journalLine.aggregate).toHaveBeenCalledWith({
       where: {
@@ -42,11 +56,46 @@ describe('FinanceService financial overview', () => {
         journalEntry: {
           payment: {
             status: 'COMPLETED',
-            organization: { institutionId: 'institution-1' },
+            organization: {},
           },
         },
       },
       _sum: { amount: true },
     });
+    expect((service as any).prisma.withdrawal.aggregate).toHaveBeenCalledWith({
+      where: {
+        status: { in: ['PROCESSING', 'COMPLETED'] },
+        metadata: { path: ['type'], equals: 'PLATFORM_WITHDRAWAL' },
+      },
+      _sum: { amount: true, fee: true },
+      _count: { _all: true },
+    });
+  });
+
+  it('does not apply Heightt withdrawal charges to platform payouts', () => {
+    const service = Object.create(FinanceService.prototype) as FinanceService;
+    expect(
+      (service as any).calculatePlatformWithdrawalCharges(100_000),
+    ).toEqual({ fee: 0, netAmount: 100_000, totalCharges: 0 });
+  });
+
+  it('limits an organisation principal so principal plus fee fits the wallet', () => {
+    const service = Object.create(FinanceService.prototype) as FinanceService;
+    (service as any).ledgerService = {
+      calculateWithdrawalCharges: jest.fn((amount: number) => ({
+        fee: amount > 0 ? 10_000 : 0,
+      })),
+    };
+
+    expect((service as any).calculateMaximumWithdrawal(200_000, false)).toBe(
+      190_000,
+    );
+  });
+
+  it('allows a platform admin to withdraw the exact available balance', () => {
+    const service = Object.create(FinanceService.prototype) as FinanceService;
+    expect((service as any).calculateMaximumWithdrawal(200_000, true)).toBe(
+      200_000,
+    );
   });
 });

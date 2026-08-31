@@ -62,6 +62,7 @@ import {
   PlatformWithdrawalRequestDto,
   OrganizationWithdrawalRequestDto,
   UserWithdrawalRequestDto,
+  WithdrawalQuoteDto,
   UpdateBankAccountDto,
   CreateBankAccountDto,
   ResolveBankAccountDto,
@@ -1148,6 +1149,18 @@ export class FinanceController {
   // ============================================
   // WITHDRAWAL HISTORY ENDPOINTS
   // ============================================
+
+  @Get('withdrawals/quote')
+  @ApiOperation({
+    summary: 'Get available balance, fee, and maximum withdrawal amount',
+  })
+  @ApiResponse({ status: 200, description: 'Withdrawal quote returned' })
+  async getWithdrawalQuote(
+    @Request() req: any,
+    @Query() dto: WithdrawalQuoteDto,
+  ) {
+    return this.financeService.getWithdrawalQuote(req.user.id, dto);
+  }
 
   @Get('withdrawals')
   @Cache({

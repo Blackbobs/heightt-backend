@@ -16,7 +16,7 @@ import { PermissionService } from '../auth/permission.service';
 import { EmailService } from '../../email/email.service';
 import { LedgerService } from './ledger.service';
 import { ReceiptService } from './receipt.service';
-import { WalletService } from './wallet.service';
+import { WalletService, WalletOwner } from './wallet.service';
 import { EventService, SystemEvents } from '../../events/event.service';
 import { BachsClient } from '../bachs/bachs.client';
 import { ConfigService } from '@nestjs/config';
@@ -39,6 +39,8 @@ import {
   PlatformWithdrawalRequestDto,
   OrganizationWithdrawalRequestDto,
   WithdrawalFilterDto,
+  WithdrawalQuoteDto,
+  WithdrawalType,
 } from './dto/withdrawal.dto';
 import { randomBytes } from 'crypto';
 
@@ -2411,19 +2413,40 @@ export class FinanceService {
       _sum: { amount: true },
     });
 
-    const platformEarnings = platformFeeTotal._sum.amount ?? 0;
+    const platformWithdrawalTotal = institutionId
+      ? { _sum: { amount: 0, fee: 0 }, _count: { _all: 0 } }
+      : await this.prisma.withdrawal.aggregate({
+          where: {
+            status: { in: ['PROCESSING', 'COMPLETED'] },
+            metadata: { path: ['type'], equals: 'PLATFORM_WITHDRAWAL' },
+          },
+          _sum: { amount: true, fee: true },
+          _count: { _all: true },
+        });
+
+    const grossPlatformEarnings = platformFeeTotal._sum.amount ?? 0;
+    const withdrawnPlatformEarnings = platformWithdrawalTotal._sum.amount ?? 0;
+    const payoutProviderFees = platformWithdrawalTotal._sum.fee ?? 0;
+    const netPlatformEarnings =
+      grossPlatformEarnings - withdrawnPlatformEarnings - payoutProviderFees;
 
     return {
       totalBalance,
       totalHeld,
       totalWallets: wallets.length,
       platformEarnings: {
-        amount: platformEarnings,
-        amountFormatted: `₦${(platformEarnings / this.KOBO_PER_NAIRA).toFixed(
-          2,
-        )}`,
+        amount: netPlatformEarnings,
+        amountFormatted: this.formatKobo(netPlatformEarnings),
+        grossAmount: grossPlatformEarnings,
+        grossAmountFormatted: this.formatKobo(grossPlatformEarnings),
+        withdrawnAmount: withdrawnPlatformEarnings,
+        withdrawnAmountFormatted: this.formatKobo(withdrawnPlatformEarnings),
+        payoutProviderFees,
+        payoutProviderFeesFormatted: this.formatKobo(payoutProviderFees),
+        withdrawalCount: platformWithdrawalTotal._count._all,
         currency: 'NGN',
         currencyUnit: 'KOBO',
+        scope: institutionId ? 'INSTITUTION_GROSS' : 'PLATFORM_NET',
       },
       dueStats: {
         total: totalDues,
@@ -2471,15 +2494,16 @@ export class FinanceService {
     const netAmount = dto.amount;
 
     return this.prisma.$transaction(async (tx) => {
-      const currentWallet = await tx.wallet.findUnique({
-        where: { id: wallet.id },
-      });
+      const currentWallet = await this.lockWalletForWithdrawal(tx, wallet.id);
       if (
         !currentWallet ||
         currentWallet.balance - currentWallet.heldBalance < totalAmount
       ) {
-        throw new BadRequestException(
-          `Insufficient balance. Need: ${this.formatKobo(totalAmount)}`,
+        throw this.insufficientWithdrawalBalance(
+          currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
+          dto.amount,
+          charges.fee,
+          false,
         );
       }
 
@@ -2555,6 +2579,125 @@ export class FinanceService {
     });
   }
 
+  private calculatePlatformWithdrawalCharges(amount: number): {
+    fee: number;
+    netAmount: number;
+    totalCharges: number;
+  } {
+    return { fee: 0, netAmount: amount, totalCharges: 0 };
+  }
+
+  private calculateMaximumWithdrawal(
+    availableBalance: number,
+    feeFree: boolean,
+  ): number {
+    if (availableBalance <= 0 || feeFree) {
+      return Math.max(0, availableBalance);
+    }
+
+    let low = 0;
+    let high = availableBalance;
+    while (low < high) {
+      const candidate = Math.ceil((low + high) / 2);
+      const fee = this.ledgerService.calculateWithdrawalCharges(candidate).fee;
+      if (candidate + fee <= availableBalance) low = candidate;
+      else high = candidate - 1;
+    }
+    return low;
+  }
+
+  private async lockWalletForWithdrawal(tx: any, walletId: string) {
+    const wallets = await tx.$queryRaw<
+      Array<{ id: string; balance: number; heldBalance: number }>
+    >`SELECT "id", "balance", "heldBalance"
+      FROM "wallets"
+      WHERE "id" = ${walletId}
+      FOR UPDATE`;
+    return wallets[0] ?? null;
+  }
+
+  private insufficientWithdrawalBalance(
+    availableBalance: number,
+    requestedAmount: number,
+    fee: number,
+    feeFree: boolean,
+  ): BadRequestException {
+    const maxWithdrawable = this.calculateMaximumWithdrawal(
+      availableBalance,
+      feeFree,
+    );
+    return new BadRequestException({
+      code: 'INSUFFICIENT_AVAILABLE_BALANCE',
+      message:
+        'The requested withdrawal and fee exceed the available wallet balance',
+      availableBalance,
+      requestedAmount,
+      fee,
+      totalDebit: requestedAmount + fee,
+      maxWithdrawable,
+      currency: 'NGN',
+      currencyUnit: 'KOBO',
+    });
+  }
+
+  async getWithdrawalQuote(userId: string, dto: WithdrawalQuoteDto) {
+    let walletOwner: WalletOwner;
+    let feeFree = false;
+
+    if (dto.type === WithdrawalType.ORGANIZATION) {
+      if (!dto.organizationId) {
+        throw new BadRequestException(
+          'organizationId is required for an organization withdrawal quote',
+        );
+      }
+      await this.assertOrganizationAdminScope(userId, dto.organizationId);
+      walletOwner = { type: 'ORGANIZATION', id: dto.organizationId };
+    } else if (dto.type === WithdrawalType.PLATFORM) {
+      const platformAdmin = await this.prisma.admin.findFirst({
+        where: { userId, status: 'ACTIVE', adminType: 'PLATFORM_ADMIN' },
+      });
+      if (!platformAdmin) {
+        throw new ForbiddenException(
+          'Only platform admins can access the platform withdrawal quote',
+        );
+      }
+      walletOwner = { type: 'PLATFORM' };
+      feeFree = true;
+    } else {
+      walletOwner = { type: 'USER', id: userId };
+    }
+
+    const wallet = await this.walletService.getOrCreateWallet(walletOwner);
+    const availableBalance = Math.max(0, wallet.balance - wallet.heldBalance);
+    const maxWithdrawable = this.calculateMaximumWithdrawal(
+      availableBalance,
+      feeFree,
+    );
+    const fee = dto.amount
+      ? feeFree
+        ? 0
+        : this.ledgerService.calculateWithdrawalCharges(dto.amount).fee
+      : 0;
+    const totalDebit = dto.amount ? dto.amount + fee : 0;
+
+    return {
+      balance: wallet.balance,
+      heldBalance: wallet.heldBalance,
+      availableBalance,
+      requestedAmount: dto.amount ?? null,
+      fee,
+      totalDebit,
+      maxWithdrawable,
+      canWithdraw:
+        dto.amount !== undefined
+          ? dto.amount >= 100 && totalDebit <= availableBalance
+          : maxWithdrawable >= 100,
+      feePolicy: feeFree ? 'FEE_FREE' : 'WITHDRAWAL_FEE_APPLIES',
+      currency: wallet.currency,
+      currencyUnit: 'KOBO',
+    };
+  }
+
   async requestOrganizationWithdrawal(
     userId: string,
     dto: OrganizationWithdrawalRequestDto,
@@ -2576,15 +2719,16 @@ export class FinanceService {
     const totalAmount = dto.amount + charges.fee;
 
     const withdrawal = await this.prisma.$transaction(async (tx) => {
-      const currentWallet = await tx.wallet.findUnique({
-        where: { id: wallet.id },
-      });
+      const currentWallet = await this.lockWalletForWithdrawal(tx, wallet.id);
       if (
         !currentWallet ||
         currentWallet.balance - currentWallet.heldBalance < totalAmount
       ) {
-        throw new BadRequestException(
-          'Insufficient available organization balance',
+        throw this.insufficientWithdrawalBalance(
+          currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
+          dto.amount,
+          charges.fee,
+          false,
         );
       }
       const created = await tx.withdrawal.create({
@@ -2673,19 +2817,20 @@ export class FinanceService {
     );
     const payoutDestination = await this.ensurePayoutDestination(bankAccount);
 
-    const charges = this.ledgerService.calculateWithdrawalCharges(dto.amount);
+    const charges = this.calculatePlatformWithdrawalCharges(dto.amount);
     const totalAmount = dto.amount + charges.fee;
 
     const withdrawal = await this.prisma.$transaction(async (tx) => {
-      const currentWallet = await tx.wallet.findUnique({
-        where: { id: wallet.id },
-      });
+      const currentWallet = await this.lockWalletForWithdrawal(tx, wallet.id);
       if (
         !currentWallet ||
         currentWallet.balance - currentWallet.heldBalance < totalAmount
       ) {
-        throw new BadRequestException(
-          `Insufficient platform balance. Available: ₦${(wallet.balance / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        throw this.insufficientWithdrawalBalance(
+          currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
+          dto.amount,
+          charges.fee,
+          true,
         );
       }
 

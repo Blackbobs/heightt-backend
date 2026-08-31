@@ -828,9 +828,22 @@ export class RbacService {
         'Department ID required for DEPARTMENT_ADMIN',
       );
     }
-    if (dto.adminType === 'ORGANIZATION_ADMIN' && !dto.organizationId) {
+    if (
+      (dto.adminType === 'ORGANIZATION_ADMIN' ||
+        dto.adminType === 'CLUB_ADMIN') &&
+      !dto.organizationId
+    ) {
       throw new BadRequestException(
-        'Organization ID required for ORGANIZATION_ADMIN',
+        'Organization ID required for organization admin roles',
+      );
+    }
+    if (
+      (dto.adminType === 'ORGANIZATION_ADMIN' ||
+        dto.adminType === 'CLUB_ADMIN') &&
+      !dto.academicSessionId
+    ) {
+      throw new BadRequestException(
+        'Academic session ID is required for organization admin roles',
       );
     }
 
@@ -842,6 +855,16 @@ export class RbacService {
         throw new NotFoundException('Academic session not found');
       }
 
+      if (
+        (dto.adminType === 'ORGANIZATION_ADMIN' ||
+          dto.adminType === 'CLUB_ADMIN') &&
+        (!session.isCurrent || session.scope !== 'INSTITUTION')
+      ) {
+        throw new BadRequestException(
+          'Organization admins must be assigned to the institution current academic session',
+        );
+      }
+
       if (dto.organizationId) {
         const org = await this.prisma.organization.findUnique({
           where: { id: dto.organizationId },
@@ -850,6 +873,15 @@ export class RbacService {
         if (org && session.institutionId !== org.institutionId) {
           throw new BadRequestException(
             'Academic session must belong to the same institution as the organization',
+          );
+        }
+        if (
+          (dto.adminType === 'ORGANIZATION_ADMIN' ||
+            dto.adminType === 'CLUB_ADMIN') &&
+          org?.academicSessionId !== session.id
+        ) {
+          throw new BadRequestException(
+            'The organization and admin assignment must belong to the same academic session',
           );
         }
       }

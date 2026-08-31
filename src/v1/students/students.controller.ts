@@ -25,16 +25,19 @@ import {
 import { StudentsService } from './students.service';
 import { PromotionService } from './promotion.service'; // Add this import
 import { JwtGuard } from '../../common/guards/jwt.guard';
-import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
+import {
+  AdminGuard,
+  RequireAdminType,
+  RequirePermission,
+} from '../../common/guards/admin.guard';
 import {
   CreateStudentDto,
   UpdateStudentDto,
   AddAcademicRecordDto,
-  PromoteStudentDto,
   StudentResponseDto,
   StudentListResponseDto,
 } from './dto';
-import { BulkPromoteDto } from './dto/promotion.dto';
+import { PromoteInstitutionDto } from './dto/promotion.dto';
 // Import cache decorators
 import {
   Cache,
@@ -326,24 +329,32 @@ export class StudentsController {
   // STUDENT PROMOTION
   // ============================================
 
-  @Post(':id/promote')
+  @Post('institutions/:institutionId/promote')
   @UseGuards(AdminGuard)
-  @RequirePermission('student:promote', 'id')
-  @InvalidateCache(['students', 'academics', 'promotions'])
-  @ApiOperation({ summary: 'Promote student (Admin only)' })
-  @ApiParam({ name: 'id', description: 'Student ID' })
-  @ApiBody({ type: PromoteStudentDto })
+  @RequireAdminType('PLATFORM_ADMIN', 'INSTITUTION_ADMIN')
+  @RequirePermission('student:promote', 'institutionId')
+  @InvalidateCache(['students', 'academics', 'promotions', 'sessions', 'auth'])
+  @ApiOperation({
+    summary: 'Promote every eligible student in an institution',
+    description:
+      'Advances the institution to its next academic session, creates that session when necessary, promotes students to the next level, and graduates final-level students. Existing organisation admins retain access only to their assigned session.',
+  })
+  @ApiParam({ name: 'institutionId', description: 'Institution ID' })
+  @ApiBody({ type: PromoteInstitutionDto })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Student promoted',
+    description: 'Institution promotion completed',
   })
-  async promoteStudent(
-    @Param('id') id: string,
+  async promoteInstitution(
+    @Param('institutionId') institutionId: string,
     @Request() req: any,
-    @Body() dto: PromoteStudentDto,
+    @Body() dto: PromoteInstitutionDto,
   ) {
-    this.logger.log(`Promote student endpoint called for student: ${id}`);
-    return this.promotionService.promoteStudent(id, req.user.id, dto);
+    return this.promotionService.promoteInstitution(
+      institutionId,
+      req.user.id,
+      dto,
+    );
   }
 
   @Get(':id/promotions')
@@ -366,25 +377,6 @@ export class StudentsController {
   async getPromotionHistory(@Param('id') id: string) {
     this.logger.log(`Get promotion history endpoint called for student: ${id}`);
     return this.promotionService.getPromotionHistory(id, 1, 10);
-  }
-
-  // ============================================
-  // BULK PROMOTION
-  // ============================================
-
-  @Post('promotions/bulk')
-  @UseGuards(AdminGuard)
-  @RequirePermission('student:promote')
-  @InvalidateCache(['students', 'promotions'])
-  @ApiOperation({ summary: 'Bulk promote students (Admin only)' })
-  @ApiBody({ type: BulkPromoteDto })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Students promoted',
-  })
-  async bulkPromoteStudents(@Request() req: any, @Body() dto: BulkPromoteDto) {
-    this.logger.log('Bulk promote students endpoint called');
-    return this.promotionService.bulkPromoteStudents(req.user.id, dto);
   }
 
   @Get('promotions/eligible')

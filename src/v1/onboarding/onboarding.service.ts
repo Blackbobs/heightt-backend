@@ -32,6 +32,9 @@ export class OnboardingService {
     try {
       await this.cacheService.invalidateByTag('onboarding');
       await this.cacheService.invalidateByTag('user');
+      await this.cacheService.invalidateByTag('organizations');
+      await this.cacheService.invalidateByTag('members');
+      await this.cacheService.invalidateByTag('dashboard');
       await this.cacheService.delete(`onboarding:status:${userId}`);
       await this.cacheService.invalidateUserCache(userId);
       this.logger.debug(`Onboarding cache invalidated for user: ${userId}`);
@@ -236,9 +239,7 @@ export class OnboardingService {
           userId,
           institution.id,
           faculty.id,
-          department.id,
-          academicLevelId,
-          session?.id, // NEW: Pass session ID
+          session?.id,
         );
       }
 
@@ -433,55 +434,69 @@ export class OnboardingService {
       }
     }
 
-    const studentProfile = await this.prisma.studentProfile.upsert({
-      where: { userId },
-      update: {
-        institutionId: dto.institutionId,
-        facultyId: dto.facultyId,
-        departmentId: dto.departmentId,
-        currentAcademicLevelId: dto.levelId,
-        matricNumber: dto.matricNumber,
-        onboardingStep: 'COMPLETED',
-        onboardingCompleted: true,
-        onboardingCompletedAt: new Date(),
-      },
-      create: {
-        userId: userId,
-        institutionId: dto.institutionId,
-        facultyId: dto.facultyId,
-        departmentId: dto.departmentId,
-        currentAcademicLevelId: dto.levelId,
-        matricNumber: dto.matricNumber,
-        onboardingStep: 'COMPLETED',
-        onboardingCompleted: true,
-        onboardingCompletedAt: new Date(),
-      },
-    });
+    const { studentProfile, updatedProfile } = await this.prisma.$transaction(
+      async (tx) => {
+        const completedAt = new Date();
+        const studentProfile = await tx.studentProfile.upsert({
+          where: { userId },
+          update: {
+            institutionId: dto.institutionId,
+            facultyId: dto.facultyId,
+            departmentId: dto.departmentId,
+            currentAcademicLevelId: dto.levelId,
+            matricNumber: dto.matricNumber,
+            onboardingStep: 'COMPLETED',
+            onboardingCompleted: true,
+            onboardingCompletedAt: completedAt,
+          },
+          create: {
+            userId,
+            institutionId: dto.institutionId,
+            facultyId: dto.facultyId,
+            departmentId: dto.departmentId,
+            currentAcademicLevelId: dto.levelId,
+            matricNumber: dto.matricNumber,
+            onboardingStep: 'COMPLETED',
+            onboardingCompleted: true,
+            onboardingCompletedAt: completedAt,
+          },
+        });
 
-    const updatedProfile = await this.prisma.userProfile.update({
-      where: { userId },
-      data: {
-        onboardingStep: 'COMPLETED',
-        onboardingCompleted: true,
-        onboardingCompletedAt: new Date(),
-      },
-    });
+        const updatedProfile = await tx.userProfile.update({
+          where: { userId },
+          data: {
+            onboardingStep: 'COMPLETED',
+            onboardingCompleted: true,
+            onboardingCompletedAt: completedAt,
+          },
+        });
 
-    await this.prisma.activityLog.create({
-      data: {
-        userId,
-        activity: 'ONBOARDING_COMPLETED',
-        details: JSON.stringify({
-          step: 'INSTITUTION',
-          completed: true,
-          institutionId: dto.institutionId,
-          facultyId: dto.facultyId,
-          departmentId: dto.departmentId,
-          levelId: dto.levelId,
-          hasMatricNumber: !!dto.matricNumber,
-        }),
+        await this.autoJoinInstitutionalOrganizationsInTransaction(
+          tx,
+          userId,
+          dto.institutionId,
+          dto.facultyId,
+        );
+
+        await tx.activityLog.create({
+          data: {
+            userId,
+            activity: 'ONBOARDING_COMPLETED',
+            details: JSON.stringify({
+              step: 'INSTITUTION',
+              completed: true,
+              institutionId: dto.institutionId,
+              facultyId: dto.facultyId,
+              departmentId: dto.departmentId,
+              levelId: dto.levelId,
+              hasMatricNumber: !!dto.matricNumber,
+            }),
+          },
+        });
+
+        return { studentProfile, updatedProfile };
       },
-    });
+    );
 
     await this.invalidateOnboardingCache(userId);
 
@@ -605,79 +620,84 @@ export class OnboardingService {
     userId: string,
     institutionId: string,
     facultyId?: string,
-    departmentId?: string,
-    levelId?: string,
-    sessionId?: string, // NEW
+    sessionId?: string,
   ) {
-    try {
-      const orConditions: any[] = [{ scope: 'INSTITUTION' }];
-      if (facultyId) orConditions.push({ scope: 'FACULTY', facultyId });
-      if (departmentId)
-        orConditions.push({ scope: 'DEPARTMENT', departmentId });
-      if (levelId)
-        orConditions.push({ scope: 'LEVEL', academicLevelId: levelId });
+    const organizationScopes: any[] = [
+      { type: 'INSTITUTION', scope: 'INSTITUTION' },
+    ];
+    if (facultyId) {
+      organizationScopes.push({
+        type: 'FACULTY',
+        scope: 'FACULTY',
+        facultyId,
+      });
+    }
 
-      const matchingOrgs = await tx.organization.findMany({
+    const matchingOrgs = await tx.organization.findMany({
+      where: {
+        institutionId,
+        status: 'ACTIVE',
+        AND: [
+          { OR: organizationScopes },
+          {
+            OR: sessionId
+              ? [{ academicSessionId: null }, { academicSessionId: sessionId }]
+              : [{ academicSessionId: null }],
+          },
+        ],
+      },
+      select: { id: true, name: true, type: true, academicSessionId: true },
+    });
+
+    for (const org of matchingOrgs) {
+      await tx.organizationMembership.upsert({
         where: {
-          institutionId,
-          OR: orConditions,
+          organizationId_userId: {
+            organizationId: org.id,
+            userId,
+          },
+        },
+        update: {
+          membershipType: 'STUDENT',
           status: 'ACTIVE',
-          // NEW: Filter by session if provided
-          ...(sessionId ? { academicSessionId: sessionId } : {}),
+          leftAt: null,
+          joinedSessionId: org.academicSessionId || sessionId || null,
+        },
+        create: {
+          organizationId: org.id,
+          userId,
+          membershipType: 'STUDENT',
+          status: 'ACTIVE',
+          isPrimary: org.type === 'INSTITUTION',
+          joinedAt: new Date(),
+          joinedSessionId: org.academicSessionId || sessionId || null,
         },
       });
 
-      for (const org of matchingOrgs) {
-        const existing = await tx.organizationMembership.findUnique({
-          where: {
-            organizationId_userId: {
-              organizationId: org.id,
-              userId,
-            },
+      await tx.organizationJoinRequest.upsert({
+        where: {
+          organizationId_userId: {
+            organizationId: org.id,
+            userId,
           },
-        });
+        },
+        update: {
+          membershipType: 'STUDENT',
+          status: 'APPROVED',
+          reviewedAt: new Date(),
+        },
+        create: {
+          organizationId: org.id,
+          userId,
+          membershipType: 'STUDENT',
+          status: 'APPROVED',
+          reviewedAt: new Date(),
+          message: 'Auto-joined during onboarding',
+        },
+      });
 
-        if (!existing) {
-          await tx.organizationMembership.create({
-            data: {
-              organizationId: org.id,
-              userId,
-              membershipType: 'STUDENT',
-              status: 'ACTIVE',
-              joinedAt: new Date(),
-              joinedSessionId: sessionId, // NEW
-            },
-          });
-
-          await tx.organizationJoinRequest.upsert({
-            where: {
-              organizationId_userId: {
-                organizationId: org.id,
-                userId,
-              },
-            },
-            update: {
-              status: 'APPROVED',
-              reviewedAt: new Date(),
-            },
-            create: {
-              organizationId: org.id,
-              userId,
-              membershipType: 'STUDENT',
-              status: 'APPROVED',
-              reviewedAt: new Date(),
-              message: 'Auto-joined during onboarding',
-            },
-          });
-
-          this.logger.log(
-            `User ${userId} auto-joined organization ${org.name} (${org.id}) during onboarding`,
-          );
-        }
-      }
-    } catch (error) {
-      this.logger.warn(
-        `Failed to auto-join institutional orgs for user ${userId}: ${error.message}`,
+      this.logger.log(
+        `User ${userId} auto-joined organization ${org.name} (${org.id}) during onboarding`,
       );
     }
   }

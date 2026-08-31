@@ -80,6 +80,13 @@ export class AdminGuard implements CanActivate {
         request.params?.organizationId ||
         request.query?.organizationId ||
         request.body?.organizationId;
+      const academicSessionId =
+        request.params?.academicSessionId ||
+        request.query?.academicSessionId ||
+        request.body?.academicSessionId ||
+        request.params?.sessionId ||
+        request.query?.sessionId ||
+        request.body?.sessionId;
 
       // Check for other resource IDs
       const facultyId = request.params?.facultyId || request.query?.facultyId;
@@ -93,9 +100,24 @@ export class AdminGuard implements CanActivate {
 
       // If organizationId is provided, find admin for that organization
       if (organizationId) {
-        const found = admins.find(
+        const organizationAdmins = admins.filter(
           (admin) => admin.organizationId === organizationId,
         );
+        let found = academicSessionId
+          ? organizationAdmins.find(
+              (admin) => admin.academicSessionId === academicSessionId,
+            )
+          : undefined;
+        if (!found && !academicSessionId && organizationAdmins.length) {
+          const organization = await this.prisma.organization.findUnique({
+            where: { id: organizationId },
+            select: { academicSessionId: true },
+          });
+          found = organizationAdmins.find(
+            (admin) =>
+              admin.academicSessionId === organization?.academicSessionId,
+          );
+        }
         if (found) matchingAdmin = found;
       }
 
@@ -168,12 +190,24 @@ export class AdminGuard implements CanActivate {
         }
       }
 
-      // If no specific scope match, use the first admin (fallback)
-      // But log a warning because this could indicate a permission issue
       if (!matchingAdmin) {
-        this.logger.warn(
-          `User ${user.id} has multiple admin roles but none match the request scope. Using first admin: ${admins[0].adminType}`,
+        matchingAdmin = admins.find(
+          (admin) => admin.adminType === 'PLATFORM_ADMIN',
         );
+      }
+
+      if (
+        !matchingAdmin &&
+        (organizationId || facultyId || departmentId || institutionId)
+      ) {
+        throw new ForbiddenException(
+          'This admin assignment does not include the requested scope or academic session',
+        );
+      }
+
+      // Requests without a scoped resource can use the first assignment; the
+      // permission check below still validates its explicit permissions.
+      if (!matchingAdmin) {
         matchingAdmin = admins[0];
       }
 
@@ -214,11 +248,30 @@ export class AdminGuard implements CanActivate {
         }
 
         // Use the matching admin to check permission with proper scope
-        const hasPermission = await this.checkPermissionForAdmin(
-          matchingAdmin,
-          requiredPermission,
-          resourceId,
-        );
+        const eligibleAdmins = academicSessionId
+          ? admins.filter(
+              (admin) =>
+                admin.adminType === 'PLATFORM_ADMIN' ||
+                !['ORGANIZATION_ADMIN', 'CLUB_ADMIN'].includes(
+                  admin.adminType,
+                ) ||
+                admin.academicSessionId === academicSessionId,
+            )
+          : admins;
+        let hasPermission = false;
+        for (const admin of resourceId ? eligibleAdmins : [matchingAdmin]) {
+          if (
+            await this.checkPermissionForAdmin(
+              admin,
+              requiredPermission,
+              resourceId,
+            )
+          ) {
+            hasPermission = true;
+            matchingAdmin = admin;
+            break;
+          }
+        }
 
         if (!hasPermission) {
           this.logger.warn(
@@ -238,6 +291,7 @@ export class AdminGuard implements CanActivate {
         facultyId: matchingAdmin.facultyId,
         departmentId: matchingAdmin.departmentId,
         organizationId: matchingAdmin.organizationId,
+        academicSessionId: matchingAdmin.academicSessionId,
         // Include all admins for multi-scope support
         allAdmins: admins.map((a) => ({
           id: a.id,
@@ -246,6 +300,7 @@ export class AdminGuard implements CanActivate {
           facultyId: a.facultyId,
           departmentId: a.departmentId,
           organizationId: a.organizationId,
+          academicSessionId: a.academicSessionId,
         })),
       };
 
@@ -325,7 +380,7 @@ export class AdminGuard implements CanActivate {
 
       case 'ORGANIZATION_ADMIN':
       case 'CLUB_ADMIN':
-        return this.isResourceInOrganization(admin.organizationId, resourceId);
+        return this.isResourceInOrganizationSession(admin, resourceId);
 
       default:
         return false;
@@ -395,17 +450,53 @@ export class AdminGuard implements CanActivate {
     return false;
   }
 
-  private async isResourceInOrganization(
-    organizationId: string,
+  private async isResourceInOrganizationSession(
+    admin: any,
     resourceId: string,
   ): Promise<boolean> {
-    if (organizationId === resourceId) return true;
+    const organizationId = admin.organizationId;
+    const academicSessionId = admin.academicSessionId;
+    if (!organizationId || !academicSessionId) return false;
+
+    if (organizationId === resourceId) {
+      const organization = await this.prisma.organization.findFirst({
+        where: { id: resourceId, academicSessionId },
+      });
+      return !!organization;
+    }
 
     // Check if resource is a membership in this organization
     const membership = await this.prisma.organizationMembership.findFirst({
-      where: { id: resourceId, organizationId },
+      where: {
+        id: resourceId,
+        organizationId,
+        joinedSessionId: academicSessionId,
+      },
     });
     if (membership) return true;
+
+    const due = await this.prisma.due.findFirst({
+      where: { id: resourceId, organizationId, sessionId: academicSessionId },
+    });
+    if (due) return true;
+
+    const event = await this.prisma.event.findFirst({
+      where: {
+        id: resourceId,
+        organizationId,
+        organization: { academicSessionId },
+      },
+    });
+    if (event) return true;
+
+    const announcement = await this.prisma.announcement.findFirst({
+      where: {
+        id: resourceId,
+        organizationId,
+        organization: { academicSessionId },
+      },
+    });
+    if (announcement) return true;
 
     return false;
   }

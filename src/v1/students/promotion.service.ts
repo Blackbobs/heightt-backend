@@ -14,6 +14,7 @@ import {
   PromoteStudentDto,
   BulkPromoteDto,
   PromotionResultDto,
+  PromoteInstitutionDto,
 } from './dto/promotion.dto';
 
 @Injectable()
@@ -26,6 +27,259 @@ export class PromotionService {
     private readonly eventService: EventService,
     private readonly notificationService: NotificationService,
   ) {}
+
+  async promoteInstitution(
+    institutionId: string,
+    userId: string,
+    dto: PromoteInstitutionDto,
+  ) {
+    const [institution, currentSession, operator] = await Promise.all([
+      this.prisma.institution.findUnique({ where: { id: institutionId } }),
+      this.prisma.academicSession.findFirst({
+        where: {
+          id: dto.currentSessionId,
+          institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+      }),
+      this.prisma.admin.findFirst({
+        where: {
+          userId,
+          status: 'ACTIVE',
+          OR: [
+            { adminType: 'PLATFORM_ADMIN' },
+            { adminType: 'INSTITUTION_ADMIN', institutionId },
+          ],
+        },
+      }),
+    ]);
+
+    if (!institution) {
+      throw new NotFoundException('Institution not found');
+    }
+    if (!operator) {
+      throw new ForbiddenException(
+        'Only a platform admin or this institution admin can run promotion',
+      );
+    }
+    if (!currentSession) {
+      throw new BadRequestException(
+        'The supplied session is not the institution current session. Refresh and try again.',
+      );
+    }
+
+    const nextSessionName = this.getNextSessionName(currentSession.name);
+    const existingNextSession = await this.prisma.academicSession.findFirst({
+      where: {
+        institutionId,
+        name: nextSessionName,
+        scope: 'INSTITUTION',
+      },
+    });
+    const students = await this.prisma.studentProfile.findMany({
+      where: { institutionId, academicStatus: 'ACTIVE' },
+      select: {
+        id: true,
+        userId: true,
+        departmentId: true,
+        currentAcademicLevelId: true,
+      },
+    });
+    const departmentIds = [...new Set(students.map((s) => s.departmentId))];
+    const levels = await this.prisma.academicLevel.findMany({
+      where: {
+        departmentId: { in: departmentIds },
+        status: 'ACTIVE',
+      },
+      orderBy: [{ departmentId: 'asc' }, { order: 'asc' }],
+    });
+    const levelsByDepartment = new Map<string, typeof levels>();
+    for (const level of levels) {
+      const departmentLevels = levelsByDepartment.get(level.departmentId) || [];
+      departmentLevels.push(level);
+      levelsByDepartment.set(level.departmentId, departmentLevels);
+    }
+
+    const now = new Date();
+    const result = await this.prisma.$transaction(async (tx) => {
+      const claimedCurrentSession = await tx.academicSession.updateMany({
+        where: {
+          id: currentSession.id,
+          institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+        data: { isCurrent: false, status: 'COMPLETED', updatedBy: userId },
+      });
+      if (claimedCurrentSession.count !== 1) {
+        throw new BadRequestException(
+          'This institution has already been promoted. Refresh before trying again.',
+        );
+      }
+
+      const nextSession = existingNextSession
+        ? await tx.academicSession.update({
+            where: { id: existingNextSession.id },
+            data: { isCurrent: true, status: 'ACTIVE', updatedBy: userId },
+          })
+        : await tx.academicSession.create({
+            data: {
+              institutionId,
+              name: nextSessionName,
+              startDate: this.addYears(currentSession.startDate, 1),
+              endDate: this.addYears(currentSession.endDate, 1),
+              status: 'ACTIVE',
+              scope: 'INSTITUTION',
+              isCurrent: true,
+              createdBy: userId,
+            },
+          });
+
+      await tx.academicSession.updateMany({
+        where: {
+          institutionId,
+          scope: 'INSTITUTION',
+          id: { not: nextSession.id },
+          isCurrent: true,
+        },
+        data: { isCurrent: false, status: 'COMPLETED', updatedBy: userId },
+      });
+
+      let promoted = 0;
+      let graduated = 0;
+      let skipped = 0;
+
+      for (const student of students) {
+        if (!student.currentAcademicLevelId) {
+          skipped += 1;
+          continue;
+        }
+        const departmentLevels =
+          levelsByDepartment.get(student.departmentId) || [];
+        const currentIndex = departmentLevels.findIndex(
+          (level) => level.id === student.currentAcademicLevelId,
+        );
+        if (currentIndex < 0) {
+          skipped += 1;
+          continue;
+        }
+        const nextLevel = departmentLevels[currentIndex + 1];
+
+        if (!nextLevel) {
+          await tx.studentProfile.update({
+            where: { id: student.id },
+            data: { academicStatus: 'GRADUATED' },
+          });
+          graduated += 1;
+          continue;
+        }
+
+        await tx.studentPromotion.create({
+          data: {
+            studentId: student.id,
+            fromLevelId: student.currentAcademicLevelId,
+            toLevelId: nextLevel.id,
+            sessionId: nextSession.id,
+            promotedBy: userId,
+            promotionDate: now,
+            notes: dto.notes || `Institution promotion to ${nextSession.name}`,
+          },
+        });
+        await tx.studentProfile.update({
+          where: { id: student.id },
+          data: { currentAcademicLevelId: nextLevel.id },
+        });
+        await tx.studentAcademicRecord.upsert({
+          where: {
+            studentId_sessionId: {
+              studentId: student.id,
+              sessionId: nextSession.id,
+            },
+          },
+          update: {
+            departmentId: student.departmentId,
+            academicLevelId: nextLevel.id,
+            status: 'ACTIVE',
+          },
+          create: {
+            studentId: student.id,
+            sessionId: nextSession.id,
+            departmentId: student.departmentId,
+            academicLevelId: nextLevel.id,
+            status: 'ACTIVE',
+          },
+        });
+        promoted += 1;
+      }
+
+      await tx.activityLog.create({
+        data: {
+          userId,
+          activity: 'INSTITUTION_STUDENTS_PROMOTED',
+          details: JSON.stringify({
+            institutionId,
+            fromSessionId: currentSession.id,
+            fromSessionName: currentSession.name,
+            toSessionId: nextSession.id,
+            toSessionName: nextSession.name,
+            promoted,
+            graduated,
+            skipped,
+          }),
+        },
+      });
+
+      return {
+        institution: { id: institution.id, name: institution.name },
+        previousSession: {
+          id: currentSession.id,
+          name: currentSession.name,
+        },
+        currentSession: {
+          id: nextSession.id,
+          name: nextSession.name,
+          generated: !existingNextSession,
+        },
+        summary: {
+          eligible: students.length,
+          promoted,
+          graduated,
+          skipped,
+        },
+      };
+    });
+
+    await Promise.all([
+      this.invalidatePromotionCache(),
+      this.cacheService.invalidateByTag('sessions'),
+    ]);
+
+    return result;
+  }
+
+  private getNextSessionName(currentName: string): string {
+    const match = currentName.trim().match(/^(\d{4})\s*\/\s*(\d{4})$/);
+    if (!match) {
+      throw new BadRequestException(
+        'Current session name must use the YYYY/YYYY format',
+      );
+    }
+    const startYear = Number(match[1]);
+    const endYear = Number(match[2]);
+    if (endYear !== startYear + 1) {
+      throw new BadRequestException(
+        'Current session years must be consecutive',
+      );
+    }
+    return `${startYear + 1}/${endYear + 1}`;
+  }
+
+  private addYears(date: Date, years: number): Date {
+    const result = new Date(date);
+    result.setUTCFullYear(result.getUTCFullYear() + years);
+    return result;
+  }
 
   // ============================================
   // PROMOTE STUDENT

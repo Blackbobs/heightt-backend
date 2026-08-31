@@ -84,6 +84,20 @@ export class PromotionResultDto {
   promotionId?: string;
 }
 
+export class PromoteInstitutionDto {
+  @ApiProperty({
+    description:
+      'The institution current session ID. This prevents an accidental second promotion run.',
+  })
+  @IsString()
+  currentSessionId: string;
+
+  @ApiPropertyOptional({ description: 'Audit note for this promotion run' })
+  @IsOptional()
+  @IsString()
+  notes?: string;
+}
+
 export class PromotionHistoryDto {
   @ApiProperty()
   id: string;
