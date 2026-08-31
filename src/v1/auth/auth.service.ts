@@ -39,6 +39,14 @@ export class AuthService {
     private readonly permissionService: PermissionService,
   ) {}
 
+  private getFrontendUrl(): string {
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') ||
+      'http://localhost:3001';
+
+    return frontendUrl.replace(/\/+$/, '');
+  }
+
   // ============================================
   // REGISTER - NO AUTO-LOGIN
   // ============================================
@@ -122,8 +130,7 @@ export class AuthService {
     });
 
     if (verification) {
-      const frontendUrl =
-        this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+      const frontendUrl = this.getFrontendUrl();
       const verificationLink = `${frontendUrl}/verify-email?token=${verification.token}`;
 
       try {
@@ -260,8 +267,7 @@ export class AuthService {
       },
     });
 
-    const frontendUrl =
-      this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+    const frontendUrl = this.getFrontendUrl();
     const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
     try {
