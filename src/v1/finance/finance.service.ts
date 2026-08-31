@@ -3616,6 +3616,15 @@ export class FinanceService {
       where.userId = userId;
     }
 
+    if (filters.academicSessionId) {
+      where.wallet = {
+        ...(where.wallet || {}),
+        organization: {
+          academicSessionId: filters.academicSessionId,
+        },
+      };
+    }
+
     if (filters.status) {
       where.status = filters.status;
     }

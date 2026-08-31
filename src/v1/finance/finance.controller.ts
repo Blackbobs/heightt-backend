@@ -1191,6 +1191,11 @@ export class FinanceController {
     description:
       'Organization wallet to query. Requires an active admin role within that organization scope.',
   })
+  @ApiQuery({
+    name: 'academicSessionId',
+    required: false,
+    description: 'Filter organisation withdrawals by academic session',
+  })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
   @ApiQuery({

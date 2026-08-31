@@ -111,6 +111,14 @@ export class WithdrawalFilterDto {
   @IsString()
   organizationId?: string;
 
+  @ApiProperty({
+    required: false,
+    description: 'Academic session ID of the organization',
+  })
+  @IsOptional()
+  @IsString()
+  academicSessionId?: string;
+
   @ApiProperty({ required: false })
   @IsOptional()
   @IsEnum(['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED'])
