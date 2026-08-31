@@ -1009,95 +1009,114 @@ export class FinanceService {
   async getMyDues(userId: string) {
     this.logger.log(`Getting all dues for user: ${userId}`);
 
-    // Get all organizations the user is a member of
-    const memberships = await this.prisma.organizationMembership.findMany({
-      where: {
-        userId,
-        status: 'ACTIVE',
-      },
-      select: {
-        organizationId: true,
-      },
-    });
-
-    const organizationIds = memberships.map((m) => m.organizationId);
-
-    if (organizationIds.length === 0) {
-      this.logger.log(`User ${userId} is not a member of any organization`);
-      return [];
-    }
-
-    // Get the student profile to check if user is a student
     const studentProfile = await this.prisma.studentProfile.findUnique({
       where: { userId },
-      select: { id: true },
+      select: { id: true, institutionId: true },
     });
 
-    // Get ALL active dues for organizations the user belongs to
-    const allDues = await this.prisma.due.findMany({
-      where: {
-        organizationId: { in: organizationIds },
-        status: 'ACTIVE',
-      },
-      include: {
-        organization: true,
-        session: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    // If user is not a student, return empty array (only students pay dues)
     if (!studentProfile) {
       this.logger.log(`User ${userId} does not have a student profile`);
       return [];
     }
 
-    // Get existing assignments to know which dues are already assigned to this student
-    const existingAssignments = await this.prisma.dueAssignment.findMany({
+    const [memberships, currentSession] = await Promise.all([
+      this.prisma.organizationMembership.findMany({
+        where: { userId, status: 'ACTIVE' },
+        select: { organizationId: true },
+      }),
+      this.prisma.academicSession.findFirst({
+        where: {
+          institutionId: studentProfile.institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+        select: { id: true, name: true },
+      }),
+    ]);
+    const organizationIds = memberships.map(
+      (membership) => membership.organizationId,
+    );
+
+    // Only current-session and cross-session dues are available for new
+    // assignment. Historical obligations are loaded from existing assignments.
+    const availableDues = organizationIds.length
+      ? await this.prisma.due.findMany({
+          where: {
+            organizationId: { in: organizationIds },
+            status: 'ACTIVE',
+            OR: [
+              { sessionId: null },
+              ...(currentSession ? [{ sessionId: currentSession.id }] : []),
+            ],
+          },
+          include: { organization: true, session: true },
+          orderBy: { createdAt: 'desc' },
+        })
+      : [];
+    const availableDueIds = availableDues.map((due) => due.id);
+
+    // Keep every unpaid assigned obligation visible even if its session ended
+    // or the student's old organization membership is no longer active.
+    const assignments = await this.prisma.dueAssignment.findMany({
       where: {
         studentId: studentProfile.id,
-        dueId: { in: allDues.map((d) => d.id) },
+        OR: [
+          { isPaid: false },
+          ...(availableDueIds.length
+            ? [{ dueId: { in: availableDueIds } }]
+            : []),
+        ],
       },
-      select: {
-        dueId: true,
-        isPaid: true,
-        paidAt: true,
-        id: true,
-        amount: true,
-        studentId: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
+        due: { include: { organization: true, session: true } },
       },
+      orderBy: { createdAt: 'desc' },
     });
 
-    // Create a map of dueId -> assignment
-    const assignmentMap = new Map();
-    for (const assignment of existingAssignments) {
-      assignmentMap.set(assignment.dueId, assignment);
+    const assignmentByDueId = new Map(
+      assignments.map((assignment) => [assignment.dueId, assignment]),
+    );
+    const dueById = new Map<string, any>();
+    for (const due of availableDues) dueById.set(due.id, due);
+    for (const assignment of assignments) {
+      dueById.set(assignment.dueId, assignment.due);
     }
 
-    // Build the response: combine due data with assignment data if it exists
-    const result = allDues.map((due) => {
-      const assignment = assignmentMap.get(due.id);
+    const result = [...dueById.values()]
+      .map((due) => {
+        const assignment = assignmentByDueId.get(due.id);
+        const isPaid = assignment?.isPaid ?? false;
+        const sessionCategory = !due.sessionId
+          ? 'ALL_SESSIONS'
+          : due.sessionId === currentSession?.id
+            ? 'CURRENT'
+            : 'PREVIOUS';
+        const isArrear = !isPaid && sessionCategory === 'PREVIOUS';
 
-      return {
-        id: assignment?.id || `due_${due.id}`,
-        dueId: due.id,
-        studentId: studentProfile.id,
-        amount: due.amount,
-        isPaid: assignment?.isPaid || false,
-        paidAt: assignment?.paidAt || null,
-        createdAt: assignment?.createdAt || due.createdAt,
-        updatedAt: assignment?.updatedAt || due.updatedAt,
-        due: due,
-        isAutoAssigned: !assignment,
-      };
-    });
+        return {
+          id: assignment?.id || `due_${due.id}`,
+          dueId: due.id,
+          studentId: studentProfile.id,
+          amount: assignment?.amount ?? due.amount,
+          isPaid,
+          paidAt: assignment?.paidAt || null,
+          createdAt: assignment?.createdAt || due.createdAt,
+          updatedAt: assignment?.updatedAt || due.updatedAt,
+          due,
+          sessionCategory,
+          isOutstanding: !isPaid,
+          isArrear,
+          canPay: !isPaid && due.status === 'ACTIVE',
+          isAutoAssigned: !assignment,
+        };
+      })
+      .sort((a, b) => {
+        if (a.isArrear !== b.isArrear) return a.isArrear ? -1 : 1;
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      });
 
     this.logger.log(
-      `Found ${result.length} dues for user ${userId} across ${organizationIds.length} organizations`,
+      `Found ${result.length} current and outstanding dues for user ${userId}`,
     );
 
     return result;
@@ -1213,6 +1232,7 @@ export class FinanceService {
         where: { id: dueAssignmentId },
         include: {
           student: { select: { userId: true } },
+          due: { select: { status: true } },
           duePayments: { select: { id: true }, take: 1 },
         },
       });
@@ -1229,6 +1249,11 @@ export class FinanceService {
 
       if (assignment.isPaid || assignment.duePayments.length > 0) {
         throw new BadRequestException('This due has already been paid');
+      }
+      if (assignment.due.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          'This due is visible for your records but is not open for payment',
+        );
       }
       if (paymentAmount !== undefined && paymentAmount !== assignment.amount) {
         throw new BadRequestException(
@@ -1247,6 +1272,11 @@ export class FinanceService {
     if (!due) {
       throw new NotFoundException('Due not found');
     }
+    if (due.status !== 'ACTIVE') {
+      throw new BadRequestException(
+        'This due is not currently open for payment',
+      );
+    }
     if (paymentAmount !== undefined && paymentAmount !== due.amount) {
       throw new BadRequestException(
         `Due payment amount must be exactly ${due.amount} Kobo`,
@@ -1261,21 +1291,6 @@ export class FinanceService {
     if (!studentProfile) {
       throw new NotFoundException(
         'Student profile not found. Please complete your student profile first.',
-      );
-    }
-
-    // Check if the user is a member of the organization
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId: due.organizationId,
-        status: 'ACTIVE',
-      },
-    });
-
-    if (!membership) {
-      throw new ForbiddenException(
-        'You are not a member of this organization. Please join the organization first.',
       );
     }
 
@@ -1298,6 +1313,34 @@ export class FinanceService {
         throw new BadRequestException('This due has already been paid');
       }
       return existingAssignment.id;
+    }
+
+    // A closed session can keep collecting assignments that already existed,
+    // but must not create new obligations for students after the fact.
+    if (due.sessionId) {
+      const dueSession = await this.prisma.academicSession.findUnique({
+        where: { id: due.sessionId },
+        select: { isCurrent: true, status: true },
+      });
+      if (!dueSession?.isCurrent || dueSession.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          'This due belongs to a previous academic session and cannot be newly assigned',
+        );
+      }
+    }
+
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: {
+        userId,
+        organizationId: due.organizationId,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException(
+        'You are not a member of this organization. Please join the organization first.',
+      );
     }
 
     // Auto-assign the due
