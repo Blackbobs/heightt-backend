@@ -22,17 +22,42 @@ export class EmailService {
       base64Content: string;
     }>,
   ): Promise<boolean> {
+    const brandedHtml = this.ensureHeighttBranding(subject, html);
     if (attachments && attachments.length > 0) {
-      const sent = await this.trySend(to, subject, html, attachments);
+      const sent = await this.trySend(to, subject, brandedHtml, attachments);
       if (sent) {
         return true;
       }
       this.logger.warn(
         `Retrying email to ${to} without attachments after failure`,
       );
-      return this.trySend(to, subject, html);
+      return this.trySend(to, subject, brandedHtml);
     }
-    return this.trySend(to, subject, html);
+    return this.trySend(to, subject, brandedHtml);
+  }
+
+  private ensureHeighttBranding(subject: string, html: string): string {
+    if (html.includes('data-heightt-email="true"')) return html;
+
+    const plainContent = html
+      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    this.logger.warn(
+      `Applied the default Heightt layout to an unbranded email: ${subject}`,
+    );
+    return renderHeighttEmail({
+      preheader: subject,
+      category: 'Heightt notification',
+      headline: subject,
+      intro: plainContent || 'You have a new update from Heightt.',
+      reason:
+        'You received this email because it relates to your Heightt account or organisation activity.',
+    });
   }
 
   private async trySend(

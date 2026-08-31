@@ -36,8 +36,23 @@ function toneColour(tone: EmailTone): string {
   }[tone];
 }
 
+function normaliseActionUrl(value?: string): string | undefined {
+  if (!value) return undefined;
+  try {
+    const url = value.startsWith('/')
+      ? new URL(value, 'https://www.heightt.app')
+      : new URL(value);
+    return ['https:', 'http:'].includes(url.protocol)
+      ? url.toString()
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function renderHeighttEmail(options: HeighttEmailOptions): string {
   const colour = toneColour(options.tone || 'info');
+  const actionUrl = normaliseActionUrl(options.actionUrl);
   const details = (options.details || []).filter(
     ({ value }) => value !== undefined && value !== null && value !== '',
   );
@@ -53,22 +68,22 @@ export function renderHeighttEmail(options: HeighttEmailOptions): string {
     )
     .join('');
   const action =
-    options.actionLabel && options.actionUrl
+    options.actionLabel && actionUrl
       ? `<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:28px 0 22px;width:100%;"><tr><td align="center">
-        <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(options.actionUrl)}" style="height:48px;v-text-anchor:middle;width:220px;" arcsize="12%" stroke="f" fillcolor="#2563EB"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">${escapeHtml(options.actionLabel)}</center></v:roundrect><![endif]-->
-        <!--[if !mso]><!--><a href="${escapeHtml(options.actionUrl)}" style="background-color:#2563EB;border-radius:6px;color:#FFFFFF;display:inline-block;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;line-height:48px;text-align:center;text-decoration:none;width:220px;-webkit-text-size-adjust:none;">${escapeHtml(options.actionLabel)}</a><!--<![endif]-->
+        <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${escapeHtml(actionUrl)}" style="height:48px;v-text-anchor:middle;width:220px;" arcsize="12%" stroke="f" fillcolor="#2563EB"><w:anchorlock/><center style="color:#ffffff;font-family:Arial,sans-serif;font-size:15px;font-weight:bold;">${escapeHtml(options.actionLabel)}</center></v:roundrect><![endif]-->
+        <!--[if !mso]><!--><a href="${escapeHtml(actionUrl)}" style="background-color:#2563EB;border-radius:6px;color:#FFFFFF;display:inline-block;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;line-height:48px;text-align:center;text-decoration:none;width:220px;-webkit-text-size-adjust:none;">${escapeHtml(options.actionLabel)}</a><!--<![endif]-->
       </td></tr></table>
-      <p style="margin:0 0 22px;color:#64748B;font-size:12px;line-height:18px;">If the button does not work, copy and paste this link into your browser:<br><a href="${escapeHtml(options.actionUrl)}" style="color:#2563EB;text-decoration:underline;word-break:break-all;">${escapeHtml(options.actionUrl)}</a></p>`
+      <p style="margin:0 0 22px;color:#64748B;font-size:12px;line-height:18px;">If the button does not work, copy and paste this link into your browser:<br><a href="${escapeHtml(actionUrl)}" style="color:#2563EB;text-decoration:underline;word-break:break-all;">${escapeHtml(actionUrl)}</a></p>`
       : '';
 
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="x-apple-disable-message-reformatting"><title>${escapeHtml(options.headline)}</title>
 <style>@media only screen and (max-width:620px){.email-shell{width:100%!important}.email-card{padding:28px 22px!important}.email-pad{padding:16px 10px!important}}</style></head>
-<body style="margin:0;padding:0;background-color:#F1F5F9;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+<body data-heightt-email="true" style="margin:0;padding:0;background-color:#F1F5F9;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 <div style="display:none;font-size:1px;color:#F1F5F9;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">${escapeHtml(options.preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;background-color:#F1F5F9;"><tr><td class="email-pad" align="center" style="padding:32px 16px;">
   <table class="email-shell" role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;">
-    <tr><td style="padding:0 0 18px;"><a href="https://www.heightt.app" style="text-decoration:none;"><img src="${LOGO_URL}" width="132" alt="Heightt" style="display:block;width:132px;height:auto;border:0;outline:none;text-decoration:none;"></a></td></tr>
+    <tr><td style="padding:0 0 18px;"><a href="https://www.heightt.app" style="text-decoration:none;"><img src="${LOGO_URL}" width="132" alt="Heightt logo" style="display:block;width:132px;height:auto;border:0;outline:none;text-decoration:none;"></a></td></tr>
     <tr><td class="email-card" style="background-color:#FFFFFF;border:1px solid #E2E8F0;border-radius:10px;padding:38px 42px;">
       ${options.category ? `<p style="margin:0 0 12px;color:${colour};font-size:12px;line-height:18px;font-weight:bold;letter-spacing:.7px;text-transform:uppercase;">${escapeHtml(options.category)}</p>` : ''}
       <h1 style="margin:0 0 20px;color:#0F172A;font-size:27px;line-height:34px;font-weight:bold;">${escapeHtml(options.headline)}</h1>

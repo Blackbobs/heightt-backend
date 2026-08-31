@@ -84,17 +84,20 @@ describe('PromotionService institution promotion', () => {
       delete: jest.fn().mockResolvedValue(undefined),
       invalidateUserCache: jest.fn().mockResolvedValue(undefined),
     };
+    const notifications = {
+      createNotification: jest.fn().mockResolvedValue({ id: 'notification-1' }),
+    };
     const service = new PromotionService(
       prisma as any,
       cache as any,
       {} as any,
-      {} as any,
+      notifications as any,
     );
-    return { service, prisma, tx, cache };
+    return { service, prisma, tx, cache, notifications };
   }
 
   it('creates the next session and promotes 300 level to 400 level', async () => {
-    const { service, tx, cache } = setup();
+    const { service, tx, cache, notifications } = setup();
     const result = await service.promoteInstitution(
       'institution-1',
       'platform-admin',
@@ -126,13 +129,64 @@ describe('PromotionService institution promotion', () => {
       }),
     );
     expect(tx.admin.updateMany).not.toHaveBeenCalled();
-    expect(cache.invalidateUserCache).not.toHaveBeenCalled();
+    expect(cache.invalidateUserCache).toHaveBeenCalledWith('student-user');
+    expect(notifications.createNotification).toHaveBeenCalledWith(
+      'student-user',
+      expect.objectContaining({
+        title: 'Promotion confirmed',
+        sendEmail: true,
+        data: expect.objectContaining({
+          event: 'STUDENT_PROMOTED',
+          previousLevel: '300 Level',
+          currentLevel: '400 Level',
+          previousSession: '2026/2027',
+          currentSession: '2027/2028',
+        }),
+      }),
+    );
     expect(result.currentSession).toEqual({
       id: 'session-2027',
       name: '2027/2028',
       generated: true,
     });
     expect(result.summary.promoted).toBe(1);
+  });
+
+  it('notifies final-level students when they are marked as graduated', async () => {
+    const { service, prisma, tx, notifications } = setup();
+    prisma.studentProfile.findMany.mockResolvedValue([
+      {
+        id: 'student-400',
+        userId: 'final-year-user',
+        departmentId: 'department-1',
+        currentAcademicLevelId: 'level-400',
+      },
+    ]);
+
+    const result = await service.promoteInstitution(
+      'institution-1',
+      'platform-admin',
+      { currentSessionId: currentSession.id },
+    );
+
+    expect(tx.studentProfile.update).toHaveBeenCalledWith({
+      where: { id: 'student-400' },
+      data: { academicStatus: 'GRADUATED' },
+    });
+    expect(tx.studentPromotion.create).not.toHaveBeenCalled();
+    expect(notifications.createNotification).toHaveBeenCalledWith(
+      'final-year-user',
+      expect.objectContaining({
+        title: 'Graduation status confirmed',
+        sendEmail: true,
+        data: expect.objectContaining({
+          event: 'STUDENT_GRADUATED',
+          previousLevel: '400 Level',
+          currentLevel: null,
+        }),
+      }),
+    );
+    expect(result.summary.graduated).toBe(1);
   });
 
   it('rejects a stale current-session ID to prevent double promotion', async () => {

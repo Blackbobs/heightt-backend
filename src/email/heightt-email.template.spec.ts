@@ -14,7 +14,7 @@ describe('Heightt email template', () => {
 
     expect(html).not.toContain('<script>alert(1)</script>');
     expect(html).toContain('&lt;script&gt;alert(1)&lt;/script&gt;');
-    expect(html).toContain('token=&quot;bad&quot;&amp;next=&lt;unsafe&gt;');
+    expect(html).toContain('token=%22bad%22&amp;next=%3Cunsafe%3E');
   });
 
   it('does not render rows for unavailable optional values', () => {
@@ -35,5 +35,33 @@ describe('Heightt email template', () => {
 
   it('escapes all HTML-sensitive characters', () => {
     expect(escapeHtml(`&<>"'`)).toBe('&amp;&lt;&gt;&quot;&#39;');
+  });
+
+  it('always renders the Heightt brand shell and accessible logo', () => {
+    const html = renderHeighttEmail({
+      preheader: 'Account update',
+      headline: 'Account update',
+      intro: 'Your account has been updated.',
+      reason: 'This relates to your Heightt account.',
+    });
+
+    expect(html).toContain('data-heightt-email="true"');
+    expect(html).toContain('alt="Heightt logo"');
+    expect(html).toContain('#2563EB');
+    expect(html).toContain('Heightt Technologies Inc.');
+  });
+
+  it('does not render unsafe action URL protocols', () => {
+    const html = renderHeighttEmail({
+      preheader: 'Account update',
+      headline: 'Account update',
+      intro: 'Your account has been updated.',
+      actionLabel: 'Open account',
+      actionUrl: 'javascript:alert(1)',
+      reason: 'This relates to your Heightt account.',
+    });
+
+    expect(html).not.toContain('javascript:');
+    expect(html).not.toContain('Open account');
   });
 });

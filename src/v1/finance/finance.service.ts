@@ -43,6 +43,7 @@ import {
   WithdrawalType,
 } from './dto/withdrawal.dto';
 import { randomBytes } from 'crypto';
+import { renderHeighttEmail } from '../../email/heightt-email.template';
 
 @Injectable()
 export class FinanceService {
@@ -3782,12 +3783,27 @@ export class FinanceService {
       await this.emailService.sendEmail(
         admin.user.email,
         'Withdrawal Request - Heightt',
-        `<p>A withdrawal request requires your attention.</p>
-       <p>Amount: ${data.amountFormatted}</p>
-       <p>Bank: ${data.bankName}</p>
-       <p>Account: ${data.accountNumber}</p>
-       <p>Request ID: ${data.withdrawalId}</p>
-       <p>Please log in to the admin dashboard to approve or reject this request.</p>`,
+        renderHeighttEmail({
+          preheader: `A withdrawal request for ${data.amountFormatted} requires review.`,
+          category: 'Withdrawal review',
+          headline: 'Withdrawal request requires attention',
+          recipientName: admin.user.username,
+          intro:
+            'A withdrawal request has been submitted and requires review in the Heightt admin dashboard.',
+          details: [
+            { label: 'Amount', value: data.amountFormatted },
+            { label: 'Bank', value: data.bankName },
+            { label: 'Account', value: data.accountNumber },
+            { label: 'Request reference', value: data.withdrawalId },
+          ],
+          actionLabel: 'Open admin dashboard',
+          actionUrl: `${(this.configService.get<string>('FRONTEND_URL') || 'https://www.heightt.app').replace(/\/+$/, '')}/admin/withdrawals`,
+          notice:
+            'Review the request details before approving or rejecting it.',
+          tone: 'warning',
+          reason:
+            'You received this email because you are an active Heightt platform administrator.',
+        }),
       );
     }
   }
@@ -3828,7 +3844,20 @@ export class FinanceService {
       .sendEmail(
         user.email,
         title,
-        `<p>${body}</p><p>Reference: ${data.withdrawalId}</p>`,
+        renderHeighttEmail({
+          preheader: body,
+          category: 'Withdrawal update',
+          headline: title,
+          recipientName: user.username,
+          intro: body,
+          details: [
+            { label: 'Amount', value: data.amountFormatted },
+            { label: 'Reference', value: data.withdrawalId },
+          ],
+          tone: event === 'WITHDRAWAL_REJECTED' ? 'danger' : 'info',
+          reason:
+            'You received this email because you requested a withdrawal from your Heightt wallet.',
+        }),
       )
       .catch((error: any) => {
         this.logger.error(

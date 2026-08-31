@@ -149,6 +149,16 @@ export class PromotionService {
       let promoted = 0;
       let graduated = 0;
       let skipped = 0;
+      const notificationTargets: Array<{
+        userId: string;
+        studentId: string;
+        event: 'STUDENT_PROMOTED' | 'STUDENT_GRADUATED';
+        fromLevelId: string;
+        fromLevelName: string;
+        toLevelId?: string;
+        toLevelName?: string;
+        promotionId?: string;
+      }> = [];
 
       for (const student of students) {
         if (!student.currentAcademicLevelId) {
@@ -171,11 +181,18 @@ export class PromotionService {
             where: { id: student.id },
             data: { academicStatus: 'GRADUATED' },
           });
+          notificationTargets.push({
+            userId: student.userId,
+            studentId: student.id,
+            event: 'STUDENT_GRADUATED',
+            fromLevelId: student.currentAcademicLevelId,
+            fromLevelName: departmentLevels[currentIndex].name,
+          });
           graduated += 1;
           continue;
         }
 
-        await tx.studentPromotion.create({
+        const promotion = await tx.studentPromotion.create({
           data: {
             studentId: student.id,
             fromLevelId: student.currentAcademicLevelId,
@@ -209,6 +226,16 @@ export class PromotionService {
             academicLevelId: nextLevel.id,
             status: 'ACTIVE',
           },
+        });
+        notificationTargets.push({
+          userId: student.userId,
+          studentId: student.id,
+          event: 'STUDENT_PROMOTED',
+          fromLevelId: student.currentAcademicLevelId,
+          fromLevelName: departmentLevels[currentIndex].name,
+          toLevelId: nextLevel.id,
+          toLevelName: nextLevel.name,
+          promotionId: promotion.id,
         });
         promoted += 1;
       }
@@ -247,6 +274,7 @@ export class PromotionService {
           graduated,
           skipped,
         },
+        notificationTargets,
       };
     });
 
@@ -255,7 +283,81 @@ export class PromotionService {
       this.cacheService.invalidateByTag('sessions'),
     ]);
 
-    return result;
+    await this.notifyInstitutionPromotionStudents(
+      result.notificationTargets,
+      institution,
+      currentSession,
+      result.currentSession,
+    );
+
+    const { notificationTargets: _notificationTargets, ...publicResult } =
+      result;
+
+    return publicResult;
+  }
+
+  private async notifyInstitutionPromotionStudents(
+    targets: Array<{
+      userId: string;
+      studentId: string;
+      event: 'STUDENT_PROMOTED' | 'STUDENT_GRADUATED';
+      fromLevelId: string;
+      fromLevelName: string;
+      toLevelId?: string;
+      toLevelName?: string;
+      promotionId?: string;
+    }>,
+    institution: { id: string; name: string },
+    previousSession: { id: string; name: string },
+    currentSession: { id: string; name: string },
+  ): Promise<void> {
+    const batchSize = 20;
+    for (let offset = 0; offset < targets.length; offset += batchSize) {
+      const batch = targets.slice(offset, offset + batchSize);
+      const results = await Promise.allSettled(
+        batch.map(async (target) => {
+          const graduated = target.event === 'STUDENT_GRADUATED';
+          await this.notificationService.createNotification(target.userId, {
+            title: graduated
+              ? 'Graduation status confirmed'
+              : 'Promotion confirmed',
+            body: graduated
+              ? `You completed ${target.fromLevelName} in the ${previousSession.name} academic session. Your academic status is now Graduated.`
+              : `Congratulations! You have been promoted from ${target.fromLevelName} to ${target.toLevelName} for the ${currentSession.name} academic session.`,
+            type: 'ACADEMIC',
+            priority: 'NORMAL',
+            data: {
+              event: target.event,
+              studentId: target.studentId,
+              institutionId: institution.id,
+              institutionName: institution.name,
+              previousLevelId: target.fromLevelId,
+              previousLevel: target.fromLevelName,
+              currentLevelId: target.toLevelId || null,
+              currentLevel: target.toLevelName || null,
+              previousSessionId: previousSession.id,
+              previousSession: previousSession.name,
+              currentSessionId: currentSession.id,
+              currentSession: currentSession.name,
+              promotionId: target.promotionId || null,
+              promotedAt: new Date().toISOString(),
+            },
+            sendEmail: true,
+          });
+
+          await this.cacheService.invalidateUserCache(target.userId);
+          await this.cacheService.delete(`student:dashboard:${target.userId}`);
+        }),
+      );
+
+      results.forEach((delivery, index) => {
+        if (delivery.status === 'rejected') {
+          this.logger.error(
+            `Failed to notify promoted student ${batch[index].studentId}: ${delivery.reason?.message || delivery.reason}`,
+          );
+        }
+      });
+    }
   }
 
   private getNextSessionName(currentName: string): string {
@@ -740,6 +842,10 @@ export class PromotionService {
     try {
       await this.cacheService.invalidateByTag('promotions');
       await this.cacheService.invalidateByTag('students');
+      await this.cacheService.invalidateByTag('dashboard');
+      await this.cacheService.invalidateByTag('user');
+      await this.cacheService.invalidateByTag('academics');
+      await this.cacheService.invalidateByTag('dues');
 
       if (studentId) {
         await this.cacheService.invalidatePattern(

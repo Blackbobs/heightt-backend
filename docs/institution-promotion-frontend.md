@@ -19,6 +19,56 @@ One promotion action now:
 
 The operation is atomic. If any database operation fails, none of the session, student, or admin changes are committed.
 
+## Student notification and dashboard behaviour
+
+After the promotion transaction commits, each affected student receives an in-app notification and a branded Heightt email.
+
+Promoted students receive notification data shaped like:
+
+```ts
+type StudentPromotionNotification = {
+  event: 'STUDENT_PROMOTED';
+  studentId: string;
+  institutionId: string;
+  institutionName: string;
+  previousLevelId: string;
+  previousLevel: string;
+  currentLevelId: string;
+  currentLevel: string;
+  previousSessionId: string;
+  previousSession: string;
+  currentSessionId: string;
+  currentSession: string;
+  promotionId: string;
+  promotedAt: string;
+};
+```
+
+Final-level students receive the same structure with `event: 'STUDENT_GRADUATED'`, `currentLevelId: null`, `currentLevel: null`, and `promotionId: null`.
+
+When the realtime notification gateway emits a notification with either event, show a success banner and refresh the student's academic data:
+
+```ts
+function handleAcademicNotification(notification: Notification) {
+  const event = notification.data?.event;
+  if (event !== 'STUDENT_PROMOTED' && event !== 'STUDENT_GRADUATED') return;
+
+  queryClient.invalidateQueries({ queryKey: ['student-profile'] });
+  queryClient.invalidateQueries({ queryKey: ['student-dashboard'] });
+  queryClient.invalidateQueries({ queryKey: ['academic-records'] });
+  queryClient.invalidateQueries({ queryKey: ['promotion-history'] });
+  queryClient.invalidateQueries({ queryKey: ['academic-sessions'] });
+  queryClient.invalidateQueries({ queryKey: ['notifications'] });
+  queryClient.invalidateQueries({ queryKey: ['dues'] });
+}
+```
+
+For `STUDENT_PROMOTED`, display: “Congratulations! You have been promoted from {previousLevel} to {currentLevel} for the {currentSession} academic session.”
+
+For `STUDENT_GRADUATED`, display: “You completed {previousLevel} in the {previousSession} academic session. Your academic status is now Graduated.”
+
+The frontend must still use the refreshed student profile as the source of truth. Do not update the level or graduation status locally from the notification alone.
+
 ## API client types
 
 ```ts
