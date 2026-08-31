@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { renderHeighttEmail } from './heightt-email.template';
 
 @Injectable()
 export class EmailService {
@@ -171,8 +172,7 @@ export class EmailService {
     username: string,
     token: string,
   ): Promise<boolean> {
-    const frontendUrl =
-      this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+    const frontendUrl = this.getFrontendUrl();
     const resetLink = `${frontendUrl}/reset-password?token=${token}`;
 
     const html = this.getPasswordResetEmailTemplate(username, resetLink);
@@ -190,6 +190,27 @@ export class EmailService {
     }
 
     return result;
+  }
+
+  async sendPasswordChangedEmail(
+    email: string,
+    username: string,
+  ): Promise<boolean> {
+    const html = renderHeighttEmail({
+      preheader: 'Your Heightt password was changed successfully.',
+      category: 'Account security',
+      headline: 'Your password has been changed',
+      recipientName: username,
+      intro:
+        'Your Heightt account password was changed successfully, and all existing sessions have been signed out.',
+      notice:
+        'If you did not make this change, contact Heightt Support immediately.',
+      tone: 'success',
+      reason:
+        'You received this email because the password for your Heightt account was changed.',
+    });
+
+    return this.sendEmail(email, 'Your Heightt password was changed', html);
   }
 
   /**
@@ -258,6 +279,21 @@ export class EmailService {
     username: string,
     verificationLink: string,
   ): string {
+    return renderHeighttEmail({
+      preheader: 'Verify your email address to activate your Heightt account.',
+      category: 'Account verification',
+      headline: 'Verify your email address',
+      recipientName: username,
+      intro:
+        'Please confirm this email address to activate and secure your Heightt account.',
+      actionLabel: 'Verify email address',
+      actionUrl: verificationLink,
+      notice:
+        'This link expires in 24 hours. If you did not create this account, you can ignore this email. Heightt will never ask you to send your password or verification code by email.',
+      reason:
+        'You received this email because a Heightt account was created with this address.',
+    });
+    /* Legacy template retained temporarily for reference.
     return `
       <!DOCTYPE html>
       <html>
@@ -307,10 +343,25 @@ export class EmailService {
         </div>
       </body>
       </html>
-    `;
+    `; */
   }
 
   private getWelcomeEmailTemplate(username: string): string {
+    const frontendUrl = this.getFrontendUrl();
+    return renderHeighttEmail({
+      preheader: 'Your Heightt account is ready.',
+      category: 'Welcome to Heightt',
+      headline: 'Your account is ready',
+      recipientName: username,
+      intro: 'Your email address has been verified successfully.',
+      body: 'Heightt helps students and student organisations manage payments and financial records clearly. Complete your profile to get started.',
+      actionLabel: 'Complete your profile',
+      actionUrl: `${frontendUrl}/onboarding`,
+      tone: 'success',
+      reason:
+        'You received this email because you verified your Heightt account.',
+    });
+    /* Legacy template retained temporarily for reference.
     return `
       <!DOCTYPE html>
       <html>
@@ -350,13 +401,28 @@ export class EmailService {
         </div>
       </body>
       </html>
-    `;
+    `; */
   }
 
   private getPasswordResetEmailTemplate(
     username: string,
     resetLink: string,
   ): string {
+    return renderHeighttEmail({
+      preheader: 'Use this secure link to reset your Heightt password.',
+      category: 'Account security',
+      headline: 'Reset your password',
+      recipientName: username,
+      intro:
+        'We received a request to reset the password for your Heightt account.',
+      actionLabel: 'Reset password',
+      actionUrl: resetLink,
+      notice:
+        'This single-use link expires in 1 hour. If you did not request a password reset, ignore this email and your password will remain unchanged.',
+      reason:
+        'You received this email because a password reset was requested for your account.',
+    });
+    /* Legacy template retained temporarily for reference.
     return `
       <!DOCTYPE html>
       <html>
@@ -402,7 +468,7 @@ export class EmailService {
         </div>
       </body>
       </html>
-    `;
+    `; */
   }
 
   private getOTPEmailTemplate(
@@ -410,6 +476,18 @@ export class EmailService {
     otp: string,
     expiresInMinutes: number,
   ): string {
+    return renderHeighttEmail({
+      preheader: 'Your single-use Heightt verification code.',
+      category: 'Security code',
+      headline: 'Your verification code',
+      recipientName: username,
+      intro: 'Use the code below to complete your authentication.',
+      details: [{ label: 'Verification code', value: otp }],
+      notice: `This code expires in ${expiresInMinutes} minutes. Do not share it with anyone. If you did not request this code, you can ignore this email.`,
+      reason:
+        'You received this email because a verification code was requested for your account.',
+    });
+    /* Legacy template retained temporarily for reference.
     return `
       <!DOCTYPE html>
       <html>
@@ -454,7 +532,7 @@ export class EmailService {
         </div>
       </body>
       </html>
-    `;
+    `; */
   }
 
   private getNewDeviceLoginTemplate(
@@ -464,6 +542,26 @@ export class EmailService {
     ipAddress: string,
     time: string,
   ): string {
+    return renderHeighttEmail({
+      preheader: 'A new sign-in to your Heightt account was detected.',
+      category: 'Security alert',
+      headline: 'New sign-in detected',
+      recipientName: username,
+      intro:
+        'We noticed a sign-in to your Heightt account from a new device or location.',
+      details: [
+        { label: 'Device', value: deviceName },
+        { label: 'Approximate location', value: location },
+        { label: 'IP address', value: ipAddress },
+        { label: 'Time', value: time },
+      ],
+      notice:
+        'If this was not you, change your password immediately and contact Heightt Support.',
+      tone: 'danger',
+      reason:
+        'You received this email as a security notification for your Heightt account.',
+    });
+    /* Legacy template retained temporarily for reference.
     return `
       <!DOCTYPE html>
       <html>
@@ -518,6 +616,12 @@ export class EmailService {
         </div>
       </body>
       </html>
-    `;
+    `; */
+  }
+
+  private getFrontendUrl(): string {
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3001';
+    return frontendUrl.replace(/\/+$/, '');
   }
 }

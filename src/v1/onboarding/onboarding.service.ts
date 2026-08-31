@@ -9,7 +9,11 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
-import { OnboardingPersonalInfoDto, OnboardingInstitutionDto } from './dto';
+import {
+  CompleteOnboardingDto,
+  OnboardingPersonalInfoDto,
+  OnboardingInstitutionDto,
+} from './dto';
 
 @Injectable()
 export class OnboardingService {
@@ -42,38 +46,8 @@ export class OnboardingService {
   // COMPLETE ONBOARDING (with Transaction)
   // ============================================
 
-  async completeOnboarding(
-    userId: string,
-    body: {
-      firstName?: string;
-      lastName?: string;
-      phone?: string;
-      studentId?: string;
-      gender?: string;
-      dateOfBirth?: string;
-      country?: string;
-      state?: string;
-      bio?: string;
-      institution?: string;
-      faculty?: string;
-      department?: string;
-      academicLevelId?: string;
-      sessionId?: string; // NEW
-    },
-  ) {
+  async completeOnboarding(userId: string, body: CompleteOnboardingDto) {
     this.logger.log(`Completing onboarding for user: ${userId}`);
-
-    // Validate date of birth
-    if (body.dateOfBirth) {
-      const dob = new Date(body.dateOfBirth);
-      if (isNaN(dob.getTime())) {
-        throw new BadRequestException('Invalid date of birth format');
-      }
-      const age = new Date().getFullYear() - dob.getFullYear();
-      if (age < 16) {
-        throw new BadRequestException('You must be at least 16 years old');
-      }
-    }
 
     // NEW: Validate session if provided
     let session: any = null;
@@ -93,14 +67,8 @@ export class OnboardingService {
         data: {
           firstName: body.firstName,
           lastName: body.lastName,
-          phone: body.phone,
           gender: body.gender as any,
-          dateOfBirth: body.dateOfBirth
-            ? new Date(body.dateOfBirth)
-            : undefined,
           country: body.country,
-          state: body.state,
-          bio: body.bio,
           onboardingStep: 'INSTITUTION',
         },
       });
@@ -291,11 +259,8 @@ export class OnboardingService {
           details: JSON.stringify({
             firstName: body.firstName,
             lastName: body.lastName,
-            phone: body.phone,
             gender: body.gender,
-            dateOfBirth: body.dateOfBirth,
             country: body.country,
-            state: body.state,
             institution: body.institution,
             faculty: body.faculty,
             department: body.department,
@@ -344,18 +309,6 @@ export class OnboardingService {
       throw new NotFoundException('User profile not found');
     }
 
-    // Validate date of birth
-    if (dto.dateOfBirth) {
-      const dob = new Date(dto.dateOfBirth);
-      if (isNaN(dob.getTime())) {
-        throw new BadRequestException('Invalid date of birth format');
-      }
-      const age = new Date().getFullYear() - dob.getFullYear();
-      if (age < 16) {
-        throw new BadRequestException('You must be at least 16 years old');
-      }
-    }
-
     // Update UserProfile
     const updatedProfile = await this.prisma.userProfile.update({
       where: { userId },
@@ -363,15 +316,9 @@ export class OnboardingService {
         firstName: dto.firstName,
         lastName: dto.lastName,
         middleName: dto.middleName,
-        phone: dto.phone,
         avatar: dto.avatar,
         gender: dto.gender as any,
-        dateOfBirth: dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined,
         country: dto.country,
-        state: dto.state,
-        city: dto.city,
-        address: dto.address,
-        bio: dto.bio,
         onboardingStep: 'INSTITUTION',
       },
     });
@@ -392,8 +339,7 @@ export class OnboardingService {
         details: JSON.stringify({
           step: 'PERSONAL_INFO',
           completed: true,
-          hasPhone: !!dto.phone,
-          hasDateOfBirth: !!dto.dateOfBirth,
+          fields: ['firstName', 'lastName', 'gender', 'country'],
         }),
       },
     });
@@ -577,8 +523,6 @@ export class OnboardingService {
     const personalInfoCompleted = !!(
       user.profile.firstName &&
       user.profile.lastName &&
-      user.profile.phone &&
-      user.profile.dateOfBirth &&
       user.profile.gender
     );
 
@@ -626,7 +570,7 @@ export class OnboardingService {
       progress: {
         personalInfo: {
           completed: personalInfoCompleted,
-          required: ['firstName', 'lastName', 'phone', 'dateOfBirth', 'gender'],
+          required: ['firstName', 'lastName', 'gender'],
           missing: this.getMissingPersonalFields(user.profile),
         },
         institutionInfo: {
@@ -742,8 +686,6 @@ export class OnboardingService {
     const missing: string[] = [];
     if (!profile.firstName) missing.push('firstName');
     if (!profile.lastName) missing.push('lastName');
-    if (!profile.phone) missing.push('phone');
-    if (!profile.dateOfBirth) missing.push('dateOfBirth');
     if (!profile.gender) missing.push('gender');
     return missing;
   }

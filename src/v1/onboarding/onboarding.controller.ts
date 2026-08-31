@@ -14,6 +14,7 @@ import { JwtGuard } from '../../common/guards/jwt.guard';
 import {
   OnboardingPersonalInfoDto,
   OnboardingInstitutionDto,
+  CompleteOnboardingDto,
 } from './dto/onboarding.dto';
 import {
   ApiTags,
@@ -61,22 +62,7 @@ export class OnboardingController {
   @ApiBadRequestResponse({ description: 'Invalid input data' })
   async completeOnboarding(
     @Request() req: any,
-    @Body()
-    body: {
-      firstName?: string;
-      lastName?: string;
-      phone?: string;
-      studentId?: string;
-      gender?: string;
-      dateOfBirth?: string;
-      country?: string;
-      state?: string;
-      bio?: string;
-      institution?: string;
-      faculty?: string;
-      department?: string;
-      academicLevelId?: string;
-    },
+    @Body() body: CompleteOnboardingDto,
   ) {
     return this.onboardingService.completeOnboarding(req.user.id, body);
   }

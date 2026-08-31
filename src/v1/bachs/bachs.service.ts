@@ -115,9 +115,7 @@ export class BachsService {
       'fees.platform.enabled',
       true,
     );
-    const platformFee = platformFeeEnabled
-      ? platformFeeAmount
-      : 0;
+    const platformFee = platformFeeEnabled ? platformFeeAmount : 0;
     const settlementAmount = paymentData.amount + platformFee;
 
     // 1. Get user details
@@ -138,7 +136,7 @@ export class BachsService {
     const bachsCustomer = await this.bachsClient.getOrCreateCustomer(
       user.email,
       customerName || 'Customer',
-      user.profile?.phone || undefined,
+      undefined,
     );
 
     // 3. Create pending payment record
