@@ -12,10 +12,13 @@ import { EventService, SystemEvents } from '../../events/event.service';
 import { LedgerService } from './ledger.service';
 import { WalletService } from './wallet.service';
 import { BachsClient } from '../bachs/bachs.client';
+import { CacheService } from '../../redis/cache.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class WithdrawalWebhookService {
   private readonly logger = new Logger(WithdrawalWebhookService.name);
+  private reconciliationRunning = false;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -24,7 +27,65 @@ export class WithdrawalWebhookService {
     private readonly ledgerService: LedgerService,
     private readonly walletService: WalletService,
     private readonly bachsClient: BachsClient,
+    private readonly cacheService: CacheService,
   ) {}
+
+  @Cron('*/10 * * * *')
+  async reconcileStaleProcessingWithdrawals(): Promise<void> {
+    if (this.reconciliationRunning) return;
+    this.reconciliationRunning = true;
+
+    try {
+      const staleBefore = new Date(Date.now() - 5 * 60 * 1000);
+      const withdrawals = await this.prisma.withdrawal.findMany({
+        where: {
+          status: 'PROCESSING',
+          providerPayoutId: { not: null },
+          processedAt: { lte: staleBefore },
+        },
+        select: {
+          id: true,
+          reference: true,
+          providerPayoutId: true,
+        },
+        orderBy: { processedAt: 'asc' },
+        take: 100,
+      });
+
+      for (const withdrawal of withdrawals) {
+        try {
+          const payout = await this.bachsClient.getPayout(
+            withdrawal.providerPayoutId!,
+          );
+          const status = String(payout.status || '').toUpperCase();
+          const payload = {
+            id: `reconciliation:${withdrawal.providerPayoutId}`,
+            type: `payout.${status.toLowerCase()}`,
+            reference: payout.reference || withdrawal.reference,
+            data: {
+              ...payout,
+              payout_id: payout.id || withdrawal.providerPayoutId,
+              reference: payout.reference || withdrawal.reference,
+            },
+          };
+
+          if (['PAID', 'SUCCEEDED', 'SUCCESS', 'COMPLETED'].includes(status)) {
+            await this.handleWithdrawalSucceeded(payload, 'Bachs');
+          } else if (
+            ['FAILED', 'REJECTED', 'CANCELLED', 'CANCELED'].includes(status)
+          ) {
+            await this.handleWithdrawalFailed(payload, 'Bachs');
+          }
+        } catch (error) {
+          this.logger.error(
+            `Could not reconcile withdrawal ${withdrawal.id}: ${error.message}`,
+          );
+        }
+      }
+    } finally {
+      this.reconciliationRunning = false;
+    }
+  }
 
   async processWebhook(
     provider: string,
@@ -55,6 +116,8 @@ export class WithdrawalWebhookService {
       case 'transfer.succeeded':
       case 'payout.succeeded':
       case 'payout.paid':
+      case 'payout.completed':
+      case 'payout.successful':
         result = await this.handleWithdrawalSucceeded(payload, provider);
         break;
 
@@ -83,14 +146,15 @@ export class WithdrawalWebhookService {
     payload: any,
     provider: string,
   ): Promise<any> {
-    const reference = payload.reference || payload.data?.reference;
-    const providerReference = payload.data?.withdrawal_id || payload.id;
+    const { reference, providerReference, withdrawalId } =
+      this.getWebhookIdentifiers(payload);
 
     this.logger.log(`Withdrawal succeeded for reference: ${reference}`);
 
     const withdrawal = await this.prisma.withdrawal.findFirst({
       where: {
         OR: [
+          ...(withdrawalId ? [{ id: withdrawalId }] : []),
           ...(reference ? [{ reference }] : []),
           ...(providerReference
             ? [{ providerPayoutId: providerReference }]
@@ -184,8 +248,8 @@ export class WithdrawalWebhookService {
     payload: any,
     provider: string,
   ): Promise<any> {
-    const reference = payload.reference || payload.data?.reference;
-    const providerReference = payload.data?.withdrawal_id || payload.id;
+    const { reference, providerReference, withdrawalId } =
+      this.getWebhookIdentifiers(payload);
     const failureReason =
       payload.reason || payload.data?.reason || 'Unknown error';
 
@@ -196,6 +260,7 @@ export class WithdrawalWebhookService {
     const withdrawal = await this.prisma.withdrawal.findFirst({
       where: {
         OR: [
+          ...(withdrawalId ? [{ id: withdrawalId }] : []),
           ...(reference ? [{ reference }] : []),
           ...(providerReference
             ? [{ providerPayoutId: providerReference }]
@@ -344,14 +409,15 @@ export class WithdrawalWebhookService {
     payload: any,
     provider: string,
   ): Promise<any> {
-    const reference = payload.reference || payload.data?.reference;
-    const providerReference = payload.data?.withdrawal_id || payload.id;
+    const { reference, providerReference, withdrawalId } =
+      this.getWebhookIdentifiers(payload);
 
     this.logger.log(`Withdrawal pending for reference: ${reference}`);
 
     const withdrawal = await this.prisma.withdrawal.findFirst({
       where: {
         OR: [
+          ...(withdrawalId ? [{ id: withdrawalId }] : []),
           ...(reference ? [{ reference }] : []),
           ...(providerReference
             ? [{ providerPayoutId: providerReference }]
@@ -407,6 +473,28 @@ export class WithdrawalWebhookService {
     };
   }
 
+  private getWebhookIdentifiers(payload: any): {
+    reference?: string;
+    providerReference?: string;
+    withdrawalId?: string;
+  } {
+    const payout =
+      payload.data?.object?.payout || payload.data?.payout || payload.payout;
+    const metadata =
+      payout?.metadata || payload.data?.metadata || payload.metadata;
+
+    return {
+      reference:
+        payload.reference || payload.data?.reference || payout?.reference,
+      providerReference:
+        payload.data?.withdrawal_id ||
+        payload.data?.payout_id ||
+        payload.data?.id ||
+        payout?.id,
+      withdrawalId: metadata?.withdrawalId || metadata?.withdrawal_id,
+    };
+  }
+
   private async storeUnhandledWebhook(
     provider: string,
     payload: any,
@@ -427,6 +515,12 @@ export class WithdrawalWebhookService {
   }
 
   private async invalidateWithdrawalWallet(wallet: any): Promise<void> {
+    await Promise.all([
+      this.cacheService.invalidateByTag('withdrawals'),
+      this.cacheService.invalidateByTag('finance'),
+      this.cacheService.invalidatePattern('withdrawals:*'),
+    ]);
+
     if (wallet.organizationId) {
       await this.walletService.invalidateWalletCache({
         type: 'ORGANIZATION',

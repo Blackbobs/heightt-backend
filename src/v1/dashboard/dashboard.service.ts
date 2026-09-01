@@ -84,7 +84,7 @@ export class DashboardService {
     const announcements = await this.prisma.announcement.findMany({
       where: {
         isPublished: true,
-        expiresAt: { gt: new Date() },
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
         organizationId: { in: organizationIds },
       },
       take: 5,

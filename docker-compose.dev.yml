@@ -21,21 +21,6 @@ services:
     restart: unless-stopped
 
   # ============================================
-  # Redis Cache
-  # ============================================
-  redis:
-    image: redis:7-alpine
-    container_name: heightt-redis-dev
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data_dev:/data
-    networks:
-      - heightt-network-dev
-    restart: unless-stopped
-    command: redis-server --appendonly yes
-
-  # ============================================
   # PGAdmin (Optional - for development)
   # ============================================
   pgadmin:
@@ -55,9 +40,6 @@ services:
 volumes:
   postgres_data_dev:
     driver: local
-  redis_data_dev:
-    driver: local
-
 networks:
   heightt-network-dev:
     driver: bridge

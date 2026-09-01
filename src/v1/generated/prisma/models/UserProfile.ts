@@ -30,15 +30,9 @@ export type UserProfileMinAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   middleName: string | null
-  phone: string | null
   avatar: string | null
   gender: $Enums.Gender | null
-  dateOfBirth: Date | null
   country: string | null
-  state: string | null
-  city: string | null
-  address: string | null
-  bio: string | null
   onboardingStep: $Enums.OnboardingStep | null
   onboardingCompleted: boolean | null
   onboardingCompletedAt: Date | null
@@ -54,15 +48,9 @@ export type UserProfileMaxAggregateOutputType = {
   firstName: string | null
   lastName: string | null
   middleName: string | null
-  phone: string | null
   avatar: string | null
   gender: $Enums.Gender | null
-  dateOfBirth: Date | null
   country: string | null
-  state: string | null
-  city: string | null
-  address: string | null
-  bio: string | null
   onboardingStep: $Enums.OnboardingStep | null
   onboardingCompleted: boolean | null
   onboardingCompletedAt: Date | null
@@ -78,15 +66,9 @@ export type UserProfileCountAggregateOutputType = {
   firstName: number
   lastName: number
   middleName: number
-  phone: number
   avatar: number
   gender: number
-  dateOfBirth: number
   country: number
-  state: number
-  city: number
-  address: number
-  bio: number
   onboardingStep: number
   onboardingCompleted: number
   onboardingCompletedAt: number
@@ -104,15 +86,9 @@ export type UserProfileMinAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
-  phone?: true
   avatar?: true
   gender?: true
-  dateOfBirth?: true
   country?: true
-  state?: true
-  city?: true
-  address?: true
-  bio?: true
   onboardingStep?: true
   onboardingCompleted?: true
   onboardingCompletedAt?: true
@@ -128,15 +104,9 @@ export type UserProfileMaxAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
-  phone?: true
   avatar?: true
   gender?: true
-  dateOfBirth?: true
   country?: true
-  state?: true
-  city?: true
-  address?: true
-  bio?: true
   onboardingStep?: true
   onboardingCompleted?: true
   onboardingCompletedAt?: true
@@ -152,15 +122,9 @@ export type UserProfileCountAggregateInputType = {
   firstName?: true
   lastName?: true
   middleName?: true
-  phone?: true
   avatar?: true
   gender?: true
-  dateOfBirth?: true
   country?: true
-  state?: true
-  city?: true
-  address?: true
-  bio?: true
   onboardingStep?: true
   onboardingCompleted?: true
   onboardingCompletedAt?: true
@@ -249,15 +213,9 @@ export type UserProfileGroupByOutputType = {
   firstName: string
   lastName: string
   middleName: string | null
-  phone: string | null
   avatar: string | null
   gender: $Enums.Gender | null
-  dateOfBirth: Date | null
   country: string | null
-  state: string | null
-  city: string | null
-  address: string | null
-  bio: string | null
   onboardingStep: $Enums.OnboardingStep
   onboardingCompleted: boolean
   onboardingCompletedAt: Date | null
@@ -294,15 +252,9 @@ export type UserProfileWhereInput = {
   firstName?: Prisma.StringFilter<"UserProfile"> | string
   lastName?: Prisma.StringFilter<"UserProfile"> | string
   middleName?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  phone?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   avatar?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   gender?: Prisma.EnumGenderNullableFilter<"UserProfile"> | $Enums.Gender | null
-  dateOfBirth?: Prisma.DateTimeNullableFilter<"UserProfile"> | Date | string | null
   country?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  state?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  city?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  address?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  bio?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"UserProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"UserProfile"> | boolean
   onboardingCompletedAt?: Prisma.DateTimeNullableFilter<"UserProfile"> | Date | string | null
@@ -319,15 +271,9 @@ export type UserProfileOrderByWithRelationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
-  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
-  state?: Prisma.SortOrderInput | Prisma.SortOrder
-  city?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
-  bio?: Prisma.SortOrderInput | Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -347,15 +293,9 @@ export type UserProfileWhereUniqueInput = Prisma.AtLeast<{
   firstName?: Prisma.StringFilter<"UserProfile"> | string
   lastName?: Prisma.StringFilter<"UserProfile"> | string
   middleName?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  phone?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   avatar?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   gender?: Prisma.EnumGenderNullableFilter<"UserProfile"> | $Enums.Gender | null
-  dateOfBirth?: Prisma.DateTimeNullableFilter<"UserProfile"> | Date | string | null
   country?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  state?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  city?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  address?: Prisma.StringNullableFilter<"UserProfile"> | string | null
-  bio?: Prisma.StringNullableFilter<"UserProfile"> | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"UserProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"UserProfile"> | boolean
   onboardingCompletedAt?: Prisma.DateTimeNullableFilter<"UserProfile"> | Date | string | null
@@ -372,15 +312,9 @@ export type UserProfileOrderByWithAggregationInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrderInput | Prisma.SortOrder
-  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
-  state?: Prisma.SortOrderInput | Prisma.SortOrder
-  city?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrderInput | Prisma.SortOrder
-  bio?: Prisma.SortOrderInput | Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -402,15 +336,9 @@ export type UserProfileScalarWhereWithAggregatesInput = {
   firstName?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
   lastName?: Prisma.StringWithAggregatesFilter<"UserProfile"> | string
   middleName?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  phone?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"UserProfile"> | $Enums.Gender | null
-  dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProfile"> | Date | string | null
   country?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  state?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  city?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  address?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
-  bio?: Prisma.StringNullableWithAggregatesFilter<"UserProfile"> | string | null
   onboardingStep?: Prisma.EnumOnboardingStepWithAggregatesFilter<"UserProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolWithAggregatesFilter<"UserProfile"> | boolean
   onboardingCompletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"UserProfile"> | Date | string | null
@@ -425,15 +353,9 @@ export type UserProfileCreateInput = {
   firstName: string
   lastName: string
   middleName?: string | null
-  phone?: string | null
   avatar?: string | null
   gender?: $Enums.Gender | null
-  dateOfBirth?: Date | string | null
   country?: string | null
-  state?: string | null
-  city?: string | null
-  address?: string | null
-  bio?: string | null
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -450,15 +372,9 @@ export type UserProfileUncheckedCreateInput = {
   firstName: string
   lastName: string
   middleName?: string | null
-  phone?: string | null
   avatar?: string | null
   gender?: $Enums.Gender | null
-  dateOfBirth?: Date | string | null
   country?: string | null
-  state?: string | null
-  city?: string | null
-  address?: string | null
-  bio?: string | null
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -473,15 +389,9 @@ export type UserProfileUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -498,15 +408,9 @@ export type UserProfileUncheckedUpdateInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -522,15 +426,9 @@ export type UserProfileCreateManyInput = {
   firstName: string
   lastName: string
   middleName?: string | null
-  phone?: string | null
   avatar?: string | null
   gender?: $Enums.Gender | null
-  dateOfBirth?: Date | string | null
   country?: string | null
-  state?: string | null
-  city?: string | null
-  address?: string | null
-  bio?: string | null
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -545,15 +443,9 @@ export type UserProfileUpdateManyMutationInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -569,15 +461,9 @@ export type UserProfileUncheckedUpdateManyInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -598,15 +484,9 @@ export type UserProfileCountOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   gender?: Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  bio?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrder
@@ -622,15 +502,9 @@ export type UserProfileMaxOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   gender?: Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  bio?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrder
@@ -646,15 +520,9 @@ export type UserProfileMinOrderByAggregateInput = {
   firstName?: Prisma.SortOrder
   lastName?: Prisma.SortOrder
   middleName?: Prisma.SortOrder
-  phone?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   gender?: Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  state?: Prisma.SortOrder
-  city?: Prisma.SortOrder
-  address?: Prisma.SortOrder
-  bio?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
   onboardingCompletedAt?: Prisma.SortOrder
@@ -713,15 +581,9 @@ export type UserProfileCreateWithoutUserInput = {
   firstName: string
   lastName: string
   middleName?: string | null
-  phone?: string | null
   avatar?: string | null
   gender?: $Enums.Gender | null
-  dateOfBirth?: Date | string | null
   country?: string | null
-  state?: string | null
-  city?: string | null
-  address?: string | null
-  bio?: string | null
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -736,15 +598,9 @@ export type UserProfileUncheckedCreateWithoutUserInput = {
   firstName: string
   lastName: string
   middleName?: string | null
-  phone?: string | null
   avatar?: string | null
   gender?: $Enums.Gender | null
-  dateOfBirth?: Date | string | null
   country?: string | null
-  state?: string | null
-  city?: string | null
-  address?: string | null
-  bio?: string | null
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
   onboardingCompletedAt?: Date | string | null
@@ -775,15 +631,9 @@ export type UserProfileUpdateWithoutUserInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -798,15 +648,9 @@ export type UserProfileUncheckedUpdateWithoutUserInput = {
   firstName?: Prisma.StringFieldUpdateOperationsInput | string
   lastName?: Prisma.StringFieldUpdateOperationsInput | string
   middleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboardingCompletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -824,15 +668,9 @@ export type UserProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
-  phone?: boolean
   avatar?: boolean
   gender?: boolean
-  dateOfBirth?: boolean
   country?: boolean
-  state?: boolean
-  city?: boolean
-  address?: boolean
-  bio?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -849,15 +687,9 @@ export type UserProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
-  phone?: boolean
   avatar?: boolean
   gender?: boolean
-  dateOfBirth?: boolean
   country?: boolean
-  state?: boolean
-  city?: boolean
-  address?: boolean
-  bio?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -874,15 +706,9 @@ export type UserProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
-  phone?: boolean
   avatar?: boolean
   gender?: boolean
-  dateOfBirth?: boolean
   country?: boolean
-  state?: boolean
-  city?: boolean
-  address?: boolean
-  bio?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -899,15 +725,9 @@ export type UserProfileSelectScalar = {
   firstName?: boolean
   lastName?: boolean
   middleName?: boolean
-  phone?: boolean
   avatar?: boolean
   gender?: boolean
-  dateOfBirth?: boolean
   country?: boolean
-  state?: boolean
-  city?: boolean
-  address?: boolean
-  bio?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
   onboardingCompletedAt?: boolean
@@ -917,7 +737,7 @@ export type UserProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "middleName" | "phone" | "avatar" | "gender" | "dateOfBirth" | "country" | "state" | "city" | "address" | "bio" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
+export type UserProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "middleName" | "avatar" | "gender" | "country" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["userProfile"]>
 export type UserProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -939,15 +759,9 @@ export type $UserProfilePayload<ExtArgs extends runtime.Types.Extensions.Interna
     firstName: string
     lastName: string
     middleName: string | null
-    phone: string | null
     avatar: string | null
     gender: $Enums.Gender | null
-    dateOfBirth: Date | null
     country: string | null
-    state: string | null
-    city: string | null
-    address: string | null
-    bio: string | null
     onboardingStep: $Enums.OnboardingStep
     onboardingCompleted: boolean
     onboardingCompletedAt: Date | null
@@ -1384,15 +1198,9 @@ export interface UserProfileFieldRefs {
   readonly firstName: Prisma.FieldRef<"UserProfile", 'String'>
   readonly lastName: Prisma.FieldRef<"UserProfile", 'String'>
   readonly middleName: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly phone: Prisma.FieldRef<"UserProfile", 'String'>
   readonly avatar: Prisma.FieldRef<"UserProfile", 'String'>
   readonly gender: Prisma.FieldRef<"UserProfile", 'Gender'>
-  readonly dateOfBirth: Prisma.FieldRef<"UserProfile", 'DateTime'>
   readonly country: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly state: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly city: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly address: Prisma.FieldRef<"UserProfile", 'String'>
-  readonly bio: Prisma.FieldRef<"UserProfile", 'String'>
   readonly onboardingStep: Prisma.FieldRef<"UserProfile", 'OnboardingStep'>
   readonly onboardingCompleted: Prisma.FieldRef<"UserProfile", 'Boolean'>
   readonly onboardingCompletedAt: Prisma.FieldRef<"UserProfile", 'DateTime'>

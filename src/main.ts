@@ -218,6 +218,8 @@ async function bootstrap() {
       'Authorization',
       'Cookie',
       'X-Requested-With',
+      'Cache-Control',
+      'Pragma',
       'X-CSRF-Token',
       'Accept',
       'Origin',

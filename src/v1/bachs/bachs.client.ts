@@ -376,6 +376,15 @@ export class BachsClient {
     }
   }
 
+  async getPayout(payoutId: string): Promise<any> {
+    try {
+      const response = await this.client.get(`/payouts/${payoutId}`);
+      return response.data;
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  }
+
   // ============================================
   // WEBHOOK VERIFICATION
   // ============================================

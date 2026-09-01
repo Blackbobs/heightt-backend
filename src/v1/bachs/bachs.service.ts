@@ -115,9 +115,7 @@ export class BachsService {
       'fees.platform.enabled',
       true,
     );
-    const platformFee = platformFeeEnabled
-      ? platformFeeAmount
-      : 0;
+    const platformFee = platformFeeEnabled ? platformFeeAmount : 0;
     const settlementAmount = paymentData.amount + platformFee;
 
     // 1. Get user details
@@ -138,7 +136,7 @@ export class BachsService {
     const bachsCustomer = await this.bachsClient.getOrCreateCustomer(
       user.email,
       customerName || 'Customer',
-      user.profile?.phone || undefined,
+      undefined,
     );
 
     // 3. Create pending payment record
@@ -166,25 +164,77 @@ export class BachsService {
           orderBy: { createdAt: 'desc' },
         });
 
-        if (existing && existing.bachsCheckoutId) {
+        if (existing) {
           const expiresAt = new Date(existing.createdAt);
           expiresAt.setMinutes(expiresAt.getMinutes() + 60);
 
-          if (new Date() < expiresAt) {
+          if (new Date() >= expiresAt) {
+            await tx.pendingPayment.update({
+              where: { id: existing.id },
+              data: {
+                status: 'EXPIRED',
+                metadata: {
+                  ...((existing.metadata as any) || {}),
+                  expiredAt: new Date().toISOString(),
+                  reason: 'Payment session expired before retry',
+                },
+              },
+            });
+          } else if (!existing.bachsCheckoutId) {
+            // A previous provider request may have failed after the database row
+            // was created. Reuse that row instead of violating the one-active-
+            // payment-per-due constraint.
+            return existing;
+          } else {
             try {
               const checkout = await this.bachsClient.getCheckoutSession(
                 existing.bachsCheckoutId,
               );
-              if (checkout.status === 'OPEN') {
+              const checkoutStatus = String(
+                checkout.status || '',
+              ).toUpperCase();
+              if (checkoutStatus === 'OPEN') {
                 return {
                   ...existing,
                   checkoutUrl: checkout.checkout_url,
                 };
               }
+
+              if (
+                checkoutStatus === 'EXPIRED' ||
+                checkoutStatus === 'CANCELLED'
+              ) {
+                await tx.pendingPayment.update({
+                  where: { id: existing.id },
+                  data: {
+                    status:
+                      checkoutStatus === 'EXPIRED' ? 'EXPIRED' : 'CANCELLED',
+                  },
+                });
+              } else {
+                throw new ConflictException({
+                  statusCode: 409,
+                  code: 'PAYMENT_ALREADY_IN_PROGRESS',
+                  message: 'A payment for this due is already being confirmed',
+                  pendingPaymentId: existing.id,
+                  checkoutId: existing.bachsCheckoutId,
+                  statusUrl: `/api/v1/finance/payments/pending/${existing.id}/status`,
+                });
+              }
             } catch (error) {
+              if (error instanceof ConflictException) throw error;
               this.logger.warn(
                 `Existing checkout ${existing.bachsCheckoutId} is invalid`,
               );
+              throw new ConflictException({
+                statusCode: 409,
+                code: 'PAYMENT_STATUS_UNAVAILABLE',
+                message:
+                  'The existing payment could not be checked. Please check its status before trying again.',
+                pendingPaymentId: existing.id,
+                checkoutId: existing.bachsCheckoutId,
+                statusUrl: `/api/v1/finance/payments/pending/${existing.id}/status`,
+              });
             }
           }
         }
@@ -216,9 +266,11 @@ export class BachsService {
       })
       .catch((error: any) => {
         if (error?.code === 'P2002' && paymentData.dueAssignmentId) {
-          throw new ConflictException(
-            'A payment for this due is already in progress',
-          );
+          throw new ConflictException({
+            statusCode: 409,
+            code: 'PAYMENT_ALREADY_IN_PROGRESS',
+            message: 'A payment for this due is already in progress',
+          });
         }
         throw error;
       });
@@ -961,9 +1013,10 @@ export class BachsService {
     const status =
       pendingPayment.status === 'PENDING' && payment
         ? 'COMPLETED'
-        : pendingPayment.status === 'PENDING'
+        : pendingPayment.status === 'PENDING' && pendingPayment.bachsCheckoutId
           ? 'PROCESSING'
           : pendingPayment.status;
+    const retryable = ['FAILED', 'EXPIRED', 'CANCELLED'].includes(status);
 
     return {
       id: pendingPayment.id,
@@ -974,6 +1027,19 @@ export class BachsService {
       paymentId: payment?.id || null,
       receiptId: payment?.receipt?.id || null,
       receiptNumber: payment?.receipt?.receiptNumber || null,
+      retryable,
+      nextAction:
+        status === 'COMPLETED'
+          ? 'SHOW_SUCCESS'
+          : retryable
+            ? 'RETRY_PAYMENT'
+            : status === 'PENDING'
+              ? 'RETRY_CHECKOUT_CREATION'
+              : 'WAIT_FOR_CONFIRMATION',
+      failureReason:
+        status === 'FAILED'
+          ? ((pendingPayment.metadata as any)?.failureReason ?? null)
+          : null,
       completedAt: pendingPayment.completedAt,
       createdAt: pendingPayment.createdAt,
     };

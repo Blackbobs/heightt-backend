@@ -62,6 +62,7 @@ import {
   PlatformWithdrawalRequestDto,
   OrganizationWithdrawalRequestDto,
   UserWithdrawalRequestDto,
+  WithdrawalQuoteDto,
   UpdateBankAccountDto,
   CreateBankAccountDto,
   ResolveBankAccountDto,
@@ -1149,6 +1150,18 @@ export class FinanceController {
   // WITHDRAWAL HISTORY ENDPOINTS
   // ============================================
 
+  @Get('withdrawals/quote')
+  @ApiOperation({
+    summary: 'Get available balance, fee, and maximum withdrawal amount',
+  })
+  @ApiResponse({ status: 200, description: 'Withdrawal quote returned' })
+  async getWithdrawalQuote(
+    @Request() req: any,
+    @Query() dto: WithdrawalQuoteDto,
+  ) {
+    return this.financeService.getWithdrawalQuote(req.user.id, dto);
+  }
+
   @Get('withdrawals')
   @Cache({
     key: (context) => {
@@ -1177,6 +1190,11 @@ export class FinanceController {
     required: false,
     description:
       'Organization wallet to query. Requires an active admin role within that organization scope.',
+  })
+  @ApiQuery({
+    name: 'academicSessionId',
+    required: false,
+    description: 'Filter organisation withdrawals by academic session',
   })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })

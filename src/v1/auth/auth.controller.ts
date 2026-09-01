@@ -29,7 +29,13 @@ import {
   ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto, AdminLoginResponseDto } from './dto';
+import {
+  RegisterDto,
+  LoginDto,
+  AdminLoginResponseDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
 import { AuthResponseDto, UserResponseDto } from './dto/auth-response.dto';
@@ -296,6 +302,37 @@ export class AuthController {
   async resendVerification(@Body() body: { email: string }) {
     this.logger.log(`Resend verification email called for: ${body.email}`);
     return this.authService.resendVerificationEmail(body.email);
+  }
+
+  @Post('forgot-password')
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Request a password reset',
+    description:
+      'Sends a password reset email when an eligible account exists. The response is intentionally identical for all email addresses.',
+  })
+  @ApiBody({ type: ForgotPasswordDto })
+  @ApiOkResponse({ description: 'Password reset request accepted' })
+  @ApiBadRequestResponse({ description: 'Invalid input or too many requests' })
+  async forgotPassword(@Body() dto: ForgotPasswordDto, @Request() req: any) {
+    return this.authService.forgotPassword(dto, req);
+  }
+
+  @Post('reset-password')
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users', 'sessions'])
+  @ApiOperation({
+    summary: 'Reset a password',
+    description:
+      'Consumes a valid single-use reset token, updates the password, and revokes all active sessions.',
+  })
+  @ApiBody({ type: ResetPasswordDto })
+  @ApiOkResponse({ description: 'Password reset successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid or expired reset token' })
+  async resetPassword(@Body() dto: ResetPasswordDto, @Request() req: any) {
+    return this.authService.resetPassword(dto, req);
   }
 
   @Get('csrf-token')

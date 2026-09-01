@@ -1,4 +1,8 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { IsEmail, IsOptional } from 'class-validator';
 
 export class UserProfileResponseDto {
@@ -16,13 +20,6 @@ export class UserProfileResponseDto {
   middleName?: string;
 
   @ApiProperty({
-    example: '+2348012345678',
-    description: 'User phone number',
-    required: false,
-  })
-  phone?: string;
-
-  @ApiProperty({
     example: 'https://cloudinary.com/avatar.jpg',
     description: 'User avatar URL',
     required: false,
@@ -36,35 +33,8 @@ export class UserProfileResponseDto {
   })
   gender?: string;
 
-  @ApiProperty({
-    example: '2000-01-01T00:00:00.000Z',
-    description: 'Date of birth',
-    required: false,
-  })
-  dateOfBirth?: Date;
-
   @ApiProperty({ example: 'Nigeria', description: 'Country', required: false })
   country?: string;
-
-  @ApiProperty({ example: 'Lagos', description: 'State', required: false })
-  state?: string;
-
-  @ApiProperty({ example: 'Lagos', description: 'City', required: false })
-  city?: string;
-
-  @ApiProperty({
-    example: '123 Main Street',
-    description: 'Address',
-    required: false,
-  })
-  address?: string;
-
-  @ApiProperty({
-    example: 'Software Engineer',
-    description: 'User bio',
-    required: false,
-  })
-  bio?: string;
 
   @ApiProperty({ example: 'PERSONAL_INFO', description: 'Onboarding step' })
   onboardingStep: string;
@@ -213,11 +183,9 @@ export class UpdateUserDto {
   })
   lastName?: string;
 
-  @ApiProperty({
-    example: '+2348012345678',
-    description: 'Updated phone number',
-    required: false,
-  })
+  /** @deprecated Accepted during the frontend rollout but never persisted. */
+  @ApiHideProperty()
+  @IsOptional()
   phone?: string;
 
   @ApiProperty({
@@ -234,11 +202,9 @@ export class UpdateUserDto {
   })
   gender?: string;
 
-  @ApiProperty({
-    example: '2000-01-01T00:00:00.000Z',
-    description: 'Updated date of birth',
-    required: false,
-  })
+  /** @deprecated Accepted during the frontend rollout but never persisted. */
+  @ApiHideProperty()
+  @IsOptional()
   dateOfBirth?: Date;
 
   @ApiProperty({
@@ -248,18 +214,14 @@ export class UpdateUserDto {
   })
   country?: string;
 
-  @ApiProperty({
-    example: 'Lagos',
-    description: 'Updated state',
-    required: false,
-  })
+  /** @deprecated Accepted during the frontend rollout but never persisted. */
+  @ApiHideProperty()
+  @IsOptional()
   state?: string;
 
-  @ApiProperty({
-    example: 'Software Engineer',
-    description: 'Updated bio',
-    required: false,
-  })
+  /** @deprecated Accepted during the frontend rollout but never persisted. */
+  @ApiHideProperty()
+  @IsOptional()
   bio?: string;
 }
 

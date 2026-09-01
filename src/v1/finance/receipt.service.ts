@@ -14,6 +14,7 @@ import { randomBytes } from 'crypto';
 import PDFDocument from 'pdfkit';
 import { v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
+import { renderHeighttEmail } from '../../email/heightt-email.template';
 
 @Injectable()
 export class ReceiptService {
@@ -903,24 +904,29 @@ export class ReceiptService {
 
   private buildReceiptEmailHtml(receipt: any, pdfUrl?: string): string {
     const money = (k: number) => this.formatNaira(k);
-    return `
-      <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto">
-        <h2 style="color:#4F46E5">Payment Receipt</h2>
-        <p>Hi <strong>${receipt.payerName}</strong>,</p>
-        <p>Thank you for your payment. Your receipt <strong>${receipt.receiptNumber}</strong> is attached as a PDF.</p>
-        <table style="width:100%;border-collapse:collapse">
-          <tr><td style="padding:6px;color:#6B7280">Reference</td><td style="padding:6px;text-align:right">${receipt.reference || '-'}</td></tr>
-          <tr><td style="padding:6px;color:#6B7280">${receipt.description || 'Payment'}</td><td style="padding:6px;text-align:right">${money(receipt.amount)}</td></tr>
-          <tr><td style="padding:6px;color:#6B7280">Service fee</td><td style="padding:6px;text-align:right">${money(receipt.serviceFee)}</td></tr>
-          <tr><td style="padding:8px;border-top:2px solid #E5E7EB"><strong>Total Paid</strong></td>
-              <td style="padding:8px;border-top:2px solid #E5E7EB;text-align:right"><strong>${money(receipt.totalAmount)} ${receipt.currency}</strong></td></tr>
-        </table>
-        ${
-          pdfUrl
-            ? `<p style="margin-top:18px"><a href="${pdfUrl}" style="background:#4F46E5;color:#fff;padding:12px 22px;border-radius:6px;text-decoration:none">Download Receipt (PDF)</a></p>`
-            : ''
-        }
-        <p style="color:#9CA3AF;font-size:12px;margin-top:24px">&copy; ${new Date().getFullYear()} Heightt. Electronically generated receipt.</p>
-      </div>`;
+    return renderHeighttEmail({
+      preheader: `Your Heightt payment receipt ${receipt.receiptNumber} is ready.`,
+      category: 'Payment successful',
+      headline: 'Your payment receipt is ready',
+      recipientName: receipt.payerName,
+      intro: `Your payment was successful. Receipt ${receipt.receiptNumber} is attached as a PDF.`,
+      details: [
+        { label: 'Transaction reference', value: receipt.reference },
+        { label: 'Payment', value: receipt.description || 'Payment' },
+        { label: 'Amount', value: money(receipt.amount) },
+        { label: 'Service fee', value: money(receipt.serviceFee) },
+        {
+          label: 'Total paid',
+          value: `${money(receipt.totalAmount)} ${receipt.currency}`,
+        },
+      ],
+      actionLabel: pdfUrl ? 'Download receipt' : undefined,
+      actionUrl: pdfUrl,
+      notice:
+        'This receipt was generated automatically by Heightt. Keep it for your financial records.',
+      tone: 'success',
+      reason:
+        'You received this email because a payment was recorded on your Heightt account.',
+    });
   }
 }

@@ -119,15 +119,9 @@ model UserProfile {
   firstName             String
   lastName              String
   middleName            String?
-  phone                 String?
   avatar                String?
   gender                Gender?
-  dateOfBirth           DateTime?
   country               String?
-  state                 String?
-  city                  String?
-  address               String?
-  bio                   String?
   onboardingStep        OnboardingStep     @default(PERSONAL_INFO)
   onboardingCompleted   Boolean            @default(false)
   onboardingCompletedAt DateTime?

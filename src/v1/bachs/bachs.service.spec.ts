@@ -90,7 +90,7 @@ describe('BachsService payment callbacks', () => {
 
     expect(client.createCheckoutSession).toHaveBeenCalledWith(
       expect.objectContaining({
-        pricing: expect.objectContaining({ amount: '102.00' }),
+        pricing: expect.objectContaining({ amount: '200.00' }),
         success_url:
           'https://app.heightt.test/payment/callback?source=checkout&payment=pending-1',
         cancel_url:
@@ -154,5 +154,66 @@ describe('BachsService payment callbacks', () => {
 
     expect(tx.pendingPayment.create).not.toHaveBeenCalled();
     expect(client.createCheckoutSession).not.toHaveBeenCalled();
+  });
+
+  it('reuses an orphaned pending row when checkout creation is retried', async () => {
+    const { service, prisma, client } = createService();
+    const tx = {
+      pendingPayment: {
+        findFirst: jest.fn().mockResolvedValue(pending),
+        create: jest.fn(),
+        update: jest.fn(),
+      },
+      duePayment: { findUnique: jest.fn().mockResolvedValue(null) },
+    };
+    prisma.$transaction.mockImplementation((callback: any) => callback(tx));
+
+    const result = await service.initiatePayment(user.id, {
+      userId: user.id,
+      organizationId: 'org-1',
+      amount: 10_000,
+      paymentMethod: 'CARD',
+      dueAssignmentId: 'assignment-1',
+    });
+
+    expect(tx.pendingPayment.create).not.toHaveBeenCalled();
+    expect(client.createCheckoutSession).toHaveBeenCalledTimes(1);
+    expect(result.pendingPaymentId).toBe(pending.id);
+  });
+
+  it('expires a stale row and creates a fresh payment attempt', async () => {
+    const { service, prisma } = createService();
+    const stale = {
+      ...pending,
+      bachsCheckoutId: 'stale-checkout',
+      createdAt: new Date(Date.now() - 61 * 60 * 1000),
+    };
+    const fresh = { ...pending, id: 'pending-2', reference: 'pending-ref-2' };
+    const tx = {
+      pendingPayment: {
+        findFirst: jest.fn().mockResolvedValue(stale),
+        create: jest.fn().mockResolvedValue(fresh),
+        update: jest.fn().mockResolvedValue({ ...stale, status: 'EXPIRED' }),
+      },
+      duePayment: { findUnique: jest.fn().mockResolvedValue(null) },
+    };
+    prisma.$transaction.mockImplementation((callback: any) => callback(tx));
+
+    const result = await service.initiatePayment(user.id, {
+      userId: user.id,
+      organizationId: 'org-1',
+      amount: 10_000,
+      paymentMethod: 'CARD',
+      dueAssignmentId: 'assignment-1',
+    });
+
+    expect(tx.pendingPayment.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: stale.id },
+        data: expect.objectContaining({ status: 'EXPIRED' }),
+      }),
+    );
+    expect(tx.pendingPayment.create).toHaveBeenCalledTimes(1);
+    expect(result.pendingPaymentId).toBe(fresh.id);
   });
 });

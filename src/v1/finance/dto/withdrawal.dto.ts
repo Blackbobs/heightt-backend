@@ -9,6 +9,7 @@ import {
   MaxLength,
   IsEnum,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UserWithdrawalRequestDto {
   @ApiProperty({ description: 'Bank account ID to withdraw to' })
@@ -79,11 +80,44 @@ export enum WithdrawalType {
   PLATFORM = 'PLATFORM',
 }
 
+export class WithdrawalQuoteDto {
+  @ApiProperty({ enum: WithdrawalType })
+  @IsEnum(WithdrawalType)
+  type: WithdrawalType;
+
+  @ApiProperty({
+    required: false,
+    description: 'Required for organisation withdrawals',
+  })
+  @IsOptional()
+  @IsString()
+  organizationId?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Requested principal in Kobo',
+    minimum: 100,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(100)
+  amount?: number;
+}
+
 export class WithdrawalFilterDto {
   @ApiProperty({ required: false, description: 'Organization ID' })
   @IsOptional()
   @IsString()
   organizationId?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Academic session ID of the organization',
+  })
+  @IsOptional()
+  @IsString()
+  academicSessionId?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()

@@ -16,7 +16,7 @@ import { PermissionService } from '../auth/permission.service';
 import { EmailService } from '../../email/email.service';
 import { LedgerService } from './ledger.service';
 import { ReceiptService } from './receipt.service';
-import { WalletService } from './wallet.service';
+import { WalletService, WalletOwner } from './wallet.service';
 import { EventService, SystemEvents } from '../../events/event.service';
 import { BachsClient } from '../bachs/bachs.client';
 import { ConfigService } from '@nestjs/config';
@@ -39,8 +39,11 @@ import {
   PlatformWithdrawalRequestDto,
   OrganizationWithdrawalRequestDto,
   WithdrawalFilterDto,
+  WithdrawalQuoteDto,
+  WithdrawalType,
 } from './dto/withdrawal.dto';
 import { randomBytes } from 'crypto';
+import { renderHeighttEmail } from '../../email/heightt-email.template';
 
 @Injectable()
 export class FinanceService {
@@ -1006,95 +1009,114 @@ export class FinanceService {
   async getMyDues(userId: string) {
     this.logger.log(`Getting all dues for user: ${userId}`);
 
-    // Get all organizations the user is a member of
-    const memberships = await this.prisma.organizationMembership.findMany({
-      where: {
-        userId,
-        status: 'ACTIVE',
-      },
-      select: {
-        organizationId: true,
-      },
-    });
-
-    const organizationIds = memberships.map((m) => m.organizationId);
-
-    if (organizationIds.length === 0) {
-      this.logger.log(`User ${userId} is not a member of any organization`);
-      return [];
-    }
-
-    // Get the student profile to check if user is a student
     const studentProfile = await this.prisma.studentProfile.findUnique({
       where: { userId },
-      select: { id: true },
+      select: { id: true, institutionId: true },
     });
 
-    // Get ALL active dues for organizations the user belongs to
-    const allDues = await this.prisma.due.findMany({
-      where: {
-        organizationId: { in: organizationIds },
-        status: 'ACTIVE',
-      },
-      include: {
-        organization: true,
-        session: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    // If user is not a student, return empty array (only students pay dues)
     if (!studentProfile) {
       this.logger.log(`User ${userId} does not have a student profile`);
       return [];
     }
 
-    // Get existing assignments to know which dues are already assigned to this student
-    const existingAssignments = await this.prisma.dueAssignment.findMany({
+    const [memberships, currentSession] = await Promise.all([
+      this.prisma.organizationMembership.findMany({
+        where: { userId, status: 'ACTIVE' },
+        select: { organizationId: true },
+      }),
+      this.prisma.academicSession.findFirst({
+        where: {
+          institutionId: studentProfile.institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+        select: { id: true, name: true },
+      }),
+    ]);
+    const organizationIds = memberships.map(
+      (membership) => membership.organizationId,
+    );
+
+    // Only current-session and cross-session dues are available for new
+    // assignment. Historical obligations are loaded from existing assignments.
+    const availableDues = organizationIds.length
+      ? await this.prisma.due.findMany({
+          where: {
+            organizationId: { in: organizationIds },
+            status: 'ACTIVE',
+            OR: [
+              { sessionId: null },
+              ...(currentSession ? [{ sessionId: currentSession.id }] : []),
+            ],
+          },
+          include: { organization: true, session: true },
+          orderBy: { createdAt: 'desc' },
+        })
+      : [];
+    const availableDueIds = availableDues.map((due) => due.id);
+
+    // Keep every unpaid assigned obligation visible even if its session ended
+    // or the student's old organization membership is no longer active.
+    const assignments = await this.prisma.dueAssignment.findMany({
       where: {
         studentId: studentProfile.id,
-        dueId: { in: allDues.map((d) => d.id) },
+        OR: [
+          { isPaid: false },
+          ...(availableDueIds.length
+            ? [{ dueId: { in: availableDueIds } }]
+            : []),
+        ],
       },
-      select: {
-        dueId: true,
-        isPaid: true,
-        paidAt: true,
-        id: true,
-        amount: true,
-        studentId: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
+        due: { include: { organization: true, session: true } },
       },
+      orderBy: { createdAt: 'desc' },
     });
 
-    // Create a map of dueId -> assignment
-    const assignmentMap = new Map();
-    for (const assignment of existingAssignments) {
-      assignmentMap.set(assignment.dueId, assignment);
+    const assignmentByDueId = new Map(
+      assignments.map((assignment) => [assignment.dueId, assignment]),
+    );
+    const dueById = new Map<string, any>();
+    for (const due of availableDues) dueById.set(due.id, due);
+    for (const assignment of assignments) {
+      dueById.set(assignment.dueId, assignment.due);
     }
 
-    // Build the response: combine due data with assignment data if it exists
-    const result = allDues.map((due) => {
-      const assignment = assignmentMap.get(due.id);
+    const result = [...dueById.values()]
+      .map((due) => {
+        const assignment = assignmentByDueId.get(due.id);
+        const isPaid = assignment?.isPaid ?? false;
+        const sessionCategory = !due.sessionId
+          ? 'ALL_SESSIONS'
+          : due.sessionId === currentSession?.id
+            ? 'CURRENT'
+            : 'PREVIOUS';
+        const isArrear = !isPaid && sessionCategory === 'PREVIOUS';
 
-      return {
-        id: assignment?.id || `due_${due.id}`,
-        dueId: due.id,
-        studentId: studentProfile.id,
-        amount: due.amount,
-        isPaid: assignment?.isPaid || false,
-        paidAt: assignment?.paidAt || null,
-        createdAt: assignment?.createdAt || due.createdAt,
-        updatedAt: assignment?.updatedAt || due.updatedAt,
-        due: due,
-        isAutoAssigned: !assignment,
-      };
-    });
+        return {
+          id: assignment?.id || `due_${due.id}`,
+          dueId: due.id,
+          studentId: studentProfile.id,
+          amount: assignment?.amount ?? due.amount,
+          isPaid,
+          paidAt: assignment?.paidAt || null,
+          createdAt: assignment?.createdAt || due.createdAt,
+          updatedAt: assignment?.updatedAt || due.updatedAt,
+          due,
+          sessionCategory,
+          isOutstanding: !isPaid,
+          isArrear,
+          canPay: !isPaid && due.status === 'ACTIVE',
+          isAutoAssigned: !assignment,
+        };
+      })
+      .sort((a, b) => {
+        if (a.isArrear !== b.isArrear) return a.isArrear ? -1 : 1;
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      });
 
     this.logger.log(
-      `Found ${result.length} dues for user ${userId} across ${organizationIds.length} organizations`,
+      `Found ${result.length} current and outstanding dues for user ${userId}`,
     );
 
     return result;
@@ -1210,6 +1232,7 @@ export class FinanceService {
         where: { id: dueAssignmentId },
         include: {
           student: { select: { userId: true } },
+          due: { select: { status: true } },
           duePayments: { select: { id: true }, take: 1 },
         },
       });
@@ -1226,6 +1249,11 @@ export class FinanceService {
 
       if (assignment.isPaid || assignment.duePayments.length > 0) {
         throw new BadRequestException('This due has already been paid');
+      }
+      if (assignment.due.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          'This due is visible for your records but is not open for payment',
+        );
       }
       if (paymentAmount !== undefined && paymentAmount !== assignment.amount) {
         throw new BadRequestException(
@@ -1244,6 +1272,11 @@ export class FinanceService {
     if (!due) {
       throw new NotFoundException('Due not found');
     }
+    if (due.status !== 'ACTIVE') {
+      throw new BadRequestException(
+        'This due is not currently open for payment',
+      );
+    }
     if (paymentAmount !== undefined && paymentAmount !== due.amount) {
       throw new BadRequestException(
         `Due payment amount must be exactly ${due.amount} Kobo`,
@@ -1258,21 +1291,6 @@ export class FinanceService {
     if (!studentProfile) {
       throw new NotFoundException(
         'Student profile not found. Please complete your student profile first.',
-      );
-    }
-
-    // Check if the user is a member of the organization
-    const membership = await this.prisma.organizationMembership.findFirst({
-      where: {
-        userId,
-        organizationId: due.organizationId,
-        status: 'ACTIVE',
-      },
-    });
-
-    if (!membership) {
-      throw new ForbiddenException(
-        'You are not a member of this organization. Please join the organization first.',
       );
     }
 
@@ -1295,6 +1313,34 @@ export class FinanceService {
         throw new BadRequestException('This due has already been paid');
       }
       return existingAssignment.id;
+    }
+
+    // A closed session can keep collecting assignments that already existed,
+    // but must not create new obligations for students after the fact.
+    if (due.sessionId) {
+      const dueSession = await this.prisma.academicSession.findUnique({
+        where: { id: due.sessionId },
+        select: { isCurrent: true, status: true },
+      });
+      if (!dueSession?.isCurrent || dueSession.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          'This due belongs to a previous academic session and cannot be newly assigned',
+        );
+      }
+    }
+
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: {
+        userId,
+        organizationId: due.organizationId,
+        status: 'ACTIVE',
+      },
+    });
+
+    if (!membership) {
+      throw new ForbiddenException(
+        'You are not a member of this organization. Please join the organization first.',
+      );
     }
 
     // Auto-assign the due
@@ -2411,19 +2457,40 @@ export class FinanceService {
       _sum: { amount: true },
     });
 
-    const platformEarnings = platformFeeTotal._sum.amount ?? 0;
+    const platformWithdrawalTotal = institutionId
+      ? { _sum: { amount: 0, fee: 0 }, _count: { _all: 0 } }
+      : await this.prisma.withdrawal.aggregate({
+          where: {
+            status: { in: ['PROCESSING', 'COMPLETED'] },
+            metadata: { path: ['type'], equals: 'PLATFORM_WITHDRAWAL' },
+          },
+          _sum: { amount: true, fee: true },
+          _count: { _all: true },
+        });
+
+    const grossPlatformEarnings = platformFeeTotal._sum.amount ?? 0;
+    const withdrawnPlatformEarnings = platformWithdrawalTotal._sum.amount ?? 0;
+    const payoutProviderFees = platformWithdrawalTotal._sum.fee ?? 0;
+    const netPlatformEarnings =
+      grossPlatformEarnings - withdrawnPlatformEarnings - payoutProviderFees;
 
     return {
       totalBalance,
       totalHeld,
       totalWallets: wallets.length,
       platformEarnings: {
-        amount: platformEarnings,
-        amountFormatted: `₦${(platformEarnings / this.KOBO_PER_NAIRA).toFixed(
-          2,
-        )}`,
+        amount: netPlatformEarnings,
+        amountFormatted: this.formatKobo(netPlatformEarnings),
+        grossAmount: grossPlatformEarnings,
+        grossAmountFormatted: this.formatKobo(grossPlatformEarnings),
+        withdrawnAmount: withdrawnPlatformEarnings,
+        withdrawnAmountFormatted: this.formatKobo(withdrawnPlatformEarnings),
+        payoutProviderFees,
+        payoutProviderFeesFormatted: this.formatKobo(payoutProviderFees),
+        withdrawalCount: platformWithdrawalTotal._count._all,
         currency: 'NGN',
         currencyUnit: 'KOBO',
+        scope: institutionId ? 'INSTITUTION_GROSS' : 'PLATFORM_NET',
       },
       dueStats: {
         total: totalDues,
@@ -2471,15 +2538,16 @@ export class FinanceService {
     const netAmount = dto.amount;
 
     return this.prisma.$transaction(async (tx) => {
-      const currentWallet = await tx.wallet.findUnique({
-        where: { id: wallet.id },
-      });
+      const currentWallet = await this.lockWalletForWithdrawal(tx, wallet.id);
       if (
         !currentWallet ||
         currentWallet.balance - currentWallet.heldBalance < totalAmount
       ) {
-        throw new BadRequestException(
-          `Insufficient balance. Need: ${this.formatKobo(totalAmount)}`,
+        throw this.insufficientWithdrawalBalance(
+          currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
+          dto.amount,
+          charges.fee,
+          false,
         );
       }
 
@@ -2555,6 +2623,125 @@ export class FinanceService {
     });
   }
 
+  private calculatePlatformWithdrawalCharges(amount: number): {
+    fee: number;
+    netAmount: number;
+    totalCharges: number;
+  } {
+    return { fee: 0, netAmount: amount, totalCharges: 0 };
+  }
+
+  private calculateMaximumWithdrawal(
+    availableBalance: number,
+    feeFree: boolean,
+  ): number {
+    if (availableBalance <= 0 || feeFree) {
+      return Math.max(0, availableBalance);
+    }
+
+    let low = 0;
+    let high = availableBalance;
+    while (low < high) {
+      const candidate = Math.ceil((low + high) / 2);
+      const fee = this.ledgerService.calculateWithdrawalCharges(candidate).fee;
+      if (candidate + fee <= availableBalance) low = candidate;
+      else high = candidate - 1;
+    }
+    return low;
+  }
+
+  private async lockWalletForWithdrawal(tx: any, walletId: string) {
+    const wallets = await tx.$queryRaw<
+      Array<{ id: string; balance: number; heldBalance: number }>
+    >`SELECT "id", "balance", "heldBalance"
+      FROM "wallets"
+      WHERE "id" = ${walletId}
+      FOR UPDATE`;
+    return wallets[0] ?? null;
+  }
+
+  private insufficientWithdrawalBalance(
+    availableBalance: number,
+    requestedAmount: number,
+    fee: number,
+    feeFree: boolean,
+  ): BadRequestException {
+    const maxWithdrawable = this.calculateMaximumWithdrawal(
+      availableBalance,
+      feeFree,
+    );
+    return new BadRequestException({
+      code: 'INSUFFICIENT_AVAILABLE_BALANCE',
+      message:
+        'The requested withdrawal and fee exceed the available wallet balance',
+      availableBalance,
+      requestedAmount,
+      fee,
+      totalDebit: requestedAmount + fee,
+      maxWithdrawable,
+      currency: 'NGN',
+      currencyUnit: 'KOBO',
+    });
+  }
+
+  async getWithdrawalQuote(userId: string, dto: WithdrawalQuoteDto) {
+    let walletOwner: WalletOwner;
+    let feeFree = false;
+
+    if (dto.type === WithdrawalType.ORGANIZATION) {
+      if (!dto.organizationId) {
+        throw new BadRequestException(
+          'organizationId is required for an organization withdrawal quote',
+        );
+      }
+      await this.assertOrganizationAdminScope(userId, dto.organizationId);
+      walletOwner = { type: 'ORGANIZATION', id: dto.organizationId };
+    } else if (dto.type === WithdrawalType.PLATFORM) {
+      const platformAdmin = await this.prisma.admin.findFirst({
+        where: { userId, status: 'ACTIVE', adminType: 'PLATFORM_ADMIN' },
+      });
+      if (!platformAdmin) {
+        throw new ForbiddenException(
+          'Only platform admins can access the platform withdrawal quote',
+        );
+      }
+      walletOwner = { type: 'PLATFORM' };
+      feeFree = true;
+    } else {
+      walletOwner = { type: 'USER', id: userId };
+    }
+
+    const wallet = await this.walletService.getOrCreateWallet(walletOwner);
+    const availableBalance = Math.max(0, wallet.balance - wallet.heldBalance);
+    const maxWithdrawable = this.calculateMaximumWithdrawal(
+      availableBalance,
+      feeFree,
+    );
+    const fee = dto.amount
+      ? feeFree
+        ? 0
+        : this.ledgerService.calculateWithdrawalCharges(dto.amount).fee
+      : 0;
+    const totalDebit = dto.amount ? dto.amount + fee : 0;
+
+    return {
+      balance: wallet.balance,
+      heldBalance: wallet.heldBalance,
+      availableBalance,
+      requestedAmount: dto.amount ?? null,
+      fee,
+      totalDebit,
+      maxWithdrawable,
+      canWithdraw:
+        dto.amount !== undefined
+          ? dto.amount >= 100 && totalDebit <= availableBalance
+          : maxWithdrawable >= 100,
+      feePolicy: feeFree ? 'FEE_FREE' : 'WITHDRAWAL_FEE_APPLIES',
+      currency: wallet.currency,
+      currencyUnit: 'KOBO',
+    };
+  }
+
   async requestOrganizationWithdrawal(
     userId: string,
     dto: OrganizationWithdrawalRequestDto,
@@ -2576,15 +2763,16 @@ export class FinanceService {
     const totalAmount = dto.amount + charges.fee;
 
     const withdrawal = await this.prisma.$transaction(async (tx) => {
-      const currentWallet = await tx.wallet.findUnique({
-        where: { id: wallet.id },
-      });
+      const currentWallet = await this.lockWalletForWithdrawal(tx, wallet.id);
       if (
         !currentWallet ||
         currentWallet.balance - currentWallet.heldBalance < totalAmount
       ) {
-        throw new BadRequestException(
-          'Insufficient available organization balance',
+        throw this.insufficientWithdrawalBalance(
+          currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
+          dto.amount,
+          charges.fee,
+          false,
         );
       }
       const created = await tx.withdrawal.create({
@@ -2673,19 +2861,20 @@ export class FinanceService {
     );
     const payoutDestination = await this.ensurePayoutDestination(bankAccount);
 
-    const charges = this.ledgerService.calculateWithdrawalCharges(dto.amount);
+    const charges = this.calculatePlatformWithdrawalCharges(dto.amount);
     const totalAmount = dto.amount + charges.fee;
 
     const withdrawal = await this.prisma.$transaction(async (tx) => {
-      const currentWallet = await tx.wallet.findUnique({
-        where: { id: wallet.id },
-      });
+      const currentWallet = await this.lockWalletForWithdrawal(tx, wallet.id);
       if (
         !currentWallet ||
         currentWallet.balance - currentWallet.heldBalance < totalAmount
       ) {
-        throw new BadRequestException(
-          `Insufficient platform balance. Available: ₦${(wallet.balance / this.KOBO_PER_NAIRA).toFixed(2)}`,
+        throw this.insufficientWithdrawalBalance(
+          currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
+          dto.amount,
+          charges.fee,
+          true,
         );
       }
 
@@ -3427,6 +3616,15 @@ export class FinanceService {
       where.userId = userId;
     }
 
+    if (filters.academicSessionId) {
+      where.wallet = {
+        ...(where.wallet || {}),
+        organization: {
+          academicSessionId: filters.academicSessionId,
+        },
+      };
+    }
+
     if (filters.status) {
       where.status = filters.status;
     }
@@ -3637,12 +3835,27 @@ export class FinanceService {
       await this.emailService.sendEmail(
         admin.user.email,
         'Withdrawal Request - Heightt',
-        `<p>A withdrawal request requires your attention.</p>
-       <p>Amount: ${data.amountFormatted}</p>
-       <p>Bank: ${data.bankName}</p>
-       <p>Account: ${data.accountNumber}</p>
-       <p>Request ID: ${data.withdrawalId}</p>
-       <p>Please log in to the admin dashboard to approve or reject this request.</p>`,
+        renderHeighttEmail({
+          preheader: `A withdrawal request for ${data.amountFormatted} requires review.`,
+          category: 'Withdrawal review',
+          headline: 'Withdrawal request requires attention',
+          recipientName: admin.user.username,
+          intro:
+            'A withdrawal request has been submitted and requires review in the Heightt admin dashboard.',
+          details: [
+            { label: 'Amount', value: data.amountFormatted },
+            { label: 'Bank', value: data.bankName },
+            { label: 'Account', value: data.accountNumber },
+            { label: 'Request reference', value: data.withdrawalId },
+          ],
+          actionLabel: 'Open admin dashboard',
+          actionUrl: `${(this.configService.get<string>('FRONTEND_URL') || 'https://www.heightt.app').replace(/\/+$/, '')}/admin/withdrawals`,
+          notice:
+            'Review the request details before approving or rejecting it.',
+          tone: 'warning',
+          reason:
+            'You received this email because you are an active Heightt platform administrator.',
+        }),
       );
     }
   }
@@ -3683,7 +3896,20 @@ export class FinanceService {
       .sendEmail(
         user.email,
         title,
-        `<p>${body}</p><p>Reference: ${data.withdrawalId}</p>`,
+        renderHeighttEmail({
+          preheader: body,
+          category: 'Withdrawal update',
+          headline: title,
+          recipientName: user.username,
+          intro: body,
+          details: [
+            { label: 'Amount', value: data.amountFormatted },
+            { label: 'Reference', value: data.withdrawalId },
+          ],
+          tone: event === 'WITHDRAWAL_REJECTED' ? 'danger' : 'info',
+          reason:
+            'You received this email because you requested a withdrawal from your Heightt wallet.',
+        }),
       )
       .catch((error: any) => {
         this.logger.error(

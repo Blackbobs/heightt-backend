@@ -12,8 +12,13 @@ import { ConfigService } from '@nestjs/config';
 import { TokenService } from './token.service';
 import { CookieService } from './cookie.service';
 import { PermissionService } from './permission.service';
-import { RegisterDto, LoginDto } from './dto';
-import { randomBytes } from 'crypto';
+import {
+  RegisterDto,
+  LoginDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto';
+import { createHash, randomBytes } from 'crypto';
 import { Response } from 'express';
 import * as useragent from 'useragent';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -38,6 +43,13 @@ export class AuthService {
     private readonly emailService: EmailService,
     private readonly permissionService: PermissionService,
   ) {}
+
+  private getFrontendUrl(): string {
+    const frontendUrl =
+      this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3001';
+
+    return frontendUrl.replace(/\/+$/, '');
+  }
 
   // ============================================
   // REGISTER - NO AUTO-LOGIN
@@ -122,8 +134,7 @@ export class AuthService {
     });
 
     if (verification) {
-      const frontendUrl =
-        this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+      const frontendUrl = this.getFrontendUrl();
       const verificationLink = `${frontendUrl}/verify-email?token=${verification.token}`;
 
       try {
@@ -260,8 +271,7 @@ export class AuthService {
       },
     });
 
-    const frontendUrl =
-      this.configService.get('FRONTEND_URL') || 'http://localhost:3001';
+    const frontendUrl = this.getFrontendUrl();
     const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
     try {
@@ -283,6 +293,129 @@ export class AuthService {
     return {
       message: 'Verification email sent successfully. Please check your inbox.',
     };
+  }
+
+  async forgotPassword(dto: ForgotPasswordDto, request: any) {
+    const email = dto.email.trim().toLowerCase();
+    const rateLimitKey = `forgot-password:${request.ip || 'unknown'}:${email}`;
+    const rateLimit = await this.rateLimitService.checkRateLimit(
+      rateLimitKey,
+      5,
+      15 * 60,
+    );
+
+    if (!rateLimit.allowed) {
+      throw new BadRequestException(
+        'Too many password reset requests. Please try again later.',
+      );
+    }
+    await this.rateLimitService.incrementRateLimit(rateLimitKey, 15 * 60);
+
+    const genericResponse = {
+      message:
+        'If an eligible account exists for that email address, a password reset link has been sent.',
+    };
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user || user.status !== 'ACTIVE') {
+      return genericResponse;
+    }
+
+    const rawToken = randomBytes(32).toString('hex');
+    const tokenHash = this.hashPasswordResetToken(rawToken);
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.passwordReset.updateMany({
+        where: { userId: user.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      await tx.passwordReset.create({
+        data: { userId: user.id, token: tokenHash, expiresAt },
+      });
+    });
+
+    const sent = await this.emailService.sendPasswordResetEmail(
+      user.email,
+      user.username,
+      rawToken,
+    );
+    if (!sent) {
+      this.logger.error(`Password reset email could not be sent to ${user.id}`);
+    }
+
+    return genericResponse;
+  }
+
+  async resetPassword(dto: ResetPasswordDto, request: any) {
+    const tokenHash = this.hashPasswordResetToken(dto.token);
+    const reset = await this.prisma.passwordReset.findFirst({
+      where: {
+        token: tokenHash,
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+      include: { user: true },
+    });
+
+    if (!reset || reset.user.status !== 'ACTIVE') {
+      throw new BadRequestException('Reset link is invalid or has expired.');
+    }
+
+    const passwordHash = await PasswordUtil.hash(dto.newPassword);
+    const now = new Date();
+
+    await this.prisma.$transaction(async (tx) => {
+      const consumed = await tx.passwordReset.updateMany({
+        where: { id: reset.id, usedAt: null, expiresAt: { gt: now } },
+        data: { usedAt: now },
+      });
+      if (consumed.count !== 1) {
+        throw new BadRequestException('Reset link is invalid or has expired.');
+      }
+
+      await tx.user.update({
+        where: { id: reset.userId },
+        data: { passwordHash },
+      });
+      await tx.passwordReset.updateMany({
+        where: { userId: reset.userId, usedAt: null },
+        data: { usedAt: now },
+      });
+      await tx.session.updateMany({
+        where: { userId: reset.userId, isActive: true },
+        data: {
+          isActive: false,
+          revokedAt: now,
+          revokedReason: 'Password reset',
+        },
+      });
+      await tx.auditLog.create({
+        data: {
+          userId: reset.userId,
+          action: 'PASSWORD_RESET',
+          entity: 'User',
+          entityId: reset.userId,
+          ipAddress: request.ip,
+          userAgent: request.headers?.['user-agent'],
+        },
+      });
+    });
+
+    await this.cacheService.invalidateUserCache(reset.userId);
+    await this.emailService.sendPasswordChangedEmail(
+      reset.user.email,
+      reset.user.username,
+    );
+
+    return {
+      message:
+        'Password reset successfully. Please sign in with your new password.',
+    };
+  }
+
+  private hashPasswordResetToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex');
   }
 
   // ============================================

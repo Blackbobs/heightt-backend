@@ -582,6 +582,37 @@ export class OrganizationsService {
   // MEMBERSHIP MANAGEMENT
   // ============================================
 
+  private async assertSingleAcademicOrganizationMembership(
+    userId: string,
+    organization: { id: string; type: string },
+    membershipType: string,
+  ): Promise<void> {
+    if (
+      membershipType !== 'STUDENT' ||
+      !['INSTITUTION', 'FACULTY', 'DEPARTMENT', 'LEVEL'].includes(
+        organization.type,
+      )
+    ) {
+      return;
+    }
+
+    const conflictingMembership =
+      await this.prisma.organizationMembership.findFirst({
+        where: {
+          userId,
+          status: 'ACTIVE',
+          organizationId: { not: organization.id },
+          organization: { type: organization.type as any },
+        },
+        select: { id: true },
+      });
+    if (conflictingMembership) {
+      throw new ConflictException(
+        `A student can only have one active ${organization.type.toLowerCase()} organization membership at a time`,
+      );
+    }
+  }
+
   async addMember(organizationId: string, userId: string, dto: AddMemberDto) {
     this.logger.log(`Adding member to organization: ${organizationId}`);
 
@@ -643,6 +674,11 @@ export class OrganizationsService {
         );
       }
     }
+    await this.assertSingleAcademicOrganizationMembership(
+      dto.userId,
+      organization,
+      dto.membershipType,
+    );
 
     const membership = await this.prisma.organizationMembership.create({
       data: {
@@ -1171,6 +1207,11 @@ export class OrganizationsService {
         );
       }
     }
+    await this.assertSingleAcademicOrganizationMembership(
+      userId,
+      organization,
+      membershipType,
+    );
 
     const sessionId = organization.academicSessionId;
 
@@ -1398,6 +1439,11 @@ export class OrganizationsService {
 
     if (status === 'APPROVED') {
       try {
+        await this.assertSingleAcademicOrganizationMembership(
+          joinRequest.userId,
+          joinRequest.organization,
+          joinRequest.membershipType,
+        );
         const membership = await this.prisma.organizationMembership.create({
           data: {
             organizationId: joinRequest.organizationId,

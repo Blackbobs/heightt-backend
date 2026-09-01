@@ -14,6 +14,7 @@ import {
   PromoteStudentDto,
   BulkPromoteDto,
   PromotionResultDto,
+  PromoteInstitutionDto,
 } from './dto/promotion.dto';
 
 @Injectable()
@@ -26,6 +27,481 @@ export class PromotionService {
     private readonly eventService: EventService,
     private readonly notificationService: NotificationService,
   ) {}
+
+  async promoteInstitution(
+    institutionId: string,
+    userId: string,
+    dto: PromoteInstitutionDto,
+  ) {
+    const [institution, currentSession, operator] = await Promise.all([
+      this.prisma.institution.findUnique({ where: { id: institutionId } }),
+      this.prisma.academicSession.findFirst({
+        where: {
+          id: dto.currentSessionId,
+          institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+      }),
+      this.prisma.admin.findFirst({
+        where: {
+          userId,
+          status: 'ACTIVE',
+          OR: [
+            { adminType: 'PLATFORM_ADMIN' },
+            { adminType: 'INSTITUTION_ADMIN', institutionId },
+          ],
+        },
+      }),
+    ]);
+
+    if (!institution) {
+      throw new NotFoundException('Institution not found');
+    }
+    if (!operator) {
+      throw new ForbiddenException(
+        'Only a platform admin or this institution admin can run promotion',
+      );
+    }
+    if (!currentSession) {
+      throw new BadRequestException(
+        'The supplied session is not the institution current session. Refresh and try again.',
+      );
+    }
+
+    const nextSessionName = this.getNextSessionName(currentSession.name);
+    const existingNextSession = await this.prisma.academicSession.findFirst({
+      where: {
+        institutionId,
+        name: nextSessionName,
+        scope: 'INSTITUTION',
+      },
+    });
+    const students = await this.prisma.studentProfile.findMany({
+      where: { institutionId, academicStatus: 'ACTIVE' },
+      select: {
+        id: true,
+        userId: true,
+        facultyId: true,
+        departmentId: true,
+        currentAcademicLevelId: true,
+      },
+    });
+    const currentSessionOrganizations = await this.prisma.organization.findMany(
+      {
+        where: { institutionId, academicSessionId: currentSession.id },
+        orderBy: { createdAt: 'asc' },
+      },
+    );
+    const departmentIds = [...new Set(students.map((s) => s.departmentId))];
+    const levels = await this.prisma.academicLevel.findMany({
+      where: {
+        departmentId: { in: departmentIds },
+        status: 'ACTIVE',
+      },
+      orderBy: [{ departmentId: 'asc' }, { order: 'asc' }],
+    });
+    const levelsByDepartment = new Map<string, typeof levels>();
+    for (const level of levels) {
+      const departmentLevels = levelsByDepartment.get(level.departmentId) || [];
+      departmentLevels.push(level);
+      levelsByDepartment.set(level.departmentId, departmentLevels);
+    }
+
+    const now = new Date();
+    const result = await this.prisma.$transaction(async (tx) => {
+      const claimedCurrentSession = await tx.academicSession.updateMany({
+        where: {
+          id: currentSession.id,
+          institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+        data: { isCurrent: false, status: 'COMPLETED', updatedBy: userId },
+      });
+      if (claimedCurrentSession.count !== 1) {
+        throw new BadRequestException(
+          'This institution has already been promoted. Refresh before trying again.',
+        );
+      }
+
+      const nextSession = existingNextSession
+        ? await tx.academicSession.update({
+            where: { id: existingNextSession.id },
+            data: { isCurrent: true, status: 'ACTIVE', updatedBy: userId },
+          })
+        : await tx.academicSession.create({
+            data: {
+              institutionId,
+              name: nextSessionName,
+              startDate: this.addYears(currentSession.startDate, 1),
+              endDate: this.addYears(currentSession.endDate, 1),
+              status: 'ACTIVE',
+              scope: 'INSTITUTION',
+              isCurrent: true,
+              createdBy: userId,
+            },
+          });
+
+      await tx.academicSession.updateMany({
+        where: {
+          institutionId,
+          scope: 'INSTITUTION',
+          id: { not: nextSession.id },
+          isCurrent: true,
+        },
+        data: { isCurrent: false, status: 'COMPLETED', updatedBy: userId },
+      });
+
+      const newOrganizationsByOldId = new Map<string, any>();
+      for (const organization of currentSessionOrganizations) {
+        const sessionSlug = nextSession.name.replace('/', '-');
+        const previousSessionSlug = currentSession.name.replace('/', '-');
+        const created = await tx.organization.upsert({
+          where: {
+            institutionId_slug_academicSessionId: {
+              institutionId,
+              slug: organization.slug.includes(previousSessionSlug)
+                ? organization.slug.replace(previousSessionSlug, sessionSlug)
+                : `${organization.slug}-${sessionSlug}`,
+              academicSessionId: nextSession.id,
+            },
+          },
+          update: {},
+          create: {
+            institutionId,
+            facultyId: organization.facultyId,
+            departmentId: organization.departmentId,
+            academicLevelId: organization.academicLevelId,
+            name: organization.name.replace(
+              currentSession.name,
+              nextSession.name,
+            ),
+            slug: organization.slug.includes(previousSessionSlug)
+              ? organization.slug.replace(previousSessionSlug, sessionSlug)
+              : `${organization.slug}-${sessionSlug}`,
+            description: organization.description?.replace(
+              currentSession.name,
+              nextSession.name,
+            ),
+            logo: organization.logo,
+            type: organization.type,
+            scope: organization.scope,
+            status: organization.status,
+            academicSessionId: nextSession.id,
+            createdBy: userId,
+          },
+        });
+        newOrganizationsByOldId.set(organization.id, created);
+      }
+
+      for (const organization of currentSessionOrganizations) {
+        if (!organization.parentOrganizationId) continue;
+        const created = newOrganizationsByOldId.get(organization.id);
+        const parent = newOrganizationsByOldId.get(
+          organization.parentOrganizationId,
+        );
+        if (created && parent) {
+          await tx.organization.update({
+            where: { id: created.id },
+            data: { parentOrganizationId: parent.id },
+          });
+        }
+      }
+
+      let promoted = 0;
+      let graduated = 0;
+      let skipped = 0;
+      const notificationTargets: Array<{
+        userId: string;
+        studentId: string;
+        event: 'STUDENT_PROMOTED' | 'STUDENT_GRADUATED';
+        fromLevelId: string;
+        fromLevelName: string;
+        toLevelId?: string;
+        toLevelName?: string;
+        promotionId?: string;
+      }> = [];
+
+      for (const student of students) {
+        if (!student.currentAcademicLevelId) {
+          skipped += 1;
+          continue;
+        }
+        const departmentLevels =
+          levelsByDepartment.get(student.departmentId) || [];
+        const currentIndex = departmentLevels.findIndex(
+          (level) => level.id === student.currentAcademicLevelId,
+        );
+        if (currentIndex < 0) {
+          skipped += 1;
+          continue;
+        }
+        const nextLevel = departmentLevels[currentIndex + 1];
+
+        if (!nextLevel) {
+          await tx.studentProfile.update({
+            where: { id: student.id },
+            data: { academicStatus: 'GRADUATED' },
+          });
+          notificationTargets.push({
+            userId: student.userId,
+            studentId: student.id,
+            event: 'STUDENT_GRADUATED',
+            fromLevelId: student.currentAcademicLevelId,
+            fromLevelName: departmentLevels[currentIndex].name,
+          });
+          graduated += 1;
+          continue;
+        }
+
+        const promotion = await tx.studentPromotion.create({
+          data: {
+            studentId: student.id,
+            fromLevelId: student.currentAcademicLevelId,
+            toLevelId: nextLevel.id,
+            sessionId: nextSession.id,
+            promotedBy: userId,
+            promotionDate: now,
+            notes: dto.notes || `Institution promotion to ${nextSession.name}`,
+          },
+        });
+        await tx.studentProfile.update({
+          where: { id: student.id },
+          data: { currentAcademicLevelId: nextLevel.id },
+        });
+        await tx.studentAcademicRecord.upsert({
+          where: {
+            studentId_sessionId: {
+              studentId: student.id,
+              sessionId: nextSession.id,
+            },
+          },
+          update: {
+            departmentId: student.departmentId,
+            academicLevelId: nextLevel.id,
+            status: 'ACTIVE',
+          },
+          create: {
+            studentId: student.id,
+            sessionId: nextSession.id,
+            departmentId: student.departmentId,
+            academicLevelId: nextLevel.id,
+            status: 'ACTIVE',
+          },
+        });
+        const previousMemberships = await tx.organizationMembership.findMany({
+          where: {
+            userId: student.userId,
+            status: 'ACTIVE',
+            organization: { academicSessionId: currentSession.id },
+          },
+          include: { organization: true },
+        });
+        await tx.organizationMembership.updateMany({
+          where: {
+            userId: student.userId,
+            status: 'ACTIVE',
+            organization: {
+              institutionId,
+              academicSessionId: currentSession.id,
+            },
+          },
+          data: { status: 'LEFT', leftAt: now },
+        });
+        for (const membership of previousMemberships) {
+          const destination =
+            membership.organization.type === 'LEVEL'
+              ? [...newOrganizationsByOldId.values()].find(
+                  (organization) =>
+                    organization.type === 'LEVEL' &&
+                    organization.academicLevelId === nextLevel.id &&
+                    organization.departmentId === student.departmentId,
+                )
+              : newOrganizationsByOldId.get(membership.organizationId);
+          if (!destination) continue;
+          await tx.organizationMembership.upsert({
+            where: {
+              organizationId_userId: {
+                organizationId: destination.id,
+                userId: student.userId,
+              },
+            },
+            update: {
+              status: 'ACTIVE',
+              leftAt: null,
+              joinedSessionId: nextSession.id,
+            },
+            create: {
+              organizationId: destination.id,
+              userId: student.userId,
+              membershipType: membership.membershipType,
+              status: 'ACTIVE',
+              isPrimary: membership.isPrimary,
+              joinedAt: now,
+              joinedSessionId: nextSession.id,
+            },
+          });
+        }
+        notificationTargets.push({
+          userId: student.userId,
+          studentId: student.id,
+          event: 'STUDENT_PROMOTED',
+          fromLevelId: student.currentAcademicLevelId,
+          fromLevelName: departmentLevels[currentIndex].name,
+          toLevelId: nextLevel.id,
+          toLevelName: nextLevel.name,
+          promotionId: promotion.id,
+        });
+        promoted += 1;
+      }
+
+      await tx.activityLog.create({
+        data: {
+          userId,
+          activity: 'INSTITUTION_STUDENTS_PROMOTED',
+          details: JSON.stringify({
+            institutionId,
+            fromSessionId: currentSession.id,
+            fromSessionName: currentSession.name,
+            toSessionId: nextSession.id,
+            toSessionName: nextSession.name,
+            promoted,
+            graduated,
+            skipped,
+          }),
+        },
+      });
+
+      return {
+        institution: { id: institution.id, name: institution.name },
+        previousSession: {
+          id: currentSession.id,
+          name: currentSession.name,
+        },
+        currentSession: {
+          id: nextSession.id,
+          name: nextSession.name,
+          generated: !existingNextSession,
+        },
+        summary: {
+          eligible: students.length,
+          promoted,
+          graduated,
+          skipped,
+        },
+        notificationTargets,
+      };
+    });
+
+    await Promise.all([
+      this.invalidatePromotionCache(),
+      this.cacheService.invalidateByTag('sessions'),
+    ]);
+
+    await this.notifyInstitutionPromotionStudents(
+      result.notificationTargets,
+      institution,
+      currentSession,
+      result.currentSession,
+    );
+
+    const { notificationTargets: _notificationTargets, ...publicResult } =
+      result;
+
+    return publicResult;
+  }
+
+  private async notifyInstitutionPromotionStudents(
+    targets: Array<{
+      userId: string;
+      studentId: string;
+      event: 'STUDENT_PROMOTED' | 'STUDENT_GRADUATED';
+      fromLevelId: string;
+      fromLevelName: string;
+      toLevelId?: string;
+      toLevelName?: string;
+      promotionId?: string;
+    }>,
+    institution: { id: string; name: string },
+    previousSession: { id: string; name: string },
+    currentSession: { id: string; name: string },
+  ): Promise<void> {
+    const batchSize = 20;
+    for (let offset = 0; offset < targets.length; offset += batchSize) {
+      const batch = targets.slice(offset, offset + batchSize);
+      const results = await Promise.allSettled(
+        batch.map(async (target) => {
+          const graduated = target.event === 'STUDENT_GRADUATED';
+          await Promise.all([
+            this.cacheService.invalidateUserCache(target.userId),
+            this.cacheService.delete(`user:${target.userId}:organizations`),
+            this.cacheService.delete(`student:dashboard:${target.userId}`),
+            this.cacheService.delete(`dashboard:student:${target.userId}`),
+          ]);
+
+          await this.notificationService.createNotification(target.userId, {
+            title: graduated
+              ? 'Graduation status confirmed'
+              : 'Promotion confirmed',
+            body: graduated
+              ? `You completed ${target.fromLevelName} in the ${previousSession.name} academic session. Your academic status is now Graduated.`
+              : `Congratulations! You have been promoted from ${target.fromLevelName} to ${target.toLevelName} for the ${currentSession.name} academic session.`,
+            type: 'ACADEMIC',
+            priority: 'NORMAL',
+            data: {
+              event: target.event,
+              studentId: target.studentId,
+              institutionId: institution.id,
+              institutionName: institution.name,
+              previousLevelId: target.fromLevelId,
+              previousLevel: target.fromLevelName,
+              currentLevelId: target.toLevelId || null,
+              currentLevel: target.toLevelName || null,
+              previousSessionId: previousSession.id,
+              previousSession: previousSession.name,
+              currentSessionId: currentSession.id,
+              currentSession: currentSession.name,
+              promotionId: target.promotionId || null,
+              promotedAt: new Date().toISOString(),
+            },
+            sendEmail: true,
+          });
+        }),
+      );
+
+      results.forEach((delivery, index) => {
+        if (delivery.status === 'rejected') {
+          this.logger.error(
+            `Failed to notify promoted student ${batch[index].studentId}: ${delivery.reason?.message || delivery.reason}`,
+          );
+        }
+      });
+    }
+  }
+
+  private getNextSessionName(currentName: string): string {
+    const match = currentName.trim().match(/^(\d{4})\s*\/\s*(\d{4})$/);
+    if (!match) {
+      throw new BadRequestException(
+        'Current session name must use the YYYY/YYYY format',
+      );
+    }
+    const startYear = Number(match[1]);
+    const endYear = Number(match[2]);
+    if (endYear !== startYear + 1) {
+      throw new BadRequestException(
+        'Current session years must be consecutive',
+      );
+    }
+    return `${startYear + 1}/${endYear + 1}`;
+  }
+
+  private addYears(date: Date, years: number): Date {
+    const result = new Date(date);
+    result.setUTCFullYear(result.getUTCFullYear() + years);
+    return result;
+  }
 
   // ============================================
   // PROMOTE STUDENT
@@ -486,6 +962,12 @@ export class PromotionService {
     try {
       await this.cacheService.invalidateByTag('promotions');
       await this.cacheService.invalidateByTag('students');
+      await this.cacheService.invalidateByTag('dashboard');
+      await this.cacheService.invalidateByTag('user');
+      await this.cacheService.invalidateByTag('users');
+      await this.cacheService.invalidateByTag('organizations');
+      await this.cacheService.invalidateByTag('academics');
+      await this.cacheService.invalidateByTag('dues');
 
       if (studentId) {
         await this.cacheService.invalidatePattern(

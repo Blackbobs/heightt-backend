@@ -6,6 +6,7 @@ import { EventService, SystemEvents } from '../../events/event.service';
 import { EmailService } from '../../email/email.service';
 import { CacheService } from '../../redis/cache.service';
 import { OnEvent } from '@nestjs/event-emitter';
+import { renderHeighttEmail } from '../../email/heightt-email.template';
 
 export interface NotificationPreferenceDto {
   type: string;
@@ -367,49 +368,25 @@ export class NotificationService {
   }
 
   private getEmailTemplate(notification: any, user: any): string {
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
-          .container { background-color: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-          .header { text-align: center; margin-bottom: 30px; }
-          .header h1 { color: #4F46E5; margin: 0; }
-          .content { color: #333; line-height: 1.6; }
-          .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 12px; }
-          .button { display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 4px; margin: 20px 0; }
-          .priority-high { border-left: 4px solid #EF4444; padding-left: 15px; }
-          .priority-normal { border-left: 4px solid #4F46E5; padding-left: 15px; }
-          .priority-low { border-left: 4px solid #10B981; padding-left: 15px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1>Heightt</h1>
-            <p style="color: #6B7280;">Financial Management for Students</p>
-          </div>
-          <div class="content">
-            <h2>${notification.title}</h2>
-            <div class="priority-${notification.priority.toLowerCase()}">
-              <p>${notification.body}</p>
-            </div>
-            ${notification.data?.link ? `<a href="${notification.data.link}" class="button">View Details</a>` : ''}
-            <p style="color: #6B7280; font-size: 14px; margin-top: 20px;">
-              This notification was sent to you because you are a member of Heightt.
-            </p>
-          </div>
-          <div class="footer">
-            <p>&copy; ${new Date().getFullYear()} Heightt. All rights reserved.</p>
-            <p>
-              <a href="${process.env.FRONTEND_URL}/settings/notifications" style="color: #4F46E5;">Manage Preferences</a>
-            </p>
-          </div>
-        </div>
-      </body>
-      </html>
-    `;
+    const priority = String(notification.priority || 'NORMAL').toUpperCase();
+    return renderHeighttEmail({
+      preheader: String(notification.title || 'New Heightt notification'),
+      category: 'Account notification',
+      headline: String(notification.title || 'New notification'),
+      recipientName:
+        user.profile?.firstName || user.username || user.email || undefined,
+      intro: String(notification.body || 'You have a new update from Heightt.'),
+      actionLabel: notification.data?.link ? 'View details' : undefined,
+      actionUrl: notification.data?.link || undefined,
+      tone:
+        priority === 'HIGH'
+          ? 'warning'
+          : priority === 'LOW'
+            ? 'success'
+            : 'info',
+      reason:
+        'You received this email because notifications are enabled for your Heightt account.',
+    });
   }
 
   // ============================================
@@ -425,7 +402,9 @@ export class NotificationService {
       const amount = data.amount ?? data.payment?.amount;
 
       if (!userId) {
-        this.logger.warn('PAYMENT_RECEIVED event missing userId, skipping notification');
+        this.logger.warn(
+          'PAYMENT_RECEIVED event missing userId, skipping notification',
+        );
         return;
       }
 

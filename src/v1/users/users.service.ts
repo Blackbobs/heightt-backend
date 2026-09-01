@@ -415,28 +415,18 @@ export class UsersService {
       if (
         dto.firstName ||
         dto.lastName ||
-        dto.phone ||
         dto.avatar ||
         dto.gender ||
-        dto.dateOfBirth ||
-        dto.country ||
-        dto.state ||
-        dto.bio
+        dto.country
       ) {
         await tx.userProfile.update({
           where: { userId },
           data: {
             firstName: dto.firstName,
             lastName: dto.lastName,
-            phone: dto.phone,
             avatar: dto.avatar,
             gender: dto.gender as any,
-            dateOfBirth: dto.dateOfBirth
-              ? new Date(dto.dateOfBirth)
-              : undefined,
             country: dto.country,
-            state: dto.state,
-            bio: dto.bio,
           },
         });
       }
@@ -980,12 +970,8 @@ export class UsersService {
       emailVerified: user.emailVerified,
       firstName: user.profile?.firstName || '',
       lastName: user.profile?.lastName || '',
-      phone: user.profile?.phone || '',
       gender: user.profile?.gender || '',
-      dateOfBirth: user.profile?.dateOfBirth,
       country: user.profile?.country || '',
-      state: user.profile?.state || '',
-      city: user.profile?.city || '',
       institution: user.studentProfile?.institution?.name || '',
       department: user.studentProfile?.department?.name || '',
       level: user.studentProfile?.currentAcademicLevel?.name || '',
