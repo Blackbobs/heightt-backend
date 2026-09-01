@@ -19,19 +19,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    container_name: heightt-redis
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   api:
     build:
       context: .
@@ -41,9 +28,8 @@ services:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/heightt_db?schema=public
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ''
+      UPSTASH_REDIS_REST_URL: ${UPSTASH_REDIS_REST_URL}
+      UPSTASH_REDIS_REST_TOKEN: ${UPSTASH_REDIS_REST_TOKEN}
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-your-secret-key}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-secret-key}
       FRONTEND_URL: ${FRONTEND_URL:-https://heightt-frontend.vercel.app}
@@ -54,10 +40,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   postgres_data:
-  redis_data:

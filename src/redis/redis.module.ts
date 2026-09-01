@@ -14,40 +14,31 @@ import { IdempotencyService } from './idempotency.service';
     {
       provide: 'REDIS_CLIENT',
       useFactory: (configService: ConfigService) => {
-        const nodeEnv = configService.get('NODE_ENV', 'development');
+        const upstashUrl = configService.get<string>(
+          'UPSTASH_REDIS_REST_URL',
+        );
+        const upstashToken = configService.get<string>(
+          'UPSTASH_REDIS_REST_TOKEN',
+        );
 
-        // Check if using Upstash (production/staging)
-        const upstashUrl = configService.get('UPSTASH_REDIS_REST_URL');
-        const upstashToken = configService.get('UPSTASH_REDIS_REST_TOKEN');
-
-        if (nodeEnv === 'production' && upstashUrl && upstashToken) {
-          // Use Upstash Redis REST API
-          const Redis = require('ioredis');
-          return new Redis({
-            host: upstashUrl.replace('https://', '').split(':')[0],
-            port: 6379,
-            password: upstashToken,
-            tls: {},
-            retryStrategy: (times) => {
-              const delay = Math.min(times * 50, 2000);
-              return delay;
-            },
-            maxRetriesPerRequest: 3,
-          });
+        if (!upstashUrl || !upstashToken) {
+          throw new Error(
+            'UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are required',
+          );
         }
 
-        // Local development
+        const { hostname } = new URL(upstashUrl);
+
         return new Redis({
-          host: configService.get('REDIS_HOST', 'localhost'),
-          port: configService.get('REDIS_PORT', 6379),
-          password: configService.get('REDIS_PASSWORD') || undefined,
+          host: hostname,
+          port: 6379,
+          password: upstashToken,
+          tls: {},
           retryStrategy: (times) => {
             const delay = Math.min(times * 50, 2000);
             return delay;
           },
           maxRetriesPerRequest: 3,
-          enableReadyCheck: true,
-          lazyConnect: false,
         });
       },
       inject: [ConfigService],
