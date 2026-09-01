@@ -26,6 +26,9 @@ describe('PromotionService institution promotion', () => {
       studentPromotion: { create: jest.fn().mockResolvedValue({ id: 'p-1' }) },
       studentProfile: { update: jest.fn().mockResolvedValue({}) },
       studentAcademicRecord: { upsert: jest.fn().mockResolvedValue({}) },
+      organizationMembership: {
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
       admin: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
       activityLog: { create: jest.fn().mockResolvedValue({}) },
     };
@@ -128,8 +131,19 @@ describe('PromotionService institution promotion', () => {
         }),
       }),
     );
+    expect(tx.organizationMembership.updateMany).toHaveBeenCalledWith({
+      where: {
+        userId: 'student-user',
+        status: 'ACTIVE',
+        organization: { institutionId: 'institution-1' },
+      },
+      data: { joinedSessionId: 'session-2027' },
+    });
     expect(tx.admin.updateMany).not.toHaveBeenCalled();
     expect(cache.invalidateUserCache).toHaveBeenCalledWith('student-user');
+    expect(cache.delete).toHaveBeenCalledWith(
+      'user:student-user:organizations',
+    );
     expect(notifications.createNotification).toHaveBeenCalledWith(
       'student-user',
       expect.objectContaining({

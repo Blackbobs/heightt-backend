@@ -227,6 +227,14 @@ export class PromotionService {
             status: 'ACTIVE',
           },
         });
+        await tx.organizationMembership.updateMany({
+          where: {
+            userId: student.userId,
+            status: 'ACTIVE',
+            organization: { institutionId },
+          },
+          data: { joinedSessionId: nextSession.id },
+        });
         notificationTargets.push({
           userId: student.userId,
           studentId: student.id,
@@ -317,6 +325,13 @@ export class PromotionService {
       const results = await Promise.allSettled(
         batch.map(async (target) => {
           const graduated = target.event === 'STUDENT_GRADUATED';
+          await Promise.all([
+            this.cacheService.invalidateUserCache(target.userId),
+            this.cacheService.delete(`user:${target.userId}:organizations`),
+            this.cacheService.delete(`student:dashboard:${target.userId}`),
+            this.cacheService.delete(`dashboard:student:${target.userId}`),
+          ]);
+
           await this.notificationService.createNotification(target.userId, {
             title: graduated
               ? 'Graduation status confirmed'
@@ -344,9 +359,6 @@ export class PromotionService {
             },
             sendEmail: true,
           });
-
-          await this.cacheService.invalidateUserCache(target.userId);
-          await this.cacheService.delete(`student:dashboard:${target.userId}`);
         }),
       );
 
@@ -844,6 +856,8 @@ export class PromotionService {
       await this.cacheService.invalidateByTag('students');
       await this.cacheService.invalidateByTag('dashboard');
       await this.cacheService.invalidateByTag('user');
+      await this.cacheService.invalidateByTag('users');
+      await this.cacheService.invalidateByTag('organizations');
       await this.cacheService.invalidateByTag('academics');
       await this.cacheService.invalidateByTag('dues');
 
