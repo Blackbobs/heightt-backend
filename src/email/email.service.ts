@@ -178,7 +178,7 @@ export class EmailService {
   async sendWelcomeEmail(email: string, username: string): Promise<boolean> {
     const html = this.getWelcomeEmailTemplate(username);
 
-    const result = await this.sendEmail(email, 'Welcome to Heightt! 🎉', html);
+    const result = await this.sendEmail(email, 'Welcome to Heightt!', html);
 
     if (result) {
       this.logger.log(`Welcome email sent to ${email}`);

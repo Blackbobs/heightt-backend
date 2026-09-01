@@ -507,7 +507,7 @@ export class OnboardingService {
     this.logger.log(`User ${userId} completed onboarding successfully`);
 
     return {
-      message: 'Onboarding completed successfully! Welcome to Heightt 🎉',
+      message: 'Onboarding completed successfully! Welcome to Heightt',
       onboardingStep: 'COMPLETED',
       onboardingCompleted: true,
       profile: updatedProfile,
