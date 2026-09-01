@@ -239,6 +239,8 @@ export class OnboardingService {
           userId,
           institution.id,
           faculty.id,
+          department.id,
+          academicLevelId,
           session?.id,
         );
       }
@@ -476,6 +478,8 @@ export class OnboardingService {
           userId,
           dto.institutionId,
           dto.facultyId,
+          dto.departmentId,
+          dto.levelId,
         );
 
         await tx.activityLog.create({
@@ -620,8 +624,23 @@ export class OnboardingService {
     userId: string,
     institutionId: string,
     facultyId?: string,
+    departmentId?: string,
+    academicLevelId?: string,
     sessionId?: string,
   ) {
+    if (!sessionId) {
+      const currentSession = await tx.academicSession.findFirst({
+        where: {
+          institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+          status: 'ACTIVE',
+        },
+        select: { id: true },
+      });
+      sessionId = currentSession?.id;
+    }
+
     const organizationScopes: any[] = [
       { type: 'INSTITUTION', scope: 'INSTITUTION' },
     ];
@@ -630,6 +649,20 @@ export class OnboardingService {
         type: 'FACULTY',
         scope: 'FACULTY',
         facultyId,
+      });
+    }
+    if (departmentId) {
+      organizationScopes.push({
+        type: 'DEPARTMENT',
+        scope: 'DEPARTMENT',
+        departmentId,
+      });
+    }
+    if (academicLevelId) {
+      organizationScopes.push({
+        type: 'LEVEL',
+        scope: 'LEVEL',
+        academicLevelId,
       });
     }
 
@@ -649,7 +682,36 @@ export class OnboardingService {
       select: { id: true, name: true, type: true, academicSessionId: true },
     });
 
-    for (const org of matchingOrgs) {
+    const selectedOrganizations = new Map<
+      string,
+      (typeof matchingOrgs)[number]
+    >();
+    for (const organization of matchingOrgs) {
+      const selected = selectedOrganizations.get(organization.type);
+      if (
+        !selected ||
+        (organization.academicSessionId === sessionId &&
+          selected.academicSessionId !== sessionId)
+      ) {
+        selectedOrganizations.set(organization.type, organization);
+      }
+    }
+
+    if (selectedOrganizations.size > 0) {
+      await tx.organizationMembership.updateMany({
+        where: {
+          userId,
+          membershipType: 'STUDENT',
+          status: 'ACTIVE',
+          organization: {
+            type: { in: ['INSTITUTION', 'FACULTY', 'DEPARTMENT', 'LEVEL'] },
+          },
+        },
+        data: { status: 'LEFT', leftAt: new Date() },
+      });
+    }
+
+    for (const org of selectedOrganizations.values()) {
       await tx.organizationMembership.upsert({
         where: {
           organizationId_userId: {

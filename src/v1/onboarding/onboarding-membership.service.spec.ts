@@ -12,6 +12,10 @@ describe('OnboardingService automatic organisation membership', () => {
       },
       organizationMembership: {
         upsert: jest.fn().mockResolvedValue({}),
+        updateMany: jest.fn().mockResolvedValue({ count: 0 }),
+      },
+      academicSession: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'session-1' }),
       },
       organizationJoinRequest: {
         upsert: jest.fn().mockResolvedValue({}),
@@ -20,7 +24,7 @@ describe('OnboardingService automatic organisation membership', () => {
     return { service, tx };
   }
 
-  it('joins available institution and selected faculty organisations', async () => {
+  it('joins the selected institution, faculty, department and level organisations', async () => {
     const organizations = [
       {
         id: 'institution-org',
@@ -34,6 +38,18 @@ describe('OnboardingService automatic organisation membership', () => {
         type: 'FACULTY',
         academicSessionId: null,
       },
+      {
+        id: 'department-org',
+        name: 'Computer Science Department',
+        type: 'DEPARTMENT',
+        academicSessionId: 'session-1',
+      },
+      {
+        id: 'level-org',
+        name: 'Computer Science - 100 Level',
+        type: 'LEVEL',
+        academicSessionId: 'session-1',
+      },
     ];
     const { service, tx } = createServiceAndTransaction(organizations);
 
@@ -42,6 +58,8 @@ describe('OnboardingService automatic organisation membership', () => {
       'user-1',
       'institution-1',
       'faculty-1',
+      'department-1',
+      'level-1',
       'session-1',
     );
 
@@ -53,7 +71,7 @@ describe('OnboardingService automatic organisation membership', () => {
         }),
       }),
     );
-    expect(tx.organizationMembership.upsert).toHaveBeenCalledTimes(2);
+    expect(tx.organizationMembership.upsert).toHaveBeenCalledTimes(4);
     expect(tx.organizationMembership.upsert).toHaveBeenCalledWith(
       expect.objectContaining({
         create: expect.objectContaining({
@@ -74,7 +92,23 @@ describe('OnboardingService automatic organisation membership', () => {
         }),
       }),
     );
-    expect(tx.organizationJoinRequest.upsert).toHaveBeenCalledTimes(2);
+    expect(tx.organizationMembership.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({
+          organizationId: 'department-org',
+          joinedSessionId: 'session-1',
+        }),
+      }),
+    );
+    expect(tx.organizationMembership.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({
+          organizationId: 'level-org',
+          joinedSessionId: 'session-1',
+        }),
+      }),
+    );
+    expect(tx.organizationJoinRequest.upsert).toHaveBeenCalledTimes(4);
   });
 
   it('completes safely when matching organisations are not available', async () => {
@@ -85,6 +119,8 @@ describe('OnboardingService automatic organisation membership', () => {
       'user-1',
       'institution-1',
       'faculty-1',
+      'department-1',
+      'level-1',
     );
 
     expect(tx.organizationMembership.upsert).not.toHaveBeenCalled();
