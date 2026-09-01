@@ -82,10 +82,17 @@ export class PromotionService {
       select: {
         id: true,
         userId: true,
+        facultyId: true,
         departmentId: true,
         currentAcademicLevelId: true,
       },
     });
+    const currentSessionOrganizations = await this.prisma.organization.findMany(
+      {
+        where: { institutionId, academicSessionId: currentSession.id },
+        orderBy: { createdAt: 'asc' },
+      },
+    );
     const departmentIds = [...new Set(students.map((s) => s.departmentId))];
     const levels = await this.prisma.academicLevel.findMany({
       where: {
@@ -145,6 +152,62 @@ export class PromotionService {
         },
         data: { isCurrent: false, status: 'COMPLETED', updatedBy: userId },
       });
+
+      const newOrganizationsByOldId = new Map<string, any>();
+      for (const organization of currentSessionOrganizations) {
+        const sessionSlug = nextSession.name.replace('/', '-');
+        const previousSessionSlug = currentSession.name.replace('/', '-');
+        const created = await tx.organization.upsert({
+          where: {
+            institutionId_slug_academicSessionId: {
+              institutionId,
+              slug: organization.slug.includes(previousSessionSlug)
+                ? organization.slug.replace(previousSessionSlug, sessionSlug)
+                : `${organization.slug}-${sessionSlug}`,
+              academicSessionId: nextSession.id,
+            },
+          },
+          update: {},
+          create: {
+            institutionId,
+            facultyId: organization.facultyId,
+            departmentId: organization.departmentId,
+            academicLevelId: organization.academicLevelId,
+            name: organization.name.replace(
+              currentSession.name,
+              nextSession.name,
+            ),
+            slug: organization.slug.includes(previousSessionSlug)
+              ? organization.slug.replace(previousSessionSlug, sessionSlug)
+              : `${organization.slug}-${sessionSlug}`,
+            description: organization.description?.replace(
+              currentSession.name,
+              nextSession.name,
+            ),
+            logo: organization.logo,
+            type: organization.type,
+            scope: organization.scope,
+            status: organization.status,
+            academicSessionId: nextSession.id,
+            createdBy: userId,
+          },
+        });
+        newOrganizationsByOldId.set(organization.id, created);
+      }
+
+      for (const organization of currentSessionOrganizations) {
+        if (!organization.parentOrganizationId) continue;
+        const created = newOrganizationsByOldId.get(organization.id);
+        const parent = newOrganizationsByOldId.get(
+          organization.parentOrganizationId,
+        );
+        if (created && parent) {
+          await tx.organization.update({
+            where: { id: created.id },
+            data: { parentOrganizationId: parent.id },
+          });
+        }
+      }
 
       let promoted = 0;
       let graduated = 0;
@@ -227,14 +290,59 @@ export class PromotionService {
             status: 'ACTIVE',
           },
         });
+        const previousMemberships = await tx.organizationMembership.findMany({
+          where: {
+            userId: student.userId,
+            status: 'ACTIVE',
+            organization: { academicSessionId: currentSession.id },
+          },
+          include: { organization: true },
+        });
         await tx.organizationMembership.updateMany({
           where: {
             userId: student.userId,
             status: 'ACTIVE',
-            organization: { institutionId },
+            organization: {
+              institutionId,
+              academicSessionId: currentSession.id,
+            },
           },
-          data: { joinedSessionId: nextSession.id },
+          data: { status: 'LEFT', leftAt: now },
         });
+        for (const membership of previousMemberships) {
+          const destination =
+            membership.organization.type === 'LEVEL'
+              ? [...newOrganizationsByOldId.values()].find(
+                  (organization) =>
+                    organization.type === 'LEVEL' &&
+                    organization.academicLevelId === nextLevel.id &&
+                    organization.departmentId === student.departmentId,
+                )
+              : newOrganizationsByOldId.get(membership.organizationId);
+          if (!destination) continue;
+          await tx.organizationMembership.upsert({
+            where: {
+              organizationId_userId: {
+                organizationId: destination.id,
+                userId: student.userId,
+              },
+            },
+            update: {
+              status: 'ACTIVE',
+              leftAt: null,
+              joinedSessionId: nextSession.id,
+            },
+            create: {
+              organizationId: destination.id,
+              userId: student.userId,
+              membershipType: membership.membershipType,
+              status: 'ACTIVE',
+              isPrimary: membership.isPrimary,
+              joinedAt: now,
+              joinedSessionId: nextSession.id,
+            },
+          });
+        }
         notificationTargets.push({
           userId: student.userId,
           studentId: student.id,

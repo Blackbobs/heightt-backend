@@ -28,6 +28,12 @@ describe('PromotionService institution promotion', () => {
       studentAcademicRecord: { upsert: jest.fn().mockResolvedValue({}) },
       organizationMembership: {
         updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+        findMany: jest.fn().mockResolvedValue([]),
+        upsert: jest.fn().mockResolvedValue({}),
+      },
+      organization: {
+        upsert: jest.fn(),
+        update: jest.fn(),
       },
       admin: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
       activityLog: { create: jest.fn().mockResolvedValue({}) },
@@ -77,6 +83,7 @@ describe('PromotionService institution promotion', () => {
           },
         ]),
       },
+      organization: { findMany: jest.fn().mockResolvedValue([]) },
       $transaction: jest.fn((callback: (client: any) => unknown) =>
         callback(tx),
       ),
@@ -100,7 +107,48 @@ describe('PromotionService institution promotion', () => {
   }
 
   it('creates the next session and promotes 300 level to 400 level', async () => {
-    const { service, tx, cache, notifications } = setup();
+    const { service, prisma, tx, cache, notifications } = setup();
+    const oldLevelOrganization = {
+      id: 'org-level-300-old',
+      institutionId: 'institution-1',
+      facultyId: null,
+      departmentId: 'department-1',
+      academicLevelId: 'level-300',
+      parentOrganizationId: null,
+      name: 'Department - 300 Level (2026/2027)',
+      slug: 'department-300-level-2026-2027',
+      description: '300 Level organization (2026/2027)',
+      logo: null,
+      type: 'LEVEL',
+      scope: 'LEVEL',
+      status: 'ACTIVE',
+    };
+    const nextLevelOrganization = {
+      ...oldLevelOrganization,
+      id: 'org-level-400-old',
+      academicLevelId: 'level-400',
+      name: 'Department - 400 Level (2026/2027)',
+      slug: 'department-400-level-2026-2027',
+    };
+    prisma.organization.findMany.mockResolvedValue([
+      oldLevelOrganization,
+      nextLevelOrganization,
+    ]);
+    tx.organization.upsert.mockImplementation(({ create }) => ({
+      ...create,
+      id:
+        create.academicLevelId === 'level-400'
+          ? 'org-level-400-new'
+          : 'org-level-300-new',
+    }));
+    tx.organizationMembership.findMany.mockResolvedValue([
+      {
+        organizationId: oldLevelOrganization.id,
+        membershipType: 'STUDENT',
+        isPrimary: false,
+        organization: oldLevelOrganization,
+      },
+    ]);
     const result = await service.promoteInstitution(
       'institution-1',
       'platform-admin',
@@ -135,10 +183,27 @@ describe('PromotionService institution promotion', () => {
       where: {
         userId: 'student-user',
         status: 'ACTIVE',
-        organization: { institutionId: 'institution-1' },
+        organization: {
+          institutionId: 'institution-1',
+          academicSessionId: 'session-2026',
+        },
       },
-      data: { joinedSessionId: 'session-2027' },
+      data: { status: 'LEFT', leftAt: expect.any(Date) },
     });
+    expect(tx.organizationMembership.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: {
+          organizationId_userId: {
+            organizationId: 'org-level-400-new',
+            userId: 'student-user',
+          },
+        },
+        create: expect.objectContaining({
+          joinedSessionId: 'session-2027',
+          status: 'ACTIVE',
+        }),
+      }),
+    );
     expect(tx.admin.updateMany).not.toHaveBeenCalled();
     expect(cache.invalidateUserCache).toHaveBeenCalledWith('student-user');
     expect(cache.delete).toHaveBeenCalledWith(
