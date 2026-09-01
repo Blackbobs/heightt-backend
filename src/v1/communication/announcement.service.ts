@@ -555,6 +555,7 @@ export class AnnouncementService {
       // Invalidate tags
       await this.cacheService.invalidateByTag('announcements');
       await this.cacheService.invalidateByTag('communication');
+      await this.cacheService.invalidateByTag('dashboard');
 
       // Delete specific announcement if ID provided
       if (announcementId) {
