@@ -7,18 +7,26 @@ import axios from 'axios';
 export class KeepAliveService {
   private readonly logger = new Logger(KeepAliveService.name);
   private readonly appUrl: string;
+  private readonly isProduction: boolean;
 
   constructor(private readonly configService: ConfigService) {
+    this.isProduction =
+      this.configService.get<string>('NODE_ENV', 'development') ===
+      'production';
     this.appUrl =
       this.configService.get('APP_URL') ||
       this.configService.get('RENDER_EXTERNAL_URL') ||
       'http://localhost:3000';
-    this.logger.log(`Keep-alive service configured with URL: ${this.appUrl}`);
-    this.logger.log(`⏰ Will ping every 14 minutes to keep server alive`);
+    if (this.isProduction) {
+      this.logger.log(`Keep-alive service configured with URL: ${this.appUrl}`);
+      this.logger.log(`⏰ Will ping every 14 minutes to keep server alive`);
+    }
   }
 
   @Cron('*/14 * * * *') // Every 14 minutes
   async keepAlive() {
+    if (!this.isProduction) return;
+
     try {
       const url = `${this.appUrl}/api/v1/health`;
       const response = await axios.get(url, {
