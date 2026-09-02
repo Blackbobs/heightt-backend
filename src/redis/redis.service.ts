@@ -217,7 +217,20 @@ export class RedisService implements OnModuleDestroy {
   // ============================================
 
   async keys(pattern: string): Promise<string[]> {
-    return await this.redis.keys(pattern);
+    const keys: string[] = [];
+    let cursor = '0';
+    do {
+      const [nextCursor, batch] = await this.redis.scan(
+        cursor,
+        'MATCH',
+        pattern,
+        'COUNT',
+        250,
+      );
+      cursor = nextCursor;
+      keys.push(...batch);
+    } while (cursor !== '0');
+    return keys;
   }
 
   async flushall(): Promise<void> {
@@ -251,7 +264,7 @@ export class RedisService implements OnModuleDestroy {
   async cacheDeletePattern(pattern: string): Promise<void> {
     const keys = await this.keys(pattern);
     if (keys.length > 0) {
-      await this.redis.del(...keys);
+      await this.redis.unlink(...keys);
     }
   }
 

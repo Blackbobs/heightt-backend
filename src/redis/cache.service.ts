@@ -42,11 +42,29 @@ export class CacheService {
 
   async invalidatePattern(pattern: string): Promise<void> {
     const client = this.redisService.getClient();
-    const keys = await client.keys(pattern);
-    if (keys.length > 0) {
-      await client.del(...keys);
+    let cursor = '0';
+    let invalidated = 0;
+
+    // KEYS blocks Redis for the duration of a full keyspace scan. SCAN keeps
+    // invalidation incremental, while UNLINK frees values off the main thread.
+    do {
+      const [nextCursor, keys] = await client.scan(
+        cursor,
+        'MATCH',
+        pattern,
+        'COUNT',
+        250,
+      );
+      cursor = nextCursor;
+      if (keys.length > 0) {
+        await client.unlink(...keys);
+        invalidated += keys.length;
+      }
+    } while (cursor !== '0');
+
+    if (invalidated > 0) {
       this.logger.debug(
-        `Invalidated ${keys.length} cache keys matching ${pattern}`,
+        `Invalidated ${invalidated} cache keys matching ${pattern}`,
       );
     }
   }
@@ -184,12 +202,11 @@ export class CacheService {
 
       // Delete all keys associated with this tag
       if (keys.length > 0) {
-        await client.del(...keys);
+        await client.unlink(...keys);
         // Clean up tag references
-        for (const key of keys) {
-          const tagKey = this.getTagKey(key);
-          await client.del(tagKey);
-        }
+        const pipeline = client.pipeline();
+        for (const key of keys) pipeline.unlink(this.getTagKey(key));
+        await pipeline.exec();
       }
 
       // Delete the tag set
@@ -308,7 +325,7 @@ export class CacheService {
     memoryUsage: string;
   }> {
     const client = this.redisService.getClient();
-    const keys = await client.keys(`${this.keyPrefix}*`);
+    const keys = await this.redisService.keys(`${this.keyPrefix}*`);
     const info = await client.info('memory');
     const memoryMatch = info.match(/used_memory_human:([^\r\n]+)/);
     const memoryUsage = memoryMatch ? memoryMatch[1].trim() : 'Unknown';

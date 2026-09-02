@@ -31,18 +31,25 @@ export class NotificationService {
   // CACHE INVALIDATION HELPERS
   // ============================================
 
-  async invalidateNotificationCache(userId?: string): Promise<void> {
+  async invalidateNotificationCache(
+    userId?: string,
+    invalidateSharedTags: boolean = true,
+  ): Promise<void> {
     try {
-      await this.cacheService.invalidateByTag('notifications');
-      await this.cacheService.invalidateByTag('communication');
+      if (invalidateSharedTags) {
+        await Promise.all([
+          this.cacheService.invalidateByTag('notifications'),
+          this.cacheService.invalidateByTag('communication'),
+        ]);
+      }
 
       if (userId) {
-        await this.cacheService.delete(`notifications:user:${userId}`);
-        await this.cacheService.delete(`notifications:unread:${userId}`);
-        await this.cacheService.delete(`notifications:preferences:${userId}`);
-        await this.cacheService.invalidatePattern(
-          `notifications:user:${userId}:*`,
-        );
+        await Promise.all([
+          this.cacheService.delete(`notifications:user:${userId}`),
+          this.cacheService.delete(`notifications:unread:${userId}`),
+          this.cacheService.delete(`notifications:preferences:${userId}`),
+          this.cacheService.invalidatePattern(`notifications:user:${userId}:*`),
+        ]);
       }
 
       this.logger.debug(
@@ -116,32 +123,43 @@ export class NotificationService {
       sendEmail?: boolean;
     },
   ) {
-    const notifications = await this.prisma.$transaction(
-      userIds.map((userId) =>
-        this.prisma.notification.create({
-          data: {
-            userId,
-            title: data.title,
-            body: data.body,
-            type: data.type as any,
-            priority: (data.priority as any) || 'NORMAL',
-            data: data.data || {},
-            deliveredAt: new Date(),
-          },
-        }),
-      ),
-    );
+    const deliveredAt = new Date();
+    const notifications = await this.prisma.notification.createManyAndReturn({
+      data: userIds.map((userId) => ({
+        userId,
+        title: data.title,
+        body: data.body,
+        type: data.type as any,
+        priority: (data.priority as any) || 'NORMAL',
+        data: data.data || {},
+        deliveredAt,
+      })),
+    });
 
-    for (const userId of userIds) {
-      await this.invalidateNotificationCache(userId);
+    await Promise.all([
+      this.cacheService.invalidateByTag('notifications'),
+      this.cacheService.invalidateByTag('communication'),
+    ]);
+    for (let offset = 0; offset < userIds.length; offset += 50) {
+      await Promise.all(
+        userIds
+          .slice(offset, offset + 50)
+          .map((userId) => this.invalidateNotificationCache(userId, false)),
+      );
     }
 
     // Fix: Pass 3 arguments: userIds, event, data
     await this.gateway.sendToUsers(userIds, 'notification', notifications);
 
     if (data.sendEmail !== false) {
-      for (const notification of notifications) {
-        await this.sendEmailNotification(notification.userId, notification);
+      for (let offset = 0; offset < notifications.length; offset += 25) {
+        await Promise.allSettled(
+          notifications
+            .slice(offset, offset + 25)
+            .map((notification) =>
+              this.sendEmailNotification(notification.userId, notification),
+            ),
+        );
       }
     }
 
@@ -191,21 +209,12 @@ export class NotificationService {
   }
 
   async getUnreadCount(userId: string) {
-    const cacheKey = `notifications:unread:${userId}`;
-    const cached = await this.cacheService.get<number>(cacheKey);
-    if (cached !== null) {
-      return cached;
-    }
-
-    const count = await this.prisma.notification.count({
+    return this.prisma.notification.count({
       where: {
         userId,
         read: false,
       },
     });
-
-    await this.cacheService.set(cacheKey, count, 30);
-    return count;
   }
 
   async markAsRead(userId: string, notificationId: string) {
@@ -307,30 +316,30 @@ export class NotificationService {
       inApp: boolean;
     }>,
   ) {
-    const results: any[] = [];
-    for (const pref of preferences) {
-      const updated = await this.prisma.notificationPreference.upsert({
-        where: {
-          userId_type: {
+    const results = await this.prisma.$transaction(
+      preferences.map((pref) =>
+        this.prisma.notificationPreference.upsert({
+          where: {
+            userId_type: {
+              userId,
+              type: pref.type as any,
+            },
+          },
+          update: {
+            email: pref.email,
+            push: pref.push,
+            inApp: pref.inApp,
+          },
+          create: {
             userId,
             type: pref.type as any,
+            email: pref.email,
+            push: pref.push,
+            inApp: pref.inApp,
           },
-        },
-        update: {
-          email: pref.email,
-          push: pref.push,
-          inApp: pref.inApp,
-        },
-        create: {
-          userId,
-          type: pref.type as any,
-          email: pref.email,
-          push: pref.push,
-          inApp: pref.inApp,
-        },
-      });
-      results.push(updated);
-    }
+        }),
+      ),
+    );
 
     await this.invalidateNotificationCache(userId);
     return results;

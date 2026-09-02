@@ -444,20 +444,17 @@ export class RbacService {
       });
 
       if (dto.permissions && dto.permissions.length > 0) {
-        for (const permissionKey of dto.permissions) {
-          const permission = await tx.permission.findUnique({
-            where: { key: permissionKey },
-          });
-
-          if (permission) {
-            await tx.rolePermission.create({
-              data: {
-                roleId: newRole.id,
-                permissionId: permission.id,
-              },
-            });
-          }
-        }
+        const permissions = await tx.permission.findMany({
+          where: { key: { in: dto.permissions } },
+          select: { id: true },
+        });
+        await tx.rolePermission.createMany({
+          data: permissions.map((permission) => ({
+            roleId: newRole.id,
+            permissionId: permission.id,
+          })),
+          skipDuplicates: true,
+        });
       }
 
       return newRole;
@@ -574,20 +571,17 @@ export class RbacService {
           where: { roleId },
         });
 
-        for (const permissionKey of dto.permissions) {
-          const permission = await tx.permission.findUnique({
-            where: { key: permissionKey },
-          });
-
-          if (permission) {
-            await tx.rolePermission.create({
-              data: {
-                roleId,
-                permissionId: permission.id,
-              },
-            });
-          }
-        }
+        const permissions = await tx.permission.findMany({
+          where: { key: { in: dto.permissions } },
+          select: { id: true },
+        });
+        await tx.rolePermission.createMany({
+          data: permissions.map((permission) => ({
+            roleId,
+            permissionId: permission.id,
+          })),
+          skipDuplicates: true,
+        });
       }
 
       return updatedRole;
@@ -1219,14 +1213,13 @@ export class RbacService {
         },
       });
 
-      for (const rp of role.permissions) {
-        await tx.rolePermission.create({
-          data: {
-            roleId: clonedRole.id,
-            permissionId: rp.permissionId,
-          },
-        });
-      }
+      await tx.rolePermission.createMany({
+        data: role.permissions.map((rp) => ({
+          roleId: clonedRole.id,
+          permissionId: rp.permissionId,
+        })),
+        skipDuplicates: true,
+      });
 
       return clonedRole;
     });

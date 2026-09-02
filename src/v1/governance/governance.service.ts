@@ -79,19 +79,16 @@ export class GovernanceService {
         },
       });
 
-      // Create positions
-      for (const pos of dto.positions) {
-        await tx.electionPosition.create({
-          data: {
-            electionId: newElection.id,
-            title: pos.title,
-            description: pos.description,
-            maxCandidates: pos.maxCandidates || 3,
-            maxVotes: pos.maxVotes || 1,
-            order: pos.order || 0,
-          },
-        });
-      }
+      await tx.electionPosition.createMany({
+        data: dto.positions.map((pos) => ({
+          electionId: newElection.id,
+          title: pos.title,
+          description: pos.description,
+          maxCandidates: pos.maxCandidates || 3,
+          maxVotes: pos.maxVotes || 1,
+          order: pos.order || 0,
+        })),
+      });
 
       return newElection;
     });
@@ -990,17 +987,14 @@ export class GovernanceService {
         },
       });
 
-      // Add members
-      for (const member of dto.members) {
-        await tx.executiveMember.create({
-          data: {
-            termId: newTerm.id,
-            userId: member.userId,
-            roleId: member.roleId,
-            assignedAt: new Date(),
-          },
-        });
-      }
+      await tx.executiveMember.createMany({
+        data: dto.members.map((member) => ({
+          termId: newTerm.id,
+          userId: member.userId,
+          roleId: member.roleId,
+          assignedAt: new Date(),
+        })),
+      });
 
       return newTerm;
     });

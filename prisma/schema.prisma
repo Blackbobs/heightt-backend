@@ -302,6 +302,7 @@ model StudentProfile {
 
   @@index([userId])
   @@index([institutionId])
+  @@index([institutionId, createdAt])
   @@index([facultyId])
   @@index([departmentId])
   @@index([matricNumber])
@@ -437,6 +438,7 @@ model Organization {
 
   @@unique([institutionId, slug, academicSessionId])
   @@index([institutionId])
+  @@index([institutionId, createdAt])
   @@index([facultyId])
   @@index([departmentId])
   @@index([academicLevelId])
@@ -465,7 +467,9 @@ model OrganizationMembership {
 
   @@unique([organizationId, userId])
   @@index([userId])
+  @@index([userId, status])
   @@index([organizationId])
+  @@index([organizationId, status])
   @@index([status])
   @@map("organization_memberships")
 }
@@ -573,6 +577,7 @@ model Admin {
 
   @@unique([userId, adminType, institutionId, facultyId, departmentId, organizationId, academicSessionId])
   @@index([userId])
+  @@index([userId, status])
   @@index([adminType])
   @@index([status])
   @@map("admins")
@@ -777,6 +782,7 @@ model Transaction {
   withdrawal     Withdrawal?
 
   @@index([walletId])
+  @@index([walletId, status, createdAt(sort: Desc)])
   @@index([reference])
   @@index([status])
   @@index([journalEntryId])
@@ -811,7 +817,9 @@ model Payment {
   refund          Refund?
 
   @@index([payerId])
+  @@index([payerId, status, createdAt(sort: Desc)])
   @@index([organizationId])
+  @@index([organizationId, status, paidAt])
   @@index([reference])
   @@index([status])
   @@index([journalEntryId])
@@ -856,6 +864,7 @@ model DueAssignment {
 
   @@unique([dueId, studentId])
   @@index([studentId])
+  @@index([studentId, isPaid, createdAt(sort: Desc)])
   @@index([isPaid])
   @@map("due_assignments")
 }
@@ -1082,6 +1091,7 @@ model Announcement {
   organization   Organization         @relation(fields: [organizationId], references: [id])
 
   @@index([organizationId])
+  @@index([organizationId, isPublished, publishedAt(sort: Desc)])
   @@index([isPublished])
   @@index([type])
   @@map("announcements")
@@ -1115,6 +1125,8 @@ model Notification {
   user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([userId, read])
+  @@index([userId, createdAt(sort: Desc)])
   @@index([read])
   @@index([type])
   @@map("notifications")
@@ -1321,6 +1333,8 @@ model AuditLog {
   user      User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([entity, entityId, createdAt(sort: Desc)])
   @@index([createdAt])
   @@index([action])
   @@map("audit_logs")
@@ -1337,6 +1351,7 @@ model ActivityLog {
   user      User?    @relation(fields: [userId], references: [id])
 
   @@index([userId])
+  @@index([userId, createdAt(sort: Desc)])
   @@index([createdAt])
   @@index([activity])
   @@map("activity_logs")
@@ -1485,6 +1500,7 @@ model Event {
   tickets         Ticket[]
 
   @@index([organizationId])
+  @@index([organizationId, status, startDate])
   @@index([createdBy])
   @@index([status])
   @@index([isPublic])
@@ -1537,6 +1553,7 @@ model EventRegistration {
   user             User               @relation(fields: [userId], references: [id])
 
   @@unique([eventId, userId])
+  @@index([eventId, status])
   @@map("event_registrations")
 }
 
@@ -1606,7 +1623,9 @@ model File {
   user           User?           @relation(fields: [userId], references: [id])
 
   @@index([userId])
+  @@index([userId, isDeleted, createdAt(sort: Desc)])
   @@index([organizationId])
+  @@index([organizationId, isDeleted, createdAt(sort: Desc)])
   @@index([publicId])
   @@index([folder])
   @@index([purpose])
