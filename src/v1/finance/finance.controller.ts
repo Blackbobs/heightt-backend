@@ -1167,9 +1167,17 @@ export class FinanceController {
     key: (context) => {
       const request = context.switchToHttp().getRequest();
       const userId = request.user.id;
-      const { status, type, organizationId, page, limit, startDate, endDate } =
-        request.query;
-      return `withdrawals:v2:user:${userId}:${organizationId || 'self'}:${status || 'all'}:${type || 'all'}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}`;
+      const {
+        status,
+        type,
+        organizationId,
+        academicSessionId,
+        page,
+        limit,
+        startDate,
+        endDate,
+      } = request.query;
+      return `withdrawals:v3:user:${userId}:${organizationId || 'self'}:${academicSessionId || 'all-sessions'}:${status || 'all'}:${type || 'all'}:${page || 1}:${limit || 10}:${startDate || 'all'}:${endDate || 'all'}`;
     },
     ttl: 60,
     tags: ['finance', 'withdrawals'],
@@ -1194,7 +1202,8 @@ export class FinanceController {
   @ApiQuery({
     name: 'academicSessionId',
     required: false,
-    description: 'Filter organisation withdrawals by academic session',
+    description:
+      'Filter organisation withdrawals by academic session when organizationId is not supplied',
   })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })

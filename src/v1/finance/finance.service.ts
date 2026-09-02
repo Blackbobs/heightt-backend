@@ -3604,7 +3604,10 @@ export class FinanceService {
       where.userId = userId;
     }
 
-    if (filters.academicSessionId) {
+    // An explicit organization is already the narrowest scope. Some legacy and
+    // cross-session organizations have no academicSessionId, so combining both
+    // filters incorrectly hides withdrawals that belong to the requested wallet.
+    if (filters.academicSessionId && !filters.organizationId) {
       where.wallet = {
         ...(where.wallet || {}),
         organization: {
