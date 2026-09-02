@@ -95,6 +95,29 @@ export class AdminGuard implements CanActivate {
       const institutionId =
         request.params?.institutionId || request.query?.institutionId;
 
+      let organizationScopePromise: Promise<{
+        academicSessionId: string | null;
+        institutionId: string;
+        facultyId: string | null;
+        departmentId: string | null;
+      } | null> | null = null;
+      const getOrganizationScope = () => {
+        if (!organizationScopePromise) {
+          organizationScopePromise = Promise.resolve(
+            this.prisma.organization.findUnique({
+              where: { id: organizationId },
+              select: {
+                academicSessionId: true,
+                institutionId: true,
+                facultyId: true,
+                departmentId: true,
+              },
+            }),
+          );
+        }
+        return organizationScopePromise;
+      };
+
       // Find the admin that matches the scope of the request
       let matchingAdmin: any = null;
 
@@ -109,10 +132,7 @@ export class AdminGuard implements CanActivate {
             )
           : undefined;
         if (!found && !academicSessionId && organizationAdmins.length) {
-          const organization = await this.prisma.organization.findUnique({
-            where: { id: organizationId },
-            select: { academicSessionId: true },
-          });
+          const organization = await getOrganizationScope();
           found = organizationAdmins.find(
             (admin) =>
               admin.academicSessionId === organization?.academicSessionId,
@@ -145,6 +165,7 @@ export class AdminGuard implements CanActivate {
 
       // If still no match, check if any admin has a broader scope that includes the resource
       if (!matchingAdmin && organizationId) {
+        const organization = await getOrganizationScope();
         // Check if any admin's scope includes this organization
         for (const admin of admins) {
           if (admin.adminType === 'PLATFORM_ADMIN') {
@@ -154,11 +175,10 @@ export class AdminGuard implements CanActivate {
 
           // Check if this organization belongs to the admin's institution
           if (admin.institutionId) {
-            const org = await this.prisma.organization.findUnique({
-              where: { id: organizationId },
-              select: { institutionId: true },
-            });
-            if (org && org.institutionId === admin.institutionId) {
+            if (
+              organization &&
+              organization.institutionId === admin.institutionId
+            ) {
               matchingAdmin = admin;
               break;
             }
@@ -166,11 +186,7 @@ export class AdminGuard implements CanActivate {
 
           // Check if this organization belongs to the admin's faculty
           if (admin.facultyId) {
-            const org = await this.prisma.organization.findUnique({
-              where: { id: organizationId },
-              select: { facultyId: true },
-            });
-            if (org && org.facultyId === admin.facultyId) {
+            if (organization && organization.facultyId === admin.facultyId) {
               matchingAdmin = admin;
               break;
             }
@@ -178,11 +194,10 @@ export class AdminGuard implements CanActivate {
 
           // Check if this organization belongs to the admin's department
           if (admin.departmentId) {
-            const org = await this.prisma.organization.findUnique({
-              where: { id: organizationId },
-              select: { departmentId: true },
-            });
-            if (org && org.departmentId === admin.departmentId) {
+            if (
+              organization &&
+              organization.departmentId === admin.departmentId
+            ) {
               matchingAdmin = admin;
               break;
             }

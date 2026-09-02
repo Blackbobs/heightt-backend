@@ -87,25 +87,25 @@ export class AnalyticsService {
 
     // Total revenue and transactions
     const [totalAgg, paymentMethods, topOrgs] = await Promise.all([
-        this.prisma.payment.aggregate({
-          where,
-          _sum: { amount: true },
-          _count: { id: true },
-        }),
-        this.prisma.payment.groupBy({
-          by: ['paymentMethod'],
-          where,
-          _sum: { amount: true },
-          _count: { id: true },
-        }),
-        this.prisma.payment.groupBy({
-          by: ['organizationId'],
-          where,
-          _sum: { amount: true },
-          orderBy: { _sum: { amount: 'desc' } },
-          take: 10,
-        }),
-      ]);
+      this.prisma.payment.aggregate({
+        where,
+        _sum: { amount: true },
+        _count: { id: true },
+      }),
+      this.prisma.payment.groupBy({
+        by: ['paymentMethod'],
+        where,
+        _sum: { amount: true },
+        _count: { id: true },
+      }),
+      this.prisma.payment.groupBy({
+        by: ['organizationId'],
+        where,
+        _sum: { amount: true },
+        orderBy: { _sum: { amount: 'desc' } },
+        take: 10,
+      }),
+    ]);
 
     // A payment belongs to an organization, while the institution is a field
     // on that organization. Prisma cannot group a model by a related field, so
@@ -480,74 +480,68 @@ export class AnalyticsService {
       where.institutionId = dto.institutionId;
     }
 
-    // Student growth over last 6 months
-    const studentGrowth: Array<{ month: string; year: number; total: number }> =
-      [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - i);
-      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      const count = await this.prisma.studentProfile.count({
-        where: {
-          ...where,
-          createdAt: { lte: monthEnd },
-        },
-      });
-      studentGrowth.push({
-        month: date.toLocaleString('default', { month: 'short' }),
-        year: date.getFullYear(),
-        total: count,
-      });
-    }
-
-    // Organization growth over last 6 months
-    const orgGrowth: Array<{ month: string; year: number; total: number }> = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - i);
-      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      const count = await this.prisma.organization.count({
-        where: {
-          ...where,
-          createdAt: { lte: monthEnd },
-        },
-      });
-      orgGrowth.push({
-        month: date.toLocaleString('default', { month: 'short' }),
-        year: date.getFullYear(),
-        total: count,
-      });
-    }
-
-    // Revenue growth over last 6 months
-    const revenueGrowth: Array<{ month: string; year: number; total: number }> =
-      [];
-    for (let i = 6; i >= 0; i--) {
+    const periods = Array.from({ length: 7 }, (_, index) => {
+      const i = 6 - index;
       const date = new Date();
       date.setMonth(date.getMonth() - i);
       const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-      const revenue = await this.prisma.payment.aggregate({
-        where: {
-          status: 'COMPLETED',
-          paidAt: {
-            gte: startDate,
-            lte: endDate,
-          },
-          ...(dto.institutionId
-            ? { organization: { institutionId: dto.institutionId } }
-            : {}),
-        },
-        _sum: { amount: true },
-      });
-
-      revenueGrowth.push({
+      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      return {
+        startDate,
+        monthEnd,
         month: startDate.toLocaleString('default', { month: 'short' }),
-        year: startDate.getFullYear(),
-        total: revenue._sum.amount || 0,
-      });
-    }
+        year: date.getFullYear(),
+      };
+    });
+
+    // The time buckets are independent. Running them concurrently avoids 21
+    // network round trips being paid serially on a cache miss.
+    const [studentTotals, organizationTotals, revenues] = await Promise.all([
+      Promise.all(
+        periods.map(({ monthEnd }) =>
+          this.prisma.studentProfile.count({
+            where: { ...where, createdAt: { lte: monthEnd } },
+          }),
+        ),
+      ),
+      Promise.all(
+        periods.map(({ monthEnd }) =>
+          this.prisma.organization.count({
+            where: { ...where, createdAt: { lte: monthEnd } },
+          }),
+        ),
+      ),
+      Promise.all(
+        periods.map(({ startDate, monthEnd }) =>
+          this.prisma.payment.aggregate({
+            where: {
+              status: 'COMPLETED',
+              paidAt: { gte: startDate, lte: monthEnd },
+              ...(dto.institutionId
+                ? { organization: { institutionId: dto.institutionId } }
+                : {}),
+            },
+            _sum: { amount: true },
+          }),
+        ),
+      ),
+    ]);
+
+    const studentGrowth = periods.map((period, index) => ({
+      month: period.month,
+      year: period.year,
+      total: studentTotals[index],
+    }));
+    const orgGrowth = periods.map((period, index) => ({
+      month: period.month,
+      year: period.year,
+      total: organizationTotals[index],
+    }));
+    const revenueGrowth = periods.map((period, index) => ({
+      month: period.month,
+      year: period.year,
+      total: revenues[index]._sum.amount || 0,
+    }));
 
     const analytics = {
       studentGrowth,
@@ -577,9 +571,7 @@ export class AnalyticsService {
     ];
 
     if (where.organizationId) {
-      conditions.push(
-        Prisma.sql`"organizationId" = ${where.organizationId}`,
-      );
+      conditions.push(Prisma.sql`"organizationId" = ${where.organizationId}`);
     }
     if (where.paidAt?.gte) {
       conditions.push(Prisma.sql`"paidAt" >= ${where.paidAt.gte}`);
@@ -633,55 +625,57 @@ export class AnalyticsService {
   }
 
   private async getEnrollmentTrend(where: any) {
-    const results: Array<{ period: string; count: number }> = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - i);
-      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return Promise.all(
+      Array.from({ length: 7 }, async (_, index) => {
+        const i = 6 - index;
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-      const count = await this.prisma.studentProfile.count({
-        where: {
-          ...where,
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
+        const count = await this.prisma.studentProfile.count({
+          where: {
+            ...where,
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
+            },
           },
-        },
-      });
+        });
 
-      results.push({
-        period: startDate.toLocaleString('default', { month: 'short' }),
-        count,
-      });
-    }
-    return results;
+        return {
+          period: startDate.toLocaleString('default', { month: 'short' }),
+          count,
+        };
+      }),
+    );
   }
 
   private async getOrganizationGrowth(where: any) {
-    const results: Array<{ period: string; count: number }> = [];
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date();
-      date.setMonth(date.getMonth() - i);
-      const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return Promise.all(
+      Array.from({ length: 7 }, async (_, index) => {
+        const i = 6 - index;
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+        const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-      const count = await this.prisma.organization.count({
-        where: {
-          ...where,
-          createdAt: {
-            gte: startDate,
-            lte: endDate,
+        const count = await this.prisma.organization.count({
+          where: {
+            ...where,
+            createdAt: {
+              gte: startDate,
+              lte: endDate,
+            },
           },
-        },
-      });
+        });
 
-      results.push({
-        period: startDate.toLocaleString('default', { month: 'short' }),
-        count,
-      });
-    }
-    return results;
+        return {
+          period: startDate.toLocaleString('default', { month: 'short' }),
+          count,
+        };
+      }),
+    );
   }
 
   private async getRecentActivities(dto: AnalyticsQueryDto) {

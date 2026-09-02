@@ -614,25 +614,32 @@ export class ActivitiesService {
   // CACHE INVALIDATION HELPERS
   // ============================================
 
-  private async invalidateActivityCaches(activityId: string, organizationId?: string | null) {
+  private async invalidateActivityCaches(
+    activityId: string,
+    organizationId?: string | null,
+  ) {
     try {
       // Delete specific activity cache
       await this.cacheService.delete(`activity:${activityId}`);
-      
+
       // Invalidate activity tags
       await this.cacheService.invalidateByTag('activities');
       await this.cacheService.invalidateByTag('public');
       await this.cacheService.invalidateByTag('activity-detail');
-      
+
       // If organization-specific, invalidate organization dashboard
       if (organizationId) {
         await this.cacheService.invalidateByTag(`organization-dashboard`);
-        await this.cacheService.invalidateByTag(`organization:${organizationId}`);
+        await this.cacheService.invalidateByTag(
+          `organization:${organizationId}`,
+        );
       }
-      
+
       this.logger.debug(`Invalidated activity caches for: ${activityId}`);
     } catch (error) {
-      this.logger.warn(`Failed to invalidate activity caches: ${error.message}`);
+      this.logger.warn(
+        `Failed to invalidate activity caches: ${error.message}`,
+      );
     }
   }
 
@@ -715,19 +722,15 @@ export class ActivitiesService {
       if (!activity.isFree && price > 0) {
         const totalAmount = price * quantity;
 
-        const createdTickets: any[] = [];
-        for (let i = 0; i < quantity; i++) {
-          const ticket = await tx.ticket.create({
-            data: {
-              eventId: activityId,
-              code: `TKT-${activityId.substring(0, 8)}-${randomBytes(4).toString('hex').toUpperCase()}`,
-              type: 'REGULAR',
-              price: price,
-              isUsed: false,
-            },
-          });
-          createdTickets.push(ticket);
-        }
+        const createdTickets = await tx.ticket.createManyAndReturn({
+          data: Array.from({ length: quantity }, () => ({
+            eventId: activityId,
+            code: `TKT-${activityId.substring(0, 8)}-${randomBytes(4).toString('hex').toUpperCase()}`,
+            type: 'REGULAR',
+            price: price,
+            isUsed: false,
+          })),
+        });
 
         if (createdTickets.length > 0) {
           ticketPurchase = await tx.ticketPurchase.create({
@@ -911,9 +914,13 @@ export class ActivitiesService {
       await this.cacheService.invalidateByTag('registrations');
       await this.cacheService.invalidateByTag('activities');
       await this.cacheService.delete(`activity:${activityId}`);
-      this.logger.debug(`Invalidated registration caches for activity: ${activityId}`);
+      this.logger.debug(
+        `Invalidated registration caches for activity: ${activityId}`,
+      );
     } catch (error) {
-      this.logger.warn(`Failed to invalidate registration caches: ${error.message}`);
+      this.logger.warn(
+        `Failed to invalidate registration caches: ${error.message}`,
+      );
     }
   }
 
@@ -1052,9 +1059,13 @@ export class ActivitiesService {
       await this.cacheService.invalidateByTag('activity-stats');
       await this.cacheService.invalidateByTag('activities');
       await this.cacheService.delete(`activity:${activityId}`);
-      this.logger.debug(`Invalidated attendance caches for activity: ${activityId}`);
+      this.logger.debug(
+        `Invalidated attendance caches for activity: ${activityId}`,
+      );
     } catch (error) {
-      this.logger.warn(`Failed to invalidate attendance caches: ${error.message}`);
+      this.logger.warn(
+        `Failed to invalidate attendance caches: ${error.message}`,
+      );
     }
   }
 

@@ -59,67 +59,56 @@ export class DashboardService {
 
     const organizationIds = memberships.map((m) => m.organizationId);
 
-    // Get upcoming dues
-    const upcomingDues = await this.prisma.dueAssignment.findMany({
-      where: {
-        studentId: student.id,
-        isPaid: false,
-        due: {
-          status: 'ACTIVE',
-          organizationId: { in: organizationIds },
-        },
-      },
-      include: {
-        due: {
+    const [upcomingDues, announcements, events, wallet, unreadNotifications] =
+      await Promise.all([
+        this.prisma.dueAssignment.findMany({
+          where: {
+            studentId: student.id,
+            isPaid: false,
+            due: {
+              status: 'ACTIVE',
+              organizationId: { in: organizationIds },
+            },
+          },
+          include: {
+            due: {
+              include: {
+                organization: true,
+              },
+            },
+          },
+          take: 5,
+          orderBy: { createdAt: 'desc' },
+        }),
+        this.prisma.announcement.findMany({
+          where: {
+            isPublished: true,
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+            organizationId: { in: organizationIds },
+          },
+          take: 5,
+          orderBy: { publishedAt: 'desc' },
           include: {
             organization: true,
           },
-        },
-      },
-      take: 5,
-      orderBy: { createdAt: 'desc' },
-    });
-
-    // Get recent announcements
-    const announcements = await this.prisma.announcement.findMany({
-      where: {
-        isPublished: true,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
-        organizationId: { in: organizationIds },
-      },
-      take: 5,
-      orderBy: { publishedAt: 'desc' },
-      include: {
-        organization: true,
-      },
-    });
-
-    // Get upcoming events
-    const events = await this.prisma.event.findMany({
-      where: {
-        startDate: { gt: new Date() },
-        status: 'PUBLISHED',
-        organizationId: { in: organizationIds },
-      },
-      take: 5,
-      orderBy: { startDate: 'asc' },
-      include: {
-        organization: true,
-      },
-    });
-
-    // Get wallet balance
-    const wallet = await this.prisma.wallet.findUnique({
-      where: { userId },
-    });
-
-    // Get unread notifications count
-    const unreadNotifications = await this.prisma.notification.count({
-      where: {
-        userId,
-        read: false,
-      },
-    });
+        }),
+        this.prisma.event.findMany({
+          where: {
+            startDate: { gt: new Date() },
+            status: 'PUBLISHED',
+            organizationId: { in: organizationIds },
+          },
+          take: 5,
+          orderBy: { startDate: 'asc' },
+          include: {
+            organization: true,
+          },
+        }),
+        this.prisma.wallet.findUnique({ where: { userId } }),
+        this.prisma.notification.count({
+          where: { userId, read: false },
+        }),
+      ]);
 
     const dashboard = {
       student: {

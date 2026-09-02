@@ -62,11 +62,16 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException('Invalid token type');
     }
 
+    // Authentication only needs the account fields below. Loading profile and
+    // studentProfile here added two joins to every authenticated request even
+    // though request handlers only consume the user's identity.
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
-      include: {
-        profile: true,
-        studentProfile: true,
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        status: true,
       },
     });
 
@@ -92,8 +97,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       id: user.id,
       email: user.email,
       username: user.username,
-      profile: user.profile,
-      studentProfile: user.studentProfile,
     };
   }
 }

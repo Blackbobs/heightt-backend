@@ -374,13 +374,10 @@ export class PermissionService {
     userId: string,
     permissions: string[],
   ): Promise<{ [key: string]: boolean }> {
-    const result: { [key: string]: boolean } = {};
-
-    for (const permission of permissions) {
-      result[permission] = await this.checkPermission(userId, permission);
-    }
-
-    return result;
+    const granted = new Set(await this.getUserPermissions(userId));
+    return Object.fromEntries(
+      permissions.map((permission) => [permission, granted.has(permission)]),
+    );
   }
 
   /**
@@ -390,12 +387,8 @@ export class PermissionService {
     userId: string,
     permissions: string[],
   ): Promise<boolean> {
-    for (const permission of permissions) {
-      if (await this.checkPermission(userId, permission)) {
-        return true;
-      }
-    }
-    return false;
+    const granted = new Set(await this.getUserPermissions(userId));
+    return permissions.some((permission) => granted.has(permission));
   }
 
   /**

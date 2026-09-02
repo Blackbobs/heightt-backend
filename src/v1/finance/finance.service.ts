@@ -847,29 +847,17 @@ export class FinanceService {
       throw new BadRequestException('No students found to assign due');
     }
 
-    const createdAssignments: any[] = [];
-    for (const studentId of studentIds) {
-      const existing = await this.prisma.dueAssignment.findUnique({
-        where: {
-          dueId_studentId: {
-            dueId,
-            studentId,
-          },
-        },
+    const createdAssignments =
+      await this.prisma.dueAssignment.createManyAndReturn({
+        data: studentIds.map((studentId) => ({
+          dueId,
+          studentId,
+          amount: due.amount,
+          isPaid: false,
+        })),
+        skipDuplicates: true,
+        select: { studentId: true },
       });
-
-      if (!existing) {
-        const assignment = await this.prisma.dueAssignment.create({
-          data: {
-            dueId,
-            studentId,
-            amount: due.amount,
-            isPaid: false,
-          },
-        });
-        createdAssignments.push(assignment);
-      }
-    }
 
     await this.prisma.activityLog.create({
       data: {
