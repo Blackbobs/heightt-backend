@@ -39,6 +39,7 @@ export type SessionMinAggregateOutputType = {
   refreshTokenHash: string | null
   revokedAt: Date | null
   revokedReason: string | null
+  authClient: $Enums.AuthClientType | null
 }
 
 export type SessionMaxAggregateOutputType = {
@@ -56,6 +57,7 @@ export type SessionMaxAggregateOutputType = {
   refreshTokenHash: string | null
   revokedAt: Date | null
   revokedReason: string | null
+  authClient: $Enums.AuthClientType | null
 }
 
 export type SessionCountAggregateOutputType = {
@@ -73,6 +75,7 @@ export type SessionCountAggregateOutputType = {
   refreshTokenHash: number
   revokedAt: number
   revokedReason: number
+  authClient: number
   _all: number
 }
 
@@ -92,6 +95,7 @@ export type SessionMinAggregateInputType = {
   refreshTokenHash?: true
   revokedAt?: true
   revokedReason?: true
+  authClient?: true
 }
 
 export type SessionMaxAggregateInputType = {
@@ -109,6 +113,7 @@ export type SessionMaxAggregateInputType = {
   refreshTokenHash?: true
   revokedAt?: true
   revokedReason?: true
+  authClient?: true
 }
 
 export type SessionCountAggregateInputType = {
@@ -126,6 +131,7 @@ export type SessionCountAggregateInputType = {
   refreshTokenHash?: true
   revokedAt?: true
   revokedReason?: true
+  authClient?: true
   _all?: true
 }
 
@@ -216,6 +222,7 @@ export type SessionGroupByOutputType = {
   refreshTokenHash: string
   revokedAt: Date | null
   revokedReason: string | null
+  authClient: $Enums.AuthClientType
   _count: SessionCountAggregateOutputType | null
   _min: SessionMinAggregateOutputType | null
   _max: SessionMaxAggregateOutputType | null
@@ -254,6 +261,7 @@ export type SessionWhereInput = {
   refreshTokenHash?: Prisma.StringFilter<"Session"> | string
   revokedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   revokedReason?: Prisma.StringNullableFilter<"Session"> | string | null
+  authClient?: Prisma.EnumAuthClientTypeFilter<"Session"> | $Enums.AuthClientType
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -272,6 +280,7 @@ export type SessionOrderByWithRelationInput = {
   refreshTokenHash?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   revokedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  authClient?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -293,6 +302,7 @@ export type SessionWhereUniqueInput = Prisma.AtLeast<{
   operatingSystem?: Prisma.StringNullableFilter<"Session"> | string | null
   revokedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   revokedReason?: Prisma.StringNullableFilter<"Session"> | string | null
+  authClient?: Prisma.EnumAuthClientTypeFilter<"Session"> | $Enums.AuthClientType
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "refreshTokenHash">
 
@@ -311,6 +321,7 @@ export type SessionOrderByWithAggregationInput = {
   refreshTokenHash?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   revokedReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  authClient?: Prisma.SortOrder
   _count?: Prisma.SessionCountOrderByAggregateInput
   _max?: Prisma.SessionMaxOrderByAggregateInput
   _min?: Prisma.SessionMinOrderByAggregateInput
@@ -334,6 +345,7 @@ export type SessionScalarWhereWithAggregatesInput = {
   refreshTokenHash?: Prisma.StringWithAggregatesFilter<"Session"> | string
   revokedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
   revokedReason?: Prisma.StringNullableWithAggregatesFilter<"Session"> | string | null
+  authClient?: Prisma.EnumAuthClientTypeWithAggregatesFilter<"Session"> | $Enums.AuthClientType
 }
 
 export type SessionCreateInput = {
@@ -350,6 +362,7 @@ export type SessionCreateInput = {
   refreshTokenHash: string
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  authClient?: $Enums.AuthClientType
   user: Prisma.UserCreateNestedOneWithoutSessionsInput
 }
 
@@ -368,6 +381,7 @@ export type SessionUncheckedCreateInput = {
   refreshTokenHash: string
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  authClient?: $Enums.AuthClientType
 }
 
 export type SessionUpdateInput = {
@@ -384,6 +398,7 @@ export type SessionUpdateInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
   user?: Prisma.UserUpdateOneRequiredWithoutSessionsNestedInput
 }
 
@@ -402,6 +417,7 @@ export type SessionUncheckedUpdateInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
 }
 
 export type SessionCreateManyInput = {
@@ -419,6 +435,7 @@ export type SessionCreateManyInput = {
   refreshTokenHash: string
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  authClient?: $Enums.AuthClientType
 }
 
 export type SessionUpdateManyMutationInput = {
@@ -435,6 +452,7 @@ export type SessionUpdateManyMutationInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
 }
 
 export type SessionUncheckedUpdateManyInput = {
@@ -452,6 +470,7 @@ export type SessionUncheckedUpdateManyInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
 }
 
 export type SessionListRelationFilter = {
@@ -479,6 +498,7 @@ export type SessionCountOrderByAggregateInput = {
   refreshTokenHash?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   revokedReason?: Prisma.SortOrder
+  authClient?: Prisma.SortOrder
 }
 
 export type SessionMaxOrderByAggregateInput = {
@@ -496,6 +516,7 @@ export type SessionMaxOrderByAggregateInput = {
   refreshTokenHash?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   revokedReason?: Prisma.SortOrder
+  authClient?: Prisma.SortOrder
 }
 
 export type SessionMinOrderByAggregateInput = {
@@ -513,6 +534,7 @@ export type SessionMinOrderByAggregateInput = {
   refreshTokenHash?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
   revokedReason?: Prisma.SortOrder
+  authClient?: Prisma.SortOrder
 }
 
 export type SessionCreateNestedManyWithoutUserInput = {
@@ -557,6 +579,10 @@ export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SessionScalarWhereInput | Prisma.SessionScalarWhereInput[]
 }
 
+export type EnumAuthClientTypeFieldUpdateOperationsInput = {
+  set?: $Enums.AuthClientType
+}
+
 export type SessionCreateWithoutUserInput = {
   id?: string
   expiresAt: Date | string
@@ -571,6 +597,7 @@ export type SessionCreateWithoutUserInput = {
   refreshTokenHash: string
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  authClient?: $Enums.AuthClientType
 }
 
 export type SessionUncheckedCreateWithoutUserInput = {
@@ -587,6 +614,7 @@ export type SessionUncheckedCreateWithoutUserInput = {
   refreshTokenHash: string
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  authClient?: $Enums.AuthClientType
 }
 
 export type SessionCreateOrConnectWithoutUserInput = {
@@ -633,6 +661,7 @@ export type SessionScalarWhereInput = {
   refreshTokenHash?: Prisma.StringFilter<"Session"> | string
   revokedAt?: Prisma.DateTimeNullableFilter<"Session"> | Date | string | null
   revokedReason?: Prisma.StringNullableFilter<"Session"> | string | null
+  authClient?: Prisma.EnumAuthClientTypeFilter<"Session"> | $Enums.AuthClientType
 }
 
 export type SessionCreateManyUserInput = {
@@ -649,6 +678,7 @@ export type SessionCreateManyUserInput = {
   refreshTokenHash: string
   revokedAt?: Date | string | null
   revokedReason?: string | null
+  authClient?: $Enums.AuthClientType
 }
 
 export type SessionUpdateWithoutUserInput = {
@@ -665,6 +695,7 @@ export type SessionUpdateWithoutUserInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
 }
 
 export type SessionUncheckedUpdateWithoutUserInput = {
@@ -681,6 +712,7 @@ export type SessionUncheckedUpdateWithoutUserInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
 }
 
 export type SessionUncheckedUpdateManyWithoutUserInput = {
@@ -697,6 +729,7 @@ export type SessionUncheckedUpdateManyWithoutUserInput = {
   refreshTokenHash?: Prisma.StringFieldUpdateOperationsInput | string
   revokedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   revokedReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authClient?: Prisma.EnumAuthClientTypeFieldUpdateOperationsInput | $Enums.AuthClientType
 }
 
 
@@ -716,6 +749,7 @@ export type SessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   refreshTokenHash?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
+  authClient?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
@@ -734,6 +768,7 @@ export type SessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   refreshTokenHash?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
+  authClient?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
@@ -752,6 +787,7 @@ export type SessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   refreshTokenHash?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
+  authClient?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["session"]>
 
@@ -770,9 +806,10 @@ export type SessionSelectScalar = {
   refreshTokenHash?: boolean
   revokedAt?: boolean
   revokedReason?: boolean
+  authClient?: boolean
 }
 
-export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "expiresAt" | "ipAddress" | "userAgent" | "createdAt" | "browser" | "deviceName" | "isActive" | "lastUsedAt" | "operatingSystem" | "refreshTokenHash" | "revokedAt" | "revokedReason", ExtArgs["result"]["session"]>
+export type SessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "expiresAt" | "ipAddress" | "userAgent" | "createdAt" | "browser" | "deviceName" | "isActive" | "lastUsedAt" | "operatingSystem" | "refreshTokenHash" | "revokedAt" | "revokedReason" | "authClient", ExtArgs["result"]["session"]>
 export type SessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -803,6 +840,7 @@ export type $SessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     refreshTokenHash: string
     revokedAt: Date | null
     revokedReason: string | null
+    authClient: $Enums.AuthClientType
   }, ExtArgs["result"]["session"]>
   composites: {}
 }
@@ -1241,6 +1279,7 @@ export interface SessionFieldRefs {
   readonly refreshTokenHash: Prisma.FieldRef<"Session", 'String'>
   readonly revokedAt: Prisma.FieldRef<"Session", 'DateTime'>
   readonly revokedReason: Prisma.FieldRef<"Session", 'String'>
+  readonly authClient: Prisma.FieldRef<"Session", 'AuthClientType'>
 }
     
 

@@ -175,7 +175,8 @@ export const SessionScalarFieldEnum = {
   operatingSystem: 'operatingSystem',
   refreshTokenHash: 'refreshTokenHash',
   revokedAt: 'revokedAt',
-  revokedReason: 'revokedReason'
+  revokedReason: 'revokedReason',
+  authClient: 'authClient'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]

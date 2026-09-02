@@ -62,26 +62,34 @@ model User {
 }
 
 model Session {
-  id               String    @id @default(cuid())
+  id               String         @id @default(cuid())
   userId           String
   expiresAt        DateTime
   ipAddress        String?
   userAgent        String?
-  createdAt        DateTime  @default(now())
+  createdAt        DateTime       @default(now())
   browser          String?
   deviceName       String?
-  isActive         Boolean   @default(true)
-  lastUsedAt       DateTime  @default(now())
+  isActive         Boolean        @default(true)
+  lastUsedAt       DateTime       @default(now())
   operatingSystem  String?
-  refreshTokenHash String    @unique
+  refreshTokenHash String         @unique
   revokedAt        DateTime?
   revokedReason    String?
-  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  authClient       AuthClientType @default(USER)
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([refreshTokenHash])
   @@index([isActive])
+  @@index([authClient])
   @@map("sessions")
+}
+
+enum AuthClientType {
+  USER
+  ORGANIZATION_ADMIN
+  PLATFORM_ADMIN
 }
 
 model PasswordReset {

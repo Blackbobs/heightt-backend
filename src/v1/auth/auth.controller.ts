@@ -151,6 +151,32 @@ export class AuthController {
     return this.authService.refresh(req, res);
   }
 
+  @Post('admin/refresh')
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth'])
+  @ApiOperation({
+    summary: 'Refresh an organization-admin dashboard session',
+  })
+  async refreshOrganizationAdmin(
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.refresh(req, res, 'ORGANIZATION_ADMIN');
+  }
+
+  @Post('platform/refresh')
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth'])
+  @ApiOperation({ summary: 'Refresh a platform-admin dashboard session' })
+  async refreshPlatformAdmin(
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.refresh(req, res, 'PLATFORM_ADMIN');
+  }
+
   @Post('logout')
   @UseGuards(JwtGuard)
   @Version('1')
@@ -167,6 +193,34 @@ export class AuthController {
   async logout(@Request() req: any, @Res({ passthrough: true }) res: Response) {
     this.logger.log('Logout endpoint called');
     return this.authService.logout(req, res);
+  }
+
+  @Post('admin/logout')
+  @UseGuards(JwtGuard)
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users'])
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Log out the organization-admin dashboard' })
+  async logoutOrganizationAdmin(
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.logout(req, res, 'ORGANIZATION_ADMIN');
+  }
+
+  @Post('platform/logout')
+  @UseGuards(JwtGuard)
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth', 'users'])
+  @ApiBearerAuth('access-token')
+  @ApiOperation({ summary: 'Log out the platform-admin dashboard' })
+  async logoutPlatformAdmin(
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.logout(req, res, 'PLATFORM_ADMIN');
   }
 
   @Post('logout-all')
@@ -385,7 +439,32 @@ export class AuthController {
     this.logger.log(
       `Admin login endpoint called for identifier: ${dto.identifier}`,
     );
-    return this.authService.adminLogin(dto, req, res);
+    return this.authService.adminLogin(dto, req, res, 'ORGANIZATION_ADMIN');
+  }
+
+  @Post('platform/login')
+  @Version('1')
+  @HttpCode(HttpStatus.OK)
+  @InvalidateCache(['auth'])
+  @ApiOperation({
+    summary: 'Platform Admin Login',
+    description:
+      'Authenticates an active platform administrator and creates an isolated platform dashboard session.',
+  })
+  @ApiBody({ type: LoginDto })
+  @ApiOkResponse({
+    description: 'Platform admin login successful',
+    type: AdminLoginResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid credentials or not a platform administrator',
+  })
+  async platformLogin(
+    @Body() dto: LoginDto,
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.adminLogin(dto, req, res, 'PLATFORM_ADMIN');
   }
 
   @Post('cache/invalidate')

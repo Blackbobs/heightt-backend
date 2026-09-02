@@ -47,6 +47,9 @@ describe('Heightt email template', () => {
 
     expect(html).toContain('data-heightt-email="true"');
     expect(html).toContain('alt="Heightt logo"');
+    expect(html).toMatch(
+      /class="email-card"[\s\S]*text-align:center;[\s\S]*alt="Heightt logo"/,
+    );
     expect(html).toContain('#2563EB');
     expect(html).toContain('Heightt Technologies Inc.');
   });
