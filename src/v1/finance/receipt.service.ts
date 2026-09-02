@@ -14,7 +14,10 @@ import { randomBytes } from 'crypto';
 import PDFDocument from 'pdfkit';
 import { v2 as cloudinary } from 'cloudinary';
 import axios from 'axios';
-import { renderHeighttEmail } from '../../email/heightt-email.template';
+import {
+  HEIGHTT_LOGO_URL,
+  renderHeighttEmail,
+} from '../../email/heightt-email.template';
 
 @Injectable()
 export class ReceiptService {
@@ -614,7 +617,12 @@ export class ReceiptService {
       org?.faculty?.logo ||
       org?.institution?.logo;
 
-    const doc = new PDFDocument({ size: 'A4', margin: 50 });
+    const [heighttLogo, organizationLogo] = await Promise.all([
+      this.fetchImageBuffer(HEIGHTT_LOGO_URL),
+      logoUrl ? this.fetchImageBuffer(logoUrl) : Promise.resolve(null),
+    ]);
+
+    const doc = new PDFDocument({ size: 'A4', margin: 0 });
     const chunks: Buffer[] = [];
     doc.on('data', (c: Buffer) => chunks.push(c));
     const rendered = new Promise<Buffer>((resolve, reject) => {
@@ -622,147 +630,264 @@ export class ReceiptService {
       doc.on('error', reject);
     });
 
-    const left = 50;
-    const right = 545;
+    const navy = '#173B4A';
+    const teal = '#159B91';
+    const muted = '#75838A';
+    const border = '#DCE5E4';
+    const soft = '#F3F7F6';
+    const left = 52;
+    const right = 543;
+    const width = right - left;
 
-    // Header
-    if (logoUrl) {
-      const img = await this.fetchImageBuffer(logoUrl);
-      if (img) {
-        try {
-          doc.image(img, left, 40, { fit: [80, 80] });
-        } catch {
-          this.logger.warn('Logo was not embeddable in PDF, skipping');
-        }
+    // Branded header: Heightt is always on the left; organization branding is
+    // shown on the right when an organization (or hierarchy) logo is available.
+    doc.rect(0, 0, 595.28, 7).fill(teal);
+    if (heighttLogo) {
+      try {
+        doc.image(heighttLogo, left, 30, { fit: [118, 42] });
+      } catch {
+        this.logger.warn('Heightt logo was not embeddable in PDF');
       }
-    }
-    const headerTextX = logoUrl ? 145 : left;
-    doc
-      .fillColor('#111827')
-      .font('Helvetica-Bold')
-      .fontSize(18)
-      .text(brandName, headerTextX, 48, { width: right - headerTextX });
-    if (subtitle && subtitle !== brandName) {
-      doc
-        .font('Helvetica')
-        .fontSize(10)
-        .fillColor('#6B7280')
-        .text(subtitle, headerTextX, 72);
-    }
-    doc
-      .font('Helvetica-Bold')
-      .fontSize(16)
-      .fillColor('#4F46E5')
-      .text('PAYMENT RECEIPT', left, 135, {
-        align: 'right',
-        width: right - left,
-      });
-
-    // Meta box
-    const metaTop = 165;
-    doc.rect(left, metaTop, right - left, 92).fill('#F3F4F6');
-    const label = (t: string, x: number, y: number) =>
-      doc.font('Helvetica').fontSize(8).fillColor('#9CA3AF').text(t, x, y);
-    const value = (t: string, x: number, y: number) =>
+    } else {
       doc
         .font('Helvetica-Bold')
-        .fontSize(10)
-        .fillColor('#111827')
-        .text(t, x, y + 11);
+        .fontSize(20)
+        .fillColor(navy)
+        .text('Heightt', left, 38);
+    }
 
-    const col2 = left + (right - left) / 2 + 10;
-    label('RECEIPT NUMBER', left + 14, metaTop + 12);
-    value(receipt.receiptNumber, left + 14, metaTop + 12);
-    label('PAYMENT DATE', col2, metaTop + 12);
-    value(new Date(receipt.paymentDate).toDateString(), col2, metaTop + 12);
-    label('REFERENCE', left + 14, metaTop + 48);
-    value(receipt.reference || '-', left + 14, metaTop + 48);
-    label('METHOD', col2, metaTop + 48);
-    value(String(receipt.paymentMethod), col2, metaTop + 48);
-
-    // Payer
-    const py = metaTop + 118;
+    if (organizationLogo) {
+      try {
+        doc.image(organizationLogo, right - 46, 27, {
+          fit: [46, 46],
+          align: 'right',
+        });
+      } catch {
+        this.logger.warn('Organization logo was not embeddable in PDF');
+      }
+    }
     doc
       .font('Helvetica-Bold')
       .fontSize(11)
-      .fillColor('#111827')
-      .text('Billed To', left, py);
+      .fillColor(navy)
+      .text(brandName, 315, 35, {
+        width: organizationLogo ? 174 : 228,
+        align: 'right',
+      });
+    if (subtitle && subtitle !== brandName) {
+      doc
+        .font('Helvetica')
+        .fontSize(8)
+        .fillColor(muted)
+        .text(subtitle, 315, 51, {
+          width: organizationLogo ? 174 : 228,
+          align: 'right',
+        });
+    }
     doc
+      .moveTo(left, 86)
+      .lineTo(right, 86)
+      .strokeColor(border)
+      .lineWidth(1)
+      .stroke();
+
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(8)
+      .fillColor(teal)
+      .text('OFFICIAL PAYMENT RECORD', left, 112, { characterSpacing: 1.1 })
+      .fontSize(27)
+      .fillColor(navy)
+      .text('Payment receipt', left, 129)
       .font('Helvetica')
       .fontSize(10)
-      .fillColor('#374151')
-      .text(String(receipt.payerName), left, py + 16)
-      .text(receipt.payerEmail || '-', left, py + 31);
+      .fillColor(muted)
+      .text(
+        'Thank you, your payment has been received and recorded.',
+        left,
+        165,
+      );
 
-    // Items table
-    const tableTop = py + 60;
-    doc.rect(left, tableTop, right - left, 24).fill('#4F46E5');
+    const paidText = receipt.status === 'VOIDED' ? 'VOIDED' : 'PAID';
+    const paidColour = receipt.status === 'VOIDED' ? '#B91C1C' : '#087C72';
+    const paidBg = receipt.status === 'VOIDED' ? '#FEF2F2' : '#EDF9F6';
+    doc.roundedRect(right - 72, 125, 72, 27, 13).fillAndStroke(paidBg, border);
     doc
       .font('Helvetica-Bold')
       .fontSize(9)
-      .fillColor('#FFFFFF')
-      .text('DESCRIPTION', left + 12, tableTop + 8)
-      .text('AMOUNT', left + 330, tableTop + 8, { width: 155, align: 'right' });
+      .fillColor(paidColour)
+      .text(`✓  ${paidText}`, right - 65, 134, { width: 58, align: 'center' });
 
-    let rowY = tableTop + 24;
-    const drawRow = (desc: string, amount: string, shaded: boolean) => {
-      if (shaded) doc.rect(left, rowY, right - left, 26).fill('#F9FAFB');
+    // Receipt metadata.
+    const metaTop = 199;
+    doc
+      .moveTo(left, metaTop)
+      .lineTo(right, metaTop)
+      .strokeColor(border)
+      .stroke();
+    doc
+      .moveTo(left, metaTop + 54)
+      .lineTo(right, metaTop + 54)
+      .strokeColor(border)
+      .stroke();
+    const label = (t: string, x: number, y: number) =>
+      doc.font('Helvetica-Bold').fontSize(7).fillColor(muted).text(t, x, y, {
+        characterSpacing: 0.6,
+      });
+    const value = (t: string, x: number, y: number) =>
       doc
-        .font('Helvetica')
+        .font('Helvetica-Bold')
         .fontSize(9)
-        .fillColor('#111827')
-        .text(desc.slice(0, 70), left + 12, rowY + 9)
-        .text(amount, left + 330, rowY + 9, { width: 155, align: 'right' });
-      rowY += 26;
+        .fillColor(navy)
+        .text(t, x, y + 11);
+
+    const colWidth = width / 3;
+    label('RECEIPT NUMBER', left, metaTop + 13);
+    value(receipt.receiptNumber, left, metaTop + 13);
+    label('PAYMENT DATE', left + colWidth, metaTop + 13);
+    value(
+      new Date(receipt.paymentDate).toLocaleDateString('en-NG', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+      }),
+      left + colWidth,
+      metaTop + 13,
+    );
+    label('PAYMENT METHOD', left + colWidth * 2, metaTop + 13);
+    value(
+      String(receipt.paymentMethod).replace(/_/g, ' '),
+      left + colWidth * 2,
+      metaTop + 13,
+    );
+
+    // Payer panel.
+    const py = metaTop + 79;
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(7)
+      .fillColor(teal)
+      .text('PAID BY', left, py, { characterSpacing: 0.9 });
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(14)
+      .fillColor(navy)
+      .text(String(receipt.payerName), left, py + 14)
+      .font('Helvetica')
+      .fontSize(9)
+      .fillColor(muted)
+      .text(receipt.payerEmail || '-', left, py + 34);
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(9)
+      .fillColor(navy)
+      .text(receipt.reference || '-', 340, py + 13, {
+        width: 203,
+        align: 'right',
+      })
+      .font('Helvetica')
+      .fontSize(7)
+      .fillColor(muted)
+      .text('TRANSACTION REFERENCE', 340, py + 29, {
+        width: 203,
+        align: 'right',
+        characterSpacing: 0.5,
+      });
+
+    // Items table
+    const tableTop = py + 65;
+    doc
+      .moveTo(left, tableTop)
+      .lineTo(right, tableTop)
+      .strokeColor(navy)
+      .stroke();
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(7)
+      .fillColor(muted)
+      .text('DESCRIPTION', left, tableTop + 10, { characterSpacing: 0.8 })
+      .text('AMOUNT', right - 155, tableTop + 10, {
+        width: 155,
+        align: 'right',
+        characterSpacing: 0.8,
+      });
+
+    let rowY = tableTop + 27;
+    const drawRow = (desc: string, amount: string) => {
+      doc.moveTo(left, rowY).lineTo(right, rowY).strokeColor(border).stroke();
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(9)
+        .fillColor(navy)
+        .text(desc.slice(0, 86), left, rowY + 12, { width: 310 })
+        .text(amount, right - 155, rowY + 12, { width: 155, align: 'right' });
+      rowY += 36;
     };
 
     const items = Array.isArray(receipt.items) ? (receipt.items as any[]) : [];
     if (items.length > 0) {
-      items.forEach((it, i) =>
+      items.forEach((it) =>
         drawRow(
           `${it.name}${Number(it.quantity) > 1 ? ` x${it.quantity}` : ''}`,
           this.formatNaira(Number(it.price) * Number(it.quantity || 1)),
-          i % 2 === 1,
         ),
       );
     } else {
       const desc = dueName
         ? `${dueName}${receipt.description ? ` - ${receipt.description}` : ''}`
         : receipt.description || 'Payment';
-      drawRow(desc, this.formatNaira(receipt.amount), false);
+      drawRow(desc, this.formatNaira(receipt.amount));
     }
+    doc.moveTo(left, rowY).lineTo(right, rowY).strokeColor(border).stroke();
 
-    // Totals
-    let ty = rowY + 18;
+    // Totals card.
+    const totalsTop = rowY + 16;
+    doc.rect(left, totalsTop, width, 92).fill(soft);
+    let ty = totalsTop + 15;
     const totalRow = (k: string, v: string, bold = false) => {
+      if (bold) {
+        doc
+          .moveTo(left + 18, ty - 7)
+          .lineTo(right - 18, ty - 7)
+          .strokeColor('#CBD9D7')
+          .stroke();
+      }
       doc
         .font(bold ? 'Helvetica-Bold' : 'Helvetica')
-        .fontSize(bold ? 12 : 10)
-        .fillColor('#111827')
-        .text(k, left + 300, ty, { width: 110 })
-        .text(v, left + 330, ty, { width: 155, align: 'right' });
-      ty += bold ? 20 : 16;
+        .fontSize(bold ? 11 : 9)
+        .fillColor(bold ? navy : muted)
+        .text(k, left + 18, ty, { width: 180 })
+        .font('Helvetica-Bold')
+        .fontSize(bold ? 15 : 9)
+        .fillColor(bold ? teal : navy)
+        .text(v, right - 175, ty, { width: 157, align: 'right' });
+      ty += bold ? 24 : 20;
     };
-    totalRow('Amount', this.formatNaira(receipt.amount));
-    totalRow('Service Fee', this.formatNaira(receipt.serviceFee));
+    totalRow('Subtotal', this.formatNaira(receipt.amount));
+    totalRow('Processing fee', this.formatNaira(receipt.serviceFee));
     totalRow('Total Paid', this.formatNaira(receipt.totalAmount), true);
 
-    // Footer
+    // Footer.
+    const footerY = Math.min(755, totalsTop + 125);
     doc
+      .moveTo(left, footerY)
+      .lineTo(right, footerY)
+      .strokeColor(border)
+      .stroke();
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(7)
+      .fillColor(teal)
+      .text('NEED HELP?', left, footerY + 17, { characterSpacing: 0.7 })
       .font('Helvetica')
       .fontSize(8)
-      .fillColor('#9CA3AF')
+      .fillColor(muted)
+      .text('support@heightt.com  •  heightt.app', left, footerY + 31)
       .text(
-        `Status: ${receipt.status}  |  Currency: ${receipt.currency}  |  Generated ${new Date().toISOString()}`,
-        left,
-        760,
-        { width: right - left, align: 'center' },
-      )
-      .text(
-        'This is an electronically generated receipt and does not require a signature.',
-        left,
-        776,
-        { width: right - left, align: 'center' },
+        'This is a computer-generated receipt.\nNo signature is required.',
+        335,
+        footerY + 18,
+        { width: right - 335, align: 'right', lineGap: 3 },
       );
 
     doc.end();

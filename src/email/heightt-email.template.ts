@@ -1,4 +1,4 @@
-const LOGO_URL =
+export const HEIGHTT_LOGO_URL =
   'https://res.cloudinary.com/dbcgdaigj/image/upload/v1788163976/Page_2-removebg-preview_oy5czj.png';
 
 export type EmailTone = 'info' | 'success' | 'warning' | 'danger';
@@ -83,8 +83,8 @@ export function renderHeighttEmail(options: HeighttEmailOptions): string {
 <div style="display:none;font-size:1px;color:#F1F5F9;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">${escapeHtml(options.preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
 <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;background-color:#F1F5F9;"><tr><td class="email-pad" align="center" style="padding:32px 16px;">
   <table class="email-shell" role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;">
-    <tr><td style="padding:0 0 18px;"><a href="https://www.heightt.app" style="text-decoration:none;"><img src="${LOGO_URL}" width="132" alt="Heightt logo" style="display:block;width:132px;height:auto;border:0;outline:none;text-decoration:none;"></a></td></tr>
     <tr><td class="email-card" style="background-color:#FFFFFF;border:1px solid #E2E8F0;border-radius:10px;padding:38px 42px;">
+      <div style="margin:0 0 30px;text-align:center;"><a href="https://www.heightt.app" style="display:inline-block;text-decoration:none;"><img src="${HEIGHTT_LOGO_URL}" width="132" alt="Heightt logo" style="display:inline-block;width:132px;height:auto;border:0;outline:none;text-decoration:none;"></a></div>
       ${options.category ? `<p style="margin:0 0 12px;color:${colour};font-size:12px;line-height:18px;font-weight:bold;letter-spacing:.7px;text-transform:uppercase;">${escapeHtml(options.category)}</p>` : ''}
       <h1 style="margin:0 0 20px;color:#0F172A;font-size:27px;line-height:34px;font-weight:bold;">${escapeHtml(options.headline)}</h1>
       ${greeting}
