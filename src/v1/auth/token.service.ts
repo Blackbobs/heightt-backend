@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as argon2 from 'argon2';
 
+export type AuthClient = 'USER' | 'ORGANIZATION_ADMIN' | 'PLATFORM_ADMIN';
+
 @Injectable()
 export class TokenService {
   private readonly logger = new Logger(TokenService.name);
@@ -16,11 +18,13 @@ export class TokenService {
     userId: string,
     email: string,
     sessionId?: string,
+    authClient: AuthClient = 'USER',
   ): Promise<string> {
     const payload: any = {
       sub: userId,
       email,
       type: 'access',
+      authClient,
     };
 
     // Include session ID if provided
@@ -44,11 +48,13 @@ export class TokenService {
     userId: string,
     email: string,
     sessionId?: string,
+    authClient: AuthClient = 'USER',
   ): Promise<string> {
     const payload: any = {
       sub: userId,
       email,
       type: 'refresh',
+      authClient,
     };
 
     // Include session ID if provided

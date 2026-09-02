@@ -9,6 +9,15 @@
 * 🟢 You can import this file directly.
 */
 
+export const AuthClientType = {
+  USER: 'USER',
+  ORGANIZATION_ADMIN: 'ORGANIZATION_ADMIN',
+  PLATFORM_ADMIN: 'PLATFORM_ADMIN'
+} as const
+
+export type AuthClientType = (typeof AuthClientType)[keyof typeof AuthClientType]
+
+
 export const JoinRequestStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

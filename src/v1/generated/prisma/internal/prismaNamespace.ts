@@ -6111,7 +6111,8 @@ export const SessionScalarFieldEnum = {
   operatingSystem: 'operatingSystem',
   refreshTokenHash: 'refreshTokenHash',
   revokedAt: 'revokedAt',
-  revokedReason: 'revokedReason'
+  revokedReason: 'revokedReason',
+  authClient: 'authClient'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -7409,6 +7410,20 @@ export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 
 
 /**
+ * Reference to a field of type 'AuthClientType'
+ */
+export type EnumAuthClientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthClientType'>
+
+
+
+/**
+ * Reference to a field of type 'AuthClientType[]'
+ */
+export type ListEnumAuthClientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthClientType[]'>
+
+
+
+/**
  * Reference to a field of type 'Gender'
  */
 export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender'>
@@ -8563,4 +8578,3 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
-

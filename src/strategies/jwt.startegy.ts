@@ -5,6 +5,14 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
 
+export function extractAccessToken(request: Request): string | null {
+  const authHeader = request?.headers?.authorization;
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.substring(7);
+  }
+  return request?.cookies?.accessToken || null;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   private readonly logger = new Logger(JwtStrategy.name);
@@ -23,19 +31,19 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
-          // Try to get token from cookie
-          const token = request?.cookies?.accessToken;
+          // A dashboard-specific bearer identity must win when the browser
+          // also sends cookies belonging to another Heightt application.
+          const authHeader = request?.headers?.authorization;
+          if (authHeader?.startsWith('Bearer ')) {
+            this.logger.debug('✅ Token extracted from Authorization header');
+            return extractAccessToken(request);
+          }
+
+          // Cookie authentication remains available for the regular web app.
+          const token = extractAccessToken(request);
           if (token) {
             this.logger.debug('✅ Token extracted from cookie');
             return token;
-          }
-
-          // Try to get token from Authorization header
-          const authHeader = request?.headers?.authorization;
-          if (authHeader && authHeader.startsWith('Bearer ')) {
-            const bearerToken = authHeader.substring(7);
-            this.logger.debug('✅ Token extracted from Authorization header');
-            return bearerToken;
           }
 
           return null;
@@ -97,6 +105,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       id: user.id,
       email: user.email,
       username: user.username,
+      sessionId: payload.sessionId,
+      authClient: payload.authClient || 'USER',
     };
   }
 }

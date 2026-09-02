@@ -9,7 +9,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TokenService } from './token.service';
+import { AuthClient, TokenService } from './token.service';
 import { CookieService } from './cookie.service';
 import { PermissionService } from './permission.service';
 import {
@@ -550,8 +550,13 @@ export class AuthService {
   // REFRESH TOKEN
   // ============================================
 
-  async refresh(request: any, response: Response) {
-    const refreshToken = this.cookieService.getRefreshTokenFromCookie(request);
+  async refresh(request: any, response: Response, expectedClient?: AuthClient) {
+    const refreshToken = expectedClient
+      ? this.cookieService.getScopedRefreshTokenFromCookie(
+          request,
+          expectedClient,
+        )
+      : this.cookieService.getRefreshTokenFromCookie(request);
     if (!refreshToken) {
       this.logger.warn('Refresh token not found in cookies');
       throw new UnauthorizedException('Refresh token required');
@@ -562,6 +567,16 @@ export class AuthService {
       if (!payload || payload.expired) {
         throw new UnauthorizedException('Invalid or expired refresh token');
       }
+      const tokenClient: AuthClient = payload.authClient || 'USER';
+      if (expectedClient && tokenClient !== expectedClient) {
+        throw new UnauthorizedException(
+          'Refresh token belongs to a different Heightt application',
+        );
+      }
+
+      const clientScope = expectedClient
+        ? { authClient: expectedClient }
+        : { authClient: 'USER' as const };
 
       let session: any = null;
       if (payload.sessionId) {
@@ -572,6 +587,7 @@ export class AuthService {
             isActive: true,
             revokedAt: null,
             expiresAt: { gt: new Date() },
+            ...clientScope,
           },
           include: { user: true },
         });
@@ -584,6 +600,7 @@ export class AuthService {
             isActive: true,
             revokedAt: null,
             expiresAt: { gt: new Date() },
+            ...clientScope,
           },
           include: { user: true },
           orderBy: { lastUsedAt: 'desc' },
@@ -622,11 +639,13 @@ export class AuthService {
         session.userId,
         session.user.email,
         session.id,
+        tokenClient,
       );
       const newRefreshToken = await this.tokenService.generateRefreshToken(
         session.userId,
         session.user.email,
         session.id,
+        tokenClient,
       );
       const newRefreshTokenHash =
         await this.tokenService.hashRefreshToken(newRefreshToken);
@@ -639,14 +658,30 @@ export class AuthService {
         },
       });
 
-      this.cookieService.setAccessTokenCookie(response, newAccessToken);
-      this.cookieService.setRefreshTokenCookie(response, newRefreshToken);
+      if (expectedClient) {
+        this.cookieService.setScopedRefreshTokenCookie(
+          response,
+          newRefreshToken,
+          expectedClient,
+        );
+      } else {
+        this.cookieService.setAccessTokenCookie(response, newAccessToken);
+        this.cookieService.setRefreshTokenCookie(response, newRefreshToken);
+      }
 
       return {
         message: 'Tokens refreshed successfully',
+        accessToken: newAccessToken,
       };
     } catch (error) {
-      this.cookieService.clearAllCookies(response);
+      if (expectedClient) {
+        this.cookieService.clearScopedRefreshTokenCookie(
+          response,
+          expectedClient,
+        );
+      } else {
+        this.cookieService.clearAllCookies(response);
+      }
       throw error;
     }
   }
@@ -655,8 +690,23 @@ export class AuthService {
   // LOGOUT
   // ============================================
 
-  async logout(request: any, response: Response) {
-    const refreshToken = this.cookieService.getRefreshTokenFromCookie(request);
+  async logout(request: any, response: Response, expectedClient?: AuthClient) {
+    if (
+      expectedClient &&
+      request.user?.authClient &&
+      request.user.authClient !== expectedClient
+    ) {
+      throw new UnauthorizedException(
+        'Access token belongs to a different Heightt application',
+      );
+    }
+
+    const refreshToken = expectedClient
+      ? this.cookieService.getScopedRefreshTokenFromCookie(
+          request,
+          expectedClient,
+        )
+      : this.cookieService.getRefreshTokenFromCookie(request);
     if (refreshToken) {
       const payload = await this.tokenService.verifyRefreshToken(refreshToken);
       if (payload) {
@@ -669,6 +719,7 @@ export class AuthService {
               userId: payload.sub,
               isActive: true,
               revokedAt: null,
+              ...(expectedClient ? { authClient: expectedClient } : {}),
             },
           });
         }
@@ -679,6 +730,7 @@ export class AuthService {
               userId: payload.sub,
               isActive: true,
               revokedAt: null,
+              ...(expectedClient ? { authClient: expectedClient } : {}),
             },
             orderBy: { lastUsedAt: 'desc' },
           });
@@ -699,7 +751,14 @@ export class AuthService {
       }
     }
 
-    this.cookieService.clearAllCookies(response);
+    if (expectedClient) {
+      this.cookieService.clearScopedRefreshTokenCookie(
+        response,
+        expectedClient,
+      );
+    } else {
+      this.cookieService.clearAllCookies(response);
+    }
 
     return { message: 'Logged out successfully' };
   }
@@ -1075,11 +1134,16 @@ export class AuthService {
   // ADMIN LOGIN - SUPPORTS ALL ADMIN TYPES
   // ============================================
 
-  async adminLogin(dto: LoginDto, request: any, response: Response) {
+  async adminLogin(
+    dto: LoginDto,
+    request: any,
+    response: Response,
+    authClient: Exclude<AuthClient, 'USER'> = 'ORGANIZATION_ADMIN',
+  ) {
     this.logger.log(`Admin login attempt for identifier: ${dto.identifier}`);
 
     // Stricter rate limiting for admin login
-    const rateLimitKey = `admin-login:${request.ip}`;
+    const rateLimitKey = `admin-login:${authClient}:${request.ip}`;
     const attempts = await this.rateLimitService.checkLoginAttempts(
       rateLimitKey,
       3,
@@ -1126,7 +1190,7 @@ export class AuthService {
     }
 
     // Get admin roles with proper relations
-    const adminRoles = await this.prisma.admin.findMany({
+    const allAdminRoles = await this.prisma.admin.findMany({
       where: {
         userId: user.id,
         status: 'ACTIVE',
@@ -1152,6 +1216,11 @@ export class AuthService {
       },
     });
 
+    const adminRoles = allAdminRoles.filter((admin) =>
+      authClient === 'PLATFORM_ADMIN'
+        ? admin.adminType === 'PLATFORM_ADMIN'
+        : admin.adminType !== 'PLATFORM_ADMIN',
+    );
     const hasAdminRole = adminRoles.length > 0;
 
     if (!hasAdminRole) {
@@ -1165,6 +1234,20 @@ export class AuthService {
     const isPlatformAdmin = adminRoles.some(
       (admin) => admin.adminType === 'PLATFORM_ADMIN',
     );
+
+    if (authClient === 'PLATFORM_ADMIN' && !isPlatformAdmin) {
+      await this.rateLimitService.incrementLoginAttempt(rateLimitKey);
+      throw new UnauthorizedException(
+        'Access denied. Platform administrator privileges are required.',
+      );
+    }
+
+    if (authClient === 'ORGANIZATION_ADMIN' && !hasAdminRole) {
+      await this.rateLimitService.incrementLoginAttempt(rateLimitKey);
+      throw new UnauthorizedException(
+        'Access denied. Organization administrator privileges are required.',
+      );
+    }
 
     // Get all admin types
     const adminTypes = adminRoles.map((admin) => admin.adminType);
@@ -1316,6 +1399,7 @@ export class AuthService {
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         lastUsedAt: new Date(),
         isActive: true,
+        authClient,
       },
     });
 
@@ -1323,11 +1407,13 @@ export class AuthService {
       user.id,
       user.email,
       session.id,
+      authClient,
     );
     const refreshToken = await this.tokenService.generateRefreshToken(
       user.id,
       user.email,
       session.id,
+      authClient,
     );
     const refreshTokenHash =
       await this.tokenService.hashRefreshToken(refreshToken);
@@ -1356,6 +1442,7 @@ export class AuthService {
           username: user.username,
           adminTypes,
           isPlatformAdmin,
+          authClient,
           adminScopes: adminScopes.map((s) => ({
             adminType: s.adminType,
             organizationId: s.organizationId,
@@ -1369,8 +1456,13 @@ export class AuthService {
       },
     });
 
-    this.cookieService.setAccessTokenCookie(response, accessToken);
-    this.cookieService.setRefreshTokenCookie(response, refreshToken);
+    // Admin dashboards authenticate API requests with their returned bearer
+    // token. Only the dashboard-specific refresh token is stored as a cookie.
+    this.cookieService.setScopedRefreshTokenCookie(
+      response,
+      refreshToken,
+      authClient,
+    );
 
     this.logger.log(
       `Admin logged in successfully: ${user.id} (${adminTypes.join(', ')})`,
@@ -1410,6 +1502,7 @@ export class AuthService {
       adminScopes,
       // Indicate this is an admin session
       isAdminSession: true,
+      authClient,
       // Highest permission level for UI
       highestAdminType: isPlatformAdmin
         ? 'PLATFORM_ADMIN'
