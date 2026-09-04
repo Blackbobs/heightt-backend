@@ -100,9 +100,15 @@ export class CreateOrganizationDto {
   ])
   scope: string;
 
-  @ApiProperty({ example: 'inst_123', description: 'Institution ID' })
+  @ApiProperty({
+    example: 'inst_123',
+    description:
+      'Institution ID. Required for academic organizations; omit for independent organizations',
+    required: false,
+  })
+  @IsOptional()
   @IsString()
-  institutionId: string;
+  institutionId?: string;
 
   @ApiProperty({
     example: 'fac_123',

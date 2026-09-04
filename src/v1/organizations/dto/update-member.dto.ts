@@ -12,12 +12,12 @@ export class UpdateMemberDto {
   status?: string;
 
   @ApiProperty({
-    enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+    enum: ['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
     description: 'Membership type',
     required: false,
   })
   @IsOptional()
-  @IsEnum(['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'])
+  @IsEnum(['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'])
   membershipType?: string;
 
   @ApiProperty({
@@ -29,4 +29,3 @@ export class UpdateMemberDto {
   @IsBoolean()
   isPrimary?: boolean;
 }
-

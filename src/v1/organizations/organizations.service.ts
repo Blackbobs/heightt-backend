@@ -56,7 +56,7 @@ export class OrganizationsService {
           where: { id: organizationId },
           select: { institutionId: true },
         });
-        if (org) {
+        if (org?.institutionId) {
           await this.cacheService.delete(`institution:${org.institutionId}`);
         }
       }
@@ -82,11 +82,42 @@ export class OrganizationsService {
   async createOrganization(userId: string, dto: CreateOrganizationDto) {
     this.logger.log(`Creating organization: ${dto.name}`);
 
-    const institution = await this.prisma.institution.findUnique({
-      where: { id: dto.institutionId },
-    });
-    if (!institution) {
-      throw new NotFoundException('Institution not found');
+    const academicTypes = ['INSTITUTION', 'FACULTY', 'DEPARTMENT', 'LEVEL'];
+    const academicScopes = [
+      'INSTITUTION',
+      'FACULTY',
+      'DEPARTMENT',
+      'LEVEL',
+      'CROSS_DEPARTMENT',
+      'CROSS_LEVEL',
+    ];
+    const requiresInstitution =
+      academicTypes.includes(dto.type) || academicScopes.includes(dto.scope);
+
+    if (requiresInstitution && !dto.institutionId) {
+      throw new BadRequestException(
+        'Institution ID is required for academic organizations',
+      );
+    }
+    if (
+      !dto.institutionId &&
+      (dto.facultyId ||
+        dto.departmentId ||
+        dto.academicLevelId ||
+        dto.academicSessionId)
+    ) {
+      throw new BadRequestException(
+        'Independent organizations cannot reference an academic hierarchy or session',
+      );
+    }
+
+    if (dto.institutionId) {
+      const institution = await this.prisma.institution.findUnique({
+        where: { id: dto.institutionId },
+      });
+      if (!institution) {
+        throw new NotFoundException('Institution not found');
+      }
     }
 
     if (dto.academicSessionId) {
@@ -105,7 +136,7 @@ export class OrganizationsService {
 
     const existingSlug = await this.prisma.organization.findFirst({
       where: {
-        institutionId: dto.institutionId,
+        institutionId: dto.institutionId || null,
         slug: dto.slug,
         academicSessionId: dto.academicSessionId || null,
       },
@@ -124,7 +155,7 @@ export class OrganizationsService {
       if (!parentOrganization) {
         throw new NotFoundException('Parent organization not found');
       }
-      if (parentOrganization.institutionId !== dto.institutionId) {
+      if (parentOrganization.institutionId !== (dto.institutionId || null)) {
         throw new BadRequestException(
           'Parent organization must be in the same institution',
         );
@@ -213,7 +244,9 @@ export class OrganizationsService {
       },
     });
 
-    await this.cacheService.delete(`institution:${dto.institutionId}`);
+    if (dto.institutionId) {
+      await this.cacheService.delete(`institution:${dto.institutionId}`);
+    }
     await this.invalidateOrganizationsCache(organization.id);
 
     this.logger.log(
@@ -377,11 +410,11 @@ export class OrganizationsService {
     return organization;
   }
 
-  async getOrganizationBySlug(slug: string, institutionId: string) {
+  async getOrganizationBySlug(slug: string, institutionId?: string) {
     const organization = await this.prisma.organization.findFirst({
       where: {
         slug,
-        institutionId,
+        institutionId: institutionId || null,
       },
       include: {
         institution: true,
@@ -838,6 +871,24 @@ export class OrganizationsService {
       throw new NotFoundException('Membership not found');
     }
 
+    const resultingStatus = dto.status || membership.status;
+    const resultingMembershipType =
+      dto.membershipType || membership.membershipType;
+    if (resultingStatus === 'ACTIVE' && resultingMembershipType === 'STUDENT') {
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: organizationId },
+        select: { id: true, type: true },
+      });
+      if (!organization) {
+        throw new NotFoundException('Organization not found');
+      }
+      await this.assertSingleAcademicOrganizationMembership(
+        membership.userId,
+        organization,
+        resultingMembershipType,
+      );
+    }
+
     const updated = await this.prisma.organizationMembership.update({
       where: { id: membershipId },
       data: {
@@ -1123,7 +1174,7 @@ export class OrganizationsService {
   async requestToJoin(
     userId: string,
     organizationId: string,
-    membershipType: MembershipType = 'STUDENT',
+    membershipType?: MembershipType,
     message?: string,
   ) {
     this.logger.log(
@@ -1140,6 +1191,9 @@ export class OrganizationsService {
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
+
+    membershipType =
+      membershipType || (organization.institutionId ? 'STUDENT' : 'MEMBER');
 
     if (organization.status !== 'ACTIVE' && organization.status !== 'DRAFT') {
       throw new BadRequestException(

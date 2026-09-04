@@ -329,7 +329,7 @@ export class SearchService {
     // Get institution names
     const institutionIds = organizations
       .map((o) => o.institutionId)
-      .filter(Boolean);
+      .filter((id): id is string => Boolean(id));
     const institutions = await this.prisma.institution.findMany({
       where: { id: { in: institutionIds } },
       select: { id: true, name: true },
@@ -341,14 +341,19 @@ export class SearchService {
         id: org.id,
         type: 'organization',
         title: org.name,
-        description: org.description || instMap.get(org.institutionId) || '',
+        description:
+          org.description ||
+          (org.institutionId ? instMap.get(org.institutionId) : '') ||
+          '',
         url: `/organizations/${org.slug}`,
         image: null,
         score: this.calculateRelevance(query, org.name, org.description),
         createdAt: org.createdAt,
         metadata: {
           slug: org.slug,
-          institution: instMap.get(org.institutionId) || '',
+          institution: org.institutionId
+            ? instMap.get(org.institutionId) || ''
+            : '',
         },
       })),
       total,

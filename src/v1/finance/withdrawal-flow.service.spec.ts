@@ -3,6 +3,38 @@ jest.mock('uuid', () => ({ v4: jest.fn(() => 'test-uuid') }));
 import { FinanceService } from './finance.service';
 
 describe('FinanceService withdrawal accounting', () => {
+  it('reserves only the fixed Bachs fee for organization withdrawals', async () => {
+    const service = Object.create(FinanceService.prototype) as FinanceService;
+    (service as any).KOBO_PER_NAIRA = 100;
+    (service as any).BACHS_PAYOUT_FEE = 10_000;
+    (service as any).assertOrganizationAdminScope = jest.fn();
+    (service as any).walletService = {
+      getOrCreateWallet: jest.fn().mockResolvedValue({
+        balance: 100_000,
+        heldBalance: 0,
+        currency: 'NGN',
+      }),
+    };
+
+    const quote = await service.getWithdrawalQuote('admin-1', {
+      type: 'ORGANIZATION' as any,
+      organizationId: 'organization-1',
+      amount: 90_000,
+    });
+
+    expect(quote).toEqual(
+      expect.objectContaining({
+        fee: 10_000,
+        platformFee: 0,
+        providerFee: 10_000,
+        totalDebit: 100_000,
+        maxWithdrawable: 90_000,
+        canWithdraw: true,
+        feePolicy: 'PROVIDER_FEE_ONLY',
+      }),
+    );
+  });
+
   it('describes an approved payout as processing until the provider completes it', async () => {
     const service = Object.create(FinanceService.prototype) as FinanceService;
     const notificationCreate = jest.fn().mockResolvedValue({});
@@ -15,9 +47,7 @@ describe('FinanceService withdrawal accounting', () => {
       },
       notification: { create: notificationCreate },
     };
-    const sendEmail = jest.fn(
-      () => new Promise<boolean>(() => undefined),
-    );
+    const sendEmail = jest.fn(() => new Promise<boolean>(() => undefined));
     (service as any).emailService = { sendEmail };
 
     await (service as any).notifyUser('user-1', 'WITHDRAWAL_PROCESSING', {

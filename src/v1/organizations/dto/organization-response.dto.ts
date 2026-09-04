@@ -91,8 +91,8 @@ export class OrganizationResponseDto {
   })
   status: string;
 
-  @ApiProperty()
-  institutionId: string;
+  @ApiProperty({ required: false, nullable: true })
+  institutionId?: string | null;
 
   @ApiProperty({ required: false })
   facultyId?: string;

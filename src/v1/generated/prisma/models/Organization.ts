@@ -251,7 +251,7 @@ export type OrganizationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type OrganizationGroupByOutputType = {
   id: string
-  institutionId: string
+  institutionId: string | null
   facultyId: string | null
   departmentId: string | null
   academicLevelId: string | null
@@ -297,7 +297,7 @@ export type OrganizationWhereInput = {
   OR?: Prisma.OrganizationWhereInput[]
   NOT?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   id?: Prisma.StringFilter<"Organization"> | string
-  institutionId?: Prisma.StringFilter<"Organization"> | string
+  institutionId?: Prisma.StringNullableFilter<"Organization"> | string | null
   facultyId?: Prisma.StringNullableFilter<"Organization"> | string | null
   departmentId?: Prisma.StringNullableFilter<"Organization"> | string | null
   academicLevelId?: Prisma.StringNullableFilter<"Organization"> | string | null
@@ -335,7 +335,7 @@ export type OrganizationWhereInput = {
   creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
-  institution?: Prisma.XOR<Prisma.InstitutionScalarRelationFilter, Prisma.InstitutionWhereInput>
+  institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
   parent?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   children?: Prisma.OrganizationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -349,7 +349,7 @@ export type OrganizationWhereInput = {
 
 export type OrganizationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  institutionId?: Prisma.SortOrder
+  institutionId?: Prisma.SortOrderInput | Prisma.SortOrder
   facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   academicLevelId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -405,7 +405,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   OR?: Prisma.OrganizationWhereInput[]
   NOT?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
-  institutionId?: Prisma.StringFilter<"Organization"> | string
+  institutionId?: Prisma.StringNullableFilter<"Organization"> | string | null
   facultyId?: Prisma.StringNullableFilter<"Organization"> | string | null
   departmentId?: Prisma.StringNullableFilter<"Organization"> | string | null
   academicLevelId?: Prisma.StringNullableFilter<"Organization"> | string | null
@@ -443,7 +443,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   department?: Prisma.XOR<Prisma.DepartmentNullableScalarRelationFilter, Prisma.DepartmentWhereInput> | null
   faculty?: Prisma.XOR<Prisma.FacultyNullableScalarRelationFilter, Prisma.FacultyWhereInput> | null
-  institution?: Prisma.XOR<Prisma.InstitutionScalarRelationFilter, Prisma.InstitutionWhereInput>
+  institution?: Prisma.XOR<Prisma.InstitutionNullableScalarRelationFilter, Prisma.InstitutionWhereInput> | null
   parent?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   children?: Prisma.OrganizationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -457,7 +457,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
 
 export type OrganizationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  institutionId?: Prisma.SortOrder
+  institutionId?: Prisma.SortOrderInput | Prisma.SortOrder
   facultyId?: Prisma.SortOrderInput | Prisma.SortOrder
   departmentId?: Prisma.SortOrderInput | Prisma.SortOrder
   academicLevelId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -488,7 +488,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   OR?: Prisma.OrganizationScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OrganizationScalarWhereWithAggregatesInput | Prisma.OrganizationScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Organization"> | string
-  institutionId?: Prisma.StringWithAggregatesFilter<"Organization"> | string
+  institutionId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   facultyId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   departmentId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   academicLevelId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
@@ -544,7 +544,7 @@ export type OrganizationCreateInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -558,7 +558,7 @@ export type OrganizationCreateInput = {
 
 export type OrganizationUncheckedCreateInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -634,7 +634,7 @@ export type OrganizationUpdateInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -648,7 +648,7 @@ export type OrganizationUpdateInput = {
 
 export type OrganizationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -693,7 +693,7 @@ export type OrganizationUncheckedUpdateInput = {
 
 export type OrganizationCreateManyInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -736,7 +736,7 @@ export type OrganizationUpdateManyMutationInput = {
 
 export type OrganizationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1494,7 +1494,7 @@ export type OrganizationCreateWithoutCreatorInput = {
   academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -1508,7 +1508,7 @@ export type OrganizationCreateWithoutCreatorInput = {
 
 export type OrganizationUncheckedCreateWithoutCreatorInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -1581,7 +1581,7 @@ export type OrganizationScalarWhereInput = {
   OR?: Prisma.OrganizationScalarWhereInput[]
   NOT?: Prisma.OrganizationScalarWhereInput | Prisma.OrganizationScalarWhereInput[]
   id?: Prisma.StringFilter<"Organization"> | string
-  institutionId?: Prisma.StringFilter<"Organization"> | string
+  institutionId?: Prisma.StringNullableFilter<"Organization"> | string | null
   facultyId?: Prisma.StringNullableFilter<"Organization"> | string | null
   departmentId?: Prisma.StringNullableFilter<"Organization"> | string | null
   academicLevelId?: Prisma.StringNullableFilter<"Organization"> | string | null
@@ -1750,7 +1750,7 @@ export type OrganizationCreateWithoutFacultyInput = {
   academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutOrganizationsInput
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -1764,7 +1764,7 @@ export type OrganizationCreateWithoutFacultyInput = {
 
 export type OrganizationUncheckedCreateWithoutFacultyInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
   parentOrganizationId?: string | null
@@ -1864,7 +1864,7 @@ export type OrganizationCreateWithoutDepartmentInput = {
   academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutOrganizationsInput
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -1878,7 +1878,7 @@ export type OrganizationCreateWithoutDepartmentInput = {
 
 export type OrganizationUncheckedCreateWithoutDepartmentInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   academicLevelId?: string | null
   parentOrganizationId?: string | null
@@ -1978,7 +1978,7 @@ export type OrganizationCreateWithoutAcademicLevelInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -1992,7 +1992,7 @@ export type OrganizationCreateWithoutAcademicLevelInput = {
 
 export type OrganizationUncheckedCreateWithoutAcademicLevelInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   parentOrganizationId?: string | null
@@ -2092,7 +2092,7 @@ export type OrganizationCreateWithoutAcademicSessionInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -2106,7 +2106,7 @@ export type OrganizationCreateWithoutAcademicSessionInput = {
 
 export type OrganizationUncheckedCreateWithoutAcademicSessionInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -2207,7 +2207,7 @@ export type OrganizationCreateWithoutStudentEnrollmentsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -2220,7 +2220,7 @@ export type OrganizationCreateWithoutStudentEnrollmentsInput = {
 
 export type OrganizationUncheckedCreateWithoutStudentEnrollmentsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -2311,7 +2311,7 @@ export type OrganizationUpdateWithoutStudentEnrollmentsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -2324,7 +2324,7 @@ export type OrganizationUpdateWithoutStudentEnrollmentsInput = {
 
 export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2399,7 +2399,7 @@ export type OrganizationCreateWithoutChildrenInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
@@ -2412,7 +2412,7 @@ export type OrganizationCreateWithoutChildrenInput = {
 
 export type OrganizationUncheckedCreateWithoutChildrenInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -2492,7 +2492,7 @@ export type OrganizationCreateWithoutParentInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
@@ -2505,7 +2505,7 @@ export type OrganizationCreateWithoutParentInput = {
 
 export type OrganizationUncheckedCreateWithoutParentInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -2601,7 +2601,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
@@ -2614,7 +2614,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
 
 export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2704,7 +2704,7 @@ export type OrganizationCreateWithoutMembershipsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -2718,7 +2718,7 @@ export type OrganizationCreateWithoutMembershipsInput = {
 
 export type OrganizationUncheckedCreateWithoutMembershipsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -2808,7 +2808,7 @@ export type OrganizationUpdateWithoutMembershipsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -2822,7 +2822,7 @@ export type OrganizationUpdateWithoutMembershipsInput = {
 
 export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2896,7 +2896,7 @@ export type OrganizationCreateWithoutJoinRequestsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -2910,7 +2910,7 @@ export type OrganizationCreateWithoutJoinRequestsInput = {
 
 export type OrganizationUncheckedCreateWithoutJoinRequestsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -3000,7 +3000,7 @@ export type OrganizationUpdateWithoutJoinRequestsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -3014,7 +3014,7 @@ export type OrganizationUpdateWithoutJoinRequestsInput = {
 
 export type OrganizationUncheckedUpdateWithoutJoinRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3089,7 +3089,7 @@ export type OrganizationCreateWithoutRolesInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -3102,7 +3102,7 @@ export type OrganizationCreateWithoutRolesInput = {
 
 export type OrganizationUncheckedCreateWithoutRolesInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -3193,7 +3193,7 @@ export type OrganizationUpdateWithoutRolesInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -3206,7 +3206,7 @@ export type OrganizationUpdateWithoutRolesInput = {
 
 export type OrganizationUncheckedUpdateWithoutRolesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3280,7 +3280,7 @@ export type OrganizationCreateWithoutAdminsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -3294,7 +3294,7 @@ export type OrganizationCreateWithoutAdminsInput = {
 
 export type OrganizationUncheckedCreateWithoutAdminsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -3384,7 +3384,7 @@ export type OrganizationUpdateWithoutAdminsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -3398,7 +3398,7 @@ export type OrganizationUpdateWithoutAdminsInput = {
 
 export type OrganizationUncheckedUpdateWithoutAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3473,7 +3473,7 @@ export type OrganizationCreateWithoutWalletInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -3486,7 +3486,7 @@ export type OrganizationCreateWithoutWalletInput = {
 
 export type OrganizationUncheckedCreateWithoutWalletInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -3577,7 +3577,7 @@ export type OrganizationUpdateWithoutWalletInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -3590,7 +3590,7 @@ export type OrganizationUpdateWithoutWalletInput = {
 
 export type OrganizationUncheckedUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3664,7 +3664,7 @@ export type OrganizationCreateWithoutLedgerAccountsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -3678,7 +3678,7 @@ export type OrganizationCreateWithoutLedgerAccountsInput = {
 
 export type OrganizationUncheckedCreateWithoutLedgerAccountsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -3768,7 +3768,7 @@ export type OrganizationUpdateWithoutLedgerAccountsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -3782,7 +3782,7 @@ export type OrganizationUpdateWithoutLedgerAccountsInput = {
 
 export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3857,7 +3857,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
@@ -3870,7 +3870,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
 
 export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -3961,7 +3961,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
@@ -3974,7 +3974,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
 
 export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4048,7 +4048,7 @@ export type OrganizationCreateWithoutDuesInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -4062,7 +4062,7 @@ export type OrganizationCreateWithoutDuesInput = {
 
 export type OrganizationUncheckedCreateWithoutDuesInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -4152,7 +4152,7 @@ export type OrganizationUpdateWithoutDuesInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -4166,7 +4166,7 @@ export type OrganizationUpdateWithoutDuesInput = {
 
 export type OrganizationUncheckedUpdateWithoutDuesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4241,7 +4241,7 @@ export type OrganizationCreateWithoutSettlementsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -4254,7 +4254,7 @@ export type OrganizationCreateWithoutSettlementsInput = {
 
 export type OrganizationUncheckedCreateWithoutSettlementsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -4345,7 +4345,7 @@ export type OrganizationUpdateWithoutSettlementsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -4358,7 +4358,7 @@ export type OrganizationUpdateWithoutSettlementsInput = {
 
 export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4433,7 +4433,7 @@ export type OrganizationCreateWithoutReceiptsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -4446,7 +4446,7 @@ export type OrganizationCreateWithoutReceiptsInput = {
 
 export type OrganizationUncheckedCreateWithoutReceiptsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -4537,7 +4537,7 @@ export type OrganizationUpdateWithoutReceiptsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -4550,7 +4550,7 @@ export type OrganizationUpdateWithoutReceiptsInput = {
 
 export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4624,7 +4624,7 @@ export type OrganizationCreateWithoutAnnouncementsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -4638,7 +4638,7 @@ export type OrganizationCreateWithoutAnnouncementsInput = {
 
 export type OrganizationUncheckedCreateWithoutAnnouncementsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -4728,7 +4728,7 @@ export type OrganizationUpdateWithoutAnnouncementsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -4742,7 +4742,7 @@ export type OrganizationUpdateWithoutAnnouncementsInput = {
 
 export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4816,7 +4816,7 @@ export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -4830,7 +4830,7 @@ export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
 
 export type OrganizationUncheckedCreateWithoutFeatureFlagTargetsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -4920,7 +4920,7 @@ export type OrganizationUpdateWithoutFeatureFlagTargetsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -4934,7 +4934,7 @@ export type OrganizationUpdateWithoutFeatureFlagTargetsInput = {
 
 export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5008,7 +5008,7 @@ export type OrganizationCreateWithoutElectionsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -5022,7 +5022,7 @@ export type OrganizationCreateWithoutElectionsInput = {
 
 export type OrganizationUncheckedCreateWithoutElectionsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -5112,7 +5112,7 @@ export type OrganizationUpdateWithoutElectionsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -5126,7 +5126,7 @@ export type OrganizationUpdateWithoutElectionsInput = {
 
 export type OrganizationUncheckedUpdateWithoutElectionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5200,7 +5200,7 @@ export type OrganizationCreateWithoutExecutiveTermsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -5214,7 +5214,7 @@ export type OrganizationCreateWithoutExecutiveTermsInput = {
 
 export type OrganizationUncheckedCreateWithoutExecutiveTermsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -5304,7 +5304,7 @@ export type OrganizationUpdateWithoutExecutiveTermsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -5318,7 +5318,7 @@ export type OrganizationUpdateWithoutExecutiveTermsInput = {
 
 export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5392,7 +5392,7 @@ export type OrganizationCreateWithoutCommitteesInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -5406,7 +5406,7 @@ export type OrganizationCreateWithoutCommitteesInput = {
 
 export type OrganizationUncheckedCreateWithoutCommitteesInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -5496,7 +5496,7 @@ export type OrganizationUpdateWithoutCommitteesInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -5510,7 +5510,7 @@ export type OrganizationUpdateWithoutCommitteesInput = {
 
 export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5584,7 +5584,7 @@ export type OrganizationCreateWithoutEventsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -5598,7 +5598,7 @@ export type OrganizationCreateWithoutEventsInput = {
 
 export type OrganizationUncheckedCreateWithoutEventsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -5688,7 +5688,7 @@ export type OrganizationUpdateWithoutEventsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -5702,7 +5702,7 @@ export type OrganizationUpdateWithoutEventsInput = {
 
 export type OrganizationUncheckedUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5777,7 +5777,7 @@ export type OrganizationCreateWithoutPendingPaymentsInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -5790,7 +5790,7 @@ export type OrganizationCreateWithoutPendingPaymentsInput = {
 
 export type OrganizationUncheckedCreateWithoutPendingPaymentsInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -5881,7 +5881,7 @@ export type OrganizationUpdateWithoutPendingPaymentsInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -5894,7 +5894,7 @@ export type OrganizationUpdateWithoutPendingPaymentsInput = {
 
 export type OrganizationUncheckedUpdateWithoutPendingPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5968,7 +5968,7 @@ export type OrganizationCreateWithoutFilesInput = {
   creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
   department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
   faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
-  institution: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
   parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
   children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
@@ -5982,7 +5982,7 @@ export type OrganizationCreateWithoutFilesInput = {
 
 export type OrganizationUncheckedCreateWithoutFilesInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -6072,7 +6072,7 @@ export type OrganizationUpdateWithoutFilesInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -6086,7 +6086,7 @@ export type OrganizationUpdateWithoutFilesInput = {
 
 export type OrganizationUncheckedUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6130,7 +6130,7 @@ export type OrganizationUncheckedUpdateWithoutFilesInput = {
 
 export type OrganizationCreateManyCreatorInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -6184,7 +6184,7 @@ export type OrganizationUpdateWithoutCreatorInput = {
   academicSession?: Prisma.AcademicSessionUpdateOneWithoutOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -6198,7 +6198,7 @@ export type OrganizationUpdateWithoutCreatorInput = {
 
 export type OrganizationUncheckedUpdateWithoutCreatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6242,7 +6242,7 @@ export type OrganizationUncheckedUpdateWithoutCreatorInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutCreatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6402,7 +6402,7 @@ export type OrganizationUncheckedUpdateManyWithoutInstitutionInput = {
 
 export type OrganizationCreateManyFacultyInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
   parentOrganizationId?: string | null
@@ -6456,7 +6456,7 @@ export type OrganizationUpdateWithoutFacultyInput = {
   academicSession?: Prisma.AcademicSessionUpdateOneWithoutOrganizationsNestedInput
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -6470,7 +6470,7 @@ export type OrganizationUpdateWithoutFacultyInput = {
 
 export type OrganizationUncheckedUpdateWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6514,7 +6514,7 @@ export type OrganizationUncheckedUpdateWithoutFacultyInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6538,7 +6538,7 @@ export type OrganizationUncheckedUpdateManyWithoutFacultyInput = {
 
 export type OrganizationCreateManyDepartmentInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   academicLevelId?: string | null
   parentOrganizationId?: string | null
@@ -6592,7 +6592,7 @@ export type OrganizationUpdateWithoutDepartmentInput = {
   academicSession?: Prisma.AcademicSessionUpdateOneWithoutOrganizationsNestedInput
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -6606,7 +6606,7 @@ export type OrganizationUpdateWithoutDepartmentInput = {
 
 export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6650,7 +6650,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6674,7 +6674,7 @@ export type OrganizationUncheckedUpdateManyWithoutDepartmentInput = {
 
 export type OrganizationCreateManyAcademicLevelInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   parentOrganizationId?: string | null
@@ -6728,7 +6728,7 @@ export type OrganizationUpdateWithoutAcademicLevelInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -6742,7 +6742,7 @@ export type OrganizationUpdateWithoutAcademicLevelInput = {
 
 export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6786,7 +6786,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutAcademicLevelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6810,7 +6810,7 @@ export type OrganizationUncheckedUpdateManyWithoutAcademicLevelInput = {
 
 export type OrganizationCreateManyAcademicSessionInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -6864,7 +6864,7 @@ export type OrganizationUpdateWithoutAcademicSessionInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
@@ -6878,7 +6878,7 @@ export type OrganizationUpdateWithoutAcademicSessionInput = {
 
 export type OrganizationUncheckedUpdateWithoutAcademicSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6922,7 +6922,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicSessionInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutAcademicSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6946,7 +6946,7 @@ export type OrganizationUncheckedUpdateManyWithoutAcademicSessionInput = {
 
 export type OrganizationCreateManyParentInput = {
   id?: string
-  institutionId: string
+  institutionId?: string | null
   facultyId?: string | null
   departmentId?: string | null
   academicLevelId?: string | null
@@ -7001,7 +7001,7 @@ export type OrganizationUpdateWithoutParentInput = {
   creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
   department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
   faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
-  institution?: Prisma.InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
   children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
   pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
@@ -7014,7 +7014,7 @@ export type OrganizationUpdateWithoutParentInput = {
 
 export type OrganizationUncheckedUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7058,7 +7058,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  institutionId?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7313,7 +7313,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   creator?: boolean | Prisma.Organization$creatorArgs<ExtArgs>
   department?: boolean | Prisma.Organization$departmentArgs<ExtArgs>
   faculty?: boolean | Prisma.Organization$facultyArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.Organization$institutionArgs<ExtArgs>
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
   children?: boolean | Prisma.Organization$childrenArgs<ExtArgs>
   payments?: boolean | Prisma.Organization$paymentsArgs<ExtArgs>
@@ -7354,7 +7354,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   creator?: boolean | Prisma.Organization$creatorArgs<ExtArgs>
   department?: boolean | Prisma.Organization$departmentArgs<ExtArgs>
   faculty?: boolean | Prisma.Organization$facultyArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.Organization$institutionArgs<ExtArgs>
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -7386,7 +7386,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   creator?: boolean | Prisma.Organization$creatorArgs<ExtArgs>
   department?: boolean | Prisma.Organization$departmentArgs<ExtArgs>
   faculty?: boolean | Prisma.Organization$facultyArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.Organization$institutionArgs<ExtArgs>
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -7434,7 +7434,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   creator?: boolean | Prisma.Organization$creatorArgs<ExtArgs>
   department?: boolean | Prisma.Organization$departmentArgs<ExtArgs>
   faculty?: boolean | Prisma.Organization$facultyArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.Organization$institutionArgs<ExtArgs>
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
   children?: boolean | Prisma.Organization$childrenArgs<ExtArgs>
   payments?: boolean | Prisma.Organization$paymentsArgs<ExtArgs>
@@ -7452,7 +7452,7 @@ export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types
   creator?: boolean | Prisma.Organization$creatorArgs<ExtArgs>
   department?: boolean | Prisma.Organization$departmentArgs<ExtArgs>
   faculty?: boolean | Prisma.Organization$facultyArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.Organization$institutionArgs<ExtArgs>
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
 }
 export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7461,7 +7461,7 @@ export type OrganizationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types
   creator?: boolean | Prisma.Organization$creatorArgs<ExtArgs>
   department?: boolean | Prisma.Organization$departmentArgs<ExtArgs>
   faculty?: boolean | Prisma.Organization$facultyArgs<ExtArgs>
-  institution?: boolean | Prisma.InstitutionDefaultArgs<ExtArgs>
+  institution?: boolean | Prisma.Organization$institutionArgs<ExtArgs>
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
 }
 
@@ -7485,7 +7485,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     creator: Prisma.$UserPayload<ExtArgs> | null
     department: Prisma.$DepartmentPayload<ExtArgs> | null
     faculty: Prisma.$FacultyPayload<ExtArgs> | null
-    institution: Prisma.$InstitutionPayload<ExtArgs>
+    institution: Prisma.$InstitutionPayload<ExtArgs> | null
     parent: Prisma.$OrganizationPayload<ExtArgs> | null
     children: Prisma.$OrganizationPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -7498,7 +7498,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    institutionId: string
+    institutionId: string | null
     facultyId: string | null
     departmentId: string | null
     academicLevelId: string | null
@@ -7930,7 +7930,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   creator<T extends Prisma.Organization$creatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$creatorArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   department<T extends Prisma.Organization$departmentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$departmentArgs<ExtArgs>>): Prisma.Prisma__DepartmentClient<runtime.Types.Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   faculty<T extends Prisma.Organization$facultyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$facultyArgs<ExtArgs>>): Prisma.Prisma__FacultyClient<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  institution<T extends Prisma.InstitutionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.InstitutionDefaultArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  institution<T extends Prisma.Organization$institutionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$institutionArgs<ExtArgs>>): Prisma.Prisma__InstitutionClient<runtime.Types.Result.GetResult<Prisma.$InstitutionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.Organization$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$parentArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.Organization$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Organization$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8772,6 +8772,25 @@ export type Organization$facultyArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   include?: Prisma.FacultyInclude<ExtArgs> | null
   where?: Prisma.FacultyWhereInput
+}
+
+/**
+ * Organization.institution
+ */
+export type Organization$institutionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Institution
+   */
+  select?: Prisma.InstitutionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Institution
+   */
+  omit?: Prisma.InstitutionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InstitutionInclude<ExtArgs> | null
+  where?: Prisma.InstitutionWhereInput
 }
 
 /**
