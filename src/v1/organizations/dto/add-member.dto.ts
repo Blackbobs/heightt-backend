@@ -7,10 +7,10 @@ export class AddMemberDto {
   userId: string;
 
   @ApiProperty({
-    enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+    enum: ['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
     description: 'Membership type',
   })
-  @IsEnum(['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'])
+  @IsEnum(['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'])
   membershipType: string;
 
   @ApiProperty({

@@ -466,6 +466,7 @@ export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof Organi
 
 
 export const MembershipType = {
+  MEMBER: 'MEMBER',
   STUDENT: 'STUDENT',
   ADMIN: 'ADMIN',
   STAFF: 'STAFF',

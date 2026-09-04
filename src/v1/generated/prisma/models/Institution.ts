@@ -717,10 +717,12 @@ export type InstitutionCreateNestedOneWithoutOrganizationsInput = {
   connect?: Prisma.InstitutionWhereUniqueInput
 }
 
-export type InstitutionUpdateOneRequiredWithoutOrganizationsNestedInput = {
+export type InstitutionUpdateOneWithoutOrganizationsNestedInput = {
   create?: Prisma.XOR<Prisma.InstitutionCreateWithoutOrganizationsInput, Prisma.InstitutionUncheckedCreateWithoutOrganizationsInput>
   connectOrCreate?: Prisma.InstitutionCreateOrConnectWithoutOrganizationsInput
   upsert?: Prisma.InstitutionUpsertWithoutOrganizationsInput
+  disconnect?: Prisma.InstitutionWhereInput | boolean
+  delete?: Prisma.InstitutionWhereInput | boolean
   connect?: Prisma.InstitutionWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstitutionUpdateToOneWithWhereWithoutOrganizationsInput, Prisma.InstitutionUpdateWithoutOrganizationsInput>, Prisma.InstitutionUncheckedUpdateWithoutOrganizationsInput>
 }

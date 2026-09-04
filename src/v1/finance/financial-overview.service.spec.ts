@@ -76,7 +76,7 @@ describe('FinanceService financial overview', () => {
     const service = Object.create(FinanceService.prototype) as FinanceService;
     expect(
       (service as any).calculatePlatformWithdrawalCharges(100_000),
-    ).toEqual({ fee: 0, netAmount: 100_000, totalCharges: 0 });
+    ).toEqual({ fee: 10_000, netAmount: 100_000, totalCharges: 10_000 });
   });
 
   it('limits an organisation principal so principal plus fee fits the wallet', () => {
@@ -92,10 +92,10 @@ describe('FinanceService financial overview', () => {
     );
   });
 
-  it('allows a platform admin to withdraw the exact available balance', () => {
+  it('reserves the Bachs payout fee from a platform wallet', () => {
     const service = Object.create(FinanceService.prototype) as FinanceService;
     expect((service as any).calculateMaximumWithdrawal(200_000, true)).toBe(
-      200_000,
+      190_000,
     );
   });
 });

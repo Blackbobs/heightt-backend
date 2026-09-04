@@ -46,6 +46,9 @@ lerna-debug.log*
 .temp
 .tmp
 
+# Database backups (contain production data / PII)
+/backups
+
 # Runtime data
 pids
 *.pid

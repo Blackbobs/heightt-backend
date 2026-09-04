@@ -2,13 +2,16 @@
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { MembershipType, JoinRequestStatus } from '../../generated/prisma/enums';
+import {
+  MembershipType,
+  JoinRequestStatus,
+} from '../../generated/prisma/enums';
 
 export class RequestToJoinDto {
   @ApiProperty({
     enum: MembershipType,
-    default: MembershipType.STUDENT,
-    description: 'Type of membership being requested',
+    description:
+      'Type of membership; defaults to MEMBER for independent organizations and STUDENT for institution-affiliated organizations',
   })
   @IsEnum(MembershipType)
   @IsOptional()

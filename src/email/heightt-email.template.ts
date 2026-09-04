@@ -93,7 +93,7 @@ export function renderHeighttEmail(options: HeighttEmailOptions): string {
       ${details.length ? `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;margin:22px 0;border:1px solid #E2E8F0;border-radius:6px;border-collapse:collapse;">${detailRows}</table>` : ''}
       ${action}
       ${options.notice ? `<table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="width:100%;margin-top:20px;"><tr><td style="border-left:4px solid ${colour};background-color:#F8FAFC;padding:13px 15px;color:#475569;font-size:13px;line-height:20px;">${escapeHtml(options.notice)}</td></tr></table>` : ''}
-      <p style="margin:26px 0 0;color:#64748B;font-size:13px;line-height:20px;">Need help? Contact <a href="mailto:support@heightt.com" style="color:#2563EB;text-decoration:underline;">support@heightt.com</a>.</p>
+      <p style="margin:26px 0 0;color:#64748B;font-size:13px;line-height:20px;">Need help? Contact <a href="mailto:heightt.finance@gmail.com" style="color:#2563EB;text-decoration:underline;">heightt.finance@gmail.com</a>.</p>
     </td></tr>
     <tr><td style="padding:22px 18px 0;text-align:center;color:#64748B;font-size:11px;line-height:18px;">
       <p style="margin:0 0 6px;">Heightt Technologies Inc. &nbsp;·&nbsp; <a href="https://www.heightt.app" style="color:#475569;text-decoration:underline;">heightt.app</a></p>

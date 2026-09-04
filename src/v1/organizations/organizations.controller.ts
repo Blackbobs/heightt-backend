@@ -245,8 +245,8 @@ export class OrganizationsController {
   @ApiParam({ name: 'slug', description: 'Organization slug' })
   @ApiQuery({
     name: 'institutionId',
-    required: true,
-    description: 'Institution ID',
+    required: false,
+    description: 'Institution ID; omit for an independent organization',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -259,7 +259,7 @@ export class OrganizationsController {
   })
   async getOrganizationBySlug(
     @Param('slug') slug: string,
-    @Query('institutionId') institutionId: string,
+    @Query('institutionId') institutionId?: string,
   ) {
     this.logger.log(`Get organization by slug endpoint called: ${slug}`);
     return this.organizationsService.getOrganizationBySlug(slug, institutionId);
@@ -415,7 +415,7 @@ export class OrganizationsController {
   @ApiQuery({
     name: 'membershipType',
     required: false,
-    enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+    enum: ['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
   })
   @ApiQuery({
     name: 'search',
@@ -535,7 +535,7 @@ export class OrganizationsController {
       properties: {
         membershipType: {
           type: 'string',
-          enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+          enum: ['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
           default: 'STUDENT',
         },
         message: {
@@ -572,7 +572,7 @@ export class OrganizationsController {
     return this.organizationsService.requestToJoin(
       req.user.id,
       organizationId,
-      (body.membershipType as any) || 'STUDENT',
+      body.membershipType as any,
       body.message,
     );
   }
@@ -590,7 +590,7 @@ export class OrganizationsController {
       properties: {
         membershipType: {
           type: 'string',
-          enum: ['STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
+          enum: ['MEMBER', 'STUDENT', 'ADMIN', 'STAFF', 'ALUMNI', 'HONORARY'],
           default: 'STUDENT',
         },
       },
@@ -621,7 +621,7 @@ export class OrganizationsController {
     return this.organizationsService.requestToJoin(
       req.user.id,
       organizationId,
-      (body.membershipType as any) || 'STUDENT',
+      body.membershipType as any,
     );
   }
 

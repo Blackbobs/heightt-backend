@@ -97,7 +97,7 @@ export class AdminGuard implements CanActivate {
 
       let organizationScopePromise: Promise<{
         academicSessionId: string | null;
-        institutionId: string;
+        institutionId: string | null;
         facultyId: string | null;
         departmentId: string | null;
       } | null> | null = null;

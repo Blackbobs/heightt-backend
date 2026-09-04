@@ -395,7 +395,7 @@ model StudentVerification {
 
 model Organization {
   id                   String                    @id @default(cuid())
-  institutionId        String
+  institutionId        String?
   facultyId            String?
   departmentId         String?
   academicLevelId      String?
@@ -433,7 +433,7 @@ model Organization {
   creator              User?                     @relation("OrganizationCreator", fields: [createdBy], references: [id])
   department           Department?               @relation(fields: [departmentId], references: [id])
   faculty              Faculty?                  @relation(fields: [facultyId], references: [id])
-  institution          Institution               @relation(fields: [institutionId], references: [id])
+  institution          Institution?              @relation(fields: [institutionId], references: [id])
   parent               Organization?             @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id])
   children             Organization[]            @relation("OrganizationHierarchy")
   payments             Payment[]
@@ -1962,6 +1962,7 @@ enum OrganizationStatus {
 }
 
 enum MembershipType {
+  MEMBER
   STUDENT
   ADMIN
   STAFF
