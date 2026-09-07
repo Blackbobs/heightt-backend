@@ -1,4 +1,5 @@
 import { ReceiptService } from './receipt.service';
+import PDFDocument from 'pdfkit';
 
 describe('ReceiptService automatic delivery', () => {
   it.each([true, false])(
@@ -16,7 +17,15 @@ describe('ReceiptService automatic delivery', () => {
             ? null
             : { firstName: 'Account', lastName: 'Student' },
         },
-        metadata: isGuest ? { guestEmail: email, guestName: name } : null,
+        metadata: isGuest
+          ? {
+              guestEmail: email,
+              guestName: name,
+              guestPhone: '08012345678',
+              guestMatricNumber: 'CSC/2026/001',
+            }
+          : null,
+        description: 'Department dues',
         amount: 25000,
         serviceFee: 100,
         reference: 'reference-1',
@@ -37,11 +46,15 @@ describe('ReceiptService automatic delivery', () => {
             savedReceipt = {
               id: 'receipt-1',
               ...data,
-              metadata: { pdfUrl: 'https://example.com/receipt.pdf' },
+              metadata: {
+                ...data.metadata,
+                pdfUrl: 'https://example.com/receipt.pdf',
+              },
             };
             return Promise.resolve(savedReceipt);
           }),
         },
+        duePayment: { findFirst: jest.fn().mockResolvedValue(null) },
       };
       const emailService = { sendEmail: jest.fn().mockResolvedValue(true) };
       const service = new ReceiptService(
@@ -50,10 +63,8 @@ describe('ReceiptService automatic delivery', () => {
         emailService as any,
         {} as any,
       );
-      jest.spyOn(service, 'generateReceiptPdf').mockResolvedValue({
-        buffer: Buffer.from('receipt PDF'),
-        filename: 'receipt.pdf',
-      });
+      jest.spyOn(service as any, 'fetchImageBuffer').mockResolvedValue(null);
+      const pdfText = jest.spyOn(PDFDocument.prototype, 'text');
 
       const receipt = await service.generateReceiptFromPayment(
         'payment-1',
@@ -64,13 +75,29 @@ describe('ReceiptService automatic delivery', () => {
 
       expect(receipt.payerEmail).toBe(email);
       expect(receipt.payerName).toBe(name);
+      // PDF rendering also waits for the document stream to end.
+      await new Promise<void>((resolve) => setImmediate(resolve));
       expect(emailService.sendEmail).toHaveBeenCalledTimes(1);
       expect(emailService.sendEmail).toHaveBeenCalledWith(
         email,
         expect.stringContaining('Payment Receipt'),
         expect.any(String),
-        [expect.objectContaining({ filename: 'receipt.pdf' })],
+        [expect.objectContaining({ filename: `${receipt.receiptNumber}.pdf` })],
       );
+      const html = emailService.sendEmail.mock.calls[0][2];
+      const renderedText = pdfText.mock.calls.map(([text]) => text).join('\n');
+      for (const content of [html, renderedText]) {
+        expect(content).toContain(name);
+        expect(content).toContain(email);
+        expect(content).toContain('Department dues');
+        expect(content).not.toContain('guest_123');
+        if (isGuest) {
+          expect(content).toContain('08012345678');
+          expect(content).toContain('CSC/2026/001');
+        }
+      }
+      expect(receipt.totalAmount).toBe(25100);
+      pdfText.mockRestore();
     },
   );
 });

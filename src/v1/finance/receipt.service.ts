@@ -125,6 +125,9 @@ export class ReceiptService {
         payerEmail:
           dto.payerEmail || paymentMetadata.guestEmail || payment.payer?.email || '',
         payerPhone: dto.payerPhone || paymentMetadata.guestPhone,
+        metadata: paymentMetadata.guestMatricNumber
+          ? { matricNumber: paymentMetadata.guestMatricNumber }
+          : undefined,
         paymentMethod: payment.paymentMethod,
         paymentDate: payment.paidAt || payment.createdAt,
         description: dto.description || payment.description,
@@ -800,8 +803,21 @@ export class ReceiptService {
         characterSpacing: 0.5,
       });
 
+    const matricNumber = (receipt.metadata as any)?.matricNumber;
+    const contactDetails = [
+      receipt.payerPhone ? `Phone: ${receipt.payerPhone}` : null,
+      matricNumber ? `Matric number: ${matricNumber}` : null,
+    ].filter(Boolean);
+    contactDetails.forEach((detail, index) => {
+      doc
+        .font('Helvetica')
+        .fontSize(9)
+        .fillColor(muted)
+        .text(detail!, left, py + 49 + index * 15);
+    });
+
     // Items table
-    const tableTop = py + 65;
+    const tableTop = py + 65 + contactDetails.length * 15;
     doc
       .moveTo(left, tableTop)
       .lineTo(right, tableTop)
@@ -1042,6 +1058,14 @@ export class ReceiptService {
       recipientName: receipt.payerName,
       intro: `Your payment was successful. Receipt ${receipt.receiptNumber} is attached as a PDF.`,
       details: [
+        { label: 'Paid by', value: receipt.payerName },
+        { label: 'Email', value: receipt.payerEmail },
+        ...(receipt.payerPhone
+          ? [{ label: 'Phone', value: receipt.payerPhone }]
+          : []),
+        ...(receipt.metadata?.matricNumber
+          ? [{ label: 'Matric number', value: receipt.metadata.matricNumber }]
+          : []),
         { label: 'Transaction reference', value: receipt.reference },
         { label: 'Payment', value: receipt.description || 'Payment' },
         { label: 'Amount', value: money(receipt.amount) },
@@ -1057,7 +1081,7 @@ export class ReceiptService {
         'This receipt was generated automatically by Heightt. Keep it for your financial records.',
       tone: 'success',
       reason:
-        'You received this email because a payment was recorded on your Heightt account.',
+        'You received this email because this address was provided for a payment on Heightt.',
     });
   }
 }
