@@ -45,6 +45,8 @@ export type DueMinAggregateOutputType = {
   isFresher: boolean | null
   isRequired: boolean | null
   status: $Enums.DueStatus | null
+  deletedAt: Date | null
+  deletedBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +62,8 @@ export type DueMaxAggregateOutputType = {
   isFresher: boolean | null
   isRequired: boolean | null
   status: $Enums.DueStatus | null
+  deletedAt: Date | null
+  deletedBy: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -75,6 +79,8 @@ export type DueCountAggregateOutputType = {
   isFresher: number
   isRequired: number
   status: number
+  deletedAt: number
+  deletedBy: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -100,6 +106,8 @@ export type DueMinAggregateInputType = {
   isFresher?: true
   isRequired?: true
   status?: true
+  deletedAt?: true
+  deletedBy?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -115,6 +123,8 @@ export type DueMaxAggregateInputType = {
   isFresher?: true
   isRequired?: true
   status?: true
+  deletedAt?: true
+  deletedBy?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +140,8 @@ export type DueCountAggregateInputType = {
   isFresher?: true
   isRequired?: true
   status?: true
+  deletedAt?: true
+  deletedBy?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -232,6 +244,8 @@ export type DueGroupByOutputType = {
   isFresher: boolean
   isRequired: boolean
   status: $Enums.DueStatus
+  deletedAt: Date | null
+  deletedBy: string | null
   createdAt: Date
   updatedAt: Date
   _count: DueCountAggregateOutputType | null
@@ -270,6 +284,8 @@ export type DueWhereInput = {
   isFresher?: Prisma.BoolFilter<"Due"> | boolean
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
+  deletedAt?: Prisma.DateTimeNullableFilter<"Due"> | Date | string | null
+  deletedBy?: Prisma.StringNullableFilter<"Due"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   assignments?: Prisma.DueAssignmentListRelationFilter
@@ -289,6 +305,8 @@ export type DueOrderByWithRelationInput = {
   isFresher?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   assignments?: Prisma.DueAssignmentOrderByRelationAggregateInput
@@ -311,6 +329,8 @@ export type DueWhereUniqueInput = Prisma.AtLeast<{
   isFresher?: Prisma.BoolFilter<"Due"> | boolean
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
+  deletedAt?: Prisma.DateTimeNullableFilter<"Due"> | Date | string | null
+  deletedBy?: Prisma.StringNullableFilter<"Due"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   assignments?: Prisma.DueAssignmentListRelationFilter
@@ -330,6 +350,8 @@ export type DueOrderByWithAggregationInput = {
   isFresher?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DueCountOrderByAggregateInput
@@ -353,6 +375,8 @@ export type DueScalarWhereWithAggregatesInput = {
   isFresher?: Prisma.BoolWithAggregatesFilter<"Due"> | boolean
   isRequired?: Prisma.BoolWithAggregatesFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusWithAggregatesFilter<"Due"> | $Enums.DueStatus
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Due"> | Date | string | null
+  deletedBy?: Prisma.StringNullableWithAggregatesFilter<"Due"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Due"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Due"> | Date | string
 }
@@ -365,6 +389,8 @@ export type DueCreateInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
@@ -384,6 +410,8 @@ export type DueUncheckedCreateInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutDueInput
@@ -397,6 +425,8 @@ export type DueUpdateInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
@@ -416,6 +446,8 @@ export type DueUncheckedUpdateInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutDueNestedInput
@@ -432,6 +464,8 @@ export type DueCreateManyInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -444,6 +478,8 @@ export type DueUpdateManyMutationInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -459,6 +495,8 @@ export type DueUncheckedUpdateManyInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -484,6 +522,8 @@ export type DueCountOrderByAggregateInput = {
   isFresher?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  deletedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -503,6 +543,8 @@ export type DueMaxOrderByAggregateInput = {
   isFresher?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  deletedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -518,6 +560,8 @@ export type DueMinOrderByAggregateInput = {
   isFresher?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  deletedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -683,6 +727,8 @@ export type DueCreateWithoutInstitutionInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
@@ -700,6 +746,8 @@ export type DueUncheckedCreateWithoutInstitutionInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutDueInput
@@ -745,6 +793,8 @@ export type DueScalarWhereInput = {
   isFresher?: Prisma.BoolFilter<"Due"> | boolean
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
+  deletedAt?: Prisma.DateTimeNullableFilter<"Due"> | Date | string | null
+  deletedBy?: Prisma.StringNullableFilter<"Due"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Due"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Due"> | Date | string
 }
@@ -757,6 +807,8 @@ export type DueCreateWithoutSessionInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
@@ -774,6 +826,8 @@ export type DueUncheckedCreateWithoutSessionInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutDueInput
@@ -813,6 +867,8 @@ export type DueCreateWithoutOrganizationInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentCreateNestedManyWithoutDueInput
@@ -830,6 +886,8 @@ export type DueUncheckedCreateWithoutOrganizationInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.DueAssignmentUncheckedCreateNestedManyWithoutDueInput
@@ -869,6 +927,8 @@ export type DueCreateWithoutAssignmentsInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   institution?: Prisma.InstitutionCreateNestedOneWithoutDuesInput
@@ -887,6 +947,8 @@ export type DueUncheckedCreateWithoutAssignmentsInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -915,6 +977,8 @@ export type DueUpdateWithoutAssignmentsInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   institution?: Prisma.InstitutionUpdateOneWithoutDuesNestedInput
@@ -933,6 +997,8 @@ export type DueUncheckedUpdateWithoutAssignmentsInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -947,6 +1013,8 @@ export type DueCreateManyInstitutionInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -959,6 +1027,8 @@ export type DueUpdateWithoutInstitutionInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
@@ -976,6 +1046,8 @@ export type DueUncheckedUpdateWithoutInstitutionInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutDueNestedInput
@@ -991,6 +1063,8 @@ export type DueUncheckedUpdateManyWithoutInstitutionInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1005,6 +1079,8 @@ export type DueCreateManySessionInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1017,6 +1093,8 @@ export type DueUpdateWithoutSessionInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
@@ -1034,6 +1112,8 @@ export type DueUncheckedUpdateWithoutSessionInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutDueNestedInput
@@ -1049,6 +1129,8 @@ export type DueUncheckedUpdateManyWithoutSessionInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1063,6 +1145,8 @@ export type DueCreateManyOrganizationInput = {
   isFresher?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1075,6 +1159,8 @@ export type DueUpdateWithoutOrganizationInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUpdateManyWithoutDueNestedInput
@@ -1092,6 +1178,8 @@ export type DueUncheckedUpdateWithoutOrganizationInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.DueAssignmentUncheckedUpdateManyWithoutDueNestedInput
@@ -1107,6 +1195,8 @@ export type DueUncheckedUpdateManyWithoutOrganizationInput = {
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1153,6 +1243,8 @@ export type DueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   isFresher?: boolean
   isRequired?: boolean
   status?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
@@ -1173,6 +1265,8 @@ export type DueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   isFresher?: boolean
   isRequired?: boolean
   status?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   institution?: boolean | Prisma.Due$institutionArgs<ExtArgs>
@@ -1191,6 +1285,8 @@ export type DueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   isFresher?: boolean
   isRequired?: boolean
   status?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   institution?: boolean | Prisma.Due$institutionArgs<ExtArgs>
@@ -1209,11 +1305,13 @@ export type DueSelectScalar = {
   isFresher?: boolean
   isRequired?: boolean
   status?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "sessionId" | "institutionId" | "name" | "description" | "amount" | "isFresher" | "isRequired" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["due"]>
+export type DueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "sessionId" | "institutionId" | "name" | "description" | "amount" | "isFresher" | "isRequired" | "status" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["due"]>
 export type DueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
   institution?: boolean | Prisma.Due$institutionArgs<ExtArgs>
@@ -1251,6 +1349,8 @@ export type $DuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     isFresher: boolean
     isRequired: boolean
     status: $Enums.DueStatus
+    deletedAt: Date | null
+    deletedBy: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["due"]>
@@ -1690,6 +1790,8 @@ export interface DueFieldRefs {
   readonly isFresher: Prisma.FieldRef<"Due", 'Boolean'>
   readonly isRequired: Prisma.FieldRef<"Due", 'Boolean'>
   readonly status: Prisma.FieldRef<"Due", 'DueStatus'>
+  readonly deletedAt: Prisma.FieldRef<"Due", 'DateTime'>
+  readonly deletedBy: Prisma.FieldRef<"Due", 'String'>
   readonly createdAt: Prisma.FieldRef<"Due", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Due", 'DateTime'>
 }

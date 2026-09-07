@@ -758,6 +758,8 @@ export const DueScalarFieldEnum = {
   isFresher: 'isFresher',
   isRequired: 'isRequired',
   status: 'status',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -848,6 +850,8 @@ export const BankAccountScalarFieldEnum = {
   isDefault: 'isDefault',
   payoutDestinationId: 'payoutDestinationId',
   payoutDestinationStatus: 'payoutDestinationStatus',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

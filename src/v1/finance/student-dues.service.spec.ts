@@ -108,7 +108,7 @@ describe('FinanceService student dues across academic sessions', () => {
   it('does not auto-assign an unassigned due from a closed session', async () => {
     const prisma = {
       due: {
-        findUnique: jest.fn().mockResolvedValue({
+        findFirst: jest.fn().mockResolvedValue({
           id: 'due-old',
           organizationId: 'old-organization',
           sessionId: 'session-2026',
@@ -117,12 +117,10 @@ describe('FinanceService student dues across academic sessions', () => {
         }),
       },
       studentProfile: {
-        findUnique: jest
-          .fn()
-          .mockResolvedValue({
-            id: 'student-1',
-            currentAcademicLevel: { numericLevel: 200 },
-          }),
+        findUnique: jest.fn().mockResolvedValue({
+          id: 'student-1',
+          currentAcademicLevel: { numericLevel: 200 },
+        }),
       },
       dueAssignment: { findUnique: jest.fn().mockResolvedValue(null) },
       academicSession: {

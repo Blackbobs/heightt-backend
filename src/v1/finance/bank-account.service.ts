@@ -110,30 +110,43 @@ export class BankAccountService {
       },
     });
 
-    if (existing) {
+    if (existing && !existing.deletedAt) {
       throw new ConflictException('This bank account is already added');
     }
 
-    const count = await this.prisma.bankAccount.count({ where: { userId } });
+    const count = await this.prisma.bankAccount.count({
+      where: { userId, deletedAt: null },
+    });
     const isDefault = dto.isDefault || count === 0;
 
     if (isDefault) {
       await this.prisma.bankAccount.updateMany({
-        where: { userId, isDefault: true },
+        where: { userId, isDefault: true, deletedAt: null },
         data: { isDefault: false },
       });
     }
 
-    const bankAccount = await this.prisma.bankAccount.create({
-      data: {
-        userId,
-        bankName: verifiedBankName,
-        accountNumber: dto.accountNumber,
-        accountName: verified.accountName,
-        bankCode: dto.bankCode,
-        isDefault,
-      },
-    });
+    const accountData = {
+      bankName: verifiedBankName,
+      accountNumber: dto.accountNumber,
+      accountName: verified.accountName,
+      bankCode: dto.bankCode,
+      isDefault,
+      deletedAt: null,
+      deletedBy: null,
+    };
+    const bankAccount = existing
+      ? await this.prisma.bankAccount.update({
+          where: { id: existing.id },
+          data: {
+            ...accountData,
+            payoutDestinationId: null,
+            payoutDestinationStatus: null,
+          },
+        })
+      : await this.prisma.bankAccount.create({
+          data: { userId, ...accountData },
+        });
 
     await this.cacheService.delete(`bank-accounts:user:${userId}`);
     this.logger.log(`Bank account created: ${bankAccount.id}`);
@@ -148,7 +161,7 @@ export class BankAccountService {
     }
 
     const accounts = await this.prisma.bankAccount.findMany({
-      where: { userId },
+      where: { userId, deletedAt: null },
       orderBy: { isDefault: 'desc' },
     });
 
@@ -157,8 +170,8 @@ export class BankAccountService {
   }
 
   async getBankAccountById(id: string, userId: string) {
-    const bankAccount = await this.prisma.bankAccount.findUnique({
-      where: { id },
+    const bankAccount = await this.prisma.bankAccount.findFirst({
+      where: { id, deletedAt: null },
     });
 
     if (!bankAccount) {
@@ -188,7 +201,7 @@ export class BankAccountService {
 
     if (dto.isDefault) {
       await this.prisma.bankAccount.updateMany({
-        where: { userId, isDefault: true, NOT: { id } },
+        where: { userId, isDefault: true, deletedAt: null, NOT: { id } },
         data: { isDefault: false },
       });
     }
@@ -219,7 +232,7 @@ export class BankAccountService {
 
     if (bankAccount.isDefault) {
       const nextAccount = await this.prisma.bankAccount.findFirst({
-        where: { userId, NOT: { id } },
+        where: { userId, deletedAt: null, NOT: { id } },
       });
 
       if (nextAccount) {
@@ -230,9 +243,23 @@ export class BankAccountService {
       }
     }
 
-    await this.prisma.bankAccount.delete({
-      where: { id },
-    });
+    await this.prisma.$transaction([
+      this.prisma.bankAccount.update({
+        where: { id },
+        data: {
+          isDefault: false,
+          deletedAt: new Date(),
+          deletedBy: userId,
+        },
+      }),
+      this.prisma.activityLog.create({
+        data: {
+          userId,
+          activity: 'BANK_ACCOUNT_DELETED',
+          details: JSON.stringify({ bankAccountId: id }),
+        },
+      }),
+    ]);
 
     await this.cacheService.delete(`bank-accounts:user:${userId}`);
     return { message: 'Bank account deleted successfully' };
@@ -242,7 +269,7 @@ export class BankAccountService {
     await this.getBankAccountById(id, userId);
 
     await this.prisma.bankAccount.updateMany({
-      where: { userId, isDefault: true, NOT: { id } },
+      where: { userId, isDefault: true, deletedAt: null, NOT: { id } },
       data: { isDefault: false },
     });
 

@@ -256,9 +256,9 @@ export class FinanceService {
         _count: { _all: true },
         _sum: { amount: true },
       }),
-      this.prisma.due.count({ where: { organizationId } }),
+      this.prisma.due.count({ where: { organizationId, deletedAt: null } }),
       this.prisma.due.aggregate({
-        where: { organizationId },
+        where: { organizationId, deletedAt: null },
         _sum: { amount: true },
       }),
       this.prisma.dueAssignment.aggregate({
@@ -886,8 +886,8 @@ export class FinanceService {
   async assignDueToStudents(userId: string, dueId: string, dto: AssignDueDto) {
     this.logger.log(`Assigning due ${dueId} to students`);
 
-    const due = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const due = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
     });
     if (!due) {
       throw new NotFoundException('Due not found');
@@ -951,8 +951,8 @@ export class FinanceService {
       },
     });
 
-    const dueWithOrg = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const dueWithOrg = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
       select: { organizationId: true },
     });
 
@@ -975,8 +975,8 @@ export class FinanceService {
   }
 
   async deleteDue(userId: string, dueId: string) {
-    const due = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const due = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
       select: {
         id: true,
         name: true,
@@ -1004,7 +1004,14 @@ export class FinanceService {
     }
 
     await this.prisma.$transaction([
-      this.prisma.due.delete({ where: { id: dueId } }),
+      this.prisma.due.update({
+        where: { id: dueId },
+        data: {
+          status: 'CANCELLED',
+          deletedAt: new Date(),
+          deletedBy: userId,
+        },
+      }),
       this.prisma.activityLog.create({
         data: {
           userId,
@@ -1023,7 +1030,7 @@ export class FinanceService {
   }
 
   async getDues(organizationId?: string, page: number = 1, limit: number = 10) {
-    const where: any = {};
+    const where: any = { deletedAt: null };
     if (organizationId) {
       where.organizationId = organizationId;
     }
@@ -1114,6 +1121,7 @@ export class FinanceService {
       ? await this.prisma.due.findMany({
           where: {
             organizationId: { in: organizationIds },
+            deletedAt: null,
             isFresher,
             status: 'ACTIVE',
             OR: [
@@ -1355,8 +1363,8 @@ export class FinanceService {
     }
 
     // Case 2: Due ID provided (auto-assign on payment)
-    const due = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const due = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
     });
 
     if (!due) {
@@ -1549,8 +1557,8 @@ export class FinanceService {
       // Case 2: User has a due ID (auto-assign on payment)
       else if (dto.dueId) {
         // Find the due
-        due = await tx.due.findUnique({
-          where: { id: dto.dueId },
+        due = await tx.due.findFirst({
+          where: { id: dto.dueId, deletedAt: null },
         });
 
         if (!due) {
@@ -2509,6 +2517,7 @@ export class FinanceService {
       where: {
         organization: where,
         status: 'ACTIVE',
+        deletedAt: null,
       },
     });
 

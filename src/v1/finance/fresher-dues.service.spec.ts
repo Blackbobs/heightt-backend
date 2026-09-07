@@ -126,7 +126,7 @@ describe('Fresher dues eligibility', () => {
   it('rejects auto-assignment payment for the wrong level', async () => {
     const prisma = {
       due: {
-        findUnique: jest
+        findFirst: jest
           .fn()
           .mockResolvedValue({ isFresher: true, status: 'ACTIVE' }),
       },
@@ -174,7 +174,7 @@ describe('Fresher dues eligibility', () => {
 
   it('rejects assignment when none of the selected students match the audience', async () => {
     const prisma = {
-      due: { findUnique: jest.fn().mockResolvedValue({ isFresher: true }) },
+      due: { findFirst: jest.fn().mockResolvedValue({ isFresher: true }) },
       studentProfile: { findMany: jest.fn().mockResolvedValue([]) },
       dueAssignment: { createManyAndReturn: jest.fn() },
     };

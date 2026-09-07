@@ -124,6 +124,7 @@ export class GuestPaymentService {
     return this.prisma.due.findMany({
       where: {
         status: 'ACTIVE',
+        deletedAt: null,
         isFresher: level.numericLevel === 100,
         organization: {
           status: 'ACTIVE',
@@ -177,7 +178,7 @@ export class GuestPaymentService {
     }
 
     const due = await this.prisma.due.findFirst({
-      where: { id: dto.dueId, status: 'ACTIVE' },
+      where: { id: dto.dueId, status: 'ACTIVE', deletedAt: null },
       include: { organization: true },
     });
     if (!due || due.organization.status !== 'ACTIVE') {
@@ -412,7 +413,9 @@ export class GuestPaymentService {
           )) {
             const dueId = (payment.metadata as any)?.guestDueId;
             if (!dueId) continue;
-            const due = await tx.due.findUnique({ where: { id: dueId } });
+            const due = await tx.due.findFirst({
+              where: { id: dueId, deletedAt: null },
+            });
             if (!due || due.organizationId !== payment.organizationId) continue;
             const assignment = await tx.dueAssignment.upsert({
               where: {
