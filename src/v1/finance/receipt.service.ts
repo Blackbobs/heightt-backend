@@ -492,12 +492,15 @@ export class ReceiptService {
       throw new NotFoundException('Payment not found');
     }
 
+    const paymentMetadata = (payment.metadata as any) || {};
     const dto: GenerateReceiptDto = {
       paymentId: payment.id,
-      payerName: payment.payer?.profile?.firstName
-        ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`
-        : payment.payer?.username || 'Unknown',
-      payerEmail: payment.payer?.email || '',
+      payerName:
+        paymentMetadata.guestName ||
+        (payment.payer?.profile?.firstName
+          ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`
+          : payment.payer?.username || 'Unknown'),
+      payerEmail: paymentMetadata.guestEmail || payment.payer?.email || '',
       description: payment.description || 'Payment',
     };
 
