@@ -54,11 +54,58 @@ model User {
   wallet                  Wallet?
   withdrawals             Withdrawal[]
   bankAccounts            BankAccount[]
+  guestPayer              GuestPayer?               @relation("GuestPlaceholderUser")
+  claimedGuestPayers      GuestPayer[]              @relation("GuestClaimedByUser")
 
   @@index([email])
   @@index([username])
   @@index([status])
   @@map("users")
+}
+
+model GuestPayer {
+  id                String           @id @default(cuid())
+  email             String
+  firstName         String
+  lastName          String
+  phone             String?
+  matricNumber      String?
+  institutionId     String
+  facultyId         String?
+  departmentId      String?
+  academicLevelId   String?
+  placeholderUserId String           @unique
+  accessTokenHash   String
+  claimedById       String?
+  claimedAt         DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  placeholderUser   User             @relation("GuestPlaceholderUser", fields: [placeholderUserId], references: [id])
+  claimedBy         User?            @relation("GuestClaimedByUser", fields: [claimedById], references: [id])
+  institution       Institution      @relation(fields: [institutionId], references: [id])
+  faculty           Faculty?         @relation(fields: [facultyId], references: [id])
+  department        Department?      @relation(fields: [departmentId], references: [id])
+  academicLevel     AcademicLevel?   @relation(fields: [academicLevelId], references: [id])
+  claimCodes        GuestClaimCode[]
+
+  @@index([email])
+  @@index([institutionId])
+  @@index([claimedById])
+  @@map("guest_payers")
+}
+
+model GuestClaimCode {
+  id           String     @id @default(cuid())
+  guestPayerId String
+  codeHash     String
+  expiresAt    DateTime
+  attempts     Int        @default(0)
+  usedAt       DateTime?
+  createdAt    DateTime   @default(now())
+  guestPayer   GuestPayer @relation(fields: [guestPayerId], references: [id], onDelete: Cascade)
+
+  @@index([guestPayerId, expiresAt])
+  @@map("guest_claim_codes")
 }
 
 model Session {
@@ -168,6 +215,7 @@ model Institution {
   faculties     Faculty[]
   organizations Organization[]
   students      StudentProfile[]
+  guestPayers   GuestPayer[]
 
   @@index([code])
   @@map("institutions")
@@ -190,6 +238,7 @@ model Faculty {
   institution      Institution       @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   organizations    Organization[]
   students         StudentProfile[]
+  guestPayers      GuestPayer[]
 
   @@unique([institutionId, code])
   @@index([institutionId])
@@ -215,6 +264,7 @@ model Department {
   organizations    Organization[]
   students         StudentAcademicRecord[]
   studentProfiles  StudentProfile[]
+  guestPayers      GuestPayer[]
 
   @@unique([facultyId, code])
   @@index([facultyId])
@@ -237,6 +287,7 @@ model AcademicLevel {
   students         StudentProfile[]
   promotionsFrom   StudentPromotion[]      @relation("FromLevel")
   promotionsTo     StudentPromotion[]      @relation("ToLevel")
+  guestPayers      GuestPayer[]
 
   @@unique([departmentId, name])
   @@index([departmentId])
@@ -842,6 +893,7 @@ model Due {
   name           String
   description    String?
   amount         Int
+  isFresher      Boolean          @default(false)
   isRequired     Boolean          @default(true)
   status         DueStatus        @default(ACTIVE)
   createdAt      DateTime         @default(now())

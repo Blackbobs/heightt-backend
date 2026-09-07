@@ -25,6 +25,7 @@ export interface PendingPaymentData {
   category?: string;
   reference?: string;
   metadata?: Record<string, any>;
+  customer?: { email: string; name: string; phone?: string };
 }
 
 /**
@@ -129,14 +130,17 @@ export class BachsService {
     }
 
     // 2. Get or create Bachs customer
-    const customerName = user.profile
-      ? `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim()
-      : user.username || 'Customer';
+    const customerName =
+      paymentData.customer?.name ||
+      (user.profile
+        ? `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim()
+        : user.username || 'Customer');
+    const customerEmail = paymentData.customer?.email || user.email;
 
     const bachsCustomer = await this.bachsClient.getOrCreateCustomer(
-      user.email,
+      customerEmail,
       customerName || 'Customer',
-      undefined,
+      paymentData.customer?.phone,
     );
 
     // 3. Create pending payment record
@@ -316,7 +320,7 @@ export class BachsService {
     const checkoutPayload = {
       customer: {
         customer_id: bachsCustomer.id, // FIX: Use the Bachs customer ID
-        email: user.email, // Also include email as fallback
+        email: customerEmail, // Also include email as fallback
         name: customerName || 'Customer', // Include name as well
       },
       pricing: {
@@ -333,6 +337,7 @@ export class BachsService {
         baseAmount: paymentData.amount,
         platformFee,
         expectedSettlementAmount: settlementAmount,
+        ...(paymentData.metadata || {}),
       },
       success_url: callbackUrl.toString(),
       cancel_url: cancellationUrl.toString(),
@@ -675,6 +680,7 @@ export class BachsService {
               bachsCheckoutId: checkoutId,
               bachsCustomerId: customerId,
               metadata: {
+                ...((pendingPayment.metadata as any) || {}),
                 pendingPaymentId: pendingPayment.id,
                 baseAmount: pendingPayment.amount,
                 platformFee,

@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  GuestPayer: 'GuestPayer',
+  GuestClaimCode: 'GuestClaimCode',
   Session: 'Session',
   PasswordReset: 'PasswordReset',
   EmailVerification: 'EmailVerification',
@@ -159,6 +161,41 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const GuestPayerScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  phone: 'phone',
+  matricNumber: 'matricNumber',
+  institutionId: 'institutionId',
+  facultyId: 'facultyId',
+  departmentId: 'departmentId',
+  academicLevelId: 'academicLevelId',
+  placeholderUserId: 'placeholderUserId',
+  accessTokenHash: 'accessTokenHash',
+  claimedById: 'claimedById',
+  claimedAt: 'claimedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GuestPayerScalarFieldEnum = (typeof GuestPayerScalarFieldEnum)[keyof typeof GuestPayerScalarFieldEnum]
+
+
+export const GuestClaimCodeScalarFieldEnum = {
+  id: 'id',
+  guestPayerId: 'guestPayerId',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  attempts: 'attempts',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GuestClaimCodeScalarFieldEnum = (typeof GuestClaimCodeScalarFieldEnum)[keyof typeof GuestClaimCodeScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
@@ -718,6 +755,7 @@ export const DueScalarFieldEnum = {
   name: 'name',
   description: 'description',
   amount: 'amount',
+  isFresher: 'isFresher',
   isRequired: 'isRequired',
   status: 'status',
   createdAt: 'createdAt',

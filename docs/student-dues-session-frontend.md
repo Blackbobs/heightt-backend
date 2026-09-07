@@ -1,5 +1,7 @@
 # Student dues across academic sessions
 
+> Audience filtering update: see [Fresher dues integration](fresher-dues-frontend.md). Current-level eligibility also applies to existing assignments and previous-session arrears. Guest checkout now needs an academic level.
+
 Use `GET /api/v1/finance/dues/student` as the source of truth for the authenticated student's current dues and unpaid historical obligations.
 
 Closing an academic session does not erase an existing unpaid assignment. Assigned dues from previous sessions remain visible even if the student's old organisation membership is no longer active. Only current-session and cross-session dues can be newly auto-assigned.

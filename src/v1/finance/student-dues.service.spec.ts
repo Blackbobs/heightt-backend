@@ -45,6 +45,7 @@ describe('FinanceService student dues across academic sessions', () => {
         findUnique: jest.fn().mockResolvedValue({
           id: 'student-1',
           institutionId: 'institution-1',
+          currentAcademicLevel: { numericLevel: 200 },
         }),
       },
       organizationMembership: { findMany: jest.fn().mockResolvedValue([]) },
@@ -81,7 +82,10 @@ describe('FinanceService student dues across academic sessions', () => {
           id: 'assignment-old',
           amount: 50_000,
           isPaid: false,
-          student: { userId: 'user-1' },
+          student: {
+            userId: 'user-1',
+            currentAcademicLevel: { numericLevel: 200 },
+          },
           due: { status: 'ACTIVE' },
           duePayments: [],
         }),
@@ -113,7 +117,12 @@ describe('FinanceService student dues across academic sessions', () => {
         }),
       },
       studentProfile: {
-        findUnique: jest.fn().mockResolvedValue({ id: 'student-1' }),
+        findUnique: jest
+          .fn()
+          .mockResolvedValue({
+            id: 'student-1',
+            currentAcademicLevel: { numericLevel: 200 },
+          }),
       },
       dueAssignment: { findUnique: jest.fn().mockResolvedValue(null) },
       academicSession: {

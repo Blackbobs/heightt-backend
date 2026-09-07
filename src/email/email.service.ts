@@ -75,7 +75,7 @@ export class EmailService {
       const fromEmail = this.configService.get<string>('SENDLIB_FROM_EMAIL');
 
       this.logger.debug(
-        `Email configuration: API Key set: ${!!apiKey}, From: ${fromEmail || 'noreply@heightt.com'}`,
+        `Email configuration: API Key set: ${!!apiKey}, From: ${fromEmail || 'heightt.finance@gmail.com'}`,
       );
 
       if (!apiKey) {
@@ -95,7 +95,7 @@ export class EmailService {
       const cleanApiKey = apiKey.trim().replace(/^["']|["']$/g, '');
 
       const requestBody: Record<string, any> = {
-        from: fromEmail?.trim() || 'noreply@heightt.com',
+        from: fromEmail?.trim() || 'heightt.finance@gmail.com',
         to: to.trim(),
         subject: subject.trim(),
         html: html,

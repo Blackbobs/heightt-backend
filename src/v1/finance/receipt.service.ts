@@ -101,6 +101,7 @@ export class ReceiptService {
     // Generate receipt number
     const receiptNumber = await this.generateReceiptNumber();
     const totalAmount = payment.amount + payment.serviceFee;
+    const paymentMetadata = (payment.metadata as any) || {};
 
     const receipt = await this.prisma.receipt.create({
       data: {
@@ -115,13 +116,15 @@ export class ReceiptService {
         currency: 'NGN',
         payerName:
           dto.payerName ||
+          paymentMetadata.guestName ||
           payment.payer?.profile?.firstName +
             ' ' +
             payment.payer?.profile?.lastName ||
           payment.payer?.username ||
           'Unknown',
-        payerEmail: dto.payerEmail || payment.payer?.email || '',
-        payerPhone: dto.payerPhone,
+        payerEmail:
+          dto.payerEmail || paymentMetadata.guestEmail || payment.payer?.email || '',
+        payerPhone: dto.payerPhone || paymentMetadata.guestPhone,
         paymentMethod: payment.paymentMethod,
         paymentDate: payment.paidAt || payment.createdAt,
         description: dto.description || payment.description,
@@ -882,7 +885,7 @@ export class ReceiptService {
       .font('Helvetica')
       .fontSize(8)
       .fillColor(muted)
-      .text('support@heightt.com  •  heightt.app', left, footerY + 31)
+      .text('heightt.finance@gmail.com  •  heightt.app', left, footerY + 31)
       .text(
         'This is a computer-generated receipt.\nNo signature is required.',
         335,

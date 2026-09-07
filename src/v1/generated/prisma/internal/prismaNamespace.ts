@@ -398,6 +398,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  GuestPayer: 'GuestPayer',
+  GuestClaimCode: 'GuestClaimCode',
   Session: 'Session',
   PasswordReset: 'PasswordReset',
   EmailVerification: 'EmailVerification',
@@ -487,7 +489,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "withdrawalWebhook" | "bankAccount" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
+    modelProps: "user" | "guestPayer" | "guestClaimCode" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "withdrawalWebhook" | "bankAccount" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -562,6 +564,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    GuestPayer: {
+      payload: Prisma.$GuestPayerPayload<ExtArgs>
+      fields: Prisma.GuestPayerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GuestPayerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GuestPayerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>
+        }
+        findFirst: {
+          args: Prisma.GuestPayerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GuestPayerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>
+        }
+        findMany: {
+          args: Prisma.GuestPayerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>[]
+        }
+        create: {
+          args: Prisma.GuestPayerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>
+        }
+        createMany: {
+          args: Prisma.GuestPayerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GuestPayerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>[]
+        }
+        delete: {
+          args: Prisma.GuestPayerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>
+        }
+        update: {
+          args: Prisma.GuestPayerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>
+        }
+        deleteMany: {
+          args: Prisma.GuestPayerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GuestPayerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GuestPayerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>[]
+        }
+        upsert: {
+          args: Prisma.GuestPayerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestPayerPayload>
+        }
+        aggregate: {
+          args: Prisma.GuestPayerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGuestPayer>
+        }
+        groupBy: {
+          args: Prisma.GuestPayerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuestPayerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GuestPayerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuestPayerCountAggregateOutputType> | number
+        }
+      }
+    }
+    GuestClaimCode: {
+      payload: Prisma.$GuestClaimCodePayload<ExtArgs>
+      fields: Prisma.GuestClaimCodeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GuestClaimCodeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GuestClaimCodeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>
+        }
+        findFirst: {
+          args: Prisma.GuestClaimCodeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GuestClaimCodeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>
+        }
+        findMany: {
+          args: Prisma.GuestClaimCodeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>[]
+        }
+        create: {
+          args: Prisma.GuestClaimCodeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>
+        }
+        createMany: {
+          args: Prisma.GuestClaimCodeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GuestClaimCodeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>[]
+        }
+        delete: {
+          args: Prisma.GuestClaimCodeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>
+        }
+        update: {
+          args: Prisma.GuestClaimCodeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>
+        }
+        deleteMany: {
+          args: Prisma.GuestClaimCodeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GuestClaimCodeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GuestClaimCodeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>[]
+        }
+        upsert: {
+          args: Prisma.GuestClaimCodeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestClaimCodePayload>
+        }
+        aggregate: {
+          args: Prisma.GuestClaimCodeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGuestClaimCode>
+        }
+        groupBy: {
+          args: Prisma.GuestClaimCodeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuestClaimCodeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GuestClaimCodeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuestClaimCodeCountAggregateOutputType> | number
         }
       }
     }
@@ -6097,6 +6247,41 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const GuestPayerScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  phone: 'phone',
+  matricNumber: 'matricNumber',
+  institutionId: 'institutionId',
+  facultyId: 'facultyId',
+  departmentId: 'departmentId',
+  academicLevelId: 'academicLevelId',
+  placeholderUserId: 'placeholderUserId',
+  accessTokenHash: 'accessTokenHash',
+  claimedById: 'claimedById',
+  claimedAt: 'claimedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GuestPayerScalarFieldEnum = (typeof GuestPayerScalarFieldEnum)[keyof typeof GuestPayerScalarFieldEnum]
+
+
+export const GuestClaimCodeScalarFieldEnum = {
+  id: 'id',
+  guestPayerId: 'guestPayerId',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  attempts: 'attempts',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type GuestClaimCodeScalarFieldEnum = (typeof GuestClaimCodeScalarFieldEnum)[keyof typeof GuestClaimCodeScalarFieldEnum]
+
+
 export const SessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -6654,6 +6839,7 @@ export const DueScalarFieldEnum = {
   name: 'name',
   description: 'description',
   amount: 'amount',
+  isFresher: 'isFresher',
   isRequired: 'isRequired',
   status: 'status',
   createdAt: 'createdAt',
@@ -7406,21 +7592,35 @@ export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'UserStatus[]'
  */
 export type ListEnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus[]'>
+    
 
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
 
 
 /**
  * Reference to a field of type 'AuthClientType'
  */
 export type EnumAuthClientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthClientType'>
-
+    
 
 
 /**
  * Reference to a field of type 'AuthClientType[]'
  */
 export type ListEnumAuthClientTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthClientType[]'>
-
+    
 
 
 /**
@@ -7518,20 +7718,6 @@ export type EnumDepartmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'DepartmentStatus[]'
  */
 export type ListEnumDepartmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepartmentStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -8442,6 +8628,8 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  guestPayer?: Prisma.GuestPayerOmit
+  guestClaimCode?: Prisma.GuestClaimCodeOmit
   session?: Prisma.SessionOmit
   passwordReset?: Prisma.PasswordResetOmit
   emailVerification?: Prisma.EmailVerificationOmit
@@ -8578,3 +8766,4 @@ export type PrismaAction =
  * `PrismaClient` proxy available in interactive transactions.
  */
 export type TransactionClient = Omit<DefaultPrismaClient, runtime.ITXClientDenyList>
+

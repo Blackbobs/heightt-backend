@@ -648,6 +648,7 @@ export class PermissionService {
           PermissionService.PERMISSIONS.ORGANIZATION_UPDATE,
           PermissionService.PERMISSIONS.ORGANIZATION_MANAGE,
           PermissionService.PERMISSIONS.FINANCE_READ,
+          PermissionService.PERMISSIONS.FINANCE_EXPORT,
           PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,
           PermissionService.PERMISSIONS.COMMUNICATION_CREATE,
           PermissionService.PERMISSIONS.FINANCE_WITHDRAWAL_CREATE,

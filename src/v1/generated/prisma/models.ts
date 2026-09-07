@@ -9,6 +9,8 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/GuestPayer'
+export type * from './models/GuestClaimCode'
 export type * from './models/Session'
 export type * from './models/PasswordReset'
 export type * from './models/EmailVerification'

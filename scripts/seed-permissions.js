@@ -486,6 +486,7 @@ const DEFAULT_PERMISSIONS = {
     'organization:update',
     'organization:manage',
     'finance:read',
+    'finance:export',
     'finance:due:create',
     'finance:due:assign',
     'finance:due:view',

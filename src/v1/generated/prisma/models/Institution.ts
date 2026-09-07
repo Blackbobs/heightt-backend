@@ -300,6 +300,7 @@ export type InstitutionWhereInput = {
   faculties?: Prisma.FacultyListRelationFilter
   organizations?: Prisma.OrganizationListRelationFilter
   students?: Prisma.StudentProfileListRelationFilter
+  guestPayers?: Prisma.GuestPayerListRelationFilter
 }
 
 export type InstitutionOrderByWithRelationInput = {
@@ -328,6 +329,7 @@ export type InstitutionOrderByWithRelationInput = {
   faculties?: Prisma.FacultyOrderByRelationAggregateInput
   organizations?: Prisma.OrganizationOrderByRelationAggregateInput
   students?: Prisma.StudentProfileOrderByRelationAggregateInput
+  guestPayers?: Prisma.GuestPayerOrderByRelationAggregateInput
 }
 
 export type InstitutionWhereUniqueInput = Prisma.AtLeast<{
@@ -359,6 +361,7 @@ export type InstitutionWhereUniqueInput = Prisma.AtLeast<{
   faculties?: Prisma.FacultyListRelationFilter
   organizations?: Prisma.OrganizationListRelationFilter
   students?: Prisma.StudentProfileListRelationFilter
+  guestPayers?: Prisma.GuestPayerListRelationFilter
 }, "id" | "code">
 
 export type InstitutionOrderByWithAggregationInput = {
@@ -437,6 +440,7 @@ export type InstitutionCreateInput = {
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateInput = {
@@ -465,6 +469,7 @@ export type InstitutionUncheckedCreateInput = {
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUpdateInput = {
@@ -493,6 +498,7 @@ export type InstitutionUpdateInput = {
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateInput = {
@@ -521,6 +527,7 @@ export type InstitutionUncheckedUpdateInput = {
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateManyInput = {
@@ -589,6 +596,11 @@ export type InstitutionUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type InstitutionScalarRelationFilter = {
+  is?: Prisma.InstitutionWhereInput
+  isNot?: Prisma.InstitutionWhereInput
+}
+
 export type InstitutionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -655,14 +667,23 @@ export type InstitutionMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type InstitutionScalarRelationFilter = {
-  is?: Prisma.InstitutionWhereInput
-  isNot?: Prisma.InstitutionWhereInput
-}
-
 export type InstitutionNullableScalarRelationFilter = {
   is?: Prisma.InstitutionWhereInput | null
   isNot?: Prisma.InstitutionWhereInput | null
+}
+
+export type InstitutionCreateNestedOneWithoutGuestPayersInput = {
+  create?: Prisma.XOR<Prisma.InstitutionCreateWithoutGuestPayersInput, Prisma.InstitutionUncheckedCreateWithoutGuestPayersInput>
+  connectOrCreate?: Prisma.InstitutionCreateOrConnectWithoutGuestPayersInput
+  connect?: Prisma.InstitutionWhereUniqueInput
+}
+
+export type InstitutionUpdateOneRequiredWithoutGuestPayersNestedInput = {
+  create?: Prisma.XOR<Prisma.InstitutionCreateWithoutGuestPayersInput, Prisma.InstitutionUncheckedCreateWithoutGuestPayersInput>
+  connectOrCreate?: Prisma.InstitutionCreateOrConnectWithoutGuestPayersInput
+  upsert?: Prisma.InstitutionUpsertWithoutGuestPayersInput
+  connect?: Prisma.InstitutionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InstitutionUpdateToOneWithWhereWithoutGuestPayersInput, Prisma.InstitutionUpdateWithoutGuestPayersInput>, Prisma.InstitutionUncheckedUpdateWithoutGuestPayersInput>
 }
 
 export type EnumInstitutionStatusFieldUpdateOperationsInput = {
@@ -759,6 +780,134 @@ export type InstitutionUpdateOneWithoutDuesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InstitutionUpdateToOneWithWhereWithoutDuesInput, Prisma.InstitutionUpdateWithoutDuesInput>, Prisma.InstitutionUncheckedUpdateWithoutDuesInput>
 }
 
+export type InstitutionCreateWithoutGuestPayersInput = {
+  id?: string
+  name: string
+  shortName: string
+  code: string
+  logo?: string | null
+  website?: string | null
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  country?: string | null
+  status?: $Enums.InstitutionStatus
+  createdBy?: string | null
+  updatedBy?: string | null
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AcademicSessionCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
+  students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+}
+
+export type InstitutionUncheckedCreateWithoutGuestPayersInput = {
+  id?: string
+  name: string
+  shortName: string
+  code: string
+  logo?: string | null
+  website?: string | null
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  city?: string | null
+  state?: string | null
+  country?: string | null
+  status?: $Enums.InstitutionStatus
+  createdBy?: string | null
+  updatedBy?: string | null
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutInstitutionInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutInstitutionInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
+  faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
+  students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+}
+
+export type InstitutionCreateOrConnectWithoutGuestPayersInput = {
+  where: Prisma.InstitutionWhereUniqueInput
+  create: Prisma.XOR<Prisma.InstitutionCreateWithoutGuestPayersInput, Prisma.InstitutionUncheckedCreateWithoutGuestPayersInput>
+}
+
+export type InstitutionUpsertWithoutGuestPayersInput = {
+  update: Prisma.XOR<Prisma.InstitutionUpdateWithoutGuestPayersInput, Prisma.InstitutionUncheckedUpdateWithoutGuestPayersInput>
+  create: Prisma.XOR<Prisma.InstitutionCreateWithoutGuestPayersInput, Prisma.InstitutionUncheckedCreateWithoutGuestPayersInput>
+  where?: Prisma.InstitutionWhereInput
+}
+
+export type InstitutionUpdateToOneWithWhereWithoutGuestPayersInput = {
+  where?: Prisma.InstitutionWhereInput
+  data: Prisma.XOR<Prisma.InstitutionUpdateWithoutGuestPayersInput, Prisma.InstitutionUncheckedUpdateWithoutGuestPayersInput>
+}
+
+export type InstitutionUpdateWithoutGuestPayersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  shortName?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstitutionStatusFieldUpdateOperationsInput | $Enums.InstitutionStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AcademicSessionUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
+  organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
+  students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+}
+
+export type InstitutionUncheckedUpdateWithoutGuestPayersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  shortName?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  state?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumInstitutionStatusFieldUpdateOperationsInput | $Enums.InstitutionStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutInstitutionNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutInstitutionNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
+  faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
+  students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+}
+
 export type InstitutionCreateWithoutFacultiesInput = {
   id?: string
   name: string
@@ -784,6 +933,7 @@ export type InstitutionCreateWithoutFacultiesInput = {
   dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutFacultiesInput = {
@@ -811,6 +961,7 @@ export type InstitutionUncheckedCreateWithoutFacultiesInput = {
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutFacultiesInput = {
@@ -854,6 +1005,7 @@ export type InstitutionUpdateWithoutFacultiesInput = {
   dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutFacultiesInput = {
@@ -881,6 +1033,7 @@ export type InstitutionUncheckedUpdateWithoutFacultiesInput = {
   dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutSessionsInput = {
@@ -908,6 +1061,7 @@ export type InstitutionCreateWithoutSessionsInput = {
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutSessionsInput = {
@@ -935,6 +1089,7 @@ export type InstitutionUncheckedCreateWithoutSessionsInput = {
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutSessionsInput = {
@@ -978,6 +1133,7 @@ export type InstitutionUpdateWithoutSessionsInput = {
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutSessionsInput = {
@@ -1005,6 +1161,7 @@ export type InstitutionUncheckedUpdateWithoutSessionsInput = {
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutStudentsInput = {
@@ -1032,6 +1189,7 @@ export type InstitutionCreateWithoutStudentsInput = {
   dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutStudentsInput = {
@@ -1059,6 +1217,7 @@ export type InstitutionUncheckedCreateWithoutStudentsInput = {
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutStudentsInput = {
@@ -1102,6 +1261,7 @@ export type InstitutionUpdateWithoutStudentsInput = {
   dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutStudentsInput = {
@@ -1129,6 +1289,7 @@ export type InstitutionUncheckedUpdateWithoutStudentsInput = {
   dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutOrganizationsInput = {
@@ -1156,6 +1317,7 @@ export type InstitutionCreateWithoutOrganizationsInput = {
   dues?: Prisma.DueCreateNestedManyWithoutInstitutionInput
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutOrganizationsInput = {
@@ -1183,6 +1345,7 @@ export type InstitutionUncheckedCreateWithoutOrganizationsInput = {
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutInstitutionInput
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutOrganizationsInput = {
@@ -1226,6 +1389,7 @@ export type InstitutionUpdateWithoutOrganizationsInput = {
   dues?: Prisma.DueUpdateManyWithoutInstitutionNestedInput
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutOrganizationsInput = {
@@ -1253,6 +1417,7 @@ export type InstitutionUncheckedUpdateWithoutOrganizationsInput = {
   dues?: Prisma.DueUncheckedUpdateManyWithoutInstitutionNestedInput
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutAdminsInput = {
@@ -1280,6 +1445,7 @@ export type InstitutionCreateWithoutAdminsInput = {
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutAdminsInput = {
@@ -1307,6 +1473,7 @@ export type InstitutionUncheckedCreateWithoutAdminsInput = {
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutAdminsInput = {
@@ -1350,6 +1517,7 @@ export type InstitutionUpdateWithoutAdminsInput = {
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutAdminsInput = {
@@ -1377,6 +1545,7 @@ export type InstitutionUncheckedUpdateWithoutAdminsInput = {
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionCreateWithoutDuesInput = {
@@ -1404,6 +1573,7 @@ export type InstitutionCreateWithoutDuesInput = {
   faculties?: Prisma.FacultyCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionUncheckedCreateWithoutDuesInput = {
@@ -1431,6 +1601,7 @@ export type InstitutionUncheckedCreateWithoutDuesInput = {
   faculties?: Prisma.FacultyUncheckedCreateNestedManyWithoutInstitutionInput
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutInstitutionInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutInstitutionInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutInstitutionInput
 }
 
 export type InstitutionCreateOrConnectWithoutDuesInput = {
@@ -1474,6 +1645,7 @@ export type InstitutionUpdateWithoutDuesInput = {
   faculties?: Prisma.FacultyUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutInstitutionNestedInput
 }
 
 export type InstitutionUncheckedUpdateWithoutDuesInput = {
@@ -1501,6 +1673,7 @@ export type InstitutionUncheckedUpdateWithoutDuesInput = {
   faculties?: Prisma.FacultyUncheckedUpdateManyWithoutInstitutionNestedInput
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutInstitutionNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutInstitutionNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutInstitutionNestedInput
 }
 
 
@@ -1515,6 +1688,7 @@ export type InstitutionCountOutputType = {
   faculties: number
   organizations: number
   students: number
+  guestPayers: number
 }
 
 export type InstitutionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1524,6 +1698,7 @@ export type InstitutionCountOutputTypeSelect<ExtArgs extends runtime.Types.Exten
   faculties?: boolean | InstitutionCountOutputTypeCountFacultiesArgs
   organizations?: boolean | InstitutionCountOutputTypeCountOrganizationsArgs
   students?: boolean | InstitutionCountOutputTypeCountStudentsArgs
+  guestPayers?: boolean | InstitutionCountOutputTypeCountGuestPayersArgs
 }
 
 /**
@@ -1578,6 +1753,13 @@ export type InstitutionCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.
   where?: Prisma.StudentProfileWhereInput
 }
 
+/**
+ * InstitutionCountOutputType without action
+ */
+export type InstitutionCountOutputTypeCountGuestPayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GuestPayerWhereInput
+}
+
 
 export type InstitutionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1605,6 +1787,7 @@ export type InstitutionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   faculties?: boolean | Prisma.Institution$facultiesArgs<ExtArgs>
   organizations?: boolean | Prisma.Institution$organizationsArgs<ExtArgs>
   students?: boolean | Prisma.Institution$studentsArgs<ExtArgs>
+  guestPayers?: boolean | Prisma.Institution$guestPayersArgs<ExtArgs>
   _count?: boolean | Prisma.InstitutionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["institution"]>
 
@@ -1682,6 +1865,7 @@ export type InstitutionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   faculties?: boolean | Prisma.Institution$facultiesArgs<ExtArgs>
   organizations?: boolean | Prisma.Institution$organizationsArgs<ExtArgs>
   students?: boolean | Prisma.Institution$studentsArgs<ExtArgs>
+  guestPayers?: boolean | Prisma.Institution$guestPayersArgs<ExtArgs>
   _count?: boolean | Prisma.InstitutionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InstitutionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1696,6 +1880,7 @@ export type $InstitutionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     faculties: Prisma.$FacultyPayload<ExtArgs>[]
     organizations: Prisma.$OrganizationPayload<ExtArgs>[]
     students: Prisma.$StudentProfilePayload<ExtArgs>[]
+    guestPayers: Prisma.$GuestPayerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2117,6 +2302,7 @@ export interface Prisma__InstitutionClient<T, Null = never, ExtArgs extends runt
   faculties<T extends Prisma.Institution$facultiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$facultiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FacultyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organizations<T extends Prisma.Institution$organizationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$organizationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   students<T extends Prisma.Institution$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  guestPayers<T extends Prisma.Institution$guestPayersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Institution$guestPayersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuestPayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2699,6 +2885,30 @@ export type Institution$studentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.StudentProfileScalarFieldEnum | Prisma.StudentProfileScalarFieldEnum[]
+}
+
+/**
+ * Institution.guestPayers
+ */
+export type Institution$guestPayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GuestPayer
+   */
+  select?: Prisma.GuestPayerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GuestPayer
+   */
+  omit?: Prisma.GuestPayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuestPayerInclude<ExtArgs> | null
+  where?: Prisma.GuestPayerWhereInput
+  orderBy?: Prisma.GuestPayerOrderByWithRelationInput | Prisma.GuestPayerOrderByWithRelationInput[]
+  cursor?: Prisma.GuestPayerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GuestPayerScalarFieldEnum | Prisma.GuestPayerScalarFieldEnum[]
 }
 
 /**

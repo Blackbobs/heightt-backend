@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'ayodejiayodele350@gmail.com';
+  const email = 'heightt.finance@gmail.com';
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
     console.error('User not found:', email);

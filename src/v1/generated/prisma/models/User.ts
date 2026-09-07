@@ -264,6 +264,8 @@ export type UserWhereInput = {
   wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
   withdrawals?: Prisma.WithdrawalListRelationFilter
   bankAccounts?: Prisma.BankAccountListRelationFilter
+  guestPayer?: Prisma.XOR<Prisma.GuestPayerNullableScalarRelationFilter, Prisma.GuestPayerWhereInput> | null
+  claimedGuestPayers?: Prisma.GuestPayerListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -312,6 +314,8 @@ export type UserOrderByWithRelationInput = {
   wallet?: Prisma.WalletOrderByWithRelationInput
   withdrawals?: Prisma.WithdrawalOrderByRelationAggregateInput
   bankAccounts?: Prisma.BankAccountOrderByRelationAggregateInput
+  guestPayer?: Prisma.GuestPayerOrderByWithRelationInput
+  claimedGuestPayers?: Prisma.GuestPayerOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -363,6 +367,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
   withdrawals?: Prisma.WithdrawalListRelationFilter
   bankAccounts?: Prisma.BankAccountListRelationFilter
+  guestPayer?: Prisma.XOR<Prisma.GuestPayerNullableScalarRelationFilter, Prisma.GuestPayerWhereInput> | null
+  claimedGuestPayers?: Prisma.GuestPayerListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
@@ -445,6 +451,8 @@ export type UserCreateInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -493,6 +501,8 @@ export type UserUncheckedCreateInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUpdateInput = {
@@ -541,6 +551,8 @@ export type UserUpdateInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -589,6 +601,8 @@ export type UserUncheckedUpdateInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -707,6 +721,36 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type EnumUserStatusFieldUpdateOperationsInput = {
   set?: $Enums.UserStatus
+}
+
+export type UserCreateNestedOneWithoutGuestPayerInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGuestPayerInput, Prisma.UserUncheckedCreateWithoutGuestPayerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGuestPayerInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutClaimedGuestPayersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClaimedGuestPayersInput, Prisma.UserUncheckedCreateWithoutClaimedGuestPayersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClaimedGuestPayersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGuestPayerNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGuestPayerInput, Prisma.UserUncheckedCreateWithoutGuestPayerInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGuestPayerInput
+  upsert?: Prisma.UserUpsertWithoutGuestPayerInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGuestPayerInput, Prisma.UserUpdateWithoutGuestPayerInput>, Prisma.UserUncheckedUpdateWithoutGuestPayerInput>
+}
+
+export type UserUpdateOneWithoutClaimedGuestPayersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutClaimedGuestPayersInput, Prisma.UserUncheckedCreateWithoutClaimedGuestPayersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutClaimedGuestPayersInput
+  upsert?: Prisma.UserUpsertWithoutClaimedGuestPayersInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutClaimedGuestPayersInput, Prisma.UserUpdateWithoutClaimedGuestPayersInput>, Prisma.UserUncheckedUpdateWithoutClaimedGuestPayersInput>
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -1205,6 +1249,430 @@ export type UserUpdateOneWithoutFilesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFilesInput, Prisma.UserUpdateWithoutFilesInput>, Prisma.UserUncheckedUpdateWithoutFilesInput>
 }
 
+export type UserCreateWithoutGuestPayerInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
+}
+
+export type UserUncheckedCreateWithoutGuestPayerInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
+}
+
+export type UserCreateOrConnectWithoutGuestPayerInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGuestPayerInput, Prisma.UserUncheckedCreateWithoutGuestPayerInput>
+}
+
+export type UserCreateWithoutClaimedGuestPayersInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+}
+
+export type UserUncheckedCreateWithoutClaimedGuestPayersInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  emailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  username: string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  status?: $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutUserInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedCreateNestedManyWithoutUserInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  candidates?: Prisma.CandidateUncheckedCreateNestedManyWithoutUserInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedCreateNestedManyWithoutUserInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedCreateNestedManyWithoutUserInput
+  approvedEvents?: Prisma.EventUncheckedCreateNestedManyWithoutApproverInput
+  createdEvents?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedCreateNestedManyWithoutUserInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedCreateNestedManyWithoutUserInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutReviewerInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutUserInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutUserInput
+  createdOrganizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutCreatorInput
+  passwordResets?: Prisma.PasswordResetUncheckedCreateNestedManyWithoutUserInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPayerInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutUserInput
+  pushQueues?: Prisma.PushQueueUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedCreateNestedManyWithoutUserInput
+  profile?: Prisma.UserProfileUncheckedCreateNestedOneWithoutUserInput
+  votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+}
+
+export type UserCreateOrConnectWithoutClaimedGuestPayersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutClaimedGuestPayersInput, Prisma.UserUncheckedCreateWithoutClaimedGuestPayersInput>
+}
+
+export type UserUpsertWithoutGuestPayerInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGuestPayerInput, Prisma.UserUncheckedUpdateWithoutGuestPayerInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGuestPayerInput, Prisma.UserUncheckedCreateWithoutGuestPayerInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGuestPayerInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGuestPayerInput, Prisma.UserUncheckedUpdateWithoutGuestPayerInput>
+}
+
+export type UserUpdateWithoutGuestPayerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGuestPayerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
+}
+
+export type UserUpsertWithoutClaimedGuestPayersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutClaimedGuestPayersInput, Prisma.UserUncheckedUpdateWithoutClaimedGuestPayersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutClaimedGuestPayersInput, Prisma.UserUncheckedCreateWithoutClaimedGuestPayersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutClaimedGuestPayersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutClaimedGuestPayersInput, Prisma.UserUncheckedUpdateWithoutClaimedGuestPayersInput>
+}
+
+export type UserUpdateWithoutClaimedGuestPayersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutClaimedGuestPayersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutUserNestedInput
+  announcementReads?: Prisma.AnnouncementReadUncheckedUpdateManyWithoutUserNestedInput
+  announcementAuthor?: Prisma.AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  candidates?: Prisma.CandidateUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifications?: Prisma.EmailVerificationUncheckedUpdateManyWithoutUserNestedInput
+  eventRegistrations?: Prisma.EventRegistrationUncheckedUpdateManyWithoutUserNestedInput
+  approvedEvents?: Prisma.EventUncheckedUpdateManyWithoutApproverNestedInput
+  createdEvents?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
+  executiveMembers?: Prisma.ExecutiveMemberUncheckedUpdateManyWithoutUserNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferenceUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  operationalAuditLogs?: Prisma.OperationalAuditLogUncheckedUpdateManyWithoutUserNestedInput
+  reviewedJoinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutReviewerNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutUserNestedInput
+  organizationMemberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutUserNestedInput
+  createdOrganizations?: Prisma.OrganizationUncheckedUpdateManyWithoutCreatorNestedInput
+  passwordResets?: Prisma.PasswordResetUncheckedUpdateManyWithoutUserNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPayerNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutUserNestedInput
+  pushQueues?: Prisma.PushQueueUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  savingsGoals?: Prisma.SavingsGoalUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  ticketPurchases?: Prisma.TicketPurchaseUncheckedUpdateManyWithoutUserNestedInput
+  profile?: Prisma.UserProfileUncheckedUpdateOneWithoutUserNestedInput
+  votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
@@ -1250,6 +1718,8 @@ export type UserCreateWithoutSessionsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1297,6 +1767,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1360,6 +1832,8 @@ export type UserUpdateWithoutSessionsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1407,6 +1881,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutPasswordResetsInput = {
@@ -1454,6 +1930,8 @@ export type UserCreateWithoutPasswordResetsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetsInput = {
@@ -1501,6 +1979,8 @@ export type UserUncheckedCreateWithoutPasswordResetsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetsInput = {
@@ -1564,6 +2044,8 @@ export type UserUpdateWithoutPasswordResetsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetsInput = {
@@ -1611,6 +2093,8 @@ export type UserUncheckedUpdateWithoutPasswordResetsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutEmailVerificationsInput = {
@@ -1658,6 +2142,8 @@ export type UserCreateWithoutEmailVerificationsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutEmailVerificationsInput = {
@@ -1705,6 +2191,8 @@ export type UserUncheckedCreateWithoutEmailVerificationsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutEmailVerificationsInput = {
@@ -1768,6 +2256,8 @@ export type UserUpdateWithoutEmailVerificationsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
@@ -1815,6 +2305,8 @@ export type UserUncheckedUpdateWithoutEmailVerificationsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutProfileInput = {
@@ -1862,6 +2354,8 @@ export type UserCreateWithoutProfileInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutProfileInput = {
@@ -1909,6 +2403,8 @@ export type UserUncheckedCreateWithoutProfileInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutProfileInput = {
@@ -1972,6 +2468,8 @@ export type UserUpdateWithoutProfileInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProfileInput = {
@@ -2019,6 +2517,8 @@ export type UserUncheckedUpdateWithoutProfileInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutStudentProfileInput = {
@@ -2066,6 +2566,8 @@ export type UserCreateWithoutStudentProfileInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -2113,6 +2615,8 @@ export type UserUncheckedCreateWithoutStudentProfileInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -2176,6 +2680,8 @@ export type UserUpdateWithoutStudentProfileInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -2223,6 +2729,8 @@ export type UserUncheckedUpdateWithoutStudentProfileInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutCreatedOrganizationsInput = {
@@ -2270,6 +2778,8 @@ export type UserCreateWithoutCreatedOrganizationsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedOrganizationsInput = {
@@ -2317,6 +2827,8 @@ export type UserUncheckedCreateWithoutCreatedOrganizationsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedOrganizationsInput = {
@@ -2380,6 +2892,8 @@ export type UserUpdateWithoutCreatedOrganizationsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedOrganizationsInput = {
@@ -2427,6 +2941,8 @@ export type UserUncheckedUpdateWithoutCreatedOrganizationsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutOrganizationMembershipsInput = {
@@ -2474,6 +2990,8 @@ export type UserCreateWithoutOrganizationMembershipsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationMembershipsInput = {
@@ -2521,6 +3039,8 @@ export type UserUncheckedCreateWithoutOrganizationMembershipsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationMembershipsInput = {
@@ -2584,6 +3104,8 @@ export type UserUpdateWithoutOrganizationMembershipsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationMembershipsInput = {
@@ -2631,6 +3153,8 @@ export type UserUncheckedUpdateWithoutOrganizationMembershipsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutReviewedJoinRequestsInput = {
@@ -2678,6 +3202,8 @@ export type UserCreateWithoutReviewedJoinRequestsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutReviewedJoinRequestsInput = {
@@ -2725,6 +3251,8 @@ export type UserUncheckedCreateWithoutReviewedJoinRequestsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutReviewedJoinRequestsInput = {
@@ -2777,6 +3305,8 @@ export type UserCreateWithoutJoinRequestsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutJoinRequestsInput = {
@@ -2824,6 +3354,8 @@ export type UserUncheckedCreateWithoutJoinRequestsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutJoinRequestsInput = {
@@ -2887,6 +3419,8 @@ export type UserUpdateWithoutReviewedJoinRequestsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedJoinRequestsInput = {
@@ -2934,6 +3468,8 @@ export type UserUncheckedUpdateWithoutReviewedJoinRequestsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUpsertWithoutJoinRequestsInput = {
@@ -2992,6 +3528,8 @@ export type UserUpdateWithoutJoinRequestsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJoinRequestsInput = {
@@ -3039,6 +3577,8 @@ export type UserUncheckedUpdateWithoutJoinRequestsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutAdminsInput = {
@@ -3086,6 +3626,8 @@ export type UserCreateWithoutAdminsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminsInput = {
@@ -3133,6 +3675,8 @@ export type UserUncheckedCreateWithoutAdminsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminsInput = {
@@ -3196,6 +3740,8 @@ export type UserUpdateWithoutAdminsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminsInput = {
@@ -3243,6 +3789,8 @@ export type UserUncheckedUpdateWithoutAdminsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutWalletInput = {
@@ -3290,6 +3838,8 @@ export type UserCreateWithoutWalletInput = {
   votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutWalletInput = {
@@ -3337,6 +3887,8 @@ export type UserUncheckedCreateWithoutWalletInput = {
   votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutWalletInput = {
@@ -3400,6 +3952,8 @@ export type UserUpdateWithoutWalletInput = {
   votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWalletInput = {
@@ -3447,6 +4001,8 @@ export type UserUncheckedUpdateWithoutWalletInput = {
   votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -3494,6 +4050,8 @@ export type UserCreateWithoutPaymentsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -3541,6 +4099,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -3604,6 +4164,8 @@ export type UserUpdateWithoutPaymentsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -3651,6 +4213,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutWithdrawalsInput = {
@@ -3698,6 +4262,8 @@ export type UserCreateWithoutWithdrawalsInput = {
   votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutWithdrawalsInput = {
@@ -3745,6 +4311,8 @@ export type UserUncheckedCreateWithoutWithdrawalsInput = {
   votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutWithdrawalsInput = {
@@ -3808,6 +4376,8 @@ export type UserUpdateWithoutWithdrawalsInput = {
   votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWithdrawalsInput = {
@@ -3855,6 +4425,8 @@ export type UserUncheckedUpdateWithoutWithdrawalsInput = {
   votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutBankAccountsInput = {
@@ -3902,6 +4474,8 @@ export type UserCreateWithoutBankAccountsInput = {
   votes?: Prisma.VoteCreateNestedManyWithoutVoterInput
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutBankAccountsInput = {
@@ -3949,6 +4523,8 @@ export type UserUncheckedCreateWithoutBankAccountsInput = {
   votes?: Prisma.VoteUncheckedCreateNestedManyWithoutVoterInput
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutBankAccountsInput = {
@@ -4012,6 +4588,8 @@ export type UserUpdateWithoutBankAccountsInput = {
   votes?: Prisma.VoteUpdateManyWithoutVoterNestedInput
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBankAccountsInput = {
@@ -4059,6 +4637,8 @@ export type UserUncheckedUpdateWithoutBankAccountsInput = {
   votes?: Prisma.VoteUncheckedUpdateManyWithoutVoterNestedInput
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutSavingsGoalsInput = {
@@ -4106,6 +4686,8 @@ export type UserCreateWithoutSavingsGoalsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutSavingsGoalsInput = {
@@ -4153,6 +4735,8 @@ export type UserUncheckedCreateWithoutSavingsGoalsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutSavingsGoalsInput = {
@@ -4216,6 +4800,8 @@ export type UserUpdateWithoutSavingsGoalsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavingsGoalsInput = {
@@ -4263,6 +4849,8 @@ export type UserUncheckedUpdateWithoutSavingsGoalsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutReceiptsInput = {
@@ -4310,6 +4898,8 @@ export type UserCreateWithoutReceiptsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutReceiptsInput = {
@@ -4357,6 +4947,8 @@ export type UserUncheckedCreateWithoutReceiptsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutReceiptsInput = {
@@ -4420,6 +5012,8 @@ export type UserUpdateWithoutReceiptsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceiptsInput = {
@@ -4467,6 +5061,8 @@ export type UserUncheckedUpdateWithoutReceiptsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutAnnouncementAuthorInput = {
@@ -4514,6 +5110,8 @@ export type UserCreateWithoutAnnouncementAuthorInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementAuthorInput = {
@@ -4561,6 +5159,8 @@ export type UserUncheckedCreateWithoutAnnouncementAuthorInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementAuthorInput = {
@@ -4624,6 +5224,8 @@ export type UserUpdateWithoutAnnouncementAuthorInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementAuthorInput = {
@@ -4671,6 +5273,8 @@ export type UserUncheckedUpdateWithoutAnnouncementAuthorInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutAnnouncementReadsInput = {
@@ -4718,6 +5322,8 @@ export type UserCreateWithoutAnnouncementReadsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementReadsInput = {
@@ -4765,6 +5371,8 @@ export type UserUncheckedCreateWithoutAnnouncementReadsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementReadsInput = {
@@ -4828,6 +5436,8 @@ export type UserUpdateWithoutAnnouncementReadsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementReadsInput = {
@@ -4875,6 +5485,8 @@ export type UserUncheckedUpdateWithoutAnnouncementReadsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -4922,6 +5534,8 @@ export type UserCreateWithoutNotificationsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -4969,6 +5583,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -5032,6 +5648,8 @@ export type UserUpdateWithoutNotificationsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -5079,6 +5697,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
@@ -5126,6 +5746,8 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
@@ -5173,6 +5795,8 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -5236,6 +5860,8 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
@@ -5283,6 +5909,8 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutPushQueuesInput = {
@@ -5330,6 +5958,8 @@ export type UserCreateWithoutPushQueuesInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutPushQueuesInput = {
@@ -5377,6 +6007,8 @@ export type UserUncheckedCreateWithoutPushQueuesInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutPushQueuesInput = {
@@ -5440,6 +6072,8 @@ export type UserUpdateWithoutPushQueuesInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushQueuesInput = {
@@ -5487,6 +6121,8 @@ export type UserUncheckedUpdateWithoutPushQueuesInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutFeatureFlagTargetsInput = {
@@ -5534,6 +6170,8 @@ export type UserCreateWithoutFeatureFlagTargetsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutFeatureFlagTargetsInput = {
@@ -5581,6 +6219,8 @@ export type UserUncheckedCreateWithoutFeatureFlagTargetsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutFeatureFlagTargetsInput = {
@@ -5644,6 +6284,8 @@ export type UserUpdateWithoutFeatureFlagTargetsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeatureFlagTargetsInput = {
@@ -5691,6 +6333,8 @@ export type UserUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutOperationalAuditLogsInput = {
@@ -5738,6 +6382,8 @@ export type UserCreateWithoutOperationalAuditLogsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutOperationalAuditLogsInput = {
@@ -5785,6 +6431,8 @@ export type UserUncheckedCreateWithoutOperationalAuditLogsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutOperationalAuditLogsInput = {
@@ -5848,6 +6496,8 @@ export type UserUpdateWithoutOperationalAuditLogsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOperationalAuditLogsInput = {
@@ -5895,6 +6545,8 @@ export type UserUncheckedUpdateWithoutOperationalAuditLogsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -5942,6 +6594,8 @@ export type UserCreateWithoutAuditLogsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -5989,6 +6643,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -6052,6 +6708,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -6099,6 +6757,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutActivityLogsInput = {
@@ -6146,6 +6806,8 @@ export type UserCreateWithoutActivityLogsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutActivityLogsInput = {
@@ -6193,6 +6855,8 @@ export type UserUncheckedCreateWithoutActivityLogsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutActivityLogsInput = {
@@ -6256,6 +6920,8 @@ export type UserUpdateWithoutActivityLogsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivityLogsInput = {
@@ -6303,6 +6969,8 @@ export type UserUncheckedUpdateWithoutActivityLogsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutCandidatesInput = {
@@ -6350,6 +7018,8 @@ export type UserCreateWithoutCandidatesInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutCandidatesInput = {
@@ -6397,6 +7067,8 @@ export type UserUncheckedCreateWithoutCandidatesInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutCandidatesInput = {
@@ -6460,6 +7132,8 @@ export type UserUpdateWithoutCandidatesInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCandidatesInput = {
@@ -6507,6 +7181,8 @@ export type UserUncheckedUpdateWithoutCandidatesInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutVotesInput = {
@@ -6554,6 +7230,8 @@ export type UserCreateWithoutVotesInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutVotesInput = {
@@ -6601,6 +7279,8 @@ export type UserUncheckedCreateWithoutVotesInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutVotesInput = {
@@ -6664,6 +7344,8 @@ export type UserUpdateWithoutVotesInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVotesInput = {
@@ -6711,6 +7393,8 @@ export type UserUncheckedUpdateWithoutVotesInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutExecutiveMembersInput = {
@@ -6758,6 +7442,8 @@ export type UserCreateWithoutExecutiveMembersInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutExecutiveMembersInput = {
@@ -6805,6 +7491,8 @@ export type UserUncheckedCreateWithoutExecutiveMembersInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutExecutiveMembersInput = {
@@ -6868,6 +7556,8 @@ export type UserUpdateWithoutExecutiveMembersInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutExecutiveMembersInput = {
@@ -6915,6 +7605,8 @@ export type UserUncheckedUpdateWithoutExecutiveMembersInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutApprovedEventsInput = {
@@ -6962,6 +7654,8 @@ export type UserCreateWithoutApprovedEventsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutApprovedEventsInput = {
@@ -7009,6 +7703,8 @@ export type UserUncheckedCreateWithoutApprovedEventsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutApprovedEventsInput = {
@@ -7061,6 +7757,8 @@ export type UserCreateWithoutCreatedEventsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedEventsInput = {
@@ -7108,6 +7806,8 @@ export type UserUncheckedCreateWithoutCreatedEventsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedEventsInput = {
@@ -7171,6 +7871,8 @@ export type UserUpdateWithoutApprovedEventsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedEventsInput = {
@@ -7218,6 +7920,8 @@ export type UserUncheckedUpdateWithoutApprovedEventsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUpsertWithoutCreatedEventsInput = {
@@ -7276,6 +7980,8 @@ export type UserUpdateWithoutCreatedEventsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedEventsInput = {
@@ -7323,6 +8029,8 @@ export type UserUncheckedUpdateWithoutCreatedEventsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutTicketPurchasesInput = {
@@ -7370,6 +8078,8 @@ export type UserCreateWithoutTicketPurchasesInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutTicketPurchasesInput = {
@@ -7417,6 +8127,8 @@ export type UserUncheckedCreateWithoutTicketPurchasesInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutTicketPurchasesInput = {
@@ -7480,6 +8192,8 @@ export type UserUpdateWithoutTicketPurchasesInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTicketPurchasesInput = {
@@ -7527,6 +8241,8 @@ export type UserUncheckedUpdateWithoutTicketPurchasesInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutEventRegistrationsInput = {
@@ -7574,6 +8290,8 @@ export type UserCreateWithoutEventRegistrationsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutEventRegistrationsInput = {
@@ -7621,6 +8339,8 @@ export type UserUncheckedCreateWithoutEventRegistrationsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutEventRegistrationsInput = {
@@ -7684,6 +8404,8 @@ export type UserUpdateWithoutEventRegistrationsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
@@ -7731,6 +8453,8 @@ export type UserUncheckedUpdateWithoutEventRegistrationsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutPendingPaymentsInput = {
@@ -7778,6 +8502,8 @@ export type UserCreateWithoutPendingPaymentsInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutPendingPaymentsInput = {
@@ -7825,6 +8551,8 @@ export type UserUncheckedCreateWithoutPendingPaymentsInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutPendingPaymentsInput = {
@@ -7888,6 +8616,8 @@ export type UserUpdateWithoutPendingPaymentsInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPendingPaymentsInput = {
@@ -7935,6 +8665,8 @@ export type UserUncheckedUpdateWithoutPendingPaymentsInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserCreateWithoutFilesInput = {
@@ -7982,6 +8714,8 @@ export type UserCreateWithoutFilesInput = {
   wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserUncheckedCreateWithoutFilesInput = {
@@ -8029,6 +8763,8 @@ export type UserUncheckedCreateWithoutFilesInput = {
   wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
   withdrawals?: Prisma.WithdrawalUncheckedCreateNestedManyWithoutUserInput
   bankAccounts?: Prisma.BankAccountUncheckedCreateNestedManyWithoutUserInput
+  guestPayer?: Prisma.GuestPayerUncheckedCreateNestedOneWithoutPlaceholderUserInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutClaimedByInput
 }
 
 export type UserCreateOrConnectWithoutFilesInput = {
@@ -8092,6 +8828,8 @@ export type UserUpdateWithoutFilesInput = {
   wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUpdateManyWithoutClaimedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFilesInput = {
@@ -8139,6 +8877,8 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
   withdrawals?: Prisma.WithdrawalUncheckedUpdateManyWithoutUserNestedInput
   bankAccounts?: Prisma.BankAccountUncheckedUpdateManyWithoutUserNestedInput
+  guestPayer?: Prisma.GuestPayerUncheckedUpdateOneWithoutPlaceholderUserNestedInput
+  claimedGuestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutClaimedByNestedInput
 }
 
 
@@ -8178,6 +8918,7 @@ export type UserCountOutputType = {
   votes: number
   withdrawals: number
   bankAccounts: number
+  claimedGuestPayers: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -8212,6 +8953,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   votes?: boolean | UserCountOutputTypeCountVotesArgs
   withdrawals?: boolean | UserCountOutputTypeCountWithdrawalsArgs
   bankAccounts?: boolean | UserCountOutputTypeCountBankAccountsArgs
+  claimedGuestPayers?: boolean | UserCountOutputTypeCountClaimedGuestPayersArgs
 }
 
 /**
@@ -8441,6 +9183,13 @@ export type UserCountOutputTypeCountBankAccountsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.BankAccountWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountClaimedGuestPayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GuestPayerWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -8488,6 +9237,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   wallet?: boolean | Prisma.User$walletArgs<ExtArgs>
   withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
   bankAccounts?: boolean | Prisma.User$bankAccountsArgs<ExtArgs>
+  guestPayer?: boolean | Prisma.User$guestPayerArgs<ExtArgs>
+  claimedGuestPayers?: boolean | Prisma.User$claimedGuestPayersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -8569,6 +9320,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   wallet?: boolean | Prisma.User$walletArgs<ExtArgs>
   withdrawals?: boolean | Prisma.User$withdrawalsArgs<ExtArgs>
   bankAccounts?: boolean | Prisma.User$bankAccountsArgs<ExtArgs>
+  guestPayer?: boolean | Prisma.User$guestPayerArgs<ExtArgs>
+  claimedGuestPayers?: boolean | Prisma.User$claimedGuestPayersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -8611,6 +9364,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     wallet: Prisma.$WalletPayload<ExtArgs> | null
     withdrawals: Prisma.$WithdrawalPayload<ExtArgs>[]
     bankAccounts: Prisma.$BankAccountPayload<ExtArgs>[]
+    guestPayer: Prisma.$GuestPayerPayload<ExtArgs> | null
+    claimedGuestPayers: Prisma.$GuestPayerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -9052,6 +9807,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   wallet<T extends Prisma.User$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$walletArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   withdrawals<T extends Prisma.User$withdrawalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$withdrawalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bankAccounts<T extends Prisma.User$bankAccountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bankAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BankAccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  guestPayer<T extends Prisma.User$guestPayerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$guestPayerArgs<ExtArgs>>): Prisma.Prisma__GuestPayerClient<runtime.Types.Result.GetResult<Prisma.$GuestPayerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  claimedGuestPayers<T extends Prisma.User$claimedGuestPayersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$claimedGuestPayersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuestPayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10283,6 +11040,49 @@ export type User$bankAccountsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.BankAccountScalarFieldEnum | Prisma.BankAccountScalarFieldEnum[]
+}
+
+/**
+ * User.guestPayer
+ */
+export type User$guestPayerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GuestPayer
+   */
+  select?: Prisma.GuestPayerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GuestPayer
+   */
+  omit?: Prisma.GuestPayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuestPayerInclude<ExtArgs> | null
+  where?: Prisma.GuestPayerWhereInput
+}
+
+/**
+ * User.claimedGuestPayers
+ */
+export type User$claimedGuestPayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GuestPayer
+   */
+  select?: Prisma.GuestPayerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GuestPayer
+   */
+  omit?: Prisma.GuestPayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuestPayerInclude<ExtArgs> | null
+  where?: Prisma.GuestPayerWhereInput
+  orderBy?: Prisma.GuestPayerOrderByWithRelationInput | Prisma.GuestPayerOrderByWithRelationInput[]
+  cursor?: Prisma.GuestPayerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GuestPayerScalarFieldEnum | Prisma.GuestPayerScalarFieldEnum[]
 }
 
 /**

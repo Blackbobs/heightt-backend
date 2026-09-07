@@ -10,12 +10,18 @@ import { BankAccountService } from './bank-account.service';
 import { WithdrawalWebhookService } from './withdrawal-webhook.service';
 import { WithdrawalWebhookController } from './withdrawal-webhook.controller';
 import { FinanceController } from './finance.controller';
+import { GuestPaymentController } from './guest-payment.controller';
+import { GuestPaymentService } from './guest-payment.service';
 import { CacheService } from '../../redis/cache.service';
 import { BachsModule } from '../bachs/bachs.module';
 
 @Module({
   imports: [AuthModule, BachsModule],
-  controllers: [FinanceController, WithdrawalWebhookController],
+  controllers: [
+    FinanceController,
+    GuestPaymentController,
+    WithdrawalWebhookController,
+  ],
   providers: [
     FinanceService,
     LedgerService,
@@ -24,6 +30,7 @@ import { BachsModule } from '../bachs/bachs.module';
     BankAccountService,
     WithdrawalWebhookService,
     CacheService,
+    GuestPaymentService,
   ],
   exports: [
     FinanceService,
