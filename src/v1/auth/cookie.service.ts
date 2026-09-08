@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import type { AuthClient } from './token.service';
+import { getCookieSettings } from '../../common/config/cookie.config';
 
 @Injectable()
 export class CookieService {
@@ -10,18 +11,18 @@ export class CookieService {
   constructor(private readonly configService: ConfigService) {}
 
   private cookieOptions(maxAge?: number) {
-    const isProduction = process.env.NODE_ENV === 'production';
+    const settings = getCookieSettings();
     return {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: (isProduction ? 'none' : 'lax') as 'none' | 'lax',
+      secure: settings.secure,
+      sameSite: settings.sameSite,
       path: '/',
       ...(maxAge === undefined ? {} : { maxAge }),
     };
   }
 
   private scopedRefreshCookieName(authClient: AuthClient): string {
-    const prefix = process.env.NODE_ENV === 'production' ? '__Host-' : '';
+    const prefix = getCookieSettings().secure ? '__Host-' : '';
     switch (authClient) {
       case 'PLATFORM_ADMIN':
         return `${prefix}heightt.platform.refresh`;
@@ -33,7 +34,7 @@ export class CookieService {
   }
 
   setAccessTokenCookie(response: Response, token: string): void {
-    const isProduction = process.env.NODE_ENV === 'production';
+    const settings = getCookieSettings();
     const expirySeconds = parseInt(
       this.configService.get('JWT_ACCESS_EXPIRY', '900'),
       10,
@@ -46,15 +47,15 @@ export class CookieService {
 
     response.cookie('accessToken', token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: settings.secure,
+      sameSite: settings.sameSite,
       path: '/',
       maxAge: maxAgeMs,
     });
   }
 
   setRefreshTokenCookie(response: Response, token: string): void {
-    const isProduction = process.env.NODE_ENV === 'production';
+    const settings = getCookieSettings();
     const expirySeconds = parseInt(
       this.configService.get('JWT_REFRESH_EXPIRY', '2592000'),
       10,
@@ -67,8 +68,8 @@ export class CookieService {
 
     response.cookie('refreshToken', token, {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: settings.secure,
+      sameSite: settings.sameSite,
       path: '/',
       maxAge: maxAgeMs,
     });
@@ -91,21 +92,21 @@ export class CookieService {
   }
 
   clearAccessTokenCookie(response: Response): void {
-    const isProduction = process.env.NODE_ENV === 'production';
+    const settings = getCookieSettings();
     response.clearCookie('accessToken', {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: settings.secure,
+      sameSite: settings.sameSite,
       path: '/',
     });
   }
 
   clearRefreshTokenCookie(response: Response): void {
-    const isProduction = process.env.NODE_ENV === 'production';
+    const settings = getCookieSettings();
     response.clearCookie('refreshToken', {
       httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'none' : 'lax',
+      secure: settings.secure,
+      sameSite: settings.sameSite,
       path: '/',
     });
   }

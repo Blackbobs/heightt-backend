@@ -1,13 +1,16 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import request from 'supertest';
+import { CookieSettings } from '../config/cookie.config';
 import { createCsrfMiddleware, getCsrfToken } from './csrf.middleware';
 
 describe('CSRF middleware', () => {
-  function createTestApp() {
+  function createTestApp(
+    settings: CookieSettings = { secure: false, sameSite: 'lax' },
+  ) {
     const app = express();
     app.use(cookieParser());
-    app.use(createCsrfMiddleware(false));
+    app.use(createCsrfMiddleware(settings));
     app.get('/api/v1/auth/csrf-token', (req, res) => {
       res.json({ csrfToken: getCsrfToken(req) });
     });
@@ -27,6 +30,27 @@ describe('CSRF middleware', () => {
       .post('/api/v1/example')
       .set('X-CSRF-Token', tokenResponse.body.csrfToken)
       .expect(204);
+  });
+
+  it('validates a token paired with a secure cross-site cookie', async () => {
+    const app = createTestApp({ secure: true, sameSite: 'none' });
+    const response = await request(app)
+      .get('/api/v1/auth/csrf-token')
+      .expect(200);
+    const cookie = response.headers['set-cookie'][0];
+    expect(cookie).toContain('__Host-heightt.csrf=');
+    expect(cookie).toContain('Secure');
+    expect(cookie).toContain('SameSite=None');
+    // Explicitly forward the cookie because the test transport is HTTP.
+    await request(app)
+      .post('/api/v1/example')
+      .set('Cookie', cookie.split(';')[0])
+      .set('X-CSRF-Token', response.body.csrfToken)
+      .expect(204);
+    await request(app)
+      .post('/api/v1/example')
+      .set('X-CSRF-Token', response.body.csrfToken)
+      .expect(403);
   });
 
   it('returns an actionable 403 when a state-changing request has no token', async () => {

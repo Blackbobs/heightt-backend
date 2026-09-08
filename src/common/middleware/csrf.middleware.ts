@@ -1,5 +1,6 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import csurf from 'csurf';
+import { CookieSettings, getCookieSettings } from '../config/cookie.config';
 
 export const CSRF_HEADER = 'X-CSRF-Token';
 export const CSRF_COOKIE = 'heightt.csrf';
@@ -15,16 +16,18 @@ type CsrfRequest = Request & { csrfToken(): string };
  * Cookie-backed synchronizer-token protection. The HTTP-only cookie contains
  * the secret; clients must echo the derived token returned by the API.
  */
-export function createCsrfMiddleware(isProduction: boolean): RequestHandler {
+export function createCsrfMiddleware(
+  settings: CookieSettings = getCookieSettings(),
+): RequestHandler {
   const protect = csurf({
     cookie: {
       // __Host- cookies require HTTPS, so local HTTP uses an unprefixed name.
-      key: isProduction ? `__Host-${CSRF_COOKIE}` : CSRF_COOKIE,
+      key: settings.secure ? `__Host-${CSRF_COOKIE}` : CSRF_COOKIE,
       httpOnly: true,
-      secure: isProduction,
+      secure: settings.secure,
       // The deployed SPA and API can live on different sites (for example
       // Vercel and Render), which requires SameSite=None with Secure.
-      sameSite: isProduction ? 'none' : 'lax',
+      sameSite: settings.sameSite,
       path: '/',
     },
     ignoreMethods: ['GET', 'HEAD', 'OPTIONS'],

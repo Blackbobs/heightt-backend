@@ -240,7 +240,7 @@ async function bootstrap() {
 
   // CORS runs first so an allowed browser origin can read CSRF failures.
   // This remains enabled locally so development reproduces production.
-  app.use(createCsrfMiddleware(isProduction));
+  app.use(createCsrfMiddleware());
   logger.log(
     `🔒 CSRF protection enabled in ${isProduction ? 'production' : 'development'} (${CSRF_HEADER})`,
   );

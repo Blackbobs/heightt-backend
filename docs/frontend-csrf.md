@@ -62,3 +62,24 @@ Use the same flow against `http://localhost:<backend-port>`. Ensure the exact
 frontend origin is present in `CORS_ORIGIN`. Local cookies are non-secure and
 `SameSite=Lax`; production cookies are `Secure; SameSite=None` to support a SPA
 and API hosted on different sites. Production must therefore use HTTPS.
+
+## HTTPS staging with development services
+
+Keep `NODE_ENV=development` to retain development service configuration and set:
+
+```env
+COOKIE_SECURE=true
+COOKIE_SAME_SITE=none
+```
+
+These overrides apply to CSRF, access, and refresh cookies independently of
+Redis and other environment-specific services. Without overrides, the existing
+NODE_ENV defaults remain. `COOKIE_SAME_SITE=none` requires `COOKIE_SECURE=true`.
+For local HTTP backends use `COOKIE_SECURE=false` and `COOKIE_SAME_SITE=lax`.
+
+Secure mode also enables the `__Host-` prefix for CSRF and dashboard refresh
+cookies. After switching modes, clear existing API cookies, fetch a new CSRF
+token, and log in again. Keep credentials enabled on all requests and configure
+the exact frontend origin in `CORS_ORIGIN`. Browser third-party cookie blocking
+can still prevent cross-site cookies; a local backend or a correctly configured
+same-origin development proxy avoids that dependency.
