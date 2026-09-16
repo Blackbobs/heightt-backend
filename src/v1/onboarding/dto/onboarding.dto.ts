@@ -39,6 +39,11 @@ export class OnboardingInstitutionDto {
   })
   @IsBoolean()
   isFresher: boolean;
+
+  @ApiProperty({ required: false, description: 'Academic session ID; defaults to the current active institution session' })
+  @IsOptional()
+  @IsString()
+  sessionId?: string;
 }
 
 export class CompleteOnboardingDto {

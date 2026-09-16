@@ -109,6 +109,22 @@ export class OnboardingService {
           );
         }
 
+        if (!session) {
+          session = await tx.academicSession.findFirst({
+            where: {
+              institutionId: institution.id,
+              status: 'ACTIVE',
+              isCurrent: true,
+            },
+            orderBy: { createdAt: 'desc' },
+          });
+          if (!session) {
+            throw new BadRequestException(
+              'No current active academic session found for the selected institution',
+            );
+          }
+        }
+
         // Find or create faculty
         faculty = await tx.faculty.findFirst({
           where: {
@@ -257,12 +273,23 @@ export class OnboardingService {
 
         // NEW: Create academic record for the session
         if (session && academicLevelId) {
-          await tx.studentAcademicRecord.create({
-            data: {
+          await tx.studentAcademicRecord.upsert({
+            where: {
+              studentId_sessionId: {
+                studentId: studentProfile.id,
+                sessionId: session.id,
+              },
+            },
+            update: {
+              departmentId: department.id,
+              academicLevelId,
+              status: 'ACTIVE',
+            },
+            create: {
               studentId: studentProfile.id,
               sessionId: session.id,
               departmentId: department.id,
-              academicLevelId: academicLevelId,
+              academicLevelId,
               status: 'ACTIVE',
             },
           });
@@ -504,6 +531,51 @@ export class OnboardingService {
           },
         });
 
+        const session = dto.sessionId
+          ? await tx.academicSession.findUnique({
+              where: { id: dto.sessionId },
+            })
+          : await tx.academicSession.findFirst({
+              where: {
+                institutionId: dto.institutionId,
+                status: 'ACTIVE',
+                isCurrent: true,
+              },
+              orderBy: { createdAt: 'desc' },
+            });
+
+        if (!session) {
+          throw new BadRequestException(
+            'No active academic session found for the selected institution',
+          );
+        }
+        if (session.institutionId !== dto.institutionId) {
+          throw new BadRequestException(
+            'Session does not belong to the selected institution',
+          );
+        }
+
+        await tx.studentAcademicRecord.upsert({
+          where: {
+            studentId_sessionId: {
+              studentId: studentProfile.id,
+              sessionId: session.id,
+            },
+          },
+          update: {
+            departmentId: dto.departmentId,
+            academicLevelId: dto.levelId,
+            status: 'ACTIVE',
+          },
+          create: {
+            studentId: studentProfile.id,
+            sessionId: session.id,
+            departmentId: dto.departmentId,
+            academicLevelId: dto.levelId,
+            status: 'ACTIVE',
+          },
+        });
+
         const updatedProfile = await tx.userProfile.update({
           where: { userId },
           data: {
@@ -533,6 +605,7 @@ export class OnboardingService {
               facultyId: dto.facultyId,
               departmentId: dto.departmentId,
               levelId: dto.levelId,
+              sessionId: session.id,
               hasMatricNumber: !!dto.matricNumber,
             }),
           },
