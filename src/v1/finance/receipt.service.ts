@@ -47,6 +47,7 @@ export class ReceiptService {
             email: true,
             username: true,
             profile: true,
+            guestPayer: { select: { email: true } },
           },
         },
         organization: {
@@ -123,7 +124,11 @@ export class ReceiptService {
           payment.payer?.username ||
           'Unknown',
         payerEmail:
-          dto.payerEmail || paymentMetadata.guestEmail || payment.payer?.email || '',
+          dto.payerEmail ||
+          paymentMetadata.guestEmail ||
+          payment.payer?.guestPayer?.email ||
+          payment.payer?.email ||
+          '',
         payerPhone: dto.payerPhone || paymentMetadata.guestPhone,
         metadata: paymentMetadata.guestMatricNumber
           ? { matricNumber: paymentMetadata.guestMatricNumber }
@@ -485,6 +490,7 @@ export class ReceiptService {
         payer: {
           include: {
             profile: true,
+            guestPayer: { select: { email: true } },
           },
         },
         organization: true,
@@ -503,7 +509,11 @@ export class ReceiptService {
         (payment.payer?.profile?.firstName
           ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`
           : payment.payer?.username || 'Unknown'),
-      payerEmail: paymentMetadata.guestEmail || payment.payer?.email || '',
+      payerEmail:
+        paymentMetadata.guestEmail ||
+        payment.payer?.guestPayer?.email ||
+        payment.payer?.email ||
+        '',
       description: payment.description || 'Payment',
     };
 

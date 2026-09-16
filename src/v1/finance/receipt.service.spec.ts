@@ -13,13 +13,13 @@ describe('ReceiptService automatic delivery', () => {
         payer: {
           email: isGuest ? 'guest_123@guest.heightt.invalid' : email,
           username: 'guest_123',
+          guestPayer: isGuest ? { email } : null,
           profile: isGuest
             ? null
             : { firstName: 'Account', lastName: 'Student' },
         },
         metadata: isGuest
           ? {
-              guestEmail: email,
               guestName: name,
               guestPhone: '08012345678',
               guestMatricNumber: 'CSC/2026/001',
