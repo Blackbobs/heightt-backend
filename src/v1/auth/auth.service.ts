@@ -239,11 +239,24 @@ export class AuthService {
   // RESEND VERIFICATION
   // ============================================
 
-  async resendVerificationEmail(email: string) {
-    this.logger.log(`Resending verification email to: ${email}`);
+  async resendVerificationEmail(email: string, request?: any) {
+    const normalizedEmail = email.trim().toLowerCase();
+    const rateLimitKey = `resend-verification:${request?.ip || 'unknown'}:${normalizedEmail}`;
+    const rateLimit = await this.rateLimitService.checkRateLimit(
+      rateLimitKey,
+      3,
+      15 * 60,
+    );
+    if (!rateLimit.allowed) {
+      throw new BadRequestException(
+        'Too many verification email requests. Please try again later.',
+      );
+    }
+
+    this.logger.log(`Resending verification email to: ${normalizedEmail}`);
 
     const user = await this.prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
+      where: { email: normalizedEmail },
     });
 
     if (!user) {
@@ -262,7 +275,7 @@ export class AuthService {
     });
 
     const verificationToken = randomBytes(32).toString('hex');
-    await this.prisma.emailVerification.create({
+    const verification = await this.prisma.emailVerification.create({
       data: {
         userId: user.id,
         email: user.email,
@@ -275,13 +288,19 @@ export class AuthService {
     const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
     try {
-      await this.emailService.sendVerificationEmailWithLink(
+      const sent = await this.emailService.sendVerificationEmailWithLink(
         user.email,
         user.username,
         verificationLink,
       );
+      if (!sent) {
+        throw new Error('Email provider returned an unsuccessful result');
+      }
       this.logger.log(`Verification email resent to: ${email}`);
     } catch (error) {
+      await this.prisma.emailVerification.delete({
+        where: { id: verification.id },
+      });
       this.logger.error(
         `Failed to resend verification email: ${error.message}`,
       );

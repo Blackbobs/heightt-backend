@@ -35,6 +35,7 @@ import {
   AdminLoginResponseDto,
   ForgotPasswordDto,
   ResetPasswordDto,
+  ResendVerificationDto,
 } from './dto';
 import { JwtGuard } from '../../common/guards/jwt.guard';
 import { AdminGuard, RequirePermission } from '../../common/guards/admin.guard';
@@ -338,24 +339,16 @@ export class AuthController {
     summary: 'Resend verification email',
     description: 'Resends the email verification link to the user.',
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        email: {
-          type: 'string',
-          example: 'john@example.com',
-          description: 'User email address',
-        },
-      },
-    },
-  })
+  @ApiBody({ type: ResendVerificationDto })
   @ApiOkResponse({ description: 'Verification email sent successfully' })
   @ApiNotFoundResponse({ description: 'User not found' })
   @ApiBadRequestResponse({ description: 'Email already verified' })
-  async resendVerification(@Body() body: { email: string }) {
+  async resendVerification(
+    @Body() body: ResendVerificationDto,
+    @Request() req: any,
+  ) {
     this.logger.log(`Resend verification email called for: ${body.email}`);
-    return this.authService.resendVerificationEmail(body.email);
+    return this.authService.resendVerificationEmail(body.email, req);
   }
 
   @Post('forgot-password')
