@@ -1,14 +1,7 @@
 // src/v1/onboarding/dto/onboarding.dto.ts
 
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsOptional,
-  IsEmail,
-  IsEnum,
-  IsDateString,
-  IsUUID,
-} from 'class-validator';
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export class OnboardingPersonalInfoDto {
   @ApiProperty({ example: 'John', description: 'First name' })
@@ -18,93 +11,43 @@ export class OnboardingPersonalInfoDto {
   @ApiProperty({ example: 'Doe', description: 'Last name' })
   @IsString()
   lastName: string;
-
-  @ApiProperty({
-    example: 'Michael',
-    description: 'Middle name',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  middleName?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  phone?: string;
-
-  @ApiProperty({ example: 'https://example.com/avatar.jpg', required: false })
-  @IsOptional()
-  @IsString()
-  avatar?: string;
-
-  @ApiProperty({ enum: ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'] })
-  @IsEnum(['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'])
-  gender: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsDateString()
-  dateOfBirth?: string;
-
-  @ApiProperty({ example: 'Nigeria', required: false })
-  @IsOptional()
-  @IsString()
-  country?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  state?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  city?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  bio?: string;
 }
 
 export class OnboardingInstitutionDto {
-  @ApiProperty({ example: 'inst_123' })
-  @IsUUID()
+  @ApiProperty({ example: 'cmtie2r6c000901iv17iupph6' })
+  @IsString()
   institutionId: string;
 
-  @ApiProperty({ example: 'fac_123' })
-  @IsUUID()
+  @ApiProperty({ example: 'cmu48qy76000901da2fhiw9lf' })
+  @IsString()
   facultyId: string;
 
-  @ApiProperty({ example: 'dept_123' })
-  @IsUUID()
+  @ApiProperty({ example: 'cmu48qz8k000b01da8f2p9x3m' })
+  @IsString()
   departmentId: string;
 
-  @ApiProperty({ example: 'lvl_123' })
-  @IsUUID()
+  @ApiProperty({ example: 'cmu48r0b7000d01da4w8n6p2q' })
+  @IsString()
   levelId: string;
 
-  @ApiProperty({ example: 'MAT/2024/001', required: false })
+  @ApiProperty({ example: 'MAT/2024/001' })
+  @IsString()
+  matricNumber: string;
+
+  @ApiProperty({
+    description: 'True for 100 level students, false for 200 level and above',
+  })
+  @IsBoolean()
+  isFresher: boolean;
+
+  @ApiProperty({ required: false, description: 'Academic session ID; defaults to the current active institution session' })
   @IsOptional()
   @IsString()
-  matricNumber?: string;
+  sessionId?: string;
 }
 
 export class CompleteOnboardingDto {
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   firstName?: string;
@@ -117,40 +60,13 @@ export class CompleteOnboardingDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  phone?: string;
+  matricNumber?: string;
 
-  @ApiProperty({ required: false })
+  /** @deprecated Use matricNumber. */
+  @ApiHideProperty()
   @IsOptional()
   @IsString()
   studentId?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  gender?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsDateString()
-  dateOfBirth?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  country?: string;
-
-  /** @deprecated Accepted during the frontend rollout but never persisted. */
-  @ApiHideProperty()
-  @IsOptional()
-  @IsString()
-  state?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  bio?: string;
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -177,4 +93,10 @@ export class CompleteOnboardingDto {
   @IsOptional()
   @IsString()
   sessionId?: string;
+
+  @ApiProperty({
+    description: 'True for 100 level students, false for 200 level and above',
+  })
+  @IsBoolean()
+  isFresher: boolean;
 }

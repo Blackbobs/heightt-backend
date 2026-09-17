@@ -232,6 +232,7 @@ async function bootstrap() {
       'X-Total-Count',
       'X-RateLimit-Limit',
       'X-RateLimit-Remaining',
+      'Content-Disposition',
     ],
     credentials: true,
     maxAge: 86400, // 24 hours
@@ -239,7 +240,7 @@ async function bootstrap() {
 
   // CORS runs first so an allowed browser origin can read CSRF failures.
   // This remains enabled locally so development reproduces production.
-  app.use(createCsrfMiddleware(isProduction));
+  app.use(createCsrfMiddleware());
   logger.log(
     `🔒 CSRF protection enabled in ${isProduction ? 'production' : 'development'} (${CSRF_HEADER})`,
   );
@@ -279,7 +280,7 @@ async function bootstrap() {
     .setContact(
       'Heightt Support',
       'https://heightt.com/support',
-      'support@heightt.com',
+      'heightt.finance@gmail.com',
     )
     .setLicense('Proprietary', 'https://heightt.com/terms')
     .addTag('auth', 'Authentication and authorization endpoints')

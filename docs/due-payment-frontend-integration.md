@@ -1,5 +1,7 @@
 # Due payment frontend integration
 
+> Audience filtering update: see [Fresher dues integration](fresher-dues-frontend.md). Current-level eligibility also applies to existing assignments and previous-session arrears. Guest checkout now needs an academic level.
+
 All monetary values sent to the API are integer kobo. A due may have only one active external payment attempt at a time.
 
 ## API types

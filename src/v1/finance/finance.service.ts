@@ -256,9 +256,9 @@ export class FinanceService {
         _count: { _all: true },
         _sum: { amount: true },
       }),
-      this.prisma.due.count({ where: { organizationId } }),
+      this.prisma.due.count({ where: { organizationId, deletedAt: null } }),
       this.prisma.due.aggregate({
-        where: { organizationId },
+        where: { organizationId, deletedAt: null },
         _sum: { amount: true },
       }),
       this.prisma.dueAssignment.aggregate({
@@ -635,6 +635,21 @@ export class FinanceService {
           studentProfile: {
             select: { id: true, matricNumber: true },
           },
+          guestPayer: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              phone: true,
+              matricNumber: true,
+              institutionId: true,
+              facultyId: true,
+              departmentId: true,
+              academicLevelId: true,
+              claimedAt: true,
+            },
+          },
         },
       },
       duePayment: {
@@ -766,6 +781,59 @@ export class FinanceService {
     };
   }
 
+  async exportAdminPaymentReport(
+    admin: any,
+    filters?: {
+      status?: string;
+      organizationId?: string;
+      payerId?: string;
+      startDate?: string;
+      endDate?: string;
+    },
+  ) {
+    const admins = admin?.allAdmins || [admin];
+    const isPlatformAdmin = admins.some(
+      (item: any) => item.type === 'PLATFORM_ADMIN',
+    );
+    const scopeFilters: any[] = [];
+
+    if (!isPlatformAdmin) {
+      for (const item of admins) {
+        if (
+          ['ORGANIZATION_ADMIN', 'CLUB_ADMIN'].includes(item.type) &&
+          item.organizationId
+        ) {
+          scopeFilters.push({ organizationId: item.organizationId });
+        }
+      }
+
+      if (!scopeFilters.length) {
+        throw new ForbiddenException('Admin has no finance organization scope');
+      }
+    }
+
+    const conditions: any[] = [];
+    if (scopeFilters.length) conditions.push({ OR: scopeFilters });
+    if (filters?.organizationId) {
+      conditions.push({ organizationId: filters.organizationId });
+    }
+
+    const where: any = conditions.length ? { AND: conditions } : {};
+    if (filters?.status) where.status = filters.status;
+    if (filters?.payerId) where.payerId = filters.payerId;
+    if (filters?.startDate || filters?.endDate) {
+      where.createdAt = {};
+      if (filters.startDate) where.createdAt.gte = new Date(filters.startDate);
+      if (filters.endDate) where.createdAt.lte = new Date(filters.endDate);
+    }
+
+    return this.prisma.payment.findMany({
+      where,
+      include: this.paymentHistoryInclude(),
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   // ============================================
   // DUE MANAGEMENT
   // ============================================
@@ -792,6 +860,7 @@ export class FinanceService {
         name: dto.name,
         description: dto.description,
         amount: dto.amount,
+        isFresher: dto.isFresher ?? false,
         isRequired: dto.isRequired !== undefined ? dto.isRequired : true,
         status: dto.status ?? 'ACTIVE',
       },
@@ -817,8 +886,8 @@ export class FinanceService {
   async assignDueToStudents(userId: string, dueId: string, dto: AssignDueDto) {
     this.logger.log(`Assigning due ${dueId} to students`);
 
-    const due = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const due = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
     });
     if (!due) {
       throw new NotFoundException('Due not found');
@@ -842,7 +911,16 @@ export class FinanceService {
       studentIds = [...studentIds, ...students.map((s) => s.id)];
     }
 
-    studentIds = [...new Set(studentIds)];
+    const eligibleStudents = await this.prisma.studentProfile.findMany({
+      where: {
+        id: { in: [...new Set(studentIds)] },
+        currentAcademicLevel: {
+          numericLevel: due.isFresher ? 100 : { gte: 200 },
+        },
+      },
+      select: { id: true },
+    });
+    studentIds = eligibleStudents.map((student) => student.id);
 
     if (studentIds.length === 0) {
       throw new BadRequestException('No students found to assign due');
@@ -873,8 +951,8 @@ export class FinanceService {
       },
     });
 
-    const dueWithOrg = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const dueWithOrg = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
       select: { organizationId: true },
     });
 
@@ -897,8 +975,8 @@ export class FinanceService {
   }
 
   async deleteDue(userId: string, dueId: string) {
-    const due = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const due = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
       select: {
         id: true,
         name: true,
@@ -926,7 +1004,14 @@ export class FinanceService {
     }
 
     await this.prisma.$transaction([
-      this.prisma.due.delete({ where: { id: dueId } }),
+      this.prisma.due.update({
+        where: { id: dueId },
+        data: {
+          status: 'CANCELLED',
+          deletedAt: new Date(),
+          deletedBy: userId,
+        },
+      }),
       this.prisma.activityLog.create({
         data: {
           userId,
@@ -945,7 +1030,7 @@ export class FinanceService {
   }
 
   async getDues(organizationId?: string, page: number = 1, limit: number = 10) {
-    const where: any = {};
+    const where: any = { deletedAt: null };
     if (organizationId) {
       where.organizationId = organizationId;
     }
@@ -1000,13 +1085,17 @@ export class FinanceService {
 
     const studentProfile = await this.prisma.studentProfile.findUnique({
       where: { userId },
-      select: { id: true, institutionId: true },
+      select: { id: true, institutionId: true, currentAcademicLevel: true },
     });
 
     if (!studentProfile) {
       this.logger.log(`User ${userId} does not have a student profile`);
       return [];
     }
+
+    const level = studentProfile.currentAcademicLevel?.numericLevel;
+    if (level !== 100 && !(level !== undefined && level >= 200)) return [];
+    const isFresher = level === 100;
 
     const [memberships, currentSession] = await Promise.all([
       this.prisma.organizationMembership.findMany({
@@ -1032,6 +1121,8 @@ export class FinanceService {
       ? await this.prisma.due.findMany({
           where: {
             organizationId: { in: organizationIds },
+            deletedAt: null,
+            isFresher,
             status: 'ACTIVE',
             OR: [
               { sessionId: null },
@@ -1044,11 +1135,12 @@ export class FinanceService {
       : [];
     const availableDueIds = availableDues.map((due) => due.id);
 
-    // Keep every unpaid assigned obligation visible even if its session ended
+    // Keep eligible unpaid obligations visible even if their session ended
     // or the student's old organization membership is no longer active.
     const assignments = await this.prisma.dueAssignment.findMany({
       where: {
         studentId: studentProfile.id,
+        due: { isFresher },
         OR: [
           { isPaid: false },
           ...(availableDueIds.length
@@ -1200,6 +1292,18 @@ export class FinanceService {
   // DUE RESOLUTION (shared between internal and external payments)
   // ============================================
 
+  private assertDueLevel(
+    due: { isFresher: boolean },
+    student: { currentAcademicLevel?: { numericLevel: number } | null },
+  ) {
+    const level = student.currentAcademicLevel?.numericLevel;
+    if (due.isFresher ? level !== 100 : level === undefined || level < 200) {
+      throw new ForbiddenException(
+        'This due is not available for your academic level',
+      );
+    }
+  }
+
   /**
    * Resolves a dueId or dueAssignmentId to a valid dueAssignmentId.
    * - If dueAssignmentId is provided, verifies it exists and is unpaid.
@@ -1220,9 +1324,12 @@ export class FinanceService {
       const assignment = await this.prisma.dueAssignment.findUnique({
         where: { id: dueAssignmentId },
         include: {
-          student: { select: { userId: true } },
-          due: { select: { status: true } },
-          duePayments: { select: { id: true }, take: 1 },
+          student: { select: { userId: true, currentAcademicLevel: true } },
+          due: { select: { status: true, isFresher: true } },
+          duePayments: {
+            select: { id: true },
+            take: 1,
+          },
         },
       });
 
@@ -1235,6 +1342,8 @@ export class FinanceService {
           'This due assignment does not belong to you',
         );
       }
+
+      this.assertDueLevel(assignment.due, assignment.student);
 
       if (assignment.isPaid || assignment.duePayments.length > 0) {
         throw new BadRequestException('This due has already been paid');
@@ -1254,8 +1363,8 @@ export class FinanceService {
     }
 
     // Case 2: Due ID provided (auto-assign on payment)
-    const due = await this.prisma.due.findUnique({
-      where: { id: dueId },
+    const due = await this.prisma.due.findFirst({
+      where: { id: dueId, deletedAt: null },
     });
 
     if (!due) {
@@ -1275,6 +1384,7 @@ export class FinanceService {
     // Check if user is a student
     const studentProfile = await this.prisma.studentProfile.findUnique({
       where: { userId },
+      include: { currentAcademicLevel: true },
     });
 
     if (!studentProfile) {
@@ -1282,6 +1392,8 @@ export class FinanceService {
         'Student profile not found. Please complete your student profile first.',
       );
     }
+
+    this.assertDueLevel(due, studentProfile);
 
     // Find or create the due assignment
     const existingAssignment = await this.prisma.dueAssignment.findUnique({
@@ -1291,7 +1403,12 @@ export class FinanceService {
           studentId: studentProfile.id,
         },
       },
-      include: { duePayments: { select: { id: true }, take: 1 } },
+      include: {
+        duePayments: {
+          select: { id: true },
+          take: 1,
+        },
+      },
     });
 
     if (existingAssignment) {
@@ -1425,7 +1542,7 @@ export class FinanceService {
         // Verify the due assignment belongs to this user
         const studentProfile = await tx.studentProfile.findUnique({
           where: { userId },
-          select: { id: true },
+          select: { id: true, currentAcademicLevel: true },
         });
 
         if (!studentProfile || dueAssignment.studentId !== studentProfile.id) {
@@ -1435,12 +1552,13 @@ export class FinanceService {
         }
 
         due = dueAssignment.due;
+        this.assertDueLevel(due, studentProfile);
       }
       // Case 2: User has a due ID (auto-assign on payment)
       else if (dto.dueId) {
         // Find the due
-        due = await tx.due.findUnique({
-          where: { id: dto.dueId },
+        due = await tx.due.findFirst({
+          where: { id: dto.dueId, deletedAt: null },
         });
 
         if (!due) {
@@ -1450,6 +1568,7 @@ export class FinanceService {
         // Check if user is a student
         const studentProfile = await tx.studentProfile.findUnique({
           where: { userId },
+          include: { currentAcademicLevel: true },
         });
 
         if (!studentProfile) {
@@ -1457,6 +1576,8 @@ export class FinanceService {
             'Student profile not found. Please complete your student profile first.',
           );
         }
+
+        this.assertDueLevel(due, studentProfile);
 
         // Check if the user is a member of the organization
         const membership = await tx.organizationMembership.findFirst({
@@ -2396,6 +2517,7 @@ export class FinanceService {
       where: {
         organization: where,
         status: 'ACTIVE',
+        deletedAt: null,
       },
     });
 

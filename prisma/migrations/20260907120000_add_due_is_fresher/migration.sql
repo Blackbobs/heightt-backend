@@ -1,0 +1,1 @@
+ALTER TABLE "dues" ADD COLUMN "isFresher" BOOLEAN NOT NULL DEFAULT false;

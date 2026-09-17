@@ -70,8 +70,6 @@ export class OnboardingService {
         data: {
           firstName: body.firstName,
           lastName: body.lastName,
-          gender: body.gender as any,
-          country: body.country,
           onboardingStep: 'INSTITUTION',
         },
       });
@@ -83,6 +81,11 @@ export class OnboardingService {
       let department: any = null;
 
       if (body.institution && body.faculty && body.department) {
+        const matricNumber = body.matricNumber ?? body.studentId;
+        if (!matricNumber) {
+          throw new BadRequestException('Matric number is required');
+        }
+
         // Find or create institution
         institution = await tx.institution.findFirst({
           where: { name: body.institution },
@@ -104,6 +107,22 @@ export class OnboardingService {
           throw new BadRequestException(
             'Session does not belong to the selected institution',
           );
+        }
+
+        if (!session) {
+          session = await tx.academicSession.findFirst({
+            where: {
+              institutionId: institution.id,
+              status: 'ACTIVE',
+              isCurrent: true,
+            },
+            orderBy: { createdAt: 'desc' },
+          });
+          if (!session) {
+            throw new BadRequestException(
+              'No current active academic session found for the selected institution',
+            );
+          }
         }
 
         // Find or create faculty
@@ -177,9 +196,19 @@ export class OnboardingService {
               academicLevelId = level.id;
             }
           } else {
+            if (level.departmentId !== department.id) {
+              throw new BadRequestException(
+                'Academic level does not belong to the selected department',
+              );
+            }
             academicLevelId = level.id;
           }
         } else {
+          if (!body.isFresher) {
+            throw new BadRequestException(
+              'Academic level is required for staylite students',
+            );
+          }
           const defaultLevel = await tx.academicLevel.findFirst({
             where: {
               departmentId: department.id,
@@ -191,6 +220,31 @@ export class OnboardingService {
           }
         }
 
+        const selectedLevel = academicLevelId
+          ? await tx.academicLevel.findUnique({
+              where: { id: academicLevelId },
+            })
+          : null;
+        if (
+          !selectedLevel ||
+          (body.isFresher
+            ? selectedLevel.numericLevel !== 100
+            : selectedLevel.numericLevel < 200)
+        ) {
+          throw new BadRequestException(
+            body.isFresher
+              ? 'Freshers must select 100 level'
+              : 'Staylite students must select 200 level or above',
+          );
+        }
+
+        const existingMatric = await tx.studentProfile.findFirst({
+          where: { matricNumber, NOT: { userId } },
+        });
+        if (existingMatric) {
+          throw new ConflictException('Matric number already registered');
+        }
+
         // Create or update student profile
         studentProfile = await tx.studentProfile.upsert({
           where: { userId },
@@ -199,7 +253,7 @@ export class OnboardingService {
             facultyId: faculty.id,
             departmentId: department.id,
             currentAcademicLevelId: academicLevelId,
-            matricNumber: body.studentId || '',
+            matricNumber,
             onboardingStep: 'COMPLETED',
             onboardingCompleted: true,
             onboardingCompletedAt: new Date(),
@@ -210,7 +264,7 @@ export class OnboardingService {
             facultyId: faculty.id,
             departmentId: department.id,
             currentAcademicLevelId: academicLevelId,
-            matricNumber: body.studentId || '',
+            matricNumber,
             onboardingStep: 'COMPLETED',
             onboardingCompleted: true,
             onboardingCompletedAt: new Date(),
@@ -219,12 +273,23 @@ export class OnboardingService {
 
         // NEW: Create academic record for the session
         if (session && academicLevelId) {
-          await tx.studentAcademicRecord.create({
-            data: {
+          await tx.studentAcademicRecord.upsert({
+            where: {
+              studentId_sessionId: {
+                studentId: studentProfile.id,
+                sessionId: session.id,
+              },
+            },
+            update: {
+              departmentId: department.id,
+              academicLevelId,
+              status: 'ACTIVE',
+            },
+            create: {
               studentId: studentProfile.id,
               sessionId: session.id,
               departmentId: department.id,
-              academicLevelId: academicLevelId,
+              academicLevelId,
               status: 'ACTIVE',
             },
           });
@@ -262,13 +327,12 @@ export class OnboardingService {
           details: JSON.stringify({
             firstName: body.firstName,
             lastName: body.lastName,
-            gender: body.gender,
-            country: body.country,
             institution: body.institution,
             faculty: body.faculty,
             department: body.department,
             academicLevelId: body.academicLevelId,
             sessionId: body.sessionId,
+            isFresher: body.isFresher,
           }),
         },
       });
@@ -318,10 +382,6 @@ export class OnboardingService {
       data: {
         firstName: dto.firstName,
         lastName: dto.lastName,
-        middleName: dto.middleName,
-        avatar: dto.avatar,
-        gender: dto.gender as any,
-        country: dto.country,
         onboardingStep: 'INSTITUTION',
       },
     });
@@ -342,7 +402,7 @@ export class OnboardingService {
         details: JSON.stringify({
           step: 'PERSONAL_INFO',
           completed: true,
-          fields: ['firstName', 'lastName', 'gender', 'country'],
+          fields: ['firstName', 'lastName'],
         }),
       },
     });
@@ -423,6 +483,13 @@ export class OnboardingService {
         'Academic level does not belong to the selected department',
       );
     }
+    if (dto.isFresher ? level.numericLevel !== 100 : level.numericLevel < 200) {
+      throw new BadRequestException(
+        dto.isFresher
+          ? 'Freshers must select 100 level'
+          : 'Staylite students must select 200 level or above',
+      );
+    }
 
     if (dto.matricNumber) {
       const existing = await this.prisma.studentProfile.findFirst({
@@ -464,6 +531,51 @@ export class OnboardingService {
           },
         });
 
+        const session = dto.sessionId
+          ? await tx.academicSession.findUnique({
+              where: { id: dto.sessionId },
+            })
+          : await tx.academicSession.findFirst({
+              where: {
+                institutionId: dto.institutionId,
+                status: 'ACTIVE',
+                isCurrent: true,
+              },
+              orderBy: { createdAt: 'desc' },
+            });
+
+        if (!session) {
+          throw new BadRequestException(
+            'No active academic session found for the selected institution',
+          );
+        }
+        if (session.institutionId !== dto.institutionId) {
+          throw new BadRequestException(
+            'Session does not belong to the selected institution',
+          );
+        }
+
+        await tx.studentAcademicRecord.upsert({
+          where: {
+            studentId_sessionId: {
+              studentId: studentProfile.id,
+              sessionId: session.id,
+            },
+          },
+          update: {
+            departmentId: dto.departmentId,
+            academicLevelId: dto.levelId,
+            status: 'ACTIVE',
+          },
+          create: {
+            studentId: studentProfile.id,
+            sessionId: session.id,
+            departmentId: dto.departmentId,
+            academicLevelId: dto.levelId,
+            status: 'ACTIVE',
+          },
+        });
+
         const updatedProfile = await tx.userProfile.update({
           where: { userId },
           data: {
@@ -493,6 +605,7 @@ export class OnboardingService {
               facultyId: dto.facultyId,
               departmentId: dto.departmentId,
               levelId: dto.levelId,
+              sessionId: session.id,
               hasMatricNumber: !!dto.matricNumber,
             }),
           },
@@ -540,16 +653,15 @@ export class OnboardingService {
     }
 
     const personalInfoCompleted = !!(
-      user.profile.firstName &&
-      user.profile.lastName &&
-      user.profile.gender
+      user.profile.firstName && user.profile.lastName
     );
 
     const institutionInfoCompleted = !!(
       user.studentProfile?.institutionId &&
       user.studentProfile?.facultyId &&
       user.studentProfile?.departmentId &&
-      user.studentProfile?.currentAcademicLevelId
+      user.studentProfile?.currentAcademicLevelId &&
+      user.studentProfile?.matricNumber
     );
 
     // ============================================
@@ -589,12 +701,18 @@ export class OnboardingService {
       progress: {
         personalInfo: {
           completed: personalInfoCompleted,
-          required: ['firstName', 'lastName', 'gender'],
+          required: ['firstName', 'lastName'],
           missing: this.getMissingPersonalFields(user.profile),
         },
         institutionInfo: {
           completed: institutionInfoCompleted,
-          required: ['institution', 'faculty', 'department', 'level'],
+          required: [
+            'institution',
+            'faculty',
+            'department',
+            'level',
+            'matricNumber',
+          ],
           missing: this.getMissingInstitutionFields(user.studentProfile),
         },
       },
@@ -768,7 +886,6 @@ export class OnboardingService {
     const missing: string[] = [];
     if (!profile.firstName) missing.push('firstName');
     if (!profile.lastName) missing.push('lastName');
-    if (!profile.gender) missing.push('gender');
     return missing;
   }
 
@@ -781,6 +898,7 @@ export class OnboardingService {
     if (!studentProfile.facultyId) missing.push('faculty');
     if (!studentProfile.departmentId) missing.push('department');
     if (!studentProfile.currentAcademicLevelId) missing.push('level');
+    if (!studentProfile.matricNumber) missing.push('matricNumber');
     return missing;
   }
 }

@@ -1726,6 +1726,24 @@ export class InstitutionsService {
       );
     }
 
+    const numberOfLevels =
+      dto.numberOfLevels ?? this.getDefaultLevelCount(dto.name);
+
+    if (numberOfLevels < 4 || numberOfLevels > 7) {
+      throw new BadRequestException(
+        'A department must have between 4 and 7 academic levels',
+      );
+    }
+
+    if (
+      dto.customLevelNames &&
+      dto.customLevelNames.length !== numberOfLevels
+    ) {
+      throw new BadRequestException(
+        'customLevelNames must contain exactly numberOfLevels entries',
+      );
+    }
+
     const department = await this.prisma.department.create({
       data: {
         name: dto.name,
@@ -1739,9 +1757,6 @@ export class InstitutionsService {
     });
 
     this.logger.log(`Department created: ${department.id}`);
-
-    const numberOfLevels =
-      dto.numberOfLevels || this.getDefaultLevelCount(dto.name);
 
     const levels: LevelData[] = this.generateAcademicLevels(
       numberOfLevels,

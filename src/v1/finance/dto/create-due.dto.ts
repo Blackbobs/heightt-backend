@@ -53,6 +53,16 @@ export class CreateDueDto {
   amount: number;
 
   @ApiProperty({
+    example: false,
+    description: 'true: 100 level only; false: 200 level and above',
+    required: false,
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isFresher?: boolean;
+
+  @ApiProperty({
     example: true,
     description: 'Is required',
     default: true,

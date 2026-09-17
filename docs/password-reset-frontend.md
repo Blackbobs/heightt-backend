@@ -270,7 +270,7 @@ import { requestPasswordReset } from '@/lib/password-reset-api';
 import styles from '../auth.module.css';
 
 const LOGO_URL =
-  'https://res.cloudinary.com/dbcgdaigj/image/upload/v1788163976/Page_2-removebg-preview_oy5czj.png';
+  'https://res.cloudinary.com/dbcgdaigj/image/upload/v1788557824/Page_1__1_-removebg-preview_tqatkk.png';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -385,7 +385,7 @@ import { resetPassword } from '@/lib/password-reset-api';
 import styles from '../auth.module.css';
 
 const LOGO_URL =
-  'https://res.cloudinary.com/dbcgdaigj/image/upload/v1788163976/Page_2-removebg-preview_oy5czj.png';
+  'https://res.cloudinary.com/dbcgdaigj/image/upload/v1788557824/Page_1__1_-removebg-preview_tqatkk.png';
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();

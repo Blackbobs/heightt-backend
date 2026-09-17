@@ -4,12 +4,13 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { AuthModule } from '../auth/auth.module';
 import { CacheService } from '../../redis/cache.service';
+import { UsernameAvailabilityController } from './username-availability.controller';
 // import { PrismaService } from '../../prisma/prisma.service';
 
 @Module({
   imports: [AuthModule],
   providers: [UsersService, CacheService],
-  controllers: [UsersController],
+  controllers: [UsernameAvailabilityController, UsersController],
   exports: [UsersService],
 })
 export class UsersModule {}

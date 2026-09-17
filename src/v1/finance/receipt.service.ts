@@ -47,6 +47,7 @@ export class ReceiptService {
             email: true,
             username: true,
             profile: true,
+            guestPayer: { select: { email: true } },
           },
         },
         organization: {
@@ -101,6 +102,7 @@ export class ReceiptService {
     // Generate receipt number
     const receiptNumber = await this.generateReceiptNumber();
     const totalAmount = payment.amount + payment.serviceFee;
+    const paymentMetadata = (payment.metadata as any) || {};
 
     const receipt = await this.prisma.receipt.create({
       data: {
@@ -115,13 +117,22 @@ export class ReceiptService {
         currency: 'NGN',
         payerName:
           dto.payerName ||
+          paymentMetadata.guestName ||
           payment.payer?.profile?.firstName +
             ' ' +
             payment.payer?.profile?.lastName ||
           payment.payer?.username ||
           'Unknown',
-        payerEmail: dto.payerEmail || payment.payer?.email || '',
-        payerPhone: dto.payerPhone,
+        payerEmail:
+          dto.payerEmail ||
+          paymentMetadata.guestEmail ||
+          payment.payer?.guestPayer?.email ||
+          payment.payer?.email ||
+          '',
+        payerPhone: dto.payerPhone || paymentMetadata.guestPhone,
+        metadata: paymentMetadata.guestMatricNumber
+          ? { matricNumber: paymentMetadata.guestMatricNumber }
+          : undefined,
         paymentMethod: payment.paymentMethod,
         paymentDate: payment.paidAt || payment.createdAt,
         description: dto.description || payment.description,
@@ -479,6 +490,7 @@ export class ReceiptService {
         payer: {
           include: {
             profile: true,
+            guestPayer: { select: { email: true } },
           },
         },
         organization: true,
@@ -489,12 +501,19 @@ export class ReceiptService {
       throw new NotFoundException('Payment not found');
     }
 
+    const paymentMetadata = (payment.metadata as any) || {};
     const dto: GenerateReceiptDto = {
       paymentId: payment.id,
-      payerName: payment.payer?.profile?.firstName
-        ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`
-        : payment.payer?.username || 'Unknown',
-      payerEmail: payment.payer?.email || '',
+      payerName:
+        paymentMetadata.guestName ||
+        (payment.payer?.profile?.firstName
+          ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`
+          : payment.payer?.username || 'Unknown'),
+      payerEmail:
+        paymentMetadata.guestEmail ||
+        payment.payer?.guestPayer?.email ||
+        payment.payer?.email ||
+        '',
       description: payment.description || 'Payment',
     };
 
@@ -794,8 +813,21 @@ export class ReceiptService {
         characterSpacing: 0.5,
       });
 
+    const matricNumber = (receipt.metadata as any)?.matricNumber;
+    const contactDetails = [
+      receipt.payerPhone ? `Phone: ${receipt.payerPhone}` : null,
+      matricNumber ? `Matric number: ${matricNumber}` : null,
+    ].filter(Boolean);
+    contactDetails.forEach((detail, index) => {
+      doc
+        .font('Helvetica')
+        .fontSize(9)
+        .fillColor(muted)
+        .text(detail!, left, py + 49 + index * 15);
+    });
+
     // Items table
-    const tableTop = py + 65;
+    const tableTop = py + 65 + contactDetails.length * 15;
     doc
       .moveTo(left, tableTop)
       .lineTo(right, tableTop)
@@ -882,7 +914,7 @@ export class ReceiptService {
       .font('Helvetica')
       .fontSize(8)
       .fillColor(muted)
-      .text('support@heightt.com  •  heightt.app', left, footerY + 31)
+      .text('heightt.finance@gmail.com  •  heightt.app', left, footerY + 31)
       .text(
         'This is a computer-generated receipt.\nNo signature is required.',
         335,
@@ -1036,6 +1068,14 @@ export class ReceiptService {
       recipientName: receipt.payerName,
       intro: `Your payment was successful. Receipt ${receipt.receiptNumber} is attached as a PDF.`,
       details: [
+        { label: 'Paid by', value: receipt.payerName },
+        { label: 'Email', value: receipt.payerEmail },
+        ...(receipt.payerPhone
+          ? [{ label: 'Phone', value: receipt.payerPhone }]
+          : []),
+        ...(receipt.metadata?.matricNumber
+          ? [{ label: 'Matric number', value: receipt.metadata.matricNumber }]
+          : []),
         { label: 'Transaction reference', value: receipt.reference },
         { label: 'Payment', value: receipt.description || 'Payment' },
         { label: 'Amount', value: money(receipt.amount) },
@@ -1051,7 +1091,7 @@ export class ReceiptService {
         'This receipt was generated automatically by Heightt. Keep it for your financial records.',
       tone: 'success',
       reason:
-        'You received this email because a payment was recorded on your Heightt account.',
+        'You received this email because this address was provided for a payment on Heightt.',
     });
   }
 }

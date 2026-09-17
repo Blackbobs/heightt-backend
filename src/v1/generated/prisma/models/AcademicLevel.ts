@@ -251,6 +251,7 @@ export type AcademicLevelWhereInput = {
   students?: Prisma.StudentProfileListRelationFilter
   promotionsFrom?: Prisma.StudentPromotionListRelationFilter
   promotionsTo?: Prisma.StudentPromotionListRelationFilter
+  guestPayers?: Prisma.GuestPayerListRelationFilter
 }
 
 export type AcademicLevelOrderByWithRelationInput = {
@@ -269,6 +270,7 @@ export type AcademicLevelOrderByWithRelationInput = {
   students?: Prisma.StudentProfileOrderByRelationAggregateInput
   promotionsFrom?: Prisma.StudentPromotionOrderByRelationAggregateInput
   promotionsTo?: Prisma.StudentPromotionOrderByRelationAggregateInput
+  guestPayers?: Prisma.GuestPayerOrderByRelationAggregateInput
 }
 
 export type AcademicLevelWhereUniqueInput = Prisma.AtLeast<{
@@ -291,6 +293,7 @@ export type AcademicLevelWhereUniqueInput = Prisma.AtLeast<{
   students?: Prisma.StudentProfileListRelationFilter
   promotionsFrom?: Prisma.StudentPromotionListRelationFilter
   promotionsTo?: Prisma.StudentPromotionListRelationFilter
+  guestPayers?: Prisma.GuestPayerListRelationFilter
 }, "id" | "departmentId_name">
 
 export type AcademicLevelOrderByWithAggregationInput = {
@@ -338,6 +341,7 @@ export type AcademicLevelCreateInput = {
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateInput = {
@@ -355,6 +359,7 @@ export type AcademicLevelUncheckedCreateInput = {
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUpdateInput = {
@@ -372,6 +377,7 @@ export type AcademicLevelUpdateInput = {
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateInput = {
@@ -389,6 +395,7 @@ export type AcademicLevelUncheckedUpdateInput = {
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelCreateManyInput = {
@@ -421,6 +428,11 @@ export type AcademicLevelUncheckedUpdateManyInput = {
   status?: Prisma.EnumAcademicLevelStatusFieldUpdateOperationsInput | $Enums.AcademicLevelStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AcademicLevelNullableScalarRelationFilter = {
+  is?: Prisma.AcademicLevelWhereInput | null
+  isNot?: Prisma.AcademicLevelWhereInput | null
 }
 
 export type AcademicLevelListRelationFilter = {
@@ -481,14 +493,25 @@ export type AcademicLevelSumOrderByAggregateInput = {
   order?: Prisma.SortOrder
 }
 
-export type AcademicLevelNullableScalarRelationFilter = {
-  is?: Prisma.AcademicLevelWhereInput | null
-  isNot?: Prisma.AcademicLevelWhereInput | null
-}
-
 export type AcademicLevelScalarRelationFilter = {
   is?: Prisma.AcademicLevelWhereInput
   isNot?: Prisma.AcademicLevelWhereInput
+}
+
+export type AcademicLevelCreateNestedOneWithoutGuestPayersInput = {
+  create?: Prisma.XOR<Prisma.AcademicLevelCreateWithoutGuestPayersInput, Prisma.AcademicLevelUncheckedCreateWithoutGuestPayersInput>
+  connectOrCreate?: Prisma.AcademicLevelCreateOrConnectWithoutGuestPayersInput
+  connect?: Prisma.AcademicLevelWhereUniqueInput
+}
+
+export type AcademicLevelUpdateOneWithoutGuestPayersNestedInput = {
+  create?: Prisma.XOR<Prisma.AcademicLevelCreateWithoutGuestPayersInput, Prisma.AcademicLevelUncheckedCreateWithoutGuestPayersInput>
+  connectOrCreate?: Prisma.AcademicLevelCreateOrConnectWithoutGuestPayersInput
+  upsert?: Prisma.AcademicLevelUpsertWithoutGuestPayersInput
+  disconnect?: Prisma.AcademicLevelWhereInput | boolean
+  delete?: Prisma.AcademicLevelWhereInput | boolean
+  connect?: Prisma.AcademicLevelWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicLevelUpdateToOneWithWhereWithoutGuestPayersInput, Prisma.AcademicLevelUpdateWithoutGuestPayersInput>, Prisma.AcademicLevelUncheckedUpdateWithoutGuestPayersInput>
 }
 
 export type AcademicLevelCreateNestedManyWithoutDepartmentInput = {
@@ -531,14 +554,6 @@ export type AcademicLevelUncheckedUpdateManyWithoutDepartmentNestedInput = {
   update?: Prisma.AcademicLevelUpdateWithWhereUniqueWithoutDepartmentInput | Prisma.AcademicLevelUpdateWithWhereUniqueWithoutDepartmentInput[]
   updateMany?: Prisma.AcademicLevelUpdateManyWithWhereWithoutDepartmentInput | Prisma.AcademicLevelUpdateManyWithWhereWithoutDepartmentInput[]
   deleteMany?: Prisma.AcademicLevelScalarWhereInput | Prisma.AcademicLevelScalarWhereInput[]
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type EnumAcademicLevelStatusFieldUpdateOperationsInput = {
@@ -635,6 +650,90 @@ export type AcademicLevelUpdateOneWithoutOrganizationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AcademicLevelUpdateToOneWithWhereWithoutOrganizationsInput, Prisma.AcademicLevelUpdateWithoutOrganizationsInput>, Prisma.AcademicLevelUncheckedUpdateWithoutOrganizationsInput>
 }
 
+export type AcademicLevelCreateWithoutGuestPayersInput = {
+  id?: string
+  name: string
+  numericLevel: number
+  order: number
+  status?: $Enums.AcademicLevelStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicSessions?: Prisma.AcademicSessionCreateNestedManyWithoutAcademicLevelInput
+  department: Prisma.DepartmentCreateNestedOneWithoutAcademicLevelsInput
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutAcademicLevelInput
+  academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutAcademicLevelInput
+  students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
+  promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
+  promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+}
+
+export type AcademicLevelUncheckedCreateWithoutGuestPayersInput = {
+  id?: string
+  departmentId: string
+  name: string
+  numericLevel: number
+  order: number
+  status?: $Enums.AcademicLevelStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicSessions?: Prisma.AcademicSessionUncheckedCreateNestedManyWithoutAcademicLevelInput
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutAcademicLevelInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutAcademicLevelInput
+  students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
+  promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
+  promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+}
+
+export type AcademicLevelCreateOrConnectWithoutGuestPayersInput = {
+  where: Prisma.AcademicLevelWhereUniqueInput
+  create: Prisma.XOR<Prisma.AcademicLevelCreateWithoutGuestPayersInput, Prisma.AcademicLevelUncheckedCreateWithoutGuestPayersInput>
+}
+
+export type AcademicLevelUpsertWithoutGuestPayersInput = {
+  update: Prisma.XOR<Prisma.AcademicLevelUpdateWithoutGuestPayersInput, Prisma.AcademicLevelUncheckedUpdateWithoutGuestPayersInput>
+  create: Prisma.XOR<Prisma.AcademicLevelCreateWithoutGuestPayersInput, Prisma.AcademicLevelUncheckedCreateWithoutGuestPayersInput>
+  where?: Prisma.AcademicLevelWhereInput
+}
+
+export type AcademicLevelUpdateToOneWithWhereWithoutGuestPayersInput = {
+  where?: Prisma.AcademicLevelWhereInput
+  data: Prisma.XOR<Prisma.AcademicLevelUpdateWithoutGuestPayersInput, Prisma.AcademicLevelUncheckedUpdateWithoutGuestPayersInput>
+}
+
+export type AcademicLevelUpdateWithoutGuestPayersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  numericLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumAcademicLevelStatusFieldUpdateOperationsInput | $Enums.AcademicLevelStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicSessions?: Prisma.AcademicSessionUpdateManyWithoutAcademicLevelNestedInput
+  department?: Prisma.DepartmentUpdateOneRequiredWithoutAcademicLevelsNestedInput
+  organizations?: Prisma.OrganizationUpdateManyWithoutAcademicLevelNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutAcademicLevelNestedInput
+  students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
+  promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
+  promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+}
+
+export type AcademicLevelUncheckedUpdateWithoutGuestPayersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  departmentId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  numericLevel?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumAcademicLevelStatusFieldUpdateOperationsInput | $Enums.AcademicLevelStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicSessions?: Prisma.AcademicSessionUncheckedUpdateManyWithoutAcademicLevelNestedInput
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutAcademicLevelNestedInput
+  academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutAcademicLevelNestedInput
+  students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
+  promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
+  promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+}
+
 export type AcademicLevelCreateWithoutDepartmentInput = {
   id?: string
   name: string
@@ -649,6 +748,7 @@ export type AcademicLevelCreateWithoutDepartmentInput = {
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutDepartmentInput = {
@@ -665,6 +765,7 @@ export type AcademicLevelUncheckedCreateWithoutDepartmentInput = {
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutDepartmentInput = {
@@ -721,6 +822,7 @@ export type AcademicLevelCreateWithoutAcademicSessionsInput = {
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutAcademicSessionsInput = {
@@ -737,6 +839,7 @@ export type AcademicLevelUncheckedCreateWithoutAcademicSessionsInput = {
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutAcademicSessionsInput = {
@@ -769,6 +872,7 @@ export type AcademicLevelUpdateWithoutAcademicSessionsInput = {
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutAcademicSessionsInput = {
@@ -785,6 +889,7 @@ export type AcademicLevelUncheckedUpdateWithoutAcademicSessionsInput = {
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelCreateWithoutStudentsInput = {
@@ -801,6 +906,7 @@ export type AcademicLevelCreateWithoutStudentsInput = {
   academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutStudentsInput = {
@@ -817,6 +923,7 @@ export type AcademicLevelUncheckedCreateWithoutStudentsInput = {
   academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutStudentsInput = {
@@ -849,6 +956,7 @@ export type AcademicLevelUpdateWithoutStudentsInput = {
   academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutStudentsInput = {
@@ -865,6 +973,7 @@ export type AcademicLevelUncheckedUpdateWithoutStudentsInput = {
   academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelCreateWithoutAcademicRecordsInput = {
@@ -881,6 +990,7 @@ export type AcademicLevelCreateWithoutAcademicRecordsInput = {
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutAcademicRecordsInput = {
@@ -897,6 +1007,7 @@ export type AcademicLevelUncheckedCreateWithoutAcademicRecordsInput = {
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutAcademicRecordsInput = {
@@ -929,6 +1040,7 @@ export type AcademicLevelUpdateWithoutAcademicRecordsInput = {
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutAcademicRecordsInput = {
@@ -945,6 +1057,7 @@ export type AcademicLevelUncheckedUpdateWithoutAcademicRecordsInput = {
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelCreateWithoutPromotionsFromInput = {
@@ -961,6 +1074,7 @@ export type AcademicLevelCreateWithoutPromotionsFromInput = {
   academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutAcademicLevelInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutPromotionsFromInput = {
@@ -977,6 +1091,7 @@ export type AcademicLevelUncheckedCreateWithoutPromotionsFromInput = {
   academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutAcademicLevelInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutPromotionsFromInput = {
@@ -998,6 +1113,7 @@ export type AcademicLevelCreateWithoutPromotionsToInput = {
   academicRecords?: Prisma.StudentAcademicRecordCreateNestedManyWithoutAcademicLevelInput
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutPromotionsToInput = {
@@ -1014,6 +1130,7 @@ export type AcademicLevelUncheckedCreateWithoutPromotionsToInput = {
   academicRecords?: Prisma.StudentAcademicRecordUncheckedCreateNestedManyWithoutAcademicLevelInput
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutPromotionsToInput = {
@@ -1046,6 +1163,7 @@ export type AcademicLevelUpdateWithoutPromotionsFromInput = {
   academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutAcademicLevelNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutPromotionsFromInput = {
@@ -1062,6 +1180,7 @@ export type AcademicLevelUncheckedUpdateWithoutPromotionsFromInput = {
   academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutAcademicLevelNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUpsertWithoutPromotionsToInput = {
@@ -1089,6 +1208,7 @@ export type AcademicLevelUpdateWithoutPromotionsToInput = {
   academicRecords?: Prisma.StudentAcademicRecordUpdateManyWithoutAcademicLevelNestedInput
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutPromotionsToInput = {
@@ -1105,6 +1225,7 @@ export type AcademicLevelUncheckedUpdateWithoutPromotionsToInput = {
   academicRecords?: Prisma.StudentAcademicRecordUncheckedUpdateManyWithoutAcademicLevelNestedInput
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelCreateWithoutOrganizationsInput = {
@@ -1121,6 +1242,7 @@ export type AcademicLevelCreateWithoutOrganizationsInput = {
   students?: Prisma.StudentProfileCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelUncheckedCreateWithoutOrganizationsInput = {
@@ -1137,6 +1259,7 @@ export type AcademicLevelUncheckedCreateWithoutOrganizationsInput = {
   students?: Prisma.StudentProfileUncheckedCreateNestedManyWithoutCurrentAcademicLevelInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutFromLevelInput
   promotionsTo?: Prisma.StudentPromotionUncheckedCreateNestedManyWithoutToLevelInput
+  guestPayers?: Prisma.GuestPayerUncheckedCreateNestedManyWithoutAcademicLevelInput
 }
 
 export type AcademicLevelCreateOrConnectWithoutOrganizationsInput = {
@@ -1169,6 +1292,7 @@ export type AcademicLevelUpdateWithoutOrganizationsInput = {
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutOrganizationsInput = {
@@ -1185,6 +1309,7 @@ export type AcademicLevelUncheckedUpdateWithoutOrganizationsInput = {
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelCreateManyDepartmentInput = {
@@ -1211,6 +1336,7 @@ export type AcademicLevelUpdateWithoutDepartmentInput = {
   students?: Prisma.StudentProfileUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateWithoutDepartmentInput = {
@@ -1227,6 +1353,7 @@ export type AcademicLevelUncheckedUpdateWithoutDepartmentInput = {
   students?: Prisma.StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelNestedInput
   promotionsFrom?: Prisma.StudentPromotionUncheckedUpdateManyWithoutFromLevelNestedInput
   promotionsTo?: Prisma.StudentPromotionUncheckedUpdateManyWithoutToLevelNestedInput
+  guestPayers?: Prisma.GuestPayerUncheckedUpdateManyWithoutAcademicLevelNestedInput
 }
 
 export type AcademicLevelUncheckedUpdateManyWithoutDepartmentInput = {
@@ -1251,6 +1378,7 @@ export type AcademicLevelCountOutputType = {
   students: number
   promotionsFrom: number
   promotionsTo: number
+  guestPayers: number
 }
 
 export type AcademicLevelCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1260,6 +1388,7 @@ export type AcademicLevelCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   students?: boolean | AcademicLevelCountOutputTypeCountStudentsArgs
   promotionsFrom?: boolean | AcademicLevelCountOutputTypeCountPromotionsFromArgs
   promotionsTo?: boolean | AcademicLevelCountOutputTypeCountPromotionsToArgs
+  guestPayers?: boolean | AcademicLevelCountOutputTypeCountGuestPayersArgs
 }
 
 /**
@@ -1314,6 +1443,13 @@ export type AcademicLevelCountOutputTypeCountPromotionsToArgs<ExtArgs extends ru
   where?: Prisma.StudentPromotionWhereInput
 }
 
+/**
+ * AcademicLevelCountOutputType without action
+ */
+export type AcademicLevelCountOutputTypeCountGuestPayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GuestPayerWhereInput
+}
+
 
 export type AcademicLevelSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1331,6 +1467,7 @@ export type AcademicLevelSelect<ExtArgs extends runtime.Types.Extensions.Interna
   students?: boolean | Prisma.AcademicLevel$studentsArgs<ExtArgs>
   promotionsFrom?: boolean | Prisma.AcademicLevel$promotionsFromArgs<ExtArgs>
   promotionsTo?: boolean | Prisma.AcademicLevel$promotionsToArgs<ExtArgs>
+  guestPayers?: boolean | Prisma.AcademicLevel$guestPayersArgs<ExtArgs>
   _count?: boolean | Prisma.AcademicLevelCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["academicLevel"]>
 
@@ -1378,6 +1515,7 @@ export type AcademicLevelInclude<ExtArgs extends runtime.Types.Extensions.Intern
   students?: boolean | Prisma.AcademicLevel$studentsArgs<ExtArgs>
   promotionsFrom?: boolean | Prisma.AcademicLevel$promotionsFromArgs<ExtArgs>
   promotionsTo?: boolean | Prisma.AcademicLevel$promotionsToArgs<ExtArgs>
+  guestPayers?: boolean | Prisma.AcademicLevel$guestPayersArgs<ExtArgs>
   _count?: boolean | Prisma.AcademicLevelCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AcademicLevelIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1397,6 +1535,7 @@ export type $AcademicLevelPayload<ExtArgs extends runtime.Types.Extensions.Inter
     students: Prisma.$StudentProfilePayload<ExtArgs>[]
     promotionsFrom: Prisma.$StudentPromotionPayload<ExtArgs>[]
     promotionsTo: Prisma.$StudentPromotionPayload<ExtArgs>[]
+    guestPayers: Prisma.$GuestPayerPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1808,6 +1947,7 @@ export interface Prisma__AcademicLevelClient<T, Null = never, ExtArgs extends ru
   students<T extends Prisma.AcademicLevel$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevel$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   promotionsFrom<T extends Prisma.AcademicLevel$promotionsFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevel$promotionsFromArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   promotionsTo<T extends Prisma.AcademicLevel$promotionsToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevel$promotionsToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPromotionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  guestPayers<T extends Prisma.AcademicLevel$guestPayersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AcademicLevel$guestPayersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuestPayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2387,6 +2527,30 @@ export type AcademicLevel$promotionsToArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.StudentPromotionScalarFieldEnum | Prisma.StudentPromotionScalarFieldEnum[]
+}
+
+/**
+ * AcademicLevel.guestPayers
+ */
+export type AcademicLevel$guestPayersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GuestPayer
+   */
+  select?: Prisma.GuestPayerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GuestPayer
+   */
+  omit?: Prisma.GuestPayerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GuestPayerInclude<ExtArgs> | null
+  where?: Prisma.GuestPayerWhereInput
+  orderBy?: Prisma.GuestPayerOrderByWithRelationInput | Prisma.GuestPayerOrderByWithRelationInput[]
+  cursor?: Prisma.GuestPayerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GuestPayerScalarFieldEnum | Prisma.GuestPayerScalarFieldEnum[]
 }
 
 /**

@@ -76,6 +76,7 @@ import {
 import { IdempotencyService } from '../../redis/idempotency.service';
 import { IdempotencyKey } from '../../common/decorators/idempotency.decorator';
 import { WalletGuard } from '../../common/guards/wallet.guard';
+import { createCsv } from '../../common/utils/csv.util';
 
 @ApiTags('finance')
 @Controller('finance')
@@ -414,7 +415,7 @@ export class FinanceController {
   @ApiOperation({
     summary: 'Get my dues',
     description:
-      'Get all dues for the authenticated user across all organizations',
+      'Get eligible dues across organizations: isFresher=true for 100 level, false for 200 level and above',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -483,6 +484,105 @@ export class FinanceController {
       parseInt(limit, 10),
       { status, organizationId, payerId },
     );
+  }
+
+  @Get('reports/payments.csv')
+  @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN', 'ORGANIZATION_ADMIN')
+  @RequirePermission('finance:export')
+  @ApiOperation({
+    summary: 'Export payment report as CSV (Admin only)',
+    description:
+      'Platform admins can export all payments. Organization admins can only export payments belonging to their assigned organization scope.',
+  })
+  @ApiQuery({ name: 'organizationId', required: false })
+  @ApiQuery({ name: 'status', required: false })
+  @ApiQuery({ name: 'payerId', required: false })
+  @ApiQuery({ name: 'startDate', required: false, description: 'ISO date' })
+  @ApiQuery({ name: 'endDate', required: false, description: 'ISO date' })
+  @ApiResponse({ status: 200, description: 'Downloadable UTF-8 CSV report' })
+  async exportPaymentReport(
+    @Request() req: any,
+    @Res() res: Response,
+    @Query('organizationId') organizationId?: string,
+    @Query('status') status?: string,
+    @Query('payerId') payerId?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    for (const [name, value] of [
+      ['startDate', startDate],
+      ['endDate', endDate],
+    ] as const) {
+      if (value && Number.isNaN(Date.parse(value))) {
+        throw new BadRequestException(`${name} must be a valid ISO date`);
+      }
+    }
+
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      throw new BadRequestException('startDate must not be after endDate');
+    }
+
+    const payments = await this.financeService.exportAdminPaymentReport(
+      req.admin,
+      { organizationId, status, payerId, startDate, endDate },
+    );
+    const csv = createCsv(
+      [
+        'Payment ID',
+        'Reference',
+        'Status',
+        'Amount (Kobo)',
+        'Amount (NGN)',
+        'Service Fee (Kobo)',
+        'Payment Method',
+        'Payer ID',
+        'Payer Name',
+        'Payer Email',
+        'Matric Number',
+        'Organization ID',
+        'Organization',
+        'Due',
+        'Receipt Number',
+        'Paid At',
+        'Created At',
+      ],
+      payments.map((payment: any) => [
+        payment.id,
+        payment.reference,
+        payment.status,
+        payment.amount,
+        (payment.amount / 100).toFixed(2),
+        payment.serviceFee,
+        payment.paymentMethod,
+        payment.payerId,
+        payment.payer?.guestPayer
+          ? `${payment.payer.guestPayer.firstName} ${payment.payer.guestPayer.lastName}`
+          : payment.payer?.profile?.firstName
+          ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`.trim()
+          : payment.payer?.username || '',
+        payment.payer?.guestPayer?.email ||
+          (payment.metadata as any)?.guestEmail ||
+          payment.payer?.email,
+        payment.payer?.guestPayer?.matricNumber ||
+          (payment.metadata as any)?.guestMatricNumber ||
+          payment.payer?.studentProfile?.matricNumber,
+        payment.organizationId,
+        payment.organization?.name,
+        payment.duePayment?.assignment?.due?.name,
+        payment.receipt?.receiptNumber,
+        payment.paidAt,
+        payment.createdAt,
+      ]),
+    );
+    const date = new Date().toISOString().slice(0, 10);
+    const scope = organizationId || req.admin.organizationId || 'platform';
+    const filename = `payment-report-${scope}-${date}.csv`;
+
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Cache-Control', 'private, no-store');
+    return res.send(csv);
   }
 
   @Post('payments')

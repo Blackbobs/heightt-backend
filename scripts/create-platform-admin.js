@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function createPlatformAdmin() {
-  const email = 'ayodejiayodele350@gmail.com';
+  const email = 'heightt.finance@gmail.com';
 
   try {
     console.log(`🔍 Looking for user with email: ${email}`);
