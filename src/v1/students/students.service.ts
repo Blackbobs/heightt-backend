@@ -219,6 +219,8 @@ export class StudentsService {
       facultyId?: string;
       departmentId?: string;
       levelId?: string;
+      organizationId?: string;
+      academicSessionId?: string;
       status?: string;
       verificationStatus?: string;
       search?: string;
@@ -227,6 +229,62 @@ export class StudentsService {
   ) {
     const skip = (page - 1) * limit;
     const where: any = {};
+
+    let academicSessionId = filters?.academicSessionId;
+
+    // Organization scope: a department organization narrows to that department,
+    // a faculty organization to that faculty, and so on down to the academic
+    // level. Explicit ids sent alongside organizationId take precedence.
+    if (filters?.organizationId) {
+      const organization = await this.prisma.organization.findUnique({
+        where: { id: filters.organizationId },
+        select: {
+          institutionId: true,
+          facultyId: true,
+          departmentId: true,
+          academicLevelId: true,
+          academicSessionId: true,
+        },
+      });
+
+      if (!organization) {
+        throw new NotFoundException('Organization not found');
+      }
+
+      if (organization.institutionId) {
+        where.institutionId = organization.institutionId;
+      }
+      if (organization.facultyId) {
+        where.facultyId = organization.facultyId;
+      }
+      if (organization.departmentId) {
+        where.departmentId = organization.departmentId;
+      }
+      if (organization.academicLevelId) {
+        where.currentAcademicLevelId = organization.academicLevelId;
+      }
+
+      // Organizations with no academic unit attached (clubs, associations,
+      // societies...) scope their students through membership instead.
+      if (
+        !organization.institutionId &&
+        !organization.facultyId &&
+        !organization.departmentId &&
+        !organization.academicLevelId
+      ) {
+        where.user = {
+          organizationMemberships: {
+            some: {
+              organizationId: filters.organizationId,
+              status: 'ACTIVE',
+            },
+          },
+        };
+      }
+
+      academicSessionId =
+        academicSessionId || organization.academicSessionId || undefined;
+    }
 
     if (filters?.institutionId) {
       where.institutionId = filters.institutionId;
@@ -273,6 +331,12 @@ export class StudentsService {
       ];
     }
 
+    // Only students enrolled in the requested session, with the records
+    // narrowed to that session so the payload matches the session filter.
+    if (academicSessionId) {
+      where.academicRecords = { some: { sessionId: academicSessionId } };
+    }
+
     const [students, total] = await Promise.all([
       this.prisma.studentProfile.findMany({
         where,
@@ -292,6 +356,9 @@ export class StudentsService {
           department: true,
           currentAcademicLevel: true,
           academicRecords: {
+            where: academicSessionId
+              ? { sessionId: academicSessionId }
+              : undefined,
             include: {
               session: true,
               department: true,
