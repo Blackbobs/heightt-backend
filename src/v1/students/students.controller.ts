@@ -87,15 +87,17 @@ export class StudentsController {
       const {
         page,
         limit,
+        organizationId,
         institutionId,
         facultyId,
         departmentId,
         levelId,
+        academicSessionId,
         status,
         verificationStatus,
         search,
       } = request.query;
-      return `students:${page || 1}:${limit || 10}:${institutionId || 'all'}:${facultyId || 'all'}:${departmentId || 'all'}:${levelId || 'all'}:${status || 'all'}:${verificationStatus || 'all'}:${search || 'all'}`;
+      return `students:${page || 1}:${limit || 10}:${organizationId || 'all'}:${institutionId || 'all'}:${facultyId || 'all'}:${departmentId || 'all'}:${levelId || 'all'}:${academicSessionId || 'all'}:${status || 'all'}:${verificationStatus || 'all'}:${search || 'all'}`;
     },
     ttl: 300, // 5 minutes
     tags: ['students'],
@@ -103,6 +105,12 @@ export class StudentsController {
   @ApiOperation({ summary: 'Get all students (Admin only)' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({
+    name: 'organizationId',
+    required: false,
+    description:
+      'Filter by organization scope (department org returns that department, faculty org that faculty, etc.)',
+  })
   @ApiQuery({
     name: 'institutionId',
     required: false,
@@ -122,6 +130,12 @@ export class StudentsController {
     name: 'levelId',
     required: false,
     description: 'Filter by academic level',
+  })
+  @ApiQuery({
+    name: 'academicSessionId',
+    required: false,
+    description:
+      'Filter by academic session (students enrolled in that session)',
   })
   @ApiQuery({
     name: 'status',
@@ -146,10 +160,12 @@ export class StudentsController {
   async getAllStudents(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
+    @Query('organizationId') organizationId?: string,
     @Query('institutionId') institutionId?: string,
     @Query('facultyId') facultyId?: string,
     @Query('departmentId') departmentId?: string,
     @Query('levelId') levelId?: string,
+    @Query('academicSessionId') academicSessionId?: string,
     @Query('status') status?: string,
     @Query('verificationStatus') verificationStatus?: string,
     @Query('search') search?: string,
@@ -159,13 +175,15 @@ export class StudentsController {
       parseInt(page, 10),
       parseInt(limit, 10),
       {
-        institutionId,
-        facultyId,
-        departmentId,
-        levelId,
-        status,
-        verificationStatus,
-        search,
+        organizationId: organizationId || undefined,
+        institutionId: institutionId || undefined,
+        facultyId: facultyId || undefined,
+        departmentId: departmentId || undefined,
+        levelId: levelId || undefined,
+        academicSessionId: academicSessionId || undefined,
+        status: status || undefined,
+        verificationStatus: verificationStatus || undefined,
+        search: search || undefined,
       },
     );
   }
