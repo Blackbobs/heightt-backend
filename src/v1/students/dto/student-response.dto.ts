@@ -113,6 +113,12 @@ export class StudentResponseDto {
   @ApiProperty({ example: 'MAT/2024/001', description: 'Matric number' })
   matricNumber?: string;
 
+  @ApiProperty({
+    example: false,
+    description: 'Whether the student entered through direct entry',
+  })
+  isDirectEntry: boolean;
+
   @ApiProperty({ example: 'ACTIVE', description: 'Academic status' })
   academicStatus: string;
 

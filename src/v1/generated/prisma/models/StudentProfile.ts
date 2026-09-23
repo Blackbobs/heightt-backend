@@ -32,6 +32,7 @@ export type StudentProfileMinAggregateOutputType = {
   departmentId: string | null
   currentAcademicLevelId: string | null
   matricNumber: string | null
+  isDirectEntry: boolean | null
   academicStatus: $Enums.AcademicStatus | null
   onboardingStep: $Enums.OnboardingStep | null
   onboardingCompleted: boolean | null
@@ -50,6 +51,7 @@ export type StudentProfileMaxAggregateOutputType = {
   departmentId: string | null
   currentAcademicLevelId: string | null
   matricNumber: string | null
+  isDirectEntry: boolean | null
   academicStatus: $Enums.AcademicStatus | null
   onboardingStep: $Enums.OnboardingStep | null
   onboardingCompleted: boolean | null
@@ -68,6 +70,7 @@ export type StudentProfileCountAggregateOutputType = {
   departmentId: number
   currentAcademicLevelId: number
   matricNumber: number
+  isDirectEntry: number
   academicStatus: number
   onboardingStep: number
   onboardingCompleted: number
@@ -88,6 +91,7 @@ export type StudentProfileMinAggregateInputType = {
   departmentId?: true
   currentAcademicLevelId?: true
   matricNumber?: true
+  isDirectEntry?: true
   academicStatus?: true
   onboardingStep?: true
   onboardingCompleted?: true
@@ -106,6 +110,7 @@ export type StudentProfileMaxAggregateInputType = {
   departmentId?: true
   currentAcademicLevelId?: true
   matricNumber?: true
+  isDirectEntry?: true
   academicStatus?: true
   onboardingStep?: true
   onboardingCompleted?: true
@@ -124,6 +129,7 @@ export type StudentProfileCountAggregateInputType = {
   departmentId?: true
   currentAcademicLevelId?: true
   matricNumber?: true
+  isDirectEntry?: true
   academicStatus?: true
   onboardingStep?: true
   onboardingCompleted?: true
@@ -215,6 +221,7 @@ export type StudentProfileGroupByOutputType = {
   departmentId: string
   currentAcademicLevelId: string | null
   matricNumber: string | null
+  isDirectEntry: boolean
   academicStatus: $Enums.AcademicStatus
   onboardingStep: $Enums.OnboardingStep
   onboardingCompleted: boolean
@@ -254,6 +261,7 @@ export type StudentProfileWhereInput = {
   departmentId?: Prisma.StringFilter<"StudentProfile"> | string
   currentAcademicLevelId?: Prisma.StringNullableFilter<"StudentProfile"> | string | null
   matricNumber?: Prisma.StringNullableFilter<"StudentProfile"> | string | null
+  isDirectEntry?: Prisma.BoolFilter<"StudentProfile"> | boolean
   academicStatus?: Prisma.EnumAcademicStatusFilter<"StudentProfile"> | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"StudentProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"StudentProfile"> | boolean
@@ -283,6 +291,7 @@ export type StudentProfileOrderByWithRelationInput = {
   departmentId?: Prisma.SortOrder
   currentAcademicLevelId?: Prisma.SortOrderInput | Prisma.SortOrder
   matricNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDirectEntry?: Prisma.SortOrder
   academicStatus?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -315,6 +324,7 @@ export type StudentProfileWhereUniqueInput = Prisma.AtLeast<{
   departmentId?: Prisma.StringFilter<"StudentProfile"> | string
   currentAcademicLevelId?: Prisma.StringNullableFilter<"StudentProfile"> | string | null
   matricNumber?: Prisma.StringNullableFilter<"StudentProfile"> | string | null
+  isDirectEntry?: Prisma.BoolFilter<"StudentProfile"> | boolean
   academicStatus?: Prisma.EnumAcademicStatusFilter<"StudentProfile"> | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"StudentProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"StudentProfile"> | boolean
@@ -344,6 +354,7 @@ export type StudentProfileOrderByWithAggregationInput = {
   departmentId?: Prisma.SortOrder
   currentAcademicLevelId?: Prisma.SortOrderInput | Prisma.SortOrder
   matricNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDirectEntry?: Prisma.SortOrder
   academicStatus?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -368,6 +379,7 @@ export type StudentProfileScalarWhereWithAggregatesInput = {
   departmentId?: Prisma.StringWithAggregatesFilter<"StudentProfile"> | string
   currentAcademicLevelId?: Prisma.StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
   matricNumber?: Prisma.StringNullableWithAggregatesFilter<"StudentProfile"> | string | null
+  isDirectEntry?: Prisma.BoolWithAggregatesFilter<"StudentProfile"> | boolean
   academicStatus?: Prisma.EnumAcademicStatusWithAggregatesFilter<"StudentProfile"> | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepWithAggregatesFilter<"StudentProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolWithAggregatesFilter<"StudentProfile"> | boolean
@@ -381,6 +393,7 @@ export type StudentProfileScalarWhereWithAggregatesInput = {
 export type StudentProfileCreateInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -410,6 +423,7 @@ export type StudentProfileUncheckedCreateInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -429,6 +443,7 @@ export type StudentProfileUncheckedCreateInput = {
 export type StudentProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -458,6 +473,7 @@ export type StudentProfileUncheckedUpdateInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -482,6 +498,7 @@ export type StudentProfileCreateManyInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -495,6 +512,7 @@ export type StudentProfileCreateManyInput = {
 export type StudentProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -513,6 +531,7 @@ export type StudentProfileUncheckedUpdateManyInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -546,6 +565,7 @@ export type StudentProfileCountOrderByAggregateInput = {
   departmentId?: Prisma.SortOrder
   currentAcademicLevelId?: Prisma.SortOrder
   matricNumber?: Prisma.SortOrder
+  isDirectEntry?: Prisma.SortOrder
   academicStatus?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -564,6 +584,7 @@ export type StudentProfileMaxOrderByAggregateInput = {
   departmentId?: Prisma.SortOrder
   currentAcademicLevelId?: Prisma.SortOrder
   matricNumber?: Prisma.SortOrder
+  isDirectEntry?: Prisma.SortOrder
   academicStatus?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -582,6 +603,7 @@ export type StudentProfileMinOrderByAggregateInput = {
   departmentId?: Prisma.SortOrder
   currentAcademicLevelId?: Prisma.SortOrder
   matricNumber?: Prisma.SortOrder
+  isDirectEntry?: Prisma.SortOrder
   academicStatus?: Prisma.SortOrder
   onboardingStep?: Prisma.SortOrder
   onboardingCompleted?: Prisma.SortOrder
@@ -890,6 +912,7 @@ export type StudentProfileUpdateOneWithoutFilesNestedInput = {
 export type StudentProfileCreateWithoutUserInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -917,6 +940,7 @@ export type StudentProfileUncheckedCreateWithoutUserInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -952,6 +976,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutUserInput = {
 export type StudentProfileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -979,6 +1004,7 @@ export type StudentProfileUncheckedUpdateWithoutUserInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -998,6 +1024,7 @@ export type StudentProfileUncheckedUpdateWithoutUserInput = {
 export type StudentProfileCreateWithoutInstitutionInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1025,6 +1052,7 @@ export type StudentProfileUncheckedCreateWithoutInstitutionInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1078,6 +1106,7 @@ export type StudentProfileScalarWhereInput = {
   departmentId?: Prisma.StringFilter<"StudentProfile"> | string
   currentAcademicLevelId?: Prisma.StringNullableFilter<"StudentProfile"> | string | null
   matricNumber?: Prisma.StringNullableFilter<"StudentProfile"> | string | null
+  isDirectEntry?: Prisma.BoolFilter<"StudentProfile"> | boolean
   academicStatus?: Prisma.EnumAcademicStatusFilter<"StudentProfile"> | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFilter<"StudentProfile"> | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFilter<"StudentProfile"> | boolean
@@ -1091,6 +1120,7 @@ export type StudentProfileScalarWhereInput = {
 export type StudentProfileCreateWithoutFacultyInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1118,6 +1148,7 @@ export type StudentProfileUncheckedCreateWithoutFacultyInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1163,6 +1194,7 @@ export type StudentProfileUpdateManyWithWhereWithoutFacultyInput = {
 export type StudentProfileCreateWithoutDepartmentInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1190,6 +1222,7 @@ export type StudentProfileUncheckedCreateWithoutDepartmentInput = {
   facultyId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1235,6 +1268,7 @@ export type StudentProfileUpdateManyWithWhereWithoutDepartmentInput = {
 export type StudentProfileCreateWithoutCurrentAcademicLevelInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1262,6 +1296,7 @@ export type StudentProfileUncheckedCreateWithoutCurrentAcademicLevelInput = {
   facultyId: string
   departmentId: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1307,6 +1342,7 @@ export type StudentProfileUpdateManyWithWhereWithoutCurrentAcademicLevelInput = 
 export type StudentProfileCreateWithoutAcademicRecordsInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1335,6 +1371,7 @@ export type StudentProfileUncheckedCreateWithoutAcademicRecordsInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1369,6 +1406,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutAcademicRecordsInput = {
 export type StudentProfileUpdateWithoutAcademicRecordsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1397,6 +1435,7 @@ export type StudentProfileUncheckedUpdateWithoutAcademicRecordsInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1415,6 +1454,7 @@ export type StudentProfileUncheckedUpdateWithoutAcademicRecordsInput = {
 export type StudentProfileCreateWithoutPromotionsInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1443,6 +1483,7 @@ export type StudentProfileUncheckedCreateWithoutPromotionsInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1477,6 +1518,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutPromotionsInput = {
 export type StudentProfileUpdateWithoutPromotionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1505,6 +1547,7 @@ export type StudentProfileUncheckedUpdateWithoutPromotionsInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1523,6 +1566,7 @@ export type StudentProfileUncheckedUpdateWithoutPromotionsInput = {
 export type StudentProfileCreateWithoutEnrollmentsInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1551,6 +1595,7 @@ export type StudentProfileUncheckedCreateWithoutEnrollmentsInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1585,6 +1630,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutEnrollmentsInput = {
 export type StudentProfileUpdateWithoutEnrollmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1613,6 +1659,7 @@ export type StudentProfileUncheckedUpdateWithoutEnrollmentsInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1631,6 +1678,7 @@ export type StudentProfileUncheckedUpdateWithoutEnrollmentsInput = {
 export type StudentProfileCreateWithoutVerificationsInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1659,6 +1707,7 @@ export type StudentProfileUncheckedCreateWithoutVerificationsInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1693,6 +1742,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutVerificationsInput = {
 export type StudentProfileUpdateWithoutVerificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1721,6 +1771,7 @@ export type StudentProfileUncheckedUpdateWithoutVerificationsInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1739,6 +1790,7 @@ export type StudentProfileUncheckedUpdateWithoutVerificationsInput = {
 export type StudentProfileCreateWithoutDueAssignmentsInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1767,6 +1819,7 @@ export type StudentProfileUncheckedCreateWithoutDueAssignmentsInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1801,6 +1854,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutDueAssignmentsInput = {
 export type StudentProfileUpdateWithoutDueAssignmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1829,6 +1883,7 @@ export type StudentProfileUncheckedUpdateWithoutDueAssignmentsInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1847,6 +1902,7 @@ export type StudentProfileUncheckedUpdateWithoutDueAssignmentsInput = {
 export type StudentProfileCreateWithoutFilesInput = {
   id?: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1875,6 +1931,7 @@ export type StudentProfileUncheckedCreateWithoutFilesInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1909,6 +1966,7 @@ export type StudentProfileUpdateToOneWithWhereWithoutFilesInput = {
 export type StudentProfileUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1937,6 +1995,7 @@ export type StudentProfileUncheckedUpdateWithoutFilesInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1959,6 +2018,7 @@ export type StudentProfileCreateManyInstitutionInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -1972,6 +2032,7 @@ export type StudentProfileCreateManyInstitutionInput = {
 export type StudentProfileUpdateWithoutInstitutionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1999,6 +2060,7 @@ export type StudentProfileUncheckedUpdateWithoutInstitutionInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2022,6 +2084,7 @@ export type StudentProfileUncheckedUpdateManyWithoutInstitutionInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2039,6 +2102,7 @@ export type StudentProfileCreateManyFacultyInput = {
   departmentId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -2052,6 +2116,7 @@ export type StudentProfileCreateManyFacultyInput = {
 export type StudentProfileUpdateWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2079,6 +2144,7 @@ export type StudentProfileUncheckedUpdateWithoutFacultyInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2102,6 +2168,7 @@ export type StudentProfileUncheckedUpdateManyWithoutFacultyInput = {
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2119,6 +2186,7 @@ export type StudentProfileCreateManyDepartmentInput = {
   facultyId: string
   currentAcademicLevelId?: string | null
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -2132,6 +2200,7 @@ export type StudentProfileCreateManyDepartmentInput = {
 export type StudentProfileUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2159,6 +2228,7 @@ export type StudentProfileUncheckedUpdateWithoutDepartmentInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2182,6 +2252,7 @@ export type StudentProfileUncheckedUpdateManyWithoutDepartmentInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   currentAcademicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2199,6 +2270,7 @@ export type StudentProfileCreateManyCurrentAcademicLevelInput = {
   facultyId: string
   departmentId: string
   matricNumber?: string | null
+  isDirectEntry?: boolean
   academicStatus?: $Enums.AcademicStatus
   onboardingStep?: $Enums.OnboardingStep
   onboardingCompleted?: boolean
@@ -2212,6 +2284,7 @@ export type StudentProfileCreateManyCurrentAcademicLevelInput = {
 export type StudentProfileUpdateWithoutCurrentAcademicLevelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2239,6 +2312,7 @@ export type StudentProfileUncheckedUpdateWithoutCurrentAcademicLevelInput = {
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2262,6 +2336,7 @@ export type StudentProfileUncheckedUpdateManyWithoutCurrentAcademicLevelInput = 
   facultyId?: Prisma.StringFieldUpdateOperationsInput | string
   departmentId?: Prisma.StringFieldUpdateOperationsInput | string
   matricNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDirectEntry?: Prisma.BoolFieldUpdateOperationsInput | boolean
   academicStatus?: Prisma.EnumAcademicStatusFieldUpdateOperationsInput | $Enums.AcademicStatus
   onboardingStep?: Prisma.EnumOnboardingStepFieldUpdateOperationsInput | $Enums.OnboardingStep
   onboardingCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2356,6 +2431,7 @@ export type StudentProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   departmentId?: boolean
   currentAcademicLevelId?: boolean
   matricNumber?: boolean
+  isDirectEntry?: boolean
   academicStatus?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
@@ -2386,6 +2462,7 @@ export type StudentProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   departmentId?: boolean
   currentAcademicLevelId?: boolean
   matricNumber?: boolean
+  isDirectEntry?: boolean
   academicStatus?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
@@ -2409,6 +2486,7 @@ export type StudentProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   departmentId?: boolean
   currentAcademicLevelId?: boolean
   matricNumber?: boolean
+  isDirectEntry?: boolean
   academicStatus?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
@@ -2432,6 +2510,7 @@ export type StudentProfileSelectScalar = {
   departmentId?: boolean
   currentAcademicLevelId?: boolean
   matricNumber?: boolean
+  isDirectEntry?: boolean
   academicStatus?: boolean
   onboardingStep?: boolean
   onboardingCompleted?: boolean
@@ -2442,7 +2521,7 @@ export type StudentProfileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "institutionId" | "facultyId" | "departmentId" | "currentAcademicLevelId" | "matricNumber" | "academicStatus" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
+export type StudentProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "institutionId" | "facultyId" | "departmentId" | "currentAcademicLevelId" | "matricNumber" | "isDirectEntry" | "academicStatus" | "onboardingStep" | "onboardingCompleted" | "onboardingCompletedAt" | "verificationStatus" | "verifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
 export type StudentProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   dueAssignments?: boolean | Prisma.StudentProfile$dueAssignmentsArgs<ExtArgs>
   files?: boolean | Prisma.StudentProfile$filesArgs<ExtArgs>
@@ -2495,6 +2574,7 @@ export type $StudentProfilePayload<ExtArgs extends runtime.Types.Extensions.Inte
     departmentId: string
     currentAcademicLevelId: string | null
     matricNumber: string | null
+    isDirectEntry: boolean
     academicStatus: $Enums.AcademicStatus
     onboardingStep: $Enums.OnboardingStep
     onboardingCompleted: boolean
@@ -2944,6 +3024,7 @@ export interface StudentProfileFieldRefs {
   readonly departmentId: Prisma.FieldRef<"StudentProfile", 'String'>
   readonly currentAcademicLevelId: Prisma.FieldRef<"StudentProfile", 'String'>
   readonly matricNumber: Prisma.FieldRef<"StudentProfile", 'String'>
+  readonly isDirectEntry: Prisma.FieldRef<"StudentProfile", 'Boolean'>
   readonly academicStatus: Prisma.FieldRef<"StudentProfile", 'AcademicStatus'>
   readonly onboardingStep: Prisma.FieldRef<"StudentProfile", 'OnboardingStep'>
   readonly onboardingCompleted: Prisma.FieldRef<"StudentProfile", 'Boolean'>

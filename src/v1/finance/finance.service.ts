@@ -841,6 +841,12 @@ export class FinanceService {
   async createDue(userId: string, dto: CreateDueDto) {
     this.logger.log(`Creating due: ${dto.name} - Amount: ${dto.amount} Kobo`);
 
+    if (dto.isDirectEntryEligible && !dto.isFresher) {
+      throw new BadRequestException(
+        'Only 100 level dues can be made available to direct entry students',
+      );
+    }
+
     const organization = await this.prisma.organization.findUnique({
       where: { id: dto.organizationId },
     });
@@ -861,6 +867,7 @@ export class FinanceService {
         description: dto.description,
         amount: dto.amount,
         isFresher: dto.isFresher ?? false,
+        isDirectEntryEligible: dto.isDirectEntryEligible ?? false,
         isRequired: dto.isRequired !== undefined ? dto.isRequired : true,
         status: dto.status ?? 'ACTIVE',
       },
@@ -875,6 +882,8 @@ export class FinanceService {
           name: due.name,
           amount: due.amount,
           organizationId: dto.organizationId,
+          isFresher: due.isFresher,
+          isDirectEntryEligible: due.isDirectEntryEligible,
         }),
       },
     });
@@ -914,9 +923,27 @@ export class FinanceService {
     const eligibleStudents = await this.prisma.studentProfile.findMany({
       where: {
         id: { in: [...new Set(studentIds)] },
-        currentAcademicLevel: {
-          numericLevel: due.isFresher ? 100 : { gte: 200 },
-        },
+        ...(due.isFresher
+          ? {
+              OR: [
+                {
+                  isDirectEntry: false,
+                  currentAcademicLevel: { numericLevel: 100 },
+                },
+                ...(due.isDirectEntryEligible
+                  ? [
+                      {
+                        isDirectEntry: true,
+                        currentAcademicLevel: { numericLevel: { gte: 200 } },
+                      },
+                    ]
+                  : []),
+              ],
+            }
+          : {
+              isDirectEntry: false,
+              currentAcademicLevel: { numericLevel: { gte: 200 } },
+            }),
       },
       select: { id: true },
     });
@@ -1085,7 +1112,12 @@ export class FinanceService {
 
     const studentProfile = await this.prisma.studentProfile.findUnique({
       where: { userId },
-      select: { id: true, institutionId: true, currentAcademicLevel: true },
+      select: {
+        id: true,
+        institutionId: true,
+        isDirectEntry: true,
+        currentAcademicLevel: true,
+      },
     });
 
     if (!studentProfile) {
@@ -1095,7 +1127,9 @@ export class FinanceService {
 
     const level = studentProfile.currentAcademicLevel?.numericLevel;
     if (level !== 100 && !(level !== undefined && level >= 200)) return [];
-    const isFresher = level === 100;
+    const dueAudience = studentProfile.isDirectEntry
+      ? { isFresher: true, isDirectEntryEligible: true }
+      : { isFresher: level === 100 };
 
     const [memberships, currentSession] = await Promise.all([
       this.prisma.organizationMembership.findMany({
@@ -1122,7 +1156,7 @@ export class FinanceService {
           where: {
             organizationId: { in: organizationIds },
             deletedAt: null,
-            isFresher,
+            ...dueAudience,
             status: 'ACTIVE',
             OR: [
               { sessionId: null },
@@ -1140,7 +1174,7 @@ export class FinanceService {
     const assignments = await this.prisma.dueAssignment.findMany({
       where: {
         studentId: studentProfile.id,
-        due: { isFresher },
+        due: dueAudience,
         OR: [
           { isPaid: false },
           ...(availableDueIds.length
@@ -1293,11 +1327,22 @@ export class FinanceService {
   // ============================================
 
   private assertDueLevel(
-    due: { isFresher: boolean },
-    student: { currentAcademicLevel?: { numericLevel: number } | null },
+    due: { isFresher: boolean; isDirectEntryEligible: boolean },
+    student: {
+      isDirectEntry: boolean;
+      currentAcademicLevel?: { numericLevel: number } | null;
+    },
   ) {
     const level = student.currentAcademicLevel?.numericLevel;
-    if (due.isFresher ? level !== 100 : level === undefined || level < 200) {
+    const isEligible = student.isDirectEntry
+      ? level !== undefined &&
+        level >= 200 &&
+        due.isFresher &&
+        due.isDirectEntryEligible
+      : due.isFresher
+        ? level === 100
+        : level !== undefined && level >= 200;
+    if (!isEligible) {
       throw new ForbiddenException(
         'This due is not available for your academic level',
       );
@@ -1324,8 +1369,20 @@ export class FinanceService {
       const assignment = await this.prisma.dueAssignment.findUnique({
         where: { id: dueAssignmentId },
         include: {
-          student: { select: { userId: true, currentAcademicLevel: true } },
-          due: { select: { status: true, isFresher: true } },
+          student: {
+            select: {
+              userId: true,
+              isDirectEntry: true,
+              currentAcademicLevel: true,
+            },
+          },
+          due: {
+            select: {
+              status: true,
+              isFresher: true,
+              isDirectEntryEligible: true,
+            },
+          },
           duePayments: {
             select: { id: true },
             take: 1,
@@ -1542,7 +1599,11 @@ export class FinanceService {
         // Verify the due assignment belongs to this user
         const studentProfile = await tx.studentProfile.findUnique({
           where: { userId },
-          select: { id: true, currentAcademicLevel: true },
+          select: {
+            id: true,
+            isDirectEntry: true,
+            currentAcademicLevel: true,
+          },
         });
 
         if (!studentProfile || dueAssignment.studentId !== studentProfile.id) {

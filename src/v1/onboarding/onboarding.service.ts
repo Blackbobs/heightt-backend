@@ -35,6 +35,9 @@ export class OnboardingService {
       await this.cacheService.invalidateByTag('organizations');
       await this.cacheService.invalidateByTag('members');
       await this.cacheService.invalidateByTag('dashboard');
+      await this.cacheService.invalidateByTag('finance');
+      await this.cacheService.invalidateByTag('dues');
+      await this.cacheService.invalidateByTag('student');
       await this.cacheService.delete(`onboarding:status:${userId}`);
       await this.cacheService.invalidateUserCache(userId);
       this.logger.debug(`Onboarding cache invalidated for user: ${userId}`);
@@ -237,6 +240,11 @@ export class OnboardingService {
               : 'Staylite students must select 200 level or above',
           );
         }
+        if (body.isDirectEntry && selectedLevel.numericLevel < 200) {
+          throw new BadRequestException(
+            'Direct entry students must select 200 level or above',
+          );
+        }
 
         const existingMatric = await tx.studentProfile.findFirst({
           where: { matricNumber, NOT: { userId } },
@@ -254,6 +262,7 @@ export class OnboardingService {
             departmentId: department.id,
             currentAcademicLevelId: academicLevelId,
             matricNumber,
+            isDirectEntry: body.isDirectEntry ?? false,
             onboardingStep: 'COMPLETED',
             onboardingCompleted: true,
             onboardingCompletedAt: new Date(),
@@ -265,6 +274,7 @@ export class OnboardingService {
             departmentId: department.id,
             currentAcademicLevelId: academicLevelId,
             matricNumber,
+            isDirectEntry: body.isDirectEntry ?? false,
             onboardingStep: 'COMPLETED',
             onboardingCompleted: true,
             onboardingCompletedAt: new Date(),
@@ -333,6 +343,7 @@ export class OnboardingService {
             academicLevelId: body.academicLevelId,
             sessionId: body.sessionId,
             isFresher: body.isFresher,
+            isDirectEntry: body.isDirectEntry ?? false,
           }),
         },
       });
@@ -490,6 +501,11 @@ export class OnboardingService {
           : 'Staylite students must select 200 level or above',
       );
     }
+    if (dto.isDirectEntry && level.numericLevel < 200) {
+      throw new BadRequestException(
+        'Direct entry students must select 200 level or above',
+      );
+    }
 
     if (dto.matricNumber) {
       const existing = await this.prisma.studentProfile.findFirst({
@@ -514,6 +530,7 @@ export class OnboardingService {
             departmentId: dto.departmentId,
             currentAcademicLevelId: dto.levelId,
             matricNumber: dto.matricNumber,
+            isDirectEntry: dto.isDirectEntry ?? false,
             onboardingStep: 'COMPLETED',
             onboardingCompleted: true,
             onboardingCompletedAt: completedAt,
@@ -525,6 +542,7 @@ export class OnboardingService {
             departmentId: dto.departmentId,
             currentAcademicLevelId: dto.levelId,
             matricNumber: dto.matricNumber,
+            isDirectEntry: dto.isDirectEntry ?? false,
             onboardingStep: 'COMPLETED',
             onboardingCompleted: true,
             onboardingCompletedAt: completedAt,
@@ -606,6 +624,7 @@ export class OnboardingService {
               departmentId: dto.departmentId,
               levelId: dto.levelId,
               sessionId: session.id,
+              isDirectEntry: dto.isDirectEntry ?? false,
               hasMatricNumber: !!dto.matricNumber,
             }),
           },

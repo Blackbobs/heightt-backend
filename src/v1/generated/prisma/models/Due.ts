@@ -43,6 +43,7 @@ export type DueMinAggregateOutputType = {
   description: string | null
   amount: number | null
   isFresher: boolean | null
+  isDirectEntryEligible: boolean | null
   isRequired: boolean | null
   status: $Enums.DueStatus | null
   deletedAt: Date | null
@@ -60,6 +61,7 @@ export type DueMaxAggregateOutputType = {
   description: string | null
   amount: number | null
   isFresher: boolean | null
+  isDirectEntryEligible: boolean | null
   isRequired: boolean | null
   status: $Enums.DueStatus | null
   deletedAt: Date | null
@@ -77,6 +79,7 @@ export type DueCountAggregateOutputType = {
   description: number
   amount: number
   isFresher: number
+  isDirectEntryEligible: number
   isRequired: number
   status: number
   deletedAt: number
@@ -104,6 +107,7 @@ export type DueMinAggregateInputType = {
   description?: true
   amount?: true
   isFresher?: true
+  isDirectEntryEligible?: true
   isRequired?: true
   status?: true
   deletedAt?: true
@@ -121,6 +125,7 @@ export type DueMaxAggregateInputType = {
   description?: true
   amount?: true
   isFresher?: true
+  isDirectEntryEligible?: true
   isRequired?: true
   status?: true
   deletedAt?: true
@@ -138,6 +143,7 @@ export type DueCountAggregateInputType = {
   description?: true
   amount?: true
   isFresher?: true
+  isDirectEntryEligible?: true
   isRequired?: true
   status?: true
   deletedAt?: true
@@ -242,6 +248,7 @@ export type DueGroupByOutputType = {
   description: string | null
   amount: number
   isFresher: boolean
+  isDirectEntryEligible: boolean
   isRequired: boolean
   status: $Enums.DueStatus
   deletedAt: Date | null
@@ -282,6 +289,7 @@ export type DueWhereInput = {
   description?: Prisma.StringNullableFilter<"Due"> | string | null
   amount?: Prisma.IntFilter<"Due"> | number
   isFresher?: Prisma.BoolFilter<"Due"> | boolean
+  isDirectEntryEligible?: Prisma.BoolFilter<"Due"> | boolean
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   deletedAt?: Prisma.DateTimeNullableFilter<"Due"> | Date | string | null
@@ -303,6 +311,7 @@ export type DueOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   isFresher?: Prisma.SortOrder
+  isDirectEntryEligible?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -327,6 +336,7 @@ export type DueWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Due"> | string | null
   amount?: Prisma.IntFilter<"Due"> | number
   isFresher?: Prisma.BoolFilter<"Due"> | boolean
+  isDirectEntryEligible?: Prisma.BoolFilter<"Due"> | boolean
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   deletedAt?: Prisma.DateTimeNullableFilter<"Due"> | Date | string | null
@@ -348,6 +358,7 @@ export type DueOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   isFresher?: Prisma.SortOrder
+  isDirectEntryEligible?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,6 +384,7 @@ export type DueScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Due"> | string | null
   amount?: Prisma.IntWithAggregatesFilter<"Due"> | number
   isFresher?: Prisma.BoolWithAggregatesFilter<"Due"> | boolean
+  isDirectEntryEligible?: Prisma.BoolWithAggregatesFilter<"Due"> | boolean
   isRequired?: Prisma.BoolWithAggregatesFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusWithAggregatesFilter<"Due"> | $Enums.DueStatus
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Due"> | Date | string | null
@@ -387,6 +399,7 @@ export type DueCreateInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -408,6 +421,7 @@ export type DueUncheckedCreateInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -423,6 +437,7 @@ export type DueUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -444,6 +459,7 @@ export type DueUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -462,6 +478,7 @@ export type DueCreateManyInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -476,6 +493,7 @@ export type DueUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -493,6 +511,7 @@ export type DueUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -520,6 +539,7 @@ export type DueCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isFresher?: Prisma.SortOrder
+  isDirectEntryEligible?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -541,6 +561,7 @@ export type DueMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isFresher?: Prisma.SortOrder
+  isDirectEntryEligible?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -558,6 +579,7 @@ export type DueMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   isFresher?: Prisma.SortOrder
+  isDirectEntryEligible?: Prisma.SortOrder
   isRequired?: Prisma.SortOrder
   status?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -725,6 +747,7 @@ export type DueCreateWithoutInstitutionInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -744,6 +767,7 @@ export type DueUncheckedCreateWithoutInstitutionInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -791,6 +815,7 @@ export type DueScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Due"> | string | null
   amount?: Prisma.IntFilter<"Due"> | number
   isFresher?: Prisma.BoolFilter<"Due"> | boolean
+  isDirectEntryEligible?: Prisma.BoolFilter<"Due"> | boolean
   isRequired?: Prisma.BoolFilter<"Due"> | boolean
   status?: Prisma.EnumDueStatusFilter<"Due"> | $Enums.DueStatus
   deletedAt?: Prisma.DateTimeNullableFilter<"Due"> | Date | string | null
@@ -805,6 +830,7 @@ export type DueCreateWithoutSessionInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -824,6 +850,7 @@ export type DueUncheckedCreateWithoutSessionInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -865,6 +892,7 @@ export type DueCreateWithoutOrganizationInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -884,6 +912,7 @@ export type DueUncheckedCreateWithoutOrganizationInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -925,6 +954,7 @@ export type DueCreateWithoutAssignmentsInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -945,6 +975,7 @@ export type DueUncheckedCreateWithoutAssignmentsInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -975,6 +1006,7 @@ export type DueUpdateWithoutAssignmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -995,6 +1027,7 @@ export type DueUncheckedUpdateWithoutAssignmentsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1011,6 +1044,7 @@ export type DueCreateManyInstitutionInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -1025,6 +1059,7 @@ export type DueUpdateWithoutInstitutionInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1044,6 +1079,7 @@ export type DueUncheckedUpdateWithoutInstitutionInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1061,6 +1097,7 @@ export type DueUncheckedUpdateManyWithoutInstitutionInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1077,6 +1114,7 @@ export type DueCreateManySessionInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -1091,6 +1129,7 @@ export type DueUpdateWithoutSessionInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1110,6 +1149,7 @@ export type DueUncheckedUpdateWithoutSessionInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1127,6 +1167,7 @@ export type DueUncheckedUpdateManyWithoutSessionInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1143,6 +1184,7 @@ export type DueCreateManyOrganizationInput = {
   description?: string | null
   amount: number
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: $Enums.DueStatus
   deletedAt?: Date | string | null
@@ -1157,6 +1199,7 @@ export type DueUpdateWithoutOrganizationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1176,6 +1219,7 @@ export type DueUncheckedUpdateWithoutOrganizationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1193,6 +1237,7 @@ export type DueUncheckedUpdateManyWithoutOrganizationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   isFresher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDirectEntryEligible?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isRequired?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.EnumDueStatusFieldUpdateOperationsInput | $Enums.DueStatus
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1241,6 +1286,7 @@ export type DueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   description?: boolean
   amount?: boolean
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: boolean
   deletedAt?: boolean
@@ -1263,6 +1309,7 @@ export type DueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   description?: boolean
   amount?: boolean
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: boolean
   deletedAt?: boolean
@@ -1283,6 +1330,7 @@ export type DueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   description?: boolean
   amount?: boolean
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: boolean
   deletedAt?: boolean
@@ -1303,6 +1351,7 @@ export type DueSelectScalar = {
   description?: boolean
   amount?: boolean
   isFresher?: boolean
+  isDirectEntryEligible?: boolean
   isRequired?: boolean
   status?: boolean
   deletedAt?: boolean
@@ -1311,7 +1360,7 @@ export type DueSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "sessionId" | "institutionId" | "name" | "description" | "amount" | "isFresher" | "isRequired" | "status" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["due"]>
+export type DueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "organizationId" | "sessionId" | "institutionId" | "name" | "description" | "amount" | "isFresher" | "isDirectEntryEligible" | "isRequired" | "status" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["due"]>
 export type DueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignments?: boolean | Prisma.Due$assignmentsArgs<ExtArgs>
   institution?: boolean | Prisma.Due$institutionArgs<ExtArgs>
@@ -1347,6 +1396,7 @@ export type $DuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     description: string | null
     amount: number
     isFresher: boolean
+    isDirectEntryEligible: boolean
     isRequired: boolean
     status: $Enums.DueStatus
     deletedAt: Date | null
@@ -1788,6 +1838,7 @@ export interface DueFieldRefs {
   readonly description: Prisma.FieldRef<"Due", 'String'>
   readonly amount: Prisma.FieldRef<"Due", 'Int'>
   readonly isFresher: Prisma.FieldRef<"Due", 'Boolean'>
+  readonly isDirectEntryEligible: Prisma.FieldRef<"Due", 'Boolean'>
   readonly isRequired: Prisma.FieldRef<"Due", 'Boolean'>
   readonly status: Prisma.FieldRef<"Due", 'DueStatus'>
   readonly deletedAt: Prisma.FieldRef<"Due", 'DateTime'>

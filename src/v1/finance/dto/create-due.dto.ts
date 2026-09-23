@@ -63,6 +63,17 @@ export class CreateDueDto {
   isFresher?: boolean;
 
   @ApiProperty({
+    example: false,
+    description:
+      'Allows direct entry students at 200 level or above to receive this 100 level due',
+    required: false,
+    default: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDirectEntryEligible?: boolean;
+
+  @ApiProperty({
     example: true,
     description: 'Is required',
     default: true,

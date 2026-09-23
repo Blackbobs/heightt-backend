@@ -339,6 +339,7 @@ model StudentProfile {
   departmentId           String
   currentAcademicLevelId String?
   matricNumber           String?
+  isDirectEntry          Boolean                 @default(false)
   academicStatus         AcademicStatus          @default(ACTIVE)
   onboardingStep         OnboardingStep          @default(INSTITUTION)
   onboardingCompleted    Boolean                 @default(false)
@@ -886,24 +887,25 @@ model Payment {
 }
 
 model Due {
-  id             String           @id @default(cuid())
-  organizationId String
-  sessionId      String?
-  institutionId  String?
-  name           String
-  description    String?
-  amount         Int
-  isFresher      Boolean          @default(false)
-  isRequired     Boolean          @default(true)
-  status         DueStatus        @default(ACTIVE)
-  deletedAt      DateTime?
-  deletedBy      String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  assignments    DueAssignment[]
-  institution    Institution?     @relation(fields: [institutionId], references: [id])
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-  session        AcademicSession? @relation(fields: [sessionId], references: [id])
+  id                    String           @id @default(cuid())
+  organizationId        String
+  sessionId             String?
+  institutionId         String?
+  name                  String
+  description           String?
+  amount                Int
+  isFresher             Boolean          @default(false)
+  isDirectEntryEligible Boolean          @default(false)
+  isRequired            Boolean          @default(true)
+  status                DueStatus        @default(ACTIVE)
+  deletedAt             DateTime?
+  deletedBy             String?
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  assignments           DueAssignment[]
+  institution           Institution?     @relation(fields: [institutionId], references: [id])
+  organization          Organization     @relation(fields: [organizationId], references: [id])
+  session               AcademicSession? @relation(fields: [sessionId], references: [id])
 
   @@index([organizationId])
   @@index([status])

@@ -187,7 +187,12 @@ describe('Fresher dues eligibility', () => {
       expect.objectContaining({
         where: {
           id: { in: ['student'] },
-          currentAcademicLevel: { numericLevel: 100 },
+          OR: [
+            {
+              isDirectEntry: false,
+              currentAcademicLevel: { numericLevel: 100 },
+            },
+          ],
         },
       }),
     );
@@ -208,4 +213,116 @@ describe('Fresher dues eligibility', () => {
       ).toBe(true);
     },
   );
+
+  it.each(['true', 'false', 1, 0])(
+    'rejects non-boolean isDirectEntryEligible=%s',
+    async (isDirectEntryEligible) => {
+      const dto = Object.assign(new CreateDueDto(), {
+        organizationId: 'org',
+        name: 'Dues',
+        amount: 100,
+        isDirectEntryEligible,
+      });
+      expect(
+        (await validate(dto)).some(
+          (error) => error.property === 'isDirectEntryEligible',
+        ),
+      ).toBe(true);
+    },
+  );
+
+  it('returns only opted-in 100 level dues to direct entry students', async () => {
+    const prisma = {
+      studentProfile: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: 'student',
+          institutionId: 'institution',
+          isDirectEntry: true,
+          currentAcademicLevel: { numericLevel: 200 },
+        }),
+      },
+      organizationMembership: {
+        findMany: jest.fn().mockResolvedValue([{ organizationId: 'org' }]),
+      },
+      academicSession: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'session' }),
+      },
+      due: { findMany: jest.fn().mockResolvedValue([]) },
+      dueAssignment: { findMany: jest.fn().mockResolvedValue([]) },
+    };
+
+    await serviceWith(prisma).getMyDues('user');
+
+    const audience = {
+      isFresher: true,
+      isDirectEntryEligible: true,
+    };
+    expect(prisma.due.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining(audience),
+      }),
+    );
+    expect(prisma.dueAssignment.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ due: audience }),
+      }),
+    );
+  });
+
+  it.each([
+    [true, true, true],
+    [true, false, false],
+    [false, false, false],
+  ])(
+    'checks direct entry payment eligibility for isFresher=%s and optedIn=%s',
+    async (isFresher, isDirectEntryEligible, allowed) => {
+      const prisma = {
+        dueAssignment: {
+          findUnique: jest.fn().mockResolvedValue({
+            student: {
+              userId: 'user',
+              isDirectEntry: true,
+              currentAcademicLevel: { numericLevel: 200 },
+            },
+            due: {
+              isFresher,
+              isDirectEntryEligible,
+              status: 'ACTIVE',
+            },
+            duePayments: [],
+            isPaid: false,
+          }),
+        },
+      };
+      const result = serviceWith(prisma).resolveDueAssignment(
+        'user',
+        undefined,
+        'assignment',
+      );
+
+      if (allowed) {
+        await expect(result).resolves.toBe('assignment');
+      } else {
+        await expect(result).rejects.toThrow(
+          'This due is not available for your academic level',
+        );
+      }
+    },
+  );
+
+  it('rejects direct entry eligibility on a non-fresher due', async () => {
+    const service = serviceWith({});
+
+    await expect(
+      service.createDue('admin', {
+        organizationId: 'org',
+        name: 'Dues',
+        amount: 100,
+        isFresher: false,
+        isDirectEntryEligible: true,
+      }),
+    ).rejects.toThrow(
+      'Only 100 level dues can be made available to direct entry students',
+    );
+  });
 });

@@ -415,7 +415,7 @@ export class FinanceController {
   @ApiOperation({
     summary: 'Get my dues',
     description:
-      'Get eligible dues across organizations: isFresher=true for 100 level, false for 200 level and above',
+      'Get eligible dues across organizations, including opted-in 100 level dues for direct entry students',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -559,8 +559,8 @@ export class FinanceController {
         payment.payer?.guestPayer
           ? `${payment.payer.guestPayer.firstName} ${payment.payer.guestPayer.lastName}`
           : payment.payer?.profile?.firstName
-          ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`.trim()
-          : payment.payer?.username || '',
+            ? `${payment.payer.profile.firstName} ${payment.payer.profile.lastName || ''}`.trim()
+            : payment.payer?.username || '',
         payment.payer?.guestPayer?.email ||
           (payment.metadata as any)?.guestEmail ||
           payment.payer?.email,

@@ -40,7 +40,20 @@ export class OnboardingInstitutionDto {
   @IsBoolean()
   isFresher: boolean;
 
-  @ApiProperty({ required: false, description: 'Academic session ID; defaults to the current active institution session' })
+  @ApiProperty({
+    required: false,
+    default: false,
+    description: 'True when a 200 level or higher student entered by transfer',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDirectEntry?: boolean;
+
+  @ApiProperty({
+    required: false,
+    description:
+      'Academic session ID; defaults to the current active institution session',
+  })
   @IsOptional()
   @IsString()
   sessionId?: string;
@@ -99,4 +112,13 @@ export class CompleteOnboardingDto {
   })
   @IsBoolean()
   isFresher: boolean;
+
+  @ApiProperty({
+    required: false,
+    default: false,
+    description: 'True when a 200 level or higher student entered by transfer',
+  })
+  @IsOptional()
+  @IsBoolean()
+  isDirectEntry?: boolean;
 }
