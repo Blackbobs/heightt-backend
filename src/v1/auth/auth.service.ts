@@ -489,6 +489,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!user.emailVerified) {
+      throw new UnauthorizedException({
+        message: 'Email verification required',
+        email: user.email,
+      });
+    }
+
     await this.rateLimitService.resetLoginAttempts(rateLimitKey);
 
     const agent = useragent.parse(request.headers['user-agent'] || '');

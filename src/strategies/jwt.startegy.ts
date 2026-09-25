@@ -78,6 +78,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       select: {
         id: true,
         email: true,
+        emailVerified: true,
         username: true,
         status: true,
       },
@@ -100,13 +101,21 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException('User account is inactive');
     }
 
+    const authClient = payload.authClient || 'USER';
+    if (authClient === 'USER' && !user.emailVerified) {
+      this.logger.warn(
+        `Unverified user attempted protected access: ${user.id}`,
+      );
+      throw new UnauthorizedException('Email verification required');
+    }
+
     this.logger.debug(`✅ User validated: ${user.email}`);
     return {
       id: user.id,
       email: user.email,
       username: user.username,
       sessionId: payload.sessionId,
-      authClient: payload.authClient || 'USER',
+      authClient,
     };
   }
 }

@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { CacheService } from '../../redis/cache.service';
 
 @Injectable()
@@ -24,13 +24,15 @@ export class CacheInvalidationInterceptor implements NestInterceptor {
     const tags = this.getInvalidationTags(handler);
 
     return next.handle().pipe(
-      tap(async (data) => {
+      mergeMap(async (data) => {
         if (tags && tags.length > 0) {
           for (const tag of tags) {
             await this.cacheService.invalidateByTag(tag);
           }
           this.logger.debug(`Invalidated cache tags: ${tags.join(', ')}`);
         }
+
+        return data;
       }),
     );
   }
