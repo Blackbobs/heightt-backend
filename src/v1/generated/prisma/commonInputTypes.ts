@@ -518,6 +518,40 @@ export type EnumOrganizationStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumOrganizationStatusFilter<$PrismaModel>
 }
 
+export type EnumApprovalEntityTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalEntityType | Prisma.EnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalEntityTypeFilter<$PrismaModel> | $Enums.ApprovalEntityType
+}
+
+export type EnumApprovalRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalRequestStatus | Prisma.EnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalRequestStatusFilter<$PrismaModel> | $Enums.ApprovalRequestStatus
+}
+
+export type EnumApprovalEntityTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalEntityType | Prisma.EnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalEntityTypeWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalEntityType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumApprovalEntityTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumApprovalEntityTypeFilter<$PrismaModel>
+}
+
+export type EnumApprovalRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalRequestStatus | Prisma.EnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumApprovalRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumApprovalRequestStatusFilter<$PrismaModel>
+}
+
 export type EnumMembershipTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.MembershipType | Prisma.EnumMembershipTypeFieldRefInput<$PrismaModel>
   in?: $Enums.MembershipType[] | Prisma.ListEnumMembershipTypeFieldRefInput<$PrismaModel>
@@ -1831,6 +1865,40 @@ export type NestedEnumOrganizationStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOrganizationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOrganizationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumApprovalEntityTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalEntityType | Prisma.EnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalEntityTypeFilter<$PrismaModel> | $Enums.ApprovalEntityType
+}
+
+export type NestedEnumApprovalRequestStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalRequestStatus | Prisma.EnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalRequestStatusFilter<$PrismaModel> | $Enums.ApprovalRequestStatus
+}
+
+export type NestedEnumApprovalEntityTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalEntityType | Prisma.EnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalEntityType[] | Prisma.ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalEntityTypeWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalEntityType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumApprovalEntityTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumApprovalEntityTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumApprovalRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ApprovalRequestStatus | Prisma.EnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ApprovalRequestStatus[] | Prisma.ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumApprovalRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.ApprovalRequestStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumApprovalRequestStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumApprovalRequestStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumMembershipTypeFilter<$PrismaModel = never> = {

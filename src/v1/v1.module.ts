@@ -18,6 +18,7 @@ import { FilesModule } from './files/files.module';
 import { HealthModule } from './health/health.module';
 import { OnboardingModule } from './onboarding/onboarding.module';
 import { BachsModule } from './bachs/bachs.module';
+import { ApprovalsModule } from './approvals/approvals.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { BachsModule } from './bachs/bachs.module';
     HealthModule,
     OnboardingModule,
     BachsModule,
+    ApprovalsModule,
   ],
   exports: [
     AuthModule,
@@ -61,6 +63,7 @@ import { BachsModule } from './bachs/bachs.module';
     HealthModule,
     OnboardingModule,
     BachsModule,
+    ApprovalsModule,
   ],
 })
 export class V1Module {}

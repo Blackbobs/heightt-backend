@@ -32,6 +32,7 @@ export type OrganizationMinAggregateOutputType = {
   academicLevelId: string | null
   parentOrganizationId: string | null
   name: string | null
+  nameNormalized: string | null
   slug: string | null
   description: string | null
   logo: string | null
@@ -57,6 +58,7 @@ export type OrganizationMaxAggregateOutputType = {
   academicLevelId: string | null
   parentOrganizationId: string | null
   name: string | null
+  nameNormalized: string | null
   slug: string | null
   description: string | null
   logo: string | null
@@ -82,6 +84,7 @@ export type OrganizationCountAggregateOutputType = {
   academicLevelId: number
   parentOrganizationId: number
   name: number
+  nameNormalized: number
   slug: number
   description: number
   logo: number
@@ -109,6 +112,7 @@ export type OrganizationMinAggregateInputType = {
   academicLevelId?: true
   parentOrganizationId?: true
   name?: true
+  nameNormalized?: true
   slug?: true
   description?: true
   logo?: true
@@ -134,6 +138,7 @@ export type OrganizationMaxAggregateInputType = {
   academicLevelId?: true
   parentOrganizationId?: true
   name?: true
+  nameNormalized?: true
   slug?: true
   description?: true
   logo?: true
@@ -159,6 +164,7 @@ export type OrganizationCountAggregateInputType = {
   academicLevelId?: true
   parentOrganizationId?: true
   name?: true
+  nameNormalized?: true
   slug?: true
   description?: true
   logo?: true
@@ -257,6 +263,7 @@ export type OrganizationGroupByOutputType = {
   academicLevelId: string | null
   parentOrganizationId: string | null
   name: string
+  nameNormalized: string | null
   slug: string
   description: string | null
   logo: string | null
@@ -303,6 +310,7 @@ export type OrganizationWhereInput = {
   academicLevelId?: Prisma.StringNullableFilter<"Organization"> | string | null
   parentOrganizationId?: Prisma.StringNullableFilter<"Organization"> | string | null
   name?: Prisma.StringFilter<"Organization"> | string
+  nameNormalized?: Prisma.StringNullableFilter<"Organization"> | string | null
   slug?: Prisma.StringFilter<"Organization"> | string
   description?: Prisma.StringNullableFilter<"Organization"> | string | null
   logo?: Prisma.StringNullableFilter<"Organization"> | string | null
@@ -355,6 +363,7 @@ export type OrganizationOrderByWithRelationInput = {
   academicLevelId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentOrganizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
+  nameNormalized?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -411,6 +420,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   academicLevelId?: Prisma.StringNullableFilter<"Organization"> | string | null
   parentOrganizationId?: Prisma.StringNullableFilter<"Organization"> | string | null
   name?: Prisma.StringFilter<"Organization"> | string
+  nameNormalized?: Prisma.StringNullableFilter<"Organization"> | string | null
   slug?: Prisma.StringFilter<"Organization"> | string
   description?: Prisma.StringNullableFilter<"Organization"> | string | null
   logo?: Prisma.StringNullableFilter<"Organization"> | string | null
@@ -463,6 +473,7 @@ export type OrganizationOrderByWithAggregationInput = {
   academicLevelId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentOrganizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
+  nameNormalized?: Prisma.SortOrderInput | Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -494,6 +505,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   academicLevelId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   parentOrganizationId?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"Organization"> | string
+  nameNormalized?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   slug?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   logo?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
@@ -514,6 +526,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
 export type OrganizationCreateInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -564,6 +577,7 @@ export type OrganizationUncheckedCreateInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -604,6 +618,7 @@ export type OrganizationUncheckedCreateInput = {
 export type OrganizationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -654,6 +669,7 @@ export type OrganizationUncheckedUpdateInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -699,6 +715,7 @@ export type OrganizationCreateManyInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -719,6 +736,7 @@ export type OrganizationCreateManyInput = {
 export type OrganizationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -742,6 +760,7 @@ export type OrganizationUncheckedUpdateManyInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -793,6 +812,7 @@ export type OrganizationCountOrderByAggregateInput = {
   academicLevelId?: Prisma.SortOrder
   parentOrganizationId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  nameNormalized?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   logo?: Prisma.SortOrder
@@ -818,6 +838,7 @@ export type OrganizationMaxOrderByAggregateInput = {
   academicLevelId?: Prisma.SortOrder
   parentOrganizationId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  nameNormalized?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   logo?: Prisma.SortOrder
@@ -843,6 +864,7 @@ export type OrganizationMinOrderByAggregateInput = {
   academicLevelId?: Prisma.SortOrder
   parentOrganizationId?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  nameNormalized?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   logo?: Prisma.SortOrder
@@ -1465,6 +1487,7 @@ export type OrganizationUpdateOneWithoutFilesNestedInput = {
 export type OrganizationCreateWithoutCreatorInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1514,6 +1537,7 @@ export type OrganizationUncheckedCreateWithoutCreatorInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1587,6 +1611,7 @@ export type OrganizationScalarWhereInput = {
   academicLevelId?: Prisma.StringNullableFilter<"Organization"> | string | null
   parentOrganizationId?: Prisma.StringNullableFilter<"Organization"> | string | null
   name?: Prisma.StringFilter<"Organization"> | string
+  nameNormalized?: Prisma.StringNullableFilter<"Organization"> | string | null
   slug?: Prisma.StringFilter<"Organization"> | string
   description?: Prisma.StringNullableFilter<"Organization"> | string | null
   logo?: Prisma.StringNullableFilter<"Organization"> | string | null
@@ -1607,6 +1632,7 @@ export type OrganizationScalarWhereInput = {
 export type OrganizationCreateWithoutInstitutionInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1655,6 +1681,7 @@ export type OrganizationUncheckedCreateWithoutInstitutionInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1721,6 +1748,7 @@ export type OrganizationUpdateManyWithWhereWithoutInstitutionInput = {
 export type OrganizationCreateWithoutFacultyInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1769,6 +1797,7 @@ export type OrganizationUncheckedCreateWithoutFacultyInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1835,6 +1864,7 @@ export type OrganizationUpdateManyWithWhereWithoutFacultyInput = {
 export type OrganizationCreateWithoutDepartmentInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1883,6 +1913,7 @@ export type OrganizationUncheckedCreateWithoutDepartmentInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1949,6 +1980,7 @@ export type OrganizationUpdateManyWithWhereWithoutDepartmentInput = {
 export type OrganizationCreateWithoutAcademicLevelInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -1997,6 +2029,7 @@ export type OrganizationUncheckedCreateWithoutAcademicLevelInput = {
   departmentId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2063,6 +2096,7 @@ export type OrganizationUpdateManyWithWhereWithoutAcademicLevelInput = {
 export type OrganizationCreateWithoutAcademicSessionInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2112,6 +2146,7 @@ export type OrganizationUncheckedCreateWithoutAcademicSessionInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2177,6 +2212,7 @@ export type OrganizationUpdateManyWithWhereWithoutAcademicSessionInput = {
 export type OrganizationCreateWithoutStudentEnrollmentsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2226,6 +2262,7 @@ export type OrganizationUncheckedCreateWithoutStudentEnrollmentsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2281,6 +2318,7 @@ export type OrganizationUpdateToOneWithWhereWithoutStudentEnrollmentsInput = {
 export type OrganizationUpdateWithoutStudentEnrollmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2330,6 +2368,7 @@ export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2369,6 +2408,7 @@ export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
 export type OrganizationCreateWithoutChildrenInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2418,6 +2458,7 @@ export type OrganizationUncheckedCreateWithoutChildrenInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2462,6 +2503,7 @@ export type OrganizationCreateOrConnectWithoutChildrenInput = {
 export type OrganizationCreateWithoutParentInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2510,6 +2552,7 @@ export type OrganizationUncheckedCreateWithoutParentInput = {
   departmentId?: string | null
   academicLevelId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2571,6 +2614,7 @@ export type OrganizationUpdateToOneWithWhereWithoutChildrenInput = {
 export type OrganizationUpdateWithoutChildrenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2620,6 +2664,7 @@ export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2675,6 +2720,7 @@ export type OrganizationUpdateManyWithWhereWithoutParentInput = {
 export type OrganizationCreateWithoutMembershipsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2724,6 +2770,7 @@ export type OrganizationUncheckedCreateWithoutMembershipsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2779,6 +2826,7 @@ export type OrganizationUpdateToOneWithWhereWithoutMembershipsInput = {
 export type OrganizationUpdateWithoutMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2828,6 +2876,7 @@ export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2867,6 +2916,7 @@ export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
 export type OrganizationCreateWithoutJoinRequestsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2916,6 +2966,7 @@ export type OrganizationUncheckedCreateWithoutJoinRequestsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -2971,6 +3022,7 @@ export type OrganizationUpdateToOneWithWhereWithoutJoinRequestsInput = {
 export type OrganizationUpdateWithoutJoinRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3020,6 +3072,7 @@ export type OrganizationUncheckedUpdateWithoutJoinRequestsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3059,6 +3112,7 @@ export type OrganizationUncheckedUpdateWithoutJoinRequestsInput = {
 export type OrganizationCreateWithoutRolesInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3108,6 +3162,7 @@ export type OrganizationUncheckedCreateWithoutRolesInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3163,6 +3218,7 @@ export type OrganizationUpdateToOneWithWhereWithoutRolesInput = {
 export type OrganizationUpdateWithoutRolesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3212,6 +3268,7 @@ export type OrganizationUncheckedUpdateWithoutRolesInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3251,6 +3308,7 @@ export type OrganizationUncheckedUpdateWithoutRolesInput = {
 export type OrganizationCreateWithoutAdminsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3300,6 +3358,7 @@ export type OrganizationUncheckedCreateWithoutAdminsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3355,6 +3414,7 @@ export type OrganizationUpdateToOneWithWhereWithoutAdminsInput = {
 export type OrganizationUpdateWithoutAdminsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3404,6 +3464,7 @@ export type OrganizationUncheckedUpdateWithoutAdminsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3443,6 +3504,7 @@ export type OrganizationUncheckedUpdateWithoutAdminsInput = {
 export type OrganizationCreateWithoutWalletInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3492,6 +3554,7 @@ export type OrganizationUncheckedCreateWithoutWalletInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3547,6 +3610,7 @@ export type OrganizationUpdateToOneWithWhereWithoutWalletInput = {
 export type OrganizationUpdateWithoutWalletInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3596,6 +3660,7 @@ export type OrganizationUncheckedUpdateWithoutWalletInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3635,6 +3700,7 @@ export type OrganizationUncheckedUpdateWithoutWalletInput = {
 export type OrganizationCreateWithoutLedgerAccountsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3684,6 +3750,7 @@ export type OrganizationUncheckedCreateWithoutLedgerAccountsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3739,6 +3806,7 @@ export type OrganizationUpdateToOneWithWhereWithoutLedgerAccountsInput = {
 export type OrganizationUpdateWithoutLedgerAccountsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3788,6 +3856,7 @@ export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3827,6 +3896,7 @@ export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
 export type OrganizationCreateWithoutPaymentsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3876,6 +3946,7 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -3931,6 +4002,7 @@ export type OrganizationUpdateToOneWithWhereWithoutPaymentsInput = {
 export type OrganizationUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3980,6 +4052,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4019,6 +4092,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
 export type OrganizationCreateWithoutDuesInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4068,6 +4142,7 @@ export type OrganizationUncheckedCreateWithoutDuesInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4123,6 +4198,7 @@ export type OrganizationUpdateToOneWithWhereWithoutDuesInput = {
 export type OrganizationUpdateWithoutDuesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4172,6 +4248,7 @@ export type OrganizationUncheckedUpdateWithoutDuesInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4211,6 +4288,7 @@ export type OrganizationUncheckedUpdateWithoutDuesInput = {
 export type OrganizationCreateWithoutSettlementsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4260,6 +4338,7 @@ export type OrganizationUncheckedCreateWithoutSettlementsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4315,6 +4394,7 @@ export type OrganizationUpdateToOneWithWhereWithoutSettlementsInput = {
 export type OrganizationUpdateWithoutSettlementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4364,6 +4444,7 @@ export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4403,6 +4484,7 @@ export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
 export type OrganizationCreateWithoutReceiptsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4452,6 +4534,7 @@ export type OrganizationUncheckedCreateWithoutReceiptsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4507,6 +4590,7 @@ export type OrganizationUpdateToOneWithWhereWithoutReceiptsInput = {
 export type OrganizationUpdateWithoutReceiptsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4556,6 +4640,7 @@ export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4595,6 +4680,7 @@ export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
 export type OrganizationCreateWithoutAnnouncementsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4644,6 +4730,7 @@ export type OrganizationUncheckedCreateWithoutAnnouncementsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4699,6 +4786,7 @@ export type OrganizationUpdateToOneWithWhereWithoutAnnouncementsInput = {
 export type OrganizationUpdateWithoutAnnouncementsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4748,6 +4836,7 @@ export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4787,6 +4876,7 @@ export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
 export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4836,6 +4926,7 @@ export type OrganizationUncheckedCreateWithoutFeatureFlagTargetsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -4891,6 +4982,7 @@ export type OrganizationUpdateToOneWithWhereWithoutFeatureFlagTargetsInput = {
 export type OrganizationUpdateWithoutFeatureFlagTargetsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4940,6 +5032,7 @@ export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4979,6 +5072,7 @@ export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
 export type OrganizationCreateWithoutElectionsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5028,6 +5122,7 @@ export type OrganizationUncheckedCreateWithoutElectionsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5083,6 +5178,7 @@ export type OrganizationUpdateToOneWithWhereWithoutElectionsInput = {
 export type OrganizationUpdateWithoutElectionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5132,6 +5228,7 @@ export type OrganizationUncheckedUpdateWithoutElectionsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5171,6 +5268,7 @@ export type OrganizationUncheckedUpdateWithoutElectionsInput = {
 export type OrganizationCreateWithoutExecutiveTermsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5220,6 +5318,7 @@ export type OrganizationUncheckedCreateWithoutExecutiveTermsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5275,6 +5374,7 @@ export type OrganizationUpdateToOneWithWhereWithoutExecutiveTermsInput = {
 export type OrganizationUpdateWithoutExecutiveTermsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5324,6 +5424,7 @@ export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5363,6 +5464,7 @@ export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
 export type OrganizationCreateWithoutCommitteesInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5412,6 +5514,7 @@ export type OrganizationUncheckedCreateWithoutCommitteesInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5467,6 +5570,7 @@ export type OrganizationUpdateToOneWithWhereWithoutCommitteesInput = {
 export type OrganizationUpdateWithoutCommitteesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5516,6 +5620,7 @@ export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5555,6 +5660,7 @@ export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
 export type OrganizationCreateWithoutEventsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5604,6 +5710,7 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5659,6 +5766,7 @@ export type OrganizationUpdateToOneWithWhereWithoutEventsInput = {
 export type OrganizationUpdateWithoutEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5708,6 +5816,7 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5747,6 +5856,7 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
 export type OrganizationCreateWithoutPendingPaymentsInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5796,6 +5906,7 @@ export type OrganizationUncheckedCreateWithoutPendingPaymentsInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5851,6 +5962,7 @@ export type OrganizationUpdateToOneWithWhereWithoutPendingPaymentsInput = {
 export type OrganizationUpdateWithoutPendingPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5900,6 +6012,7 @@ export type OrganizationUncheckedUpdateWithoutPendingPaymentsInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5939,6 +6052,7 @@ export type OrganizationUncheckedUpdateWithoutPendingPaymentsInput = {
 export type OrganizationCreateWithoutFilesInput = {
   id?: string
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -5988,6 +6102,7 @@ export type OrganizationUncheckedCreateWithoutFilesInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6043,6 +6158,7 @@ export type OrganizationUpdateToOneWithWhereWithoutFilesInput = {
 export type OrganizationUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6092,6 +6208,7 @@ export type OrganizationUncheckedUpdateWithoutFilesInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6136,6 +6253,7 @@ export type OrganizationCreateManyCreatorInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6155,6 +6273,7 @@ export type OrganizationCreateManyCreatorInput = {
 export type OrganizationUpdateWithoutCreatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6204,6 +6323,7 @@ export type OrganizationUncheckedUpdateWithoutCreatorInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6248,6 +6368,7 @@ export type OrganizationUncheckedUpdateManyWithoutCreatorInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6271,6 +6392,7 @@ export type OrganizationCreateManyInstitutionInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6291,6 +6413,7 @@ export type OrganizationCreateManyInstitutionInput = {
 export type OrganizationUpdateWithoutInstitutionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6339,6 +6462,7 @@ export type OrganizationUncheckedUpdateWithoutInstitutionInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6383,6 +6507,7 @@ export type OrganizationUncheckedUpdateManyWithoutInstitutionInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6407,6 +6532,7 @@ export type OrganizationCreateManyFacultyInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6427,6 +6553,7 @@ export type OrganizationCreateManyFacultyInput = {
 export type OrganizationUpdateWithoutFacultyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6475,6 +6602,7 @@ export type OrganizationUncheckedUpdateWithoutFacultyInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6519,6 +6647,7 @@ export type OrganizationUncheckedUpdateManyWithoutFacultyInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6543,6 +6672,7 @@ export type OrganizationCreateManyDepartmentInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6563,6 +6693,7 @@ export type OrganizationCreateManyDepartmentInput = {
 export type OrganizationUpdateWithoutDepartmentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6611,6 +6742,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6655,6 +6787,7 @@ export type OrganizationUncheckedUpdateManyWithoutDepartmentInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6679,6 +6812,7 @@ export type OrganizationCreateManyAcademicLevelInput = {
   departmentId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6699,6 +6833,7 @@ export type OrganizationCreateManyAcademicLevelInput = {
 export type OrganizationUpdateWithoutAcademicLevelInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6747,6 +6882,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6791,6 +6927,7 @@ export type OrganizationUncheckedUpdateManyWithoutAcademicLevelInput = {
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6816,6 +6953,7 @@ export type OrganizationCreateManyAcademicSessionInput = {
   academicLevelId?: string | null
   parentOrganizationId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6835,6 +6973,7 @@ export type OrganizationCreateManyAcademicSessionInput = {
 export type OrganizationUpdateWithoutAcademicSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6884,6 +7023,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicSessionInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6928,6 +7068,7 @@ export type OrganizationUncheckedUpdateManyWithoutAcademicSessionInput = {
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6951,6 +7092,7 @@ export type OrganizationCreateManyParentInput = {
   departmentId?: string | null
   academicLevelId?: string | null
   name: string
+  nameNormalized?: string | null
   slug: string
   description?: string | null
   logo?: string | null
@@ -6971,6 +7113,7 @@ export type OrganizationCreateManyParentInput = {
 export type OrganizationUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7019,6 +7162,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7063,6 +7207,7 @@ export type OrganizationUncheckedUpdateManyWithoutParentInput = {
   departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7281,6 +7426,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   academicLevelId?: boolean
   parentOrganizationId?: boolean
   name?: boolean
+  nameNormalized?: boolean
   slug?: boolean
   description?: boolean
   logo?: boolean
@@ -7334,6 +7480,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   academicLevelId?: boolean
   parentOrganizationId?: boolean
   name?: boolean
+  nameNormalized?: boolean
   slug?: boolean
   description?: boolean
   logo?: boolean
@@ -7366,6 +7513,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   academicLevelId?: boolean
   parentOrganizationId?: boolean
   name?: boolean
+  nameNormalized?: boolean
   slug?: boolean
   description?: boolean
   logo?: boolean
@@ -7398,6 +7546,7 @@ export type OrganizationSelectScalar = {
   academicLevelId?: boolean
   parentOrganizationId?: boolean
   name?: boolean
+  nameNormalized?: boolean
   slug?: boolean
   description?: boolean
   logo?: boolean
@@ -7415,7 +7564,7 @@ export type OrganizationSelectScalar = {
   academicSessionId?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "institutionId" | "facultyId" | "departmentId" | "academicLevelId" | "parentOrganizationId" | "name" | "slug" | "description" | "logo" | "type" | "scope" | "status" | "createdBy" | "updatedBy" | "activatedAt" | "archivedAt" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt" | "academicSessionId", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "institutionId" | "facultyId" | "departmentId" | "academicLevelId" | "parentOrganizationId" | "name" | "nameNormalized" | "slug" | "description" | "logo" | "type" | "scope" | "status" | "createdBy" | "updatedBy" | "activatedAt" | "archivedAt" | "deletedAt" | "deletedBy" | "createdAt" | "updatedAt" | "academicSessionId", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   admins?: boolean | Prisma.Organization$adminsArgs<ExtArgs>
   announcements?: boolean | Prisma.Organization$announcementsArgs<ExtArgs>
@@ -7504,6 +7653,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     academicLevelId: string | null
     parentOrganizationId: string | null
     name: string
+    nameNormalized: string | null
     slug: string
     description: string | null
     logo: string | null
@@ -7976,6 +8126,7 @@ export interface OrganizationFieldRefs {
   readonly academicLevelId: Prisma.FieldRef<"Organization", 'String'>
   readonly parentOrganizationId: Prisma.FieldRef<"Organization", 'String'>
   readonly name: Prisma.FieldRef<"Organization", 'String'>
+  readonly nameNormalized: Prisma.FieldRef<"Organization", 'String'>
   readonly slug: Prisma.FieldRef<"Organization", 'String'>
   readonly description: Prisma.FieldRef<"Organization", 'String'>
   readonly logo: Prisma.FieldRef<"Organization", 'String'>

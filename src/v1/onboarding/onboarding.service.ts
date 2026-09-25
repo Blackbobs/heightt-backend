@@ -89,20 +89,18 @@ export class OnboardingService {
           throw new BadRequestException('Matric number is required');
         }
 
-        // Find or create institution
+        // Academic directory records are platform-admin owned.
         institution = await tx.institution.findFirst({
-          where: { name: body.institution },
+          where: {
+            name: { equals: body.institution, mode: 'insensitive' },
+            status: 'ACTIVE',
+            deletedAt: null,
+          },
         });
-
         if (!institution) {
-          institution = await tx.institution.create({
-            data: {
-              name: body.institution,
-              shortName: body.institution.substring(0, 10),
-              code: body.institution.substring(0, 10).toUpperCase(),
-              status: 'ACTIVE',
-            },
-          });
+          throw new BadRequestException(
+            'Select an approved institution from the directory',
+          );
         }
 
         // NEW: Validate session belongs to institution
@@ -128,84 +126,48 @@ export class OnboardingService {
           }
         }
 
-        // Find or create faculty
         faculty = await tx.faculty.findFirst({
           where: {
-            name: body.faculty,
+            name: { equals: body.faculty, mode: 'insensitive' },
             institutionId: institution.id,
+            status: 'ACTIVE',
           },
         });
-
         if (!faculty) {
-          faculty = await tx.faculty.create({
-            data: {
-              name: body.faculty,
-              code: body.faculty.substring(0, 10).toUpperCase(),
-              institutionId: institution.id,
-              status: 'ACTIVE',
-            },
-          });
+          throw new BadRequestException(
+            'Select an approved faculty from the directory',
+          );
         }
 
-        // Find or create department
+        // Departments are also platform-admin owned.
         department = await tx.department.findFirst({
           where: {
-            name: body.department,
+            name: { equals: body.department, mode: 'insensitive' },
             facultyId: faculty.id,
+            status: 'ACTIVE',
           },
         });
-
         if (!department) {
-          department = await tx.department.create({
-            data: {
-              name: body.department,
-              code: body.department.substring(0, 10).toUpperCase(),
-              facultyId: faculty.id,
-              promotionType: 'AUTOMATIC',
+          throw new BadRequestException(
+            'Select an approved department from the directory',
+          );
+        }
+
+        // Academic levels must already exist under the approved department.
+        if (body.academicLevelId) {
+          const level = await tx.academicLevel.findFirst({
+            where: {
+              id: body.academicLevelId,
+              departmentId: department.id,
               status: 'ACTIVE',
             },
           });
-        }
-
-        // Find or create academic level
-        if (body.academicLevelId) {
-          let level = await tx.academicLevel.findUnique({
-            where: { id: body.academicLevelId },
-          });
-
           if (!level) {
-            const numericLevel = parseInt(body.academicLevelId) || 100;
-            const levelName = `${numericLevel} Level`;
-
-            level = await tx.academicLevel.findFirst({
-              where: {
-                departmentId: department.id,
-                name: levelName,
-              },
-            });
-
-            if (!level) {
-              const createdLevel = await tx.academicLevel.create({
-                data: {
-                  name: levelName,
-                  numericLevel,
-                  order: numericLevel / 100,
-                  departmentId: department.id,
-                  status: 'ACTIVE',
-                },
-              });
-              academicLevelId = createdLevel.id;
-            } else {
-              academicLevelId = level.id;
-            }
-          } else {
-            if (level.departmentId !== department.id) {
-              throw new BadRequestException(
-                'Academic level does not belong to the selected department',
-              );
-            }
-            academicLevelId = level.id;
+            throw new BadRequestException(
+              'Select an approved academic level for this department',
+            );
           }
+          academicLevelId = level.id;
         } else {
           if (!body.isFresher) {
             throw new BadRequestException(
@@ -216,11 +178,15 @@ export class OnboardingService {
             where: {
               departmentId: department.id,
               numericLevel: 100,
+              status: 'ACTIVE',
             },
           });
-          if (defaultLevel) {
-            academicLevelId = defaultLevel.id;
+          if (!defaultLevel) {
+            throw new BadRequestException(
+              'No approved 100 level exists for this department',
+            );
           }
+          academicLevelId = defaultLevel.id;
         }
 
         const selectedLevel = academicLevelId
@@ -449,20 +415,20 @@ export class OnboardingService {
     }
 
     const [institution, faculty, department, level] = await Promise.all([
-      this.prisma.institution.findUnique({
-        where: { id: dto.institutionId },
+      this.prisma.institution.findFirst({
+        where: { id: dto.institutionId, status: 'ACTIVE', deletedAt: null },
         include: { faculties: true },
       }),
-      this.prisma.faculty.findUnique({
-        where: { id: dto.facultyId },
+      this.prisma.faculty.findFirst({
+        where: { id: dto.facultyId, status: 'ACTIVE' },
         include: { departments: true },
       }),
-      this.prisma.department.findUnique({
-        where: { id: dto.departmentId },
+      this.prisma.department.findFirst({
+        where: { id: dto.departmentId, status: 'ACTIVE' },
         include: { academicLevels: true },
       }),
-      this.prisma.academicLevel.findUnique({
-        where: { id: dto.levelId },
+      this.prisma.academicLevel.findFirst({
+        where: { id: dto.levelId, status: 'ACTIVE' },
       }),
     ]);
 

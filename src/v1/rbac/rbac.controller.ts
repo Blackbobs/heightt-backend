@@ -31,6 +31,7 @@ import {
   UpdateRoleDto,
   AssignRoleToUserDto,
   AssignAdminRoleDto,
+  AssignOrganizationAdminDto,
   RoleResponseDto,
   PermissionResponseDto,
 } from './dto/role.dto';
@@ -363,6 +364,22 @@ export class RbacController {
       `Remove role from user endpoint called: ${membershipRoleId}`,
     );
     return this.rbacService.removeRoleFromUser(membershipRoleId, req.user.id);
+  }
+
+  @Post('organizations/:organizationId/admins')
+  @RequirePermission('organization:manage')
+  @InvalidateCache(['rbac', 'admins', 'members'])
+  @ApiOperation({ summary: 'Add an administrator to your organization' })
+  assignOrganizationAdmin(
+    @Param('organizationId') organizationId: string,
+    @Request() req: { user: { id: string } },
+    @Body() dto: AssignOrganizationAdminDto,
+  ) {
+    return this.rbacService.assignOrganizationAdmin(
+      req.user.id,
+      organizationId,
+      dto.userId,
+    );
   }
 
   // ============================================

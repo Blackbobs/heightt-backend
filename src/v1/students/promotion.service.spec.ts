@@ -64,6 +64,7 @@ describe('PromotionService institution promotion', () => {
             userId: 'student-user',
             departmentId: 'department-1',
             currentAcademicLevelId: 'level-300',
+            isDirectEntry: true,
           },
         ]),
       },
@@ -170,6 +171,13 @@ describe('PromotionService institution promotion', () => {
         toLevelId: 'level-400',
         sessionId: 'session-2027',
       }),
+    });
+    expect(tx.studentProfile.update).toHaveBeenCalledWith({
+      where: { id: 'student-300' },
+      data: {
+        currentAcademicLevelId: 'level-400',
+        isDirectEntry: false,
+      },
     });
     expect(tx.studentAcademicRecord.upsert).toHaveBeenCalledWith(
       expect.objectContaining({

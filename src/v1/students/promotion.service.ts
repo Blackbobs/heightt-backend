@@ -268,7 +268,10 @@ export class PromotionService {
         });
         await tx.studentProfile.update({
           where: { id: student.id },
-          data: { currentAcademicLevelId: nextLevel.id },
+          data: {
+            currentAcademicLevelId: nextLevel.id,
+            isDirectEntry: false,
+          },
         });
         await tx.studentAcademicRecord.upsert({
           where: {
@@ -599,6 +602,7 @@ export class PromotionService {
         where: { id: studentId },
         data: {
           currentAcademicLevelId: dto.toLevelId,
+          isDirectEntry: false,
         },
       });
 
@@ -753,6 +757,7 @@ export class PromotionService {
             where: { id: studentId },
             data: {
               currentAcademicLevelId: dto.toLevelId,
+              isDirectEntry: false,
             },
           });
 

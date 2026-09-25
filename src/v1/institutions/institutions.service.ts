@@ -1127,11 +1127,8 @@ export class InstitutionsService {
     filters?: { status?: string; search?: string },
   ) {
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: any = { status: 'ACTIVE' };
 
-    if (filters?.status) {
-      where.status = filters.status;
-    }
     if (filters?.search) {
       where.OR = [
         { name: { contains: filters.search, mode: 'insensitive' } },
@@ -1496,9 +1493,10 @@ export class InstitutionsService {
     }
 
     const faculties = await this.prisma.faculty.findMany({
-      where: { institutionId },
+      where: { institutionId, status: 'ACTIVE' },
       include: {
         departments: {
+          where: { status: 'ACTIVE' },
           include: {
             academicLevels: true,
           },
@@ -1948,7 +1946,7 @@ export class InstitutionsService {
     }
 
     const departments = await this.prisma.department.findMany({
-      where: { facultyId },
+      where: { facultyId, status: 'ACTIVE' },
       include: {
         academicLevels: {
           orderBy: { order: 'asc' },

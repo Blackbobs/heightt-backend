@@ -382,6 +382,103 @@ export class RbacService {
     return admin;
   }
 
+  async assignOrganizationAdmin(
+    assignerId: string,
+    organizationId: string,
+    userId: string,
+  ) {
+    const assigner = await this.prisma.admin.findFirst({
+      where: {
+        userId: assignerId,
+        organizationId,
+        adminType: 'ORGANIZATION_ADMIN',
+        status: 'ACTIVE',
+      },
+    });
+    if (!assigner) {
+      throw new ForbiddenException(
+        'Only an active admin of this organization can add administrators',
+      );
+    }
+
+    const [user, organization] = await Promise.all([
+      this.prisma.user.findUnique({ where: { id: userId } }),
+      this.prisma.organization.findUnique({ where: { id: organizationId } }),
+    ]);
+    if (!user) throw new NotFoundException('User not found');
+    if (!organization) throw new NotFoundException('Organization not found');
+    if (organization.status !== 'ACTIVE') {
+      throw new BadRequestException(
+        'Administrators can only be added after the organization is approved',
+      );
+    }
+
+    const result = await this.prisma.$transaction(async (tx) => {
+      await tx.organizationMembership.upsert({
+        where: { organizationId_userId: { organizationId, userId } },
+        update: {
+          membershipType: 'ADMIN',
+          status: 'ACTIVE',
+          leftAt: null,
+        },
+        create: {
+          organizationId,
+          userId,
+          membershipType: 'ADMIN',
+          status: 'ACTIVE',
+          joinedAt: new Date(),
+          joinedSessionId: organization.academicSessionId,
+        },
+      });
+
+      const existing = await tx.admin.findFirst({
+        where: {
+          userId,
+          adminType: 'ORGANIZATION_ADMIN',
+          organizationId,
+          academicSessionId: organization.academicSessionId,
+        },
+      });
+      if (existing?.status === 'ACTIVE') {
+        throw new ConflictException('User is already an organization admin');
+      }
+      if (existing) {
+        return tx.admin.update({
+          where: { id: existing.id },
+          data: {
+            status: 'ACTIVE',
+            assignedBy: assignerId,
+            assignedAt: new Date(),
+            revokedAt: null,
+            revokedReason: null,
+          },
+        });
+      }
+      return tx.admin.create({
+        data: {
+          userId,
+          adminType: 'ORGANIZATION_ADMIN',
+          organizationId,
+          institutionId: organization.institutionId,
+          facultyId: organization.facultyId,
+          departmentId: organization.departmentId,
+          academicSessionId: organization.academicSessionId,
+          assignedBy: assignerId,
+          status: 'ACTIVE',
+        },
+      });
+    });
+
+    const permissionCount = await this.prisma.adminPermission.count({
+      where: { adminId: result.id },
+    });
+    if (permissionCount === 0) {
+      await this.assignDefaultPermissions(result.id, 'ORGANIZATION_ADMIN');
+    }
+    await this.invalidateRbacCache();
+    return result;
+  }
+
   // ============================================
   // ROLES
   // ============================================

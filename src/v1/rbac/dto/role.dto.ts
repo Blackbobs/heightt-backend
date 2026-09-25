@@ -163,6 +163,12 @@ export class AssignAdminRoleDto {
   academicSessionId?: string;
 }
 
+export class AssignOrganizationAdminDto {
+  @ApiProperty({ example: 'user_123', description: 'User ID' })
+  @IsString()
+  userId: string;
+}
+
 export class PermissionResponseDto {
   @ApiProperty({ example: 'perm_123' })
   id: string;

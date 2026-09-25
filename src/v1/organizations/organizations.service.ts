@@ -269,13 +269,10 @@ export class OrganizationsService {
     },
   ) {
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: any = { status: 'ACTIVE' };
 
     if (filters?.institutionId) {
       where.institutionId = filters.institutionId;
-    }
-    if (filters?.status) {
-      where.status = filters.status;
     }
     if (filters?.type) {
       where.type = filters.type;

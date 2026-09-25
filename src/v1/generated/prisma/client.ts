@@ -130,6 +130,11 @@ export type StudentVerification = Prisma.StudentVerificationModel
  */
 export type Organization = Prisma.OrganizationModel
 /**
+ * Model ApprovalRequest
+ * 
+ */
+export type ApprovalRequest = Prisma.ApprovalRequestModel
+/**
  * Model OrganizationMembership
  * 
  */

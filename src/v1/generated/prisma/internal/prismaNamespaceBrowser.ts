@@ -69,6 +69,7 @@ export const ModelName = {
   StudentEnrollment: 'StudentEnrollment',
   StudentVerification: 'StudentVerification',
   Organization: 'Organization',
+  ApprovalRequest: 'ApprovalRequest',
   OrganizationMembership: 'OrganizationMembership',
   OrganizationJoinRequest: 'OrganizationJoinRequest',
   Role: 'Role',
@@ -448,6 +449,7 @@ export const OrganizationScalarFieldEnum = {
   academicLevelId: 'academicLevelId',
   parentOrganizationId: 'parentOrganizationId',
   name: 'name',
+  nameNormalized: 'nameNormalized',
   slug: 'slug',
   description: 'description',
   logo: 'logo',
@@ -466,6 +468,23 @@ export const OrganizationScalarFieldEnum = {
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const ApprovalRequestScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  entityName: 'entityName',
+  submittedBy: 'submittedBy',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  rejectionReason: 'rejectionReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApprovalRequestScalarFieldEnum = (typeof ApprovalRequestScalarFieldEnum)[keyof typeof ApprovalRequestScalarFieldEnum]
 
 
 export const OrganizationMembershipScalarFieldEnum = {

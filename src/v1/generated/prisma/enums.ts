@@ -465,6 +465,22 @@ export const OrganizationStatus = {
 export type OrganizationStatus = (typeof OrganizationStatus)[keyof typeof OrganizationStatus]
 
 
+export const ApprovalEntityType = {
+  ORGANIZATION: 'ORGANIZATION'
+} as const
+
+export type ApprovalEntityType = (typeof ApprovalEntityType)[keyof typeof ApprovalEntityType]
+
+
+export const ApprovalRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApprovalRequestStatus = (typeof ApprovalRequestStatus)[keyof typeof ApprovalRequestStatus]
+
+
 export const MembershipType = {
   MEMBER: 'MEMBER',
   STUDENT: 'STUDENT',

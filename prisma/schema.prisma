@@ -453,6 +453,7 @@ model Organization {
   academicLevelId      String?
   parentOrganizationId String?
   name                 String
+  nameNormalized       String?
   slug                 String
   description          String?
   logo                 String?
@@ -505,7 +506,27 @@ model Organization {
   @@index([academicSessionId])
   @@index([type])
   @@index([status])
+  @@index([institutionId, nameNormalized])
   @@map("organizations")
+}
+
+model ApprovalRequest {
+  id              String                @id @default(cuid())
+  entityType      ApprovalEntityType
+  entityId        String
+  entityName      String
+  submittedBy     String
+  status          ApprovalRequestStatus @default(PENDING)
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  rejectionReason String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@unique([entityType, entityId])
+  @@index([status, createdAt])
+  @@index([submittedBy, status])
+  @@map("approval_requests")
 }
 
 model OrganizationMembership {
@@ -2019,6 +2040,16 @@ enum OrganizationStatus {
   INACTIVE
   SUSPENDED
   ARCHIVED
+}
+
+enum ApprovalEntityType {
+  ORGANIZATION
+}
+
+enum ApprovalRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 enum MembershipType {

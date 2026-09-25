@@ -225,6 +225,7 @@ export class InstitutionsController {
 
   @Post('faculties')
   @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
   @RequirePermission('faculty:create')
   @InvalidateCache(['institutions', 'faculties'])
   @ApiOperation({ summary: 'Create a new faculty (Admin only)' })
@@ -325,6 +326,7 @@ export class InstitutionsController {
 
   @Post('departments')
   @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
   @RequirePermission('department:create')
   @InvalidateCache(['institutions', 'departments'])
   @ApiOperation({ summary: 'Create a new department (Admin only)' })
@@ -424,6 +426,7 @@ export class InstitutionsController {
 
   @Post('academic-levels')
   @UseGuards(AdminGuard)
+  @RequireAdminType('PLATFORM_ADMIN')
   @RequirePermission('academic_level:create')
   @InvalidateCache(['institutions', 'academic-levels'])
   @ApiOperation({ summary: 'Create a new academic level (Admin only)' })

@@ -415,6 +415,7 @@ export const ModelName = {
   StudentEnrollment: 'StudentEnrollment',
   StudentVerification: 'StudentVerification',
   Organization: 'Organization',
+  ApprovalRequest: 'ApprovalRequest',
   OrganizationMembership: 'OrganizationMembership',
   OrganizationJoinRequest: 'OrganizationJoinRequest',
   Role: 'Role',
@@ -489,7 +490,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "guestPayer" | "guestClaimCode" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "withdrawalWebhook" | "bankAccount" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
+    modelProps: "user" | "guestPayer" | "guestClaimCode" | "session" | "passwordReset" | "emailVerification" | "userProfile" | "institution" | "faculty" | "department" | "academicLevel" | "academicSession" | "studentProfile" | "studentAcademicRecord" | "studentPromotion" | "studentEnrollment" | "studentVerification" | "organization" | "approvalRequest" | "organizationMembership" | "organizationJoinRequest" | "role" | "permission" | "rolePermission" | "membershipRole" | "admin" | "adminPermission" | "systemRole" | "wallet" | "walletHold" | "ledgerAccount" | "ledgerEntry" | "journalEntry" | "journalLine" | "transaction" | "payment" | "due" | "dueAssignment" | "duePayment" | "withdrawal" | "withdrawalWebhook" | "bankAccount" | "refund" | "settlement" | "savingsGoal" | "savingsTransaction" | "receipt" | "announcement" | "announcementRead" | "notification" | "notificationPreference" | "emailQueue" | "pushQueue" | "featureFlag" | "featureFlagTarget" | "maintenanceMode" | "killSwitch" | "platformSetting" | "releaseChannel" | "deploymentWave" | "scheduledJob" | "operationalAuditLog" | "auditLog" | "activityLog" | "election" | "electionPosition" | "candidate" | "vote" | "executiveTerm" | "executiveMember" | "committee" | "event" | "ticket" | "ticketPurchase" | "eventRegistration" | "attendance" | "pendingPayment" | "file"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1822,6 +1823,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.OrganizationCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.OrganizationCountAggregateOutputType> | number
+        }
+      }
+    }
+    ApprovalRequest: {
+      payload: Prisma.$ApprovalRequestPayload<ExtArgs>
+      fields: Prisma.ApprovalRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ApprovalRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ApprovalRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.ApprovalRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ApprovalRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+        }
+        findMany: {
+          args: Prisma.ApprovalRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>[]
+        }
+        create: {
+          args: Prisma.ApprovalRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+        }
+        createMany: {
+          args: Prisma.ApprovalRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ApprovalRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.ApprovalRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+        }
+        update: {
+          args: Prisma.ApprovalRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.ApprovalRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ApprovalRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ApprovalRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.ApprovalRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ApprovalRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.ApprovalRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateApprovalRequest>
+        }
+        groupBy: {
+          args: Prisma.ApprovalRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApprovalRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ApprovalRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ApprovalRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -6532,6 +6607,7 @@ export const OrganizationScalarFieldEnum = {
   academicLevelId: 'academicLevelId',
   parentOrganizationId: 'parentOrganizationId',
   name: 'name',
+  nameNormalized: 'nameNormalized',
   slug: 'slug',
   description: 'description',
   logo: 'logo',
@@ -6550,6 +6626,23 @@ export const OrganizationScalarFieldEnum = {
 } as const
 
 export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const ApprovalRequestScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  entityName: 'entityName',
+  submittedBy: 'submittedBy',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  rejectionReason: 'rejectionReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ApprovalRequestScalarFieldEnum = (typeof ApprovalRequestScalarFieldEnum)[keyof typeof ApprovalRequestScalarFieldEnum]
 
 
 export const OrganizationMembershipScalarFieldEnum = {
@@ -7854,6 +7947,34 @@ export type ListEnumOrganizationStatusFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
+ * Reference to a field of type 'ApprovalEntityType'
+ */
+export type EnumApprovalEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalEntityType'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalEntityType[]'
+ */
+export type ListEnumApprovalEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalEntityType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalRequestStatus'
+ */
+export type EnumApprovalRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalRequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ApprovalRequestStatus[]'
+ */
+export type ListEnumApprovalRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApprovalRequestStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'MembershipType'
  */
 export type EnumMembershipTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MembershipType'>
@@ -8651,6 +8772,7 @@ export type GlobalOmitConfig = {
   studentEnrollment?: Prisma.StudentEnrollmentOmit
   studentVerification?: Prisma.StudentVerificationOmit
   organization?: Prisma.OrganizationOmit
+  approvalRequest?: Prisma.ApprovalRequestOmit
   organizationMembership?: Prisma.OrganizationMembershipOmit
   organizationJoinRequest?: Prisma.OrganizationJoinRequestOmit
   role?: Prisma.RoleOmit
