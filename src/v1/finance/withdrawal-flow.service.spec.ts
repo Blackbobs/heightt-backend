@@ -3,10 +3,11 @@ jest.mock('uuid', () => ({ v4: jest.fn(() => 'test-uuid') }));
 import { FinanceService } from './finance.service';
 
 describe('FinanceService withdrawal accounting', () => {
-  it('reserves only the fixed Bachs fee for organization withdrawals', async () => {
+  it('shows one fixed organization withdrawal fee without exposing its split', async () => {
     const service = Object.create(FinanceService.prototype) as FinanceService;
     (service as any).KOBO_PER_NAIRA = 100;
-    (service as any).BACHS_PAYOUT_FEE = 10_000;
+    (service as any).ORGANIZATION_WITHDRAWAL_FEE = 10_000;
+    (service as any).BACHS_PAYOUT_FEE = 5_000;
     (service as any).assertOrganizationAdminScope = jest.fn();
     (service as any).walletService = {
       getOrCreateWallet: jest.fn().mockResolvedValue({
@@ -25,14 +26,14 @@ describe('FinanceService withdrawal accounting', () => {
     expect(quote).toEqual(
       expect.objectContaining({
         fee: 10_000,
-        platformFee: 0,
-        providerFee: 10_000,
         totalDebit: 100_000,
         maxWithdrawable: 90_000,
         canWithdraw: true,
-        feePolicy: 'PROVIDER_FEE_ONLY',
+        feePolicy: 'WITHDRAWAL_FEE_APPLIES',
       }),
     );
+    expect(quote).not.toHaveProperty('platformFee');
+    expect(quote).not.toHaveProperty('providerFee');
   });
 
   it('describes an approved payout as processing until the provider completes it', async () => {
@@ -62,6 +63,95 @@ describe('FinanceService withdrawal accounting', () => {
       }),
     });
     expect(sendEmail).toHaveBeenCalledTimes(1);
+  });
+
+  it('credits the platform wallet with half of a successful organization withdrawal fee', async () => {
+    const service = Object.create(FinanceService.prototype) as FinanceService;
+    const withdrawalUpdate = jest.fn().mockResolvedValue({});
+    const walletUpdate = jest.fn().mockResolvedValue({});
+    const createJournalEntry = jest.fn().mockResolvedValue({ id: 'fee-entry' });
+    const invalidateWalletCache = jest.fn().mockResolvedValue(undefined);
+    const transaction = {
+      withdrawal: { update: withdrawalUpdate },
+      ledgerAccount: {
+        findUnique: jest.fn().mockResolvedValue({ id: 'clearing-ledger' }),
+      },
+      wallet: { update: walletUpdate },
+    };
+    (service as any).prisma = {
+      withdrawal: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: 'withdrawal-1',
+          userId: 'admin-1',
+          walletId: 'organization-wallet',
+          amount: 90_000,
+          fee: 10_000,
+          reference: 'ORG_WTH_1',
+          metadata: {
+            type: 'ORGANIZATION_WITHDRAWAL',
+            payoutDestinationId: 'destination-1',
+            charges: { platformFee: 5_000, providerFee: 5_000 },
+          },
+        }),
+      },
+      $transaction: jest.fn((callback: any) => callback(transaction)),
+    };
+    (service as any).bachsClient = {
+      toBachsAmount: jest.fn().mockReturnValue('900.00'),
+      fromBachsAmount: jest.fn().mockReturnValue(5_000),
+      createPayout: jest.fn().mockResolvedValue({
+        id: 'payout-1',
+        status: 'processing',
+        fee: '50.00',
+      }),
+    };
+    (service as any).walletService = {
+      getOrCreateWallet: jest.fn().mockResolvedValue({
+        id: 'platform-wallet',
+        ledgerAccountId: 'platform-ledger',
+      }),
+      invalidateWalletCache,
+    };
+    (service as any).ledgerService = { createJournalEntry };
+    (service as any).logger = { error: jest.fn() };
+
+    await (service as any).triggerWithdrawalTransfer('withdrawal-1');
+
+    expect(withdrawalUpdate).toHaveBeenCalledWith({
+      where: { id: 'withdrawal-1' },
+      data: expect.objectContaining({
+        fee: 10_000,
+        providerPayoutId: 'payout-1',
+        metadata: expect.objectContaining({
+          charges: expect.objectContaining({
+            platformFee: 5_000,
+            providerFee: 5_000,
+          }),
+        }),
+      }),
+    });
+    expect(walletUpdate).toHaveBeenCalledWith({
+      where: { id: 'platform-wallet' },
+      data: { balance: { increment: 5_000 } },
+    });
+    expect(createJournalEntry).toHaveBeenCalledWith(
+      expect.objectContaining({
+        lines: expect.arrayContaining([
+          expect.objectContaining({
+            accountId: 'platform-ledger',
+            type: 'DEBIT',
+            amount: 5_000,
+          }),
+          expect.objectContaining({
+            accountId: 'clearing-ledger',
+            type: 'CREDIT',
+            amount: 5_000,
+          }),
+        ]),
+      }),
+      transaction,
+    );
+    expect(invalidateWalletCache).toHaveBeenCalledWith({ type: 'PLATFORM' });
   });
 
   it('compensates an immediately failed provider payout without notifying the user', async () => {

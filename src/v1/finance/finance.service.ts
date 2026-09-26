@@ -49,7 +49,8 @@ import { renderHeighttEmail } from '../../email/heightt-email.template';
 export class FinanceService {
   private readonly logger = new Logger(FinanceService.name);
   private readonly KOBO_PER_NAIRA = 100;
-  private readonly BACHS_PAYOUT_FEE = 100 * this.KOBO_PER_NAIRA;
+  private readonly ORGANIZATION_WITHDRAWAL_FEE = 100 * this.KOBO_PER_NAIRA;
+  private readonly BACHS_PAYOUT_FEE = 50 * this.KOBO_PER_NAIRA;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -2719,7 +2720,7 @@ export class FinanceService {
           currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
           dto.amount,
           charges.fee,
-          false,
+          null,
         );
       }
 
@@ -2795,28 +2796,50 @@ export class FinanceService {
     });
   }
 
+  private calculateOrganizationWithdrawalCharges(amount: number): {
+    fee: number;
+    netAmount: number;
+    totalCharges: number;
+    platformFee: number;
+    providerFee: number;
+  } {
+    const fee = this.ORGANIZATION_WITHDRAWAL_FEE ?? 10_000;
+    const providerFee = this.BACHS_PAYOUT_FEE ?? 5_000;
+    return {
+      fee,
+      netAmount: amount,
+      totalCharges: fee,
+      platformFee: fee - providerFee,
+      providerFee,
+    };
+  }
+
   private calculatePlatformWithdrawalCharges(amount: number): {
     fee: number;
     netAmount: number;
     totalCharges: number;
+    platformFee: number;
+    providerFee: number;
   } {
-    const providerFee = this.BACHS_PAYOUT_FEE ?? 10_000;
+    const providerFee = this.BACHS_PAYOUT_FEE ?? 5_000;
     return {
       fee: providerFee,
       netAmount: amount,
       totalCharges: providerFee,
+      platformFee: 0,
+      providerFee,
     };
   }
 
   private calculateMaximumWithdrawal(
     availableBalance: number,
-    providerFeeOnly: boolean,
+    fixedFee: number | null,
   ): number {
     if (availableBalance <= 0) {
       return 0;
     }
-    if (providerFeeOnly) {
-      return Math.max(0, availableBalance - (this.BACHS_PAYOUT_FEE ?? 10_000));
+    if (fixedFee !== null) {
+      return Math.max(0, availableBalance - fixedFee);
     }
 
     let low = 0;
@@ -2844,11 +2867,11 @@ export class FinanceService {
     availableBalance: number,
     requestedAmount: number,
     fee: number,
-    providerFeeOnly: boolean,
+    fixedFee: number | null,
   ): BadRequestException {
     const maxWithdrawable = this.calculateMaximumWithdrawal(
       availableBalance,
-      providerFeeOnly,
+      fixedFee,
     );
     return new BadRequestException({
       code: 'INSUFFICIENT_AVAILABLE_BALANCE',
@@ -2866,7 +2889,10 @@ export class FinanceService {
 
   async getWithdrawalQuote(userId: string, dto: WithdrawalQuoteDto) {
     let walletOwner: WalletOwner;
-    let providerFeeOnly = false;
+    let fixedCharges:
+      | ReturnType<FinanceService['calculateOrganizationWithdrawalCharges']>
+      | ReturnType<FinanceService['calculatePlatformWithdrawalCharges']>
+      | null = null;
 
     if (dto.type === WithdrawalType.ORGANIZATION) {
       if (!dto.organizationId) {
@@ -2876,7 +2902,9 @@ export class FinanceService {
       }
       await this.assertOrganizationAdminScope(userId, dto.organizationId);
       walletOwner = { type: 'ORGANIZATION', id: dto.organizationId };
-      providerFeeOnly = true;
+      fixedCharges = this.calculateOrganizationWithdrawalCharges(
+        dto.amount ?? 0,
+      );
     } else if (dto.type === WithdrawalType.PLATFORM) {
       const platformAdmin = await this.prisma.admin.findFirst({
         where: { userId, status: 'ACTIVE', adminType: 'PLATFORM_ADMIN' },
@@ -2887,7 +2915,7 @@ export class FinanceService {
         );
       }
       walletOwner = { type: 'PLATFORM' };
-      providerFeeOnly = true;
+      fixedCharges = this.calculatePlatformWithdrawalCharges(dto.amount ?? 0);
     } else {
       walletOwner = { type: 'USER', id: userId };
     }
@@ -2896,11 +2924,11 @@ export class FinanceService {
     const availableBalance = Math.max(0, wallet.balance - wallet.heldBalance);
     const maxWithdrawable = this.calculateMaximumWithdrawal(
       availableBalance,
-      providerFeeOnly,
+      fixedCharges?.fee ?? null,
     );
     const fee = dto.amount
-      ? providerFeeOnly
-        ? this.calculatePlatformWithdrawalCharges(dto.amount).fee
+      ? fixedCharges
+        ? fixedCharges.fee
         : this.ledgerService.calculateWithdrawalCharges(dto.amount).fee
       : 0;
     const totalDebit = dto.amount ? dto.amount + fee : 0;
@@ -2917,11 +2945,10 @@ export class FinanceService {
         dto.amount !== undefined
           ? dto.amount >= 100 && totalDebit <= availableBalance
           : maxWithdrawable >= 100,
-      feePolicy: providerFeeOnly
-        ? 'PROVIDER_FEE_ONLY'
-        : 'WITHDRAWAL_FEE_APPLIES',
-      platformFee: 0,
-      providerFee: providerFeeOnly ? fee : 0,
+      feePolicy:
+        dto.type === WithdrawalType.PLATFORM
+          ? 'PROVIDER_FEE_ONLY'
+          : 'WITHDRAWAL_FEE_APPLIES',
       currency: wallet.currency,
       currencyUnit: 'KOBO',
     };
@@ -2944,7 +2971,7 @@ export class FinanceService {
       throw new BadRequestException('Bank code is required for payouts');
     }
     const payoutDestination = await this.ensurePayoutDestination(bankAccount);
-    const charges = this.calculatePlatformWithdrawalCharges(dto.amount);
+    const charges = this.calculateOrganizationWithdrawalCharges(dto.amount);
     const totalAmount = dto.amount + charges.fee;
 
     const withdrawal = await this.prisma.$transaction(async (tx) => {
@@ -2957,7 +2984,7 @@ export class FinanceService {
           currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
           dto.amount,
           charges.fee,
-          true,
+          charges.fee,
         );
       }
       const created = await tx.withdrawal.create({
@@ -3059,7 +3086,7 @@ export class FinanceService {
           currentWallet ? currentWallet.balance - currentWallet.heldBalance : 0,
           dto.amount,
           charges.fee,
-          true,
+          charges.fee,
         );
       }
 
@@ -3506,21 +3533,83 @@ export class FinanceService {
       }
       const providerFee = payout.fee
         ? this.bachsClient.fromBachsAmount(String(payout.fee))
-        : withdrawal.fee;
+        : metadata.charges?.providerFee || withdrawal.fee;
       const feeDifference = providerFee - withdrawal.fee;
+      const isOrganizationWithdrawal =
+        metadata.type === 'ORGANIZATION_WITHDRAWAL';
+      const platformFee = isOrganizationWithdrawal
+        ? Math.max(0, withdrawal.fee - providerFee)
+        : 0;
+      const platformWallet =
+        isOrganizationWithdrawal && platformFee > 0
+          ? await this.walletService.getOrCreateWallet({ type: 'PLATFORM' })
+          : null;
 
       await this.prisma.$transaction(async (tx) => {
         await tx.withdrawal.update({
           where: { id: withdrawalId },
           data: {
-            fee: providerFee,
+            fee: isOrganizationWithdrawal ? withdrawal.fee : providerFee,
             providerPayoutId: payout.id,
             webhookStatus: payoutStatus,
             webhookAttempts: { increment: 1 },
             webhookResponse: payout,
+            metadata: isOrganizationWithdrawal
+              ? {
+                  ...metadata,
+                  charges: {
+                    ...metadata.charges,
+                    fee: withdrawal.fee,
+                    totalCharges: withdrawal.fee,
+                    platformFee,
+                    providerFee,
+                  },
+                  platformFeeAllocatedAt:
+                    metadata.platformFeeAllocatedAt || new Date().toISOString(),
+                }
+              : metadata,
           },
         });
-        if (feeDifference !== 0) {
+        if (
+          isOrganizationWithdrawal &&
+          platformFee > 0 &&
+          platformWallet &&
+          !metadata.platformFeeAllocatedAt
+        ) {
+          const bankClearingAccount = await tx.ledgerAccount.findUnique({
+            where: { code: '1100' },
+            select: { id: true },
+          });
+          if (!bankClearingAccount || !platformWallet.ledgerAccountId) {
+            throw new Error('Payout fee allocation accounts are unavailable');
+          }
+          await this.ledgerService.createJournalEntry(
+            {
+              lines: [
+                {
+                  accountId: platformWallet.ledgerAccountId,
+                  type: 'DEBIT',
+                  amount: platformFee,
+                  description: 'Organization withdrawal platform fee',
+                },
+                {
+                  accountId: bankClearingAccount.id,
+                  type: 'CREDIT',
+                  amount: platformFee,
+                  description:
+                    'Organization withdrawal platform fee allocation',
+                },
+              ],
+              description: `Platform fee for withdrawal #${withdrawalId}`,
+              createdBy: withdrawal.userId,
+            },
+            tx,
+          );
+          await tx.wallet.update({
+            where: { id: platformWallet.id },
+            data: { balance: { increment: platformFee } },
+          });
+        } else if (!isOrganizationWithdrawal && feeDifference !== 0) {
           await tx.wallet.update({
             where: { id: withdrawal.walletId },
             data: { balance: { decrement: feeDifference } },
@@ -3553,6 +3642,9 @@ export class FinanceService {
           }
         }
       });
+      if (isOrganizationWithdrawal && platformFee > 0) {
+        await this.walletService.invalidateWalletCache({ type: 'PLATFORM' });
+      }
     } catch (error) {
       this.logger.error(
         `Failed to trigger withdrawal transfer: ${error.message}`,

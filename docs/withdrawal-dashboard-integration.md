@@ -61,7 +61,7 @@ export type WithdrawalListResponse = {
 
 ## Platform earnings
 
-Organization and platform withdrawals do not incur a Heightt withdrawal charge. They reserve Bachs' fixed ₦100 payout fee (10,000 kobo) in addition to the requested principal.
+Organization withdrawals reserve a fixed ₦100 fee (10,000 kobo) in addition to the requested principal. Heightt receives ₦50, and Bachs receives ₦50. Platform withdrawals reserve only Bachs' ₦50 provider fee (5,000 kobo).
 
 `GET /api/v1/finance/reports/overview` returns:
 
@@ -122,8 +122,6 @@ export type WithdrawalQuote = {
   maxWithdrawable: number;
   canWithdraw: boolean;
   feePolicy: 'WITHDRAWAL_FEE_APPLIES' | 'PROVIDER_FEE_ONLY';
-  platformFee: number;
-  providerFee: number;
   currency: 'NGN';
   currencyUnit: 'KOBO';
 };
@@ -131,7 +129,8 @@ export type WithdrawalQuote = {
 
 `availableBalance` excludes funds already held by pending or processing withdrawals. `maxWithdrawable` is the largest principal the backend will accept:
 
-- For organisation and platform withdrawals, `maxWithdrawable` is `availableBalance` minus Bachs' fixed ₦100 provider fee. Heightt's platform fee is zero.
+- For organisation withdrawals, `maxWithdrawable` is `availableBalance` minus the fixed ₦100 withdrawal fee. The quote exposes only this total fee.
+- For platform withdrawals, `maxWithdrawable` is `availableBalance` minus Bachs' fixed ₦50 provider fee. Heightt's platform fee is zero.
 
 Use `maxWithdrawable` for the input's maximum and disable submission when `canWithdraw` is false. Show Available balance, Withdrawal amount, Fee, and Total debit as separate rows. Amounts are integers in kobo; do not use floating-point naira values in API requests.
 
