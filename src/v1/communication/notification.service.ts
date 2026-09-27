@@ -365,15 +365,29 @@ export class NotificationService {
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { profile: true },
+      include: { profile: true, guestPayer: true },
     });
 
     if (!user || !user.email) return;
 
-    const emailSubject = `${notification.title}`;
-    const emailBody = this.getEmailTemplate(notification, user);
+    const recipientEmail = user.guestPayer?.email || user.email;
+    if (recipientEmail.endsWith('@guest.heightt.invalid')) {
+      this.logger.warn(
+        `Skipping email notification for placeholder guest user ${userId}`,
+      );
+      return;
+    }
 
-    await this.emailService.sendEmail(user.email, emailSubject, emailBody);
+    const emailSubject = `${notification.title}`;
+    const emailBody = this.getEmailTemplate(notification, {
+      ...user,
+      email: recipientEmail,
+      username: user.guestPayer
+        ? `${user.guestPayer.firstName} ${user.guestPayer.lastName}`.trim()
+        : user.username,
+    });
+
+    await this.emailService.sendEmail(recipientEmail, emailSubject, emailBody);
   }
 
   private getEmailTemplate(notification: any, user: any): string {
