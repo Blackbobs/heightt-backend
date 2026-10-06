@@ -3028,13 +3028,15 @@ export class FinanceService {
       type: 'ORGANIZATION',
       id: dto.organizationId,
     });
-    await this.notifyPlatformAdmins('ORGANIZATION_WITHDRAWAL_REQUEST', {
-      withdrawalId: withdrawal.id,
-      organizationId: dto.organizationId,
-      amount: dto.amount,
-      amountFormatted: this.formatKobo(dto.amount),
-    });
-    return withdrawal;
+
+    // Organization withdrawals settle immediately. The requester is already
+    // scoped to the organization wallet, so no platform approval step is
+    // required before the payout is submitted to the provider.
+    return this.settleWithdrawal(
+      withdrawal.id,
+      userId,
+      'ORGANIZATION_WITHDRAWAL_APPROVED',
+    );
   }
 
   // ============================================
@@ -3224,6 +3226,26 @@ export class FinanceService {
       );
     }
 
+    return this.settleWithdrawal(
+      withdrawalId,
+      adminUserId,
+      'USER_WITHDRAWAL_APPROVED',
+    );
+  }
+
+  /**
+   * Settles a pending withdrawal without re-checking the actor's role. It marks
+   * the withdrawal as processing, posts its ledger entry, releases the wallet
+   * hold, debits the wallet, and submits the provider payout. Callers authorize
+   * the actor before invoking this.
+   */
+  private async settleWithdrawal(
+    withdrawalId: string,
+    actorUserId: string,
+    approvalActivity:
+      | 'USER_WITHDRAWAL_APPROVED'
+      | 'ORGANIZATION_WITHDRAWAL_APPROVED',
+  ) {
     const bankClearingAccount =
       await this.ledgerService.getOrCreateBankClearingAccount();
 
@@ -3271,7 +3293,7 @@ export class FinanceService {
           lines: journalLines,
           description: `Withdrawal #${withdrawalId}`,
           withdrawalId: withdrawal.id,
-          createdBy: adminUserId,
+          createdBy: actorUserId,
         });
 
         await tx.withdrawal.update({
@@ -3304,8 +3326,8 @@ export class FinanceService {
 
         await tx.activityLog.create({
           data: {
-            userId: adminUserId,
-            activity: 'USER_WITHDRAWAL_APPROVED',
+            userId: actorUserId,
+            activity: approvalActivity,
             details: JSON.stringify({
               withdrawalId,
               amount: withdrawal.amount,
