@@ -2641,7 +2641,23 @@ export class FinanceService {
           _count: { _all: true },
         });
 
-    const grossPlatformEarnings = platformFeeTotal._sum.amount ?? 0;
+    // Heightt's half of every organisation withdrawal fee settles straight into
+    // the platform wallet, so it counts as platform earnings. Reversed
+    // allocations (failed or rejected payouts) are excluded by the entry status.
+    const withdrawalFeeTotal = institutionId
+      ? { _sum: { amount: 0 } }
+      : await this.prisma.journalLine.aggregate({
+          where: {
+            type: 'DEBIT',
+            description: 'Organization withdrawal platform fee',
+            journalEntry: { status: 'POSTED' },
+          },
+          _sum: { amount: true },
+        });
+
+    const grossPlatformEarnings =
+      (platformFeeTotal._sum.amount ?? 0) +
+      (withdrawalFeeTotal._sum.amount ?? 0);
     const withdrawnPlatformEarnings = platformWithdrawalTotal._sum.amount ?? 0;
     const payoutProviderFees = platformWithdrawalTotal._sum.fee ?? 0;
     const netPlatformEarnings =
@@ -3568,30 +3584,7 @@ export class FinanceService {
           : null;
 
       await this.prisma.$transaction(async (tx) => {
-        await tx.withdrawal.update({
-          where: { id: withdrawalId },
-          data: {
-            fee: isOrganizationWithdrawal ? withdrawal.fee : providerFee,
-            providerPayoutId: payout.id,
-            webhookStatus: payoutStatus,
-            webhookAttempts: { increment: 1 },
-            webhookResponse: payout,
-            metadata: isOrganizationWithdrawal
-              ? {
-                  ...metadata,
-                  charges: {
-                    ...metadata.charges,
-                    fee: withdrawal.fee,
-                    totalCharges: withdrawal.fee,
-                    platformFee,
-                    providerFee,
-                  },
-                  platformFeeAllocatedAt:
-                    metadata.platformFeeAllocatedAt || new Date().toISOString(),
-                }
-              : metadata,
-          },
-        });
+        let platformFeeJournalEntryId: string | null = null;
         if (
           isOrganizationWithdrawal &&
           platformFee > 0 &&
@@ -3605,7 +3598,7 @@ export class FinanceService {
           if (!bankClearingAccount || !platformWallet.ledgerAccountId) {
             throw new Error('Payout fee allocation accounts are unavailable');
           }
-          await this.ledgerService.createJournalEntry(
+          const feeEntry = await this.ledgerService.createJournalEntry(
             {
               lines: [
                 {
@@ -3627,6 +3620,7 @@ export class FinanceService {
             },
             tx,
           );
+          platformFeeJournalEntryId = feeEntry.id;
           await tx.wallet.update({
             where: { id: platformWallet.id },
             data: { balance: { increment: platformFee } },
@@ -3663,6 +3657,34 @@ export class FinanceService {
             });
           }
         }
+
+        await tx.withdrawal.update({
+          where: { id: withdrawalId },
+          data: {
+            fee: isOrganizationWithdrawal ? withdrawal.fee : providerFee,
+            providerPayoutId: payout.id,
+            webhookStatus: payoutStatus,
+            webhookAttempts: { increment: 1 },
+            webhookResponse: payout,
+            metadata: isOrganizationWithdrawal
+              ? {
+                  ...metadata,
+                  charges: {
+                    ...metadata.charges,
+                    fee: withdrawal.fee,
+                    totalCharges: withdrawal.fee,
+                    platformFee,
+                    providerFee,
+                  },
+                  platformFeeAllocatedAt:
+                    metadata.platformFeeAllocatedAt || new Date().toISOString(),
+                  ...(platformFeeJournalEntryId
+                    ? { platformFeeJournalEntryId }
+                    : {}),
+                }
+              : metadata,
+          },
+        });
       });
       if (isOrganizationWithdrawal && platformFee > 0) {
         await this.walletService.invalidateWalletCache({ type: 'PLATFORM' });
@@ -3731,6 +3753,14 @@ export class FinanceService {
           data: { status: 'REVERSED' },
         });
       }
+
+      // Heightt's share of the organisation fee is refunded to the organisation
+      // here, so the platform allocation has to come back out of the platform
+      // wallet and the clearing account.
+      await this.ledgerService.reverseOrganizationWithdrawalPlatformFee(
+        tx,
+        withdrawal,
+      );
     });
   }
 

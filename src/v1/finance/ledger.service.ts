@@ -643,6 +643,73 @@ export class LedgerService {
     return reversal;
   }
 
+  /**
+   * Releases Heightt's share of an organisation withdrawal fee back out of the
+   * platform wallet and the clearing account. Called when a payout fails after
+   * the fee was already allocated, since the organisation is refunded the full
+   * fee. Idempotent: it no-ops when the metadata has no allocation.
+   */
+  async reverseOrganizationWithdrawalPlatformFee(
+    tx: any,
+    withdrawal: { id: string; metadata: unknown },
+  ): Promise<number> {
+    const metadata = (withdrawal.metadata as any) || {};
+    const platformFee = metadata.charges?.platformFee ?? 0;
+    if (!metadata.platformFeeAllocatedAt || platformFee <= 0) {
+      return 0;
+    }
+
+    const allocationEntry = metadata.platformFeeJournalEntryId
+      ? { id: metadata.platformFeeJournalEntryId }
+      : await tx.journalEntry.findFirst({
+          where: {
+            description: `Platform fee for withdrawal #${withdrawal.id}`,
+            status: 'POSTED',
+          },
+          select: { id: true },
+        });
+
+    if (allocationEntry) {
+      await tx.journalEntry.update({
+        where: { id: allocationEntry.id },
+        data: { status: 'REVERSED' },
+      });
+    }
+
+    const platformWallet = await tx.wallet.findFirst({
+      where: { isPlatformWallet: true },
+      select: { id: true, ledgerAccountId: true },
+    });
+    if (platformWallet) {
+      await tx.wallet.update({
+        where: { id: platformWallet.id },
+        data: { balance: { decrement: platformFee } },
+      });
+      if (platformWallet.ledgerAccountId) {
+        await tx.ledgerAccount.update({
+          where: { id: platformWallet.ledgerAccountId },
+          data: { balance: { decrement: platformFee } },
+        });
+      }
+    }
+
+    const bankClearingAccount = await tx.ledgerAccount.findUnique({
+      where: { code: this.SYSTEM_ACCOUNTS.BANK_CLEARING_ACCOUNT.code },
+      select: { id: true },
+    });
+    if (bankClearingAccount) {
+      await tx.ledgerAccount.update({
+        where: { id: bankClearingAccount.id },
+        data: { balance: { increment: platformFee } },
+      });
+    }
+
+    this.logger.warn(
+      `Reversed ₦${platformFee / 100} organisation withdrawal platform fee for withdrawal ${withdrawal.id}`,
+    );
+    return platformFee;
+  }
+
   // ============================================
   // RECONCILIATION
   // ============================================

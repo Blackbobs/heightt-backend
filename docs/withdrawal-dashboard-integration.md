@@ -11,7 +11,7 @@ export type WithdrawalStatus =
   'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 ```
 
-- `PENDING`: waiting for the required approval step.
+- `PENDING`: waiting for the required approval step. Organization withdrawals never stay here; only user withdrawals await platform-admin approval.
 - `PROCESSING`: accepted and submitted to the payout provider.
 - `COMPLETED`: confirmed paid by a verified webhook or provider reconciliation.
 - `FAILED`: provider failure confirmed; the backend runs its compensation/refund path.
@@ -22,7 +22,7 @@ The backend now has two completion paths:
 1. A verified provider webhook updates the withdrawal immediately.
 2. Every 10 minutes, stale processing withdrawals are reconciled against Bachs. A withdrawal becomes eligible for reconciliation after five minutes in `PROCESSING`.
 
-Do not treat `PROCESSING` as a failure. Bank payout rails can remain asynchronous for some time.
+Do not treat `PROCESSING` as a failure. Bank payout rails can remain asynchronous for some time, and an organization withdrawal reaches `PROCESSING` as soon as it is submitted.
 
 ## Frontend type
 
@@ -61,7 +61,9 @@ export type WithdrawalListResponse = {
 
 ## Platform earnings
 
-Organization withdrawals reserve a fixed ₦100 fee (10,000 kobo) in addition to the requested principal. Heightt receives ₦50, and Bachs receives ₦50. Platform withdrawals reserve only Bachs' ₦50 provider fee (5,000 kobo).
+Organization withdrawals reserve a fixed ₦100 fee (10,000 kobo) in addition to the requested principal. Heightt receives ₦50, and Bachs receives ₦50. Heightt's half settles straight into the platform wallet once the payout is submitted, so it is included in `grossAmount`. Platform withdrawals reserve only Bachs' ₦50 provider fee (5,000 kobo).
+
+Organization withdrawals are not held for platform-admin approval: they move to `PROCESSING` as soon as they are requested. If the payout later fails, the organisation is refunded the full ₦100 fee and Heightt's ₦50 allocation is reversed, so it drops out of `grossAmount`.
 
 `GET /api/v1/finance/reports/overview` returns:
 
@@ -266,7 +268,8 @@ export const withdrawalStatusCopy: Record<
 > = {
   PENDING: {
     label: 'Pending approval',
-    description: 'This withdrawal is waiting for approval.',
+    description:
+      'This withdrawal is waiting for platform approval. Organization withdrawals are submitted immediately and move straight to processing.',
   },
   PROCESSING: {
     label: 'Processing payout',

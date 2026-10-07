@@ -20,7 +20,10 @@ describe('FinanceService financial overview', () => {
       },
       transaction: { count: jest.fn().mockResolvedValue(4) },
       journalLine: {
-        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 12_345 } }),
+        aggregate: jest
+          .fn()
+          .mockResolvedValueOnce({ _sum: { amount: 12_345 } })
+          .mockResolvedValueOnce({ _sum: { amount: 5_000 } }),
       },
       withdrawal: {
         aggregate: jest.fn().mockResolvedValue({
@@ -34,10 +37,10 @@ describe('FinanceService financial overview', () => {
 
     expect(result.totalBalance).toBe(150_000);
     expect(result.platformEarnings).toEqual({
-      amount: 10_295,
-      amountFormatted: '₦102.95',
-      grossAmount: 12_345,
-      grossAmountFormatted: '₦123.45',
+      amount: 15_295,
+      amountFormatted: '₦152.95',
+      grossAmount: 17_345,
+      grossAmountFormatted: '₦173.45',
       withdrawnAmount: 2_000,
       withdrawnAmountFormatted: '₦20.00',
       payoutProviderFees: 50,
@@ -47,7 +50,9 @@ describe('FinanceService financial overview', () => {
       currencyUnit: 'KOBO',
       scope: 'PLATFORM_NET',
     });
-    expect((service as any).prisma.journalLine.aggregate).toHaveBeenCalledWith({
+    expect(
+      (service as any).prisma.journalLine.aggregate,
+    ).toHaveBeenNthCalledWith(1, {
       where: {
         type: 'CREDIT',
         description: {
@@ -59,6 +64,16 @@ describe('FinanceService financial overview', () => {
             organization: {},
           },
         },
+      },
+      _sum: { amount: true },
+    });
+    expect(
+      (service as any).prisma.journalLine.aggregate,
+    ).toHaveBeenNthCalledWith(2, {
+      where: {
+        type: 'DEBIT',
+        description: 'Organization withdrawal platform fee',
+        journalEntry: { status: 'POSTED' },
       },
       _sum: { amount: true },
     });
