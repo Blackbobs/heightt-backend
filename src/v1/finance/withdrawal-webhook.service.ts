@@ -361,6 +361,14 @@ export class WithdrawalWebhookService {
         });
       }
 
+      // The organisation is refunded the full fee below, so Heightt's share of
+      // an organisation withdrawal fee has to be released back to the platform
+      // wallet and the clearing account.
+      await this.ledgerService.reverseOrganizationWithdrawalPlatformFee(
+        tx,
+        withdrawal,
+      );
+
       // Record webhook
       await tx.withdrawalWebhook.upsert({
         where: { withdrawalId: withdrawal.id },
