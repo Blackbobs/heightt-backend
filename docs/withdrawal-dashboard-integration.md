@@ -170,6 +170,18 @@ type InsufficientBalanceError = {
 
 Refresh the quote and display “Your available balance changed. The maximum you can now withdraw is {formatted maxWithdrawable}.” Never override this response or retry the same amount automatically.
 
+Because organization withdrawals are submitted to the provider as part of the request, a rejection from the provider surfaces on the same call. The withdrawal is already recorded as `FAILED` and the funds are refunded, so the API responds with HTTP 502 and:
+
+```ts
+type PayoutSubmissionFailedError = {
+  code: 'PAYOUT_SUBMISSION_FAILED';
+  message: string;
+  withdrawalId: string;
+};
+```
+
+Show `message` as-is, then refetch the withdrawal and the wallet so the failed entry and the refunded balance appear. Do not retry the payout automatically; the reason may be permanent.
+
 Amounts are returned in kobo. Format them at the display boundary:
 
 ```ts
