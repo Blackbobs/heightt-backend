@@ -180,9 +180,17 @@ describe('FinanceService withdrawal accounting', () => {
     (service as any).logger = { error: jest.fn() };
     (service as any).compensateFailedPayoutSubmission = compensate;
 
+    // Callers need a stable code to tell "the provider rejected this" apart
+    // from "the request never reached the provider".
     await expect(
       (service as any).triggerWithdrawalTransfer('withdrawal-1'),
-    ).rejects.toThrow('Provider rejected the payout');
+    ).rejects.toMatchObject({
+      response: expect.objectContaining({
+        code: 'PAYOUT_SUBMISSION_FAILED',
+        withdrawalId: 'withdrawal-1',
+        message: expect.stringContaining('Provider rejected the payout'),
+      }),
+    });
     expect(compensate).toHaveBeenCalledWith(
       'withdrawal-1',
       'Provider rejected the payout',

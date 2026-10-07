@@ -6,6 +6,7 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  BadGatewayException,
   Logger,
   OnModuleInit,
 } from '@nestjs/common';
@@ -3632,11 +3633,17 @@ export class FinanceService {
       this.logger.error(
         `Failed to trigger withdrawal transfer: ${error.message}`,
       );
-      await this.compensateFailedPayoutSubmission(
+      const reason = error.message || 'Payout submission failed';
+      await this.compensateFailedPayoutSubmission(withdrawalId, reason);
+      // The withdrawal is already recorded as FAILED and the funds have been
+      // refunded, so surface the provider reason instead of a bare 500. Callers
+      // use the code to tell this apart from a request that never reached the
+      // provider.
+      throw new BadGatewayException({
+        code: 'PAYOUT_SUBMISSION_FAILED',
+        message: `The payout could not be submitted: ${reason}. The funds have been returned to the wallet.`,
         withdrawalId,
-        error.message || 'Payout submission failed',
-      );
-      throw error;
+      });
     }
   }
 
