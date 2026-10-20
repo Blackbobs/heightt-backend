@@ -237,10 +237,13 @@ export class UsersService {
       status?: string;
       createdAfter?: string;
       createdBefore?: string;
+      search?: string;
     },
   ) {
     const skip = (page - 1) * limit;
     const where: any = {};
+    const search = filters?.search?.trim();
+    const searchTerms = search?.split(/\s+/).filter(Boolean) ?? [];
 
     if (filters?.email) {
       where.email = { contains: filters.email, mode: 'insensitive' };
@@ -262,6 +265,28 @@ export class UsersService {
         ...where.createdAt,
         lte: new Date(filters.createdBefore),
       };
+    }
+    if (searchTerms.length) {
+      where.OR = [
+        {
+          email: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          profile: {
+            is: {
+              AND: searchTerms.map((term) => ({
+                OR: [
+                  { firstName: { contains: term, mode: 'insensitive' } },
+                  { lastName: { contains: term, mode: 'insensitive' } },
+                ],
+              })),
+            },
+          },
+        },
+      ];
     }
 
     const [users, total] = await Promise.all([
