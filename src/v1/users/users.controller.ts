@@ -129,8 +129,9 @@ export class UsersController {
         status,
         createdAfter,
         createdBefore,
+        search,
       } = request.query;
-      return `users:${page || 1}:${limit || 10}:${email || 'all'}:${username || 'all'}:${status || 'all'}:${createdAfter || 'all'}:${createdBefore || 'all'}`;
+      return `users:${page || 1}:${limit || 10}:${email || 'all'}:${username || 'all'}:${status || 'all'}:${createdAfter || 'all'}:${createdBefore || 'all'}:${search || 'all'}`;
     },
     ttl: 300, // 5 minutes
     tags: ['users'],
@@ -174,6 +175,11 @@ export class UsersController {
     required: false,
     description: 'Filter by creation date (end)',
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search by user name or email',
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Users retrieved successfully',
@@ -191,6 +197,7 @@ export class UsersController {
     @Query('status') status?: string,
     @Query('createdAfter') createdAfter?: string,
     @Query('createdBefore') createdBefore?: string,
+    @Query('search') search?: string,
   ) {
     this.logger.log('Get all users endpoint called');
     return this.usersService.findAll(parseInt(page, 10), parseInt(limit, 10), {
@@ -199,6 +206,7 @@ export class UsersController {
       status,
       createdAfter,
       createdBefore,
+      search,
     });
   }
 
