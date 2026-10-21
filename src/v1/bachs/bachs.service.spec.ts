@@ -73,7 +73,7 @@ describe('BachsService payment callbacks', () => {
     return { service, prisma, client };
   }
 
-  it('adds the pending payment ID to approved callback URLs', async () => {
+  it('adds the 3% platform fee and pending payment ID to checkout URLs', async () => {
     const { service, client } = createService();
 
     await service.initiatePayment(
@@ -90,11 +90,29 @@ describe('BachsService payment callbacks', () => {
 
     expect(client.createCheckoutSession).toHaveBeenCalledWith(
       expect.objectContaining({
-        pricing: expect.objectContaining({ amount: '200.00' }),
+        pricing: expect.objectContaining({ amount: '103.00' }),
         success_url:
           'https://app.heightt.test/payment/callback?source=checkout&payment=pending-1',
         cancel_url:
           'https://app.heightt.test/payment/cancelled?payment=pending-1',
+      }),
+    );
+  });
+
+  it('keeps the fixed platform fee for dues', async () => {
+    const { service, client } = createService();
+
+    await service.initiatePayment(user.id, {
+      userId: user.id,
+      organizationId: 'org-1',
+      amount: 10_000,
+      paymentMethod: 'CARD',
+      category: 'DUE',
+    });
+
+    expect(client.createCheckoutSession).toHaveBeenCalledWith(
+      expect.objectContaining({
+        pricing: expect.objectContaining({ amount: '200.00' }),
       }),
     );
   });

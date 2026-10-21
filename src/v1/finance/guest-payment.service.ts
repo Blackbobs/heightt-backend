@@ -92,6 +92,7 @@ export class GuestPaymentService {
       select: {
         id: true,
         name: true,
+        numericLevel: true,
         department: { select: { id: true, name: true } },
       },
       orderBy: [{ order: 'asc' }, { name: 'asc' }],
@@ -104,6 +105,7 @@ export class GuestPaymentService {
     departmentId?: string;
     organizationId?: string;
     academicLevelId?: string;
+    isDirectEntry?: boolean;
   }) {
     if (!filters.academicLevelId) return [];
     const level = await this.prisma.academicLevel.findFirst({
@@ -119,13 +121,25 @@ export class GuestPaymentService {
         },
       },
     });
-    if (!level || (level.numericLevel !== 100 && level.numericLevel < 200))
+    if (
+      !level ||
+      (filters.isDirectEntry
+        ? level.numericLevel < 200
+        : level.numericLevel !== 100 && level.numericLevel < 200)
+    )
       return [];
     return this.prisma.due.findMany({
       where: {
         status: 'ACTIVE',
         deletedAt: null,
-        isFresher: level.numericLevel === 100,
+        ...(filters.isDirectEntry
+          ? {
+              OR: [
+                { isFresher: false },
+                { isFresher: true, isDirectEntryEligible: true },
+              ],
+            }
+          : { isFresher: level.numericLevel === 100 }),
         organization: {
           status: 'ACTIVE',
           deletedAt: null,
@@ -144,6 +158,7 @@ export class GuestPaymentService {
         amount: true,
         isRequired: true,
         isFresher: true,
+        isDirectEntryEligible: true,
         session: { select: { id: true, name: true } },
         organization: {
           select: { id: true, name: true, type: true, scope: true },
@@ -184,12 +199,15 @@ export class GuestPaymentService {
     if (!due || due.organization.status !== 'ACTIVE') {
       throw new NotFoundException('Active due not found');
     }
-    if (
-      !academicLevel ||
-      (due.isFresher
-        ? academicLevel.numericLevel !== 100
-        : academicLevel.numericLevel < 200)
-    ) {
+    const eligible = academicLevel
+      ? dto.isDirectEntry
+        ? academicLevel.numericLevel >= 200 &&
+          (!due.isFresher || due.isDirectEntryEligible)
+        : due.isFresher
+          ? academicLevel.numericLevel === 100
+          : academicLevel.numericLevel >= 200
+      : false;
+    if (!eligible) {
       throw new ForbiddenException(
         'This due is not available for your academic level',
       );
@@ -260,6 +278,7 @@ export class GuestPaymentService {
           guestPhone: guest.phone,
           guestMatricNumber: guest.matricNumber,
           guestDueId: due.id,
+          guestIsDirectEntry: dto.isDirectEntry ?? false,
         },
       },
       dto.successUrl,
@@ -352,7 +371,9 @@ export class GuestPaymentService {
   async verifyClaimCode(userId: string, code: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { studentProfile: true },
+      include: {
+        studentProfile: { include: { currentAcademicLevel: true } },
+      },
     });
     if (!user || !user.emailVerified)
       throw new ForbiddenException('Verified account required');
@@ -417,6 +438,16 @@ export class GuestPaymentService {
               where: { id: dueId, deletedAt: null },
             });
             if (!due || due.organizationId !== payment.organizationId) continue;
+            const level =
+              user.studentProfile.currentAcademicLevel?.numericLevel;
+            const isEligible = user.studentProfile.isDirectEntry
+              ? level !== undefined &&
+                level >= 200 &&
+                (!due.isFresher || due.isDirectEntryEligible)
+              : due.isFresher
+                ? level === 100
+                : level !== undefined && level >= 200;
+            if (!isEligible) continue;
             const assignment = await tx.dueAssignment.upsert({
               where: {
                 dueId_studentId: { dueId, studentId: user.studentProfile.id },

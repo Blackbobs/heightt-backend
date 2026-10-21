@@ -40,6 +40,7 @@ export type PaymentMinAggregateOutputType = {
   id: string | null
   payerId: string | null
   organizationId: string | null
+  paymentOfferingId: string | null
   transactionId: string | null
   amount: number | null
   serviceFee: number | null
@@ -60,6 +61,7 @@ export type PaymentMaxAggregateOutputType = {
   id: string | null
   payerId: string | null
   organizationId: string | null
+  paymentOfferingId: string | null
   transactionId: string | null
   amount: number | null
   serviceFee: number | null
@@ -80,6 +82,7 @@ export type PaymentCountAggregateOutputType = {
   id: number
   payerId: number
   organizationId: number
+  paymentOfferingId: number
   transactionId: number
   amount: number
   serviceFee: number
@@ -113,6 +116,7 @@ export type PaymentMinAggregateInputType = {
   id?: true
   payerId?: true
   organizationId?: true
+  paymentOfferingId?: true
   transactionId?: true
   amount?: true
   serviceFee?: true
@@ -133,6 +137,7 @@ export type PaymentMaxAggregateInputType = {
   id?: true
   payerId?: true
   organizationId?: true
+  paymentOfferingId?: true
   transactionId?: true
   amount?: true
   serviceFee?: true
@@ -153,6 +158,7 @@ export type PaymentCountAggregateInputType = {
   id?: true
   payerId?: true
   organizationId?: true
+  paymentOfferingId?: true
   transactionId?: true
   amount?: true
   serviceFee?: true
@@ -261,6 +267,7 @@ export type PaymentGroupByOutputType = {
   id: string
   payerId: string
   organizationId: string
+  paymentOfferingId: string | null
   transactionId: string | null
   amount: number
   serviceFee: number
@@ -305,6 +312,7 @@ export type PaymentWhereInput = {
   id?: Prisma.StringFilter<"Payment"> | string
   payerId?: Prisma.StringFilter<"Payment"> | string
   organizationId?: Prisma.StringFilter<"Payment"> | string
+  paymentOfferingId?: Prisma.StringNullableFilter<"Payment"> | string | null
   transactionId?: Prisma.StringNullableFilter<"Payment"> | string | null
   amount?: Prisma.IntFilter<"Payment"> | number
   serviceFee?: Prisma.IntFilter<"Payment"> | number
@@ -321,6 +329,7 @@ export type PaymentWhereInput = {
   bachsCheckoutId?: Prisma.StringNullableFilter<"Payment"> | string | null
   bachsCustomerId?: Prisma.StringNullableFilter<"Payment"> | string | null
   duePayment?: Prisma.XOR<Prisma.DuePaymentNullableScalarRelationFilter, Prisma.DuePaymentWhereInput> | null
+  paymentOffering?: Prisma.XOR<Prisma.PaymentOfferingNullableScalarRelationFilter, Prisma.PaymentOfferingWhereInput> | null
   journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   payer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -333,6 +342,7 @@ export type PaymentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  paymentOfferingId?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
@@ -349,6 +359,7 @@ export type PaymentOrderByWithRelationInput = {
   bachsCheckoutId?: Prisma.SortOrderInput | Prisma.SortOrder
   bachsCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
   duePayment?: Prisma.DuePaymentOrderByWithRelationInput
+  paymentOffering?: Prisma.PaymentOfferingOrderByWithRelationInput
   journalEntry?: Prisma.JournalEntryOrderByWithRelationInput
   organization?: Prisma.OrganizationOrderByWithRelationInput
   payer?: Prisma.UserOrderByWithRelationInput
@@ -363,11 +374,13 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   reference?: string
   journalEntryId?: string
   bachsChargeId?: string
+  payerId_paymentOfferingId?: Prisma.PaymentPayerIdPaymentOfferingIdCompoundUniqueInput
   AND?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   OR?: Prisma.PaymentWhereInput[]
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   payerId?: Prisma.StringFilter<"Payment"> | string
   organizationId?: Prisma.StringFilter<"Payment"> | string
+  paymentOfferingId?: Prisma.StringNullableFilter<"Payment"> | string | null
   amount?: Prisma.IntFilter<"Payment"> | number
   serviceFee?: Prisma.IntFilter<"Payment"> | number
   status?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
@@ -380,18 +393,20 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   bachsCheckoutId?: Prisma.StringNullableFilter<"Payment"> | string | null
   bachsCustomerId?: Prisma.StringNullableFilter<"Payment"> | string | null
   duePayment?: Prisma.XOR<Prisma.DuePaymentNullableScalarRelationFilter, Prisma.DuePaymentWhereInput> | null
+  paymentOffering?: Prisma.XOR<Prisma.PaymentOfferingNullableScalarRelationFilter, Prisma.PaymentOfferingWhereInput> | null
   journalEntry?: Prisma.XOR<Prisma.JournalEntryNullableScalarRelationFilter, Prisma.JournalEntryWhereInput> | null
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   payer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   transaction?: Prisma.XOR<Prisma.TransactionNullableScalarRelationFilter, Prisma.TransactionWhereInput> | null
   receipt?: Prisma.XOR<Prisma.ReceiptNullableScalarRelationFilter, Prisma.ReceiptWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
-}, "id" | "transactionId" | "reference" | "journalEntryId" | "bachsChargeId">
+}, "id" | "transactionId" | "reference" | "journalEntryId" | "bachsChargeId" | "payerId_paymentOfferingId">
 
 export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  paymentOfferingId?: Prisma.SortOrderInput | Prisma.SortOrder
   transactionId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
@@ -421,6 +436,7 @@ export type PaymentScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   payerId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   organizationId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
+  paymentOfferingId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   transactionId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   amount?: Prisma.IntWithAggregatesFilter<"Payment"> | number
   serviceFee?: Prisma.IntWithAggregatesFilter<"Payment"> | number
@@ -454,6 +470,7 @@ export type PaymentCreateInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
@@ -466,6 +483,7 @@ export type PaymentUncheckedCreateInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -502,6 +520,7 @@ export type PaymentUpdateInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
@@ -514,6 +533,7 @@ export type PaymentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -538,6 +558,7 @@ export type PaymentCreateManyInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -576,6 +597,7 @@ export type PaymentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -608,10 +630,16 @@ export type PaymentNullableScalarRelationFilter = {
   isNot?: Prisma.PaymentWhereInput | null
 }
 
+export type PaymentPayerIdPaymentOfferingIdCompoundUniqueInput = {
+  payerId: string
+  paymentOfferingId: string
+}
+
 export type PaymentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  paymentOfferingId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
@@ -638,6 +666,7 @@ export type PaymentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  paymentOfferingId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
@@ -658,6 +687,7 @@ export type PaymentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   payerId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
+  paymentOfferingId?: Prisma.SortOrder
   transactionId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
@@ -840,6 +870,48 @@ export type EnumPaymentMethodTypeFieldUpdateOperationsInput = {
   set?: $Enums.PaymentMethodType
 }
 
+export type PaymentCreateNestedManyWithoutPaymentOfferingInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput> | Prisma.PaymentCreateWithoutPaymentOfferingInput[] | Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput | Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput[]
+  createMany?: Prisma.PaymentCreateManyPaymentOfferingInputEnvelope
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+}
+
+export type PaymentUncheckedCreateNestedManyWithoutPaymentOfferingInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput> | Prisma.PaymentCreateWithoutPaymentOfferingInput[] | Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput | Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput[]
+  createMany?: Prisma.PaymentCreateManyPaymentOfferingInputEnvelope
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+}
+
+export type PaymentUpdateManyWithoutPaymentOfferingNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput> | Prisma.PaymentCreateWithoutPaymentOfferingInput[] | Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput | Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput[]
+  upsert?: Prisma.PaymentUpsertWithWhereUniqueWithoutPaymentOfferingInput | Prisma.PaymentUpsertWithWhereUniqueWithoutPaymentOfferingInput[]
+  createMany?: Prisma.PaymentCreateManyPaymentOfferingInputEnvelope
+  set?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  delete?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  update?: Prisma.PaymentUpdateWithWhereUniqueWithoutPaymentOfferingInput | Prisma.PaymentUpdateWithWhereUniqueWithoutPaymentOfferingInput[]
+  updateMany?: Prisma.PaymentUpdateManyWithWhereWithoutPaymentOfferingInput | Prisma.PaymentUpdateManyWithWhereWithoutPaymentOfferingInput[]
+  deleteMany?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
+}
+
+export type PaymentUncheckedUpdateManyWithoutPaymentOfferingNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentCreateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput> | Prisma.PaymentCreateWithoutPaymentOfferingInput[] | Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput[]
+  connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput | Prisma.PaymentCreateOrConnectWithoutPaymentOfferingInput[]
+  upsert?: Prisma.PaymentUpsertWithWhereUniqueWithoutPaymentOfferingInput | Prisma.PaymentUpsertWithWhereUniqueWithoutPaymentOfferingInput[]
+  createMany?: Prisma.PaymentCreateManyPaymentOfferingInputEnvelope
+  set?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  delete?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  connect?: Prisma.PaymentWhereUniqueInput | Prisma.PaymentWhereUniqueInput[]
+  update?: Prisma.PaymentUpdateWithWhereUniqueWithoutPaymentOfferingInput | Prisma.PaymentUpdateWithWhereUniqueWithoutPaymentOfferingInput[]
+  updateMany?: Prisma.PaymentUpdateManyWithWhereWithoutPaymentOfferingInput | Prisma.PaymentUpdateManyWithWhereWithoutPaymentOfferingInput[]
+  deleteMany?: Prisma.PaymentScalarWhereInput | Prisma.PaymentScalarWhereInput[]
+}
+
 export type PaymentCreateNestedOneWithoutDuePaymentInput = {
   create?: Prisma.XOR<Prisma.PaymentCreateWithoutDuePaymentInput, Prisma.PaymentUncheckedCreateWithoutDuePaymentInput>
   connectOrCreate?: Prisma.PaymentCreateOrConnectWithoutDuePaymentInput
@@ -898,6 +970,7 @@ export type PaymentCreateWithoutPayerInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutPaymentInput
@@ -908,6 +981,7 @@ export type PaymentCreateWithoutPayerInput = {
 export type PaymentUncheckedCreateWithoutPayerInput = {
   id?: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -961,6 +1035,7 @@ export type PaymentScalarWhereInput = {
   id?: Prisma.StringFilter<"Payment"> | string
   payerId?: Prisma.StringFilter<"Payment"> | string
   organizationId?: Prisma.StringFilter<"Payment"> | string
+  paymentOfferingId?: Prisma.StringNullableFilter<"Payment"> | string | null
   transactionId?: Prisma.StringNullableFilter<"Payment"> | string | null
   amount?: Prisma.IntFilter<"Payment"> | number
   serviceFee?: Prisma.IntFilter<"Payment"> | number
@@ -994,6 +1069,7 @@ export type PaymentCreateWithoutOrganizationInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutPaymentInput
@@ -1004,6 +1080,7 @@ export type PaymentCreateWithoutOrganizationInput = {
 export type PaymentUncheckedCreateWithoutOrganizationInput = {
   id?: string
   payerId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1066,6 +1143,7 @@ export type PaymentCreateWithoutJournalEntryInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
   transaction?: Prisma.TransactionCreateNestedOneWithoutPaymentInput
@@ -1077,6 +1155,7 @@ export type PaymentUncheckedCreateWithoutJournalEntryInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1128,6 +1207,7 @@ export type PaymentUpdateWithoutJournalEntryInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutPaymentNestedInput
@@ -1139,6 +1219,7 @@ export type PaymentUncheckedUpdateWithoutJournalEntryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1174,6 +1255,7 @@ export type PaymentCreateWithoutTransactionInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
@@ -1185,6 +1267,7 @@ export type PaymentUncheckedCreateWithoutTransactionInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   amount: number
   serviceFee?: number
   status?: $Enums.PaymentStatus
@@ -1236,6 +1319,7 @@ export type PaymentUpdateWithoutTransactionInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
@@ -1247,6 +1331,7 @@ export type PaymentUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
@@ -1266,6 +1351,80 @@ export type PaymentUncheckedUpdateWithoutTransactionInput = {
   refund?: Prisma.RefundUncheckedUpdateOneWithoutPaymentNestedInput
 }
 
+export type PaymentCreateWithoutPaymentOfferingInput = {
+  id?: string
+  amount: number
+  serviceFee?: number
+  status?: $Enums.PaymentStatus
+  paymentMethod: $Enums.PaymentMethodType
+  reference: string
+  description?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
+  duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
+  organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
+  payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
+  transaction?: Prisma.TransactionCreateNestedOneWithoutPaymentInput
+  receipt?: Prisma.ReceiptCreateNestedOneWithoutPaymentInput
+  refund?: Prisma.RefundCreateNestedOneWithoutPaymentInput
+}
+
+export type PaymentUncheckedCreateWithoutPaymentOfferingInput = {
+  id?: string
+  payerId: string
+  organizationId: string
+  transactionId?: string | null
+  amount: number
+  serviceFee?: number
+  status?: $Enums.PaymentStatus
+  paymentMethod: $Enums.PaymentMethodType
+  reference: string
+  description?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  journalEntryId?: string | null
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
+  duePayment?: Prisma.DuePaymentUncheckedCreateNestedOneWithoutPaymentInput
+  receipt?: Prisma.ReceiptUncheckedCreateNestedOneWithoutPaymentInput
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutPaymentInput
+}
+
+export type PaymentCreateOrConnectWithoutPaymentOfferingInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput>
+}
+
+export type PaymentCreateManyPaymentOfferingInputEnvelope = {
+  data: Prisma.PaymentCreateManyPaymentOfferingInput | Prisma.PaymentCreateManyPaymentOfferingInput[]
+  skipDuplicates?: boolean
+}
+
+export type PaymentUpsertWithWhereUniqueWithoutPaymentOfferingInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PaymentUpdateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedUpdateWithoutPaymentOfferingInput>
+  create: Prisma.XOR<Prisma.PaymentCreateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedCreateWithoutPaymentOfferingInput>
+}
+
+export type PaymentUpdateWithWhereUniqueWithoutPaymentOfferingInput = {
+  where: Prisma.PaymentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PaymentUpdateWithoutPaymentOfferingInput, Prisma.PaymentUncheckedUpdateWithoutPaymentOfferingInput>
+}
+
+export type PaymentUpdateManyWithWhereWithoutPaymentOfferingInput = {
+  where: Prisma.PaymentScalarWhereInput
+  data: Prisma.XOR<Prisma.PaymentUpdateManyMutationInput, Prisma.PaymentUncheckedUpdateManyWithoutPaymentOfferingInput>
+}
+
 export type PaymentCreateWithoutDuePaymentInput = {
   id?: string
   amount: number
@@ -1281,6 +1440,7 @@ export type PaymentCreateWithoutDuePaymentInput = {
   bachsChargeId?: string | null
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
@@ -1293,6 +1453,7 @@ export type PaymentUncheckedCreateWithoutDuePaymentInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1343,6 +1504,7 @@ export type PaymentUpdateWithoutDuePaymentInput = {
   bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
@@ -1355,6 +1517,7 @@ export type PaymentUncheckedUpdateWithoutDuePaymentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1390,6 +1553,7 @@ export type PaymentCreateWithoutRefundInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
@@ -1401,6 +1565,7 @@ export type PaymentUncheckedCreateWithoutRefundInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1452,6 +1617,7 @@ export type PaymentUpdateWithoutRefundInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
@@ -1463,6 +1629,7 @@ export type PaymentUncheckedUpdateWithoutRefundInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1498,6 +1665,7 @@ export type PaymentCreateWithoutReceiptInput = {
   bachsCheckoutId?: string | null
   bachsCustomerId?: string | null
   duePayment?: Prisma.DuePaymentCreateNestedOneWithoutPaymentInput
+  paymentOffering?: Prisma.PaymentOfferingCreateNestedOneWithoutPaymentsInput
   journalEntry?: Prisma.JournalEntryCreateNestedOneWithoutPaymentInput
   organization: Prisma.OrganizationCreateNestedOneWithoutPaymentsInput
   payer: Prisma.UserCreateNestedOneWithoutPaymentsInput
@@ -1509,6 +1677,7 @@ export type PaymentUncheckedCreateWithoutReceiptInput = {
   id?: string
   payerId: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1560,6 +1729,7 @@ export type PaymentUpdateWithoutReceiptInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
@@ -1571,6 +1741,7 @@ export type PaymentUncheckedUpdateWithoutReceiptInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1593,6 +1764,7 @@ export type PaymentUncheckedUpdateWithoutReceiptInput = {
 export type PaymentCreateManyPayerInput = {
   id?: string
   organizationId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1626,6 +1798,7 @@ export type PaymentUpdateWithoutPayerInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutPaymentNestedInput
@@ -1636,6 +1809,7 @@ export type PaymentUpdateWithoutPayerInput = {
 export type PaymentUncheckedUpdateWithoutPayerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1659,6 +1833,7 @@ export type PaymentUncheckedUpdateWithoutPayerInput = {
 export type PaymentUncheckedUpdateManyWithoutPayerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1679,6 +1854,7 @@ export type PaymentUncheckedUpdateManyWithoutPayerInput = {
 export type PaymentCreateManyOrganizationInput = {
   id?: string
   payerId: string
+  paymentOfferingId?: string | null
   transactionId?: string | null
   amount: number
   serviceFee?: number
@@ -1712,6 +1888,7 @@ export type PaymentUpdateWithoutOrganizationInput = {
   bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  paymentOffering?: Prisma.PaymentOfferingUpdateOneWithoutPaymentsNestedInput
   journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
   payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
   transaction?: Prisma.TransactionUpdateOneWithoutPaymentNestedInput
@@ -1722,6 +1899,7 @@ export type PaymentUpdateWithoutOrganizationInput = {
 export type PaymentUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1745,6 +1923,97 @@ export type PaymentUncheckedUpdateWithoutOrganizationInput = {
 export type PaymentUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentOfferingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type PaymentCreateManyPaymentOfferingInput = {
+  id?: string
+  payerId: string
+  organizationId: string
+  transactionId?: string | null
+  amount: number
+  serviceFee?: number
+  status?: $Enums.PaymentStatus
+  paymentMethod: $Enums.PaymentMethodType
+  reference: string
+  description?: string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  journalEntryId?: string | null
+  bachsChargeId?: string | null
+  bachsCheckoutId?: string | null
+  bachsCustomerId?: string | null
+}
+
+export type PaymentUpdateWithoutPaymentOfferingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duePayment?: Prisma.DuePaymentUpdateOneWithoutPaymentNestedInput
+  journalEntry?: Prisma.JournalEntryUpdateOneWithoutPaymentNestedInput
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutPaymentsNestedInput
+  payer?: Prisma.UserUpdateOneRequiredWithoutPaymentsNestedInput
+  transaction?: Prisma.TransactionUpdateOneWithoutPaymentNestedInput
+  receipt?: Prisma.ReceiptUpdateOneWithoutPaymentNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutPaymentNestedInput
+}
+
+export type PaymentUncheckedUpdateWithoutPaymentOfferingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodTypeFieldUpdateOperationsInput | $Enums.PaymentMethodType
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  journalEntryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsChargeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCheckoutId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bachsCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  duePayment?: Prisma.DuePaymentUncheckedUpdateOneWithoutPaymentNestedInput
+  receipt?: Prisma.ReceiptUncheckedUpdateOneWithoutPaymentNestedInput
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutPaymentNestedInput
+}
+
+export type PaymentUncheckedUpdateManyWithoutPaymentOfferingInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   transactionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   serviceFee?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1768,6 +2037,7 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   payerId?: boolean
   organizationId?: boolean
+  paymentOfferingId?: boolean
   transactionId?: boolean
   amount?: boolean
   serviceFee?: boolean
@@ -1784,6 +2054,7 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   bachsCheckoutId?: boolean
   bachsCustomerId?: boolean
   duePayment?: boolean | Prisma.Payment$duePaymentArgs<ExtArgs>
+  paymentOffering?: boolean | Prisma.Payment$paymentOfferingArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Payment$journalEntryArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1796,6 +2067,7 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   payerId?: boolean
   organizationId?: boolean
+  paymentOfferingId?: boolean
   transactionId?: boolean
   amount?: boolean
   serviceFee?: boolean
@@ -1811,6 +2083,7 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   bachsChargeId?: boolean
   bachsCheckoutId?: boolean
   bachsCustomerId?: boolean
+  paymentOffering?: boolean | Prisma.Payment$paymentOfferingArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Payment$journalEntryArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1821,6 +2094,7 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   payerId?: boolean
   organizationId?: boolean
+  paymentOfferingId?: boolean
   transactionId?: boolean
   amount?: boolean
   serviceFee?: boolean
@@ -1836,6 +2110,7 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   bachsChargeId?: boolean
   bachsCheckoutId?: boolean
   bachsCustomerId?: boolean
+  paymentOffering?: boolean | Prisma.Payment$paymentOfferingArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Payment$journalEntryArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1846,6 +2121,7 @@ export type PaymentSelectScalar = {
   id?: boolean
   payerId?: boolean
   organizationId?: boolean
+  paymentOfferingId?: boolean
   transactionId?: boolean
   amount?: boolean
   serviceFee?: boolean
@@ -1863,9 +2139,10 @@ export type PaymentSelectScalar = {
   bachsCustomerId?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payerId" | "organizationId" | "transactionId" | "amount" | "serviceFee" | "status" | "paymentMethod" | "reference" | "description" | "metadata" | "paidAt" | "createdAt" | "updatedAt" | "journalEntryId" | "bachsChargeId" | "bachsCheckoutId" | "bachsCustomerId", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "payerId" | "organizationId" | "paymentOfferingId" | "transactionId" | "amount" | "serviceFee" | "status" | "paymentMethod" | "reference" | "description" | "metadata" | "paidAt" | "createdAt" | "updatedAt" | "journalEntryId" | "bachsChargeId" | "bachsCheckoutId" | "bachsCustomerId", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   duePayment?: boolean | Prisma.Payment$duePaymentArgs<ExtArgs>
+  paymentOffering?: boolean | Prisma.Payment$paymentOfferingArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Payment$journalEntryArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1874,12 +2151,14 @@ export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   refund?: boolean | Prisma.Payment$refundArgs<ExtArgs>
 }
 export type PaymentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  paymentOffering?: boolean | Prisma.Payment$paymentOfferingArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Payment$journalEntryArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   transaction?: boolean | Prisma.Payment$transactionArgs<ExtArgs>
 }
 export type PaymentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  paymentOffering?: boolean | Prisma.Payment$paymentOfferingArgs<ExtArgs>
   journalEntry?: boolean | Prisma.Payment$journalEntryArgs<ExtArgs>
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   payer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1890,6 +2169,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   name: "Payment"
   objects: {
     duePayment: Prisma.$DuePaymentPayload<ExtArgs> | null
+    paymentOffering: Prisma.$PaymentOfferingPayload<ExtArgs> | null
     journalEntry: Prisma.$JournalEntryPayload<ExtArgs> | null
     organization: Prisma.$OrganizationPayload<ExtArgs>
     payer: Prisma.$UserPayload<ExtArgs>
@@ -1901,6 +2181,7 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     payerId: string
     organizationId: string
+    paymentOfferingId: string | null
     transactionId: string | null
     amount: number
     serviceFee: number
@@ -2311,6 +2592,7 @@ readonly fields: PaymentFieldRefs;
 export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   duePayment<T extends Prisma.Payment$duePaymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$duePaymentArgs<ExtArgs>>): Prisma.Prisma__DuePaymentClient<runtime.Types.Result.GetResult<Prisma.$DuePaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  paymentOffering<T extends Prisma.Payment$paymentOfferingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$paymentOfferingArgs<ExtArgs>>): Prisma.Prisma__PaymentOfferingClient<runtime.Types.Result.GetResult<Prisma.$PaymentOfferingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   journalEntry<T extends Prisma.Payment$journalEntryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Payment$journalEntryArgs<ExtArgs>>): Prisma.Prisma__JournalEntryClient<runtime.Types.Result.GetResult<Prisma.$JournalEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2349,6 +2631,7 @@ export interface PaymentFieldRefs {
   readonly id: Prisma.FieldRef<"Payment", 'String'>
   readonly payerId: Prisma.FieldRef<"Payment", 'String'>
   readonly organizationId: Prisma.FieldRef<"Payment", 'String'>
+  readonly paymentOfferingId: Prisma.FieldRef<"Payment", 'String'>
   readonly transactionId: Prisma.FieldRef<"Payment", 'String'>
   readonly amount: Prisma.FieldRef<"Payment", 'Int'>
   readonly serviceFee: Prisma.FieldRef<"Payment", 'Int'>
@@ -2781,6 +3064,25 @@ export type Payment$duePaymentArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.DuePaymentInclude<ExtArgs> | null
   where?: Prisma.DuePaymentWhereInput
+}
+
+/**
+ * Payment.paymentOffering
+ */
+export type Payment$paymentOfferingArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentOffering
+   */
+  select?: Prisma.PaymentOfferingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentOffering
+   */
+  omit?: Prisma.PaymentOfferingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentOfferingInclude<ExtArgs> | null
+  where?: Prisma.PaymentOfferingWhereInput
 }
 
 /**

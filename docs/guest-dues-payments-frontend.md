@@ -16,10 +16,10 @@ All URLs below are under the configured API origin.
 GET /api/v1/guest-payments/options/institutions
 GET /api/v1/guest-payments/options/faculties?institutionId=<id>
 GET /api/v1/guest-payments/options/departments?facultyId=<id>
-GET /api/v1/guest-payments/options/dues?institutionId=<id>&facultyId=<id>&departmentId=<id>
+GET /api/v1/guest-payments/options/dues?institutionId=<id>&facultyId=<id>&departmentId=<id>&academicLevelId=<id>&isDirectEntry=true
 ```
 
-`facultyId`, `departmentId`, and `organizationId` are optional on the dues request. Each due contains its organization, amount in kobo, and academic session. Only active dues in active organizations are returned.
+`facultyId`, `departmentId`, and `organizationId` are optional. `academicLevelId` is required. Set `isDirectEntry=true` for a direct entry student at 200 level or above. Each due contains its organization, amount in kobo, academic session, and `isDirectEntryEligible`. Only active dues in active organizations are returned.
 
 Suggested UI order:
 
@@ -58,6 +58,7 @@ X-CSRF-Token: <token>
   "facultyId": "<faculty-id>",
   "departmentId": "<department-id>",
   "academicLevelId": "<level-id>",
+  "isDirectEntry": false,
   "dueId": "<due-id>",
   "paymentMethod": "CARD",
   "successUrl": "https://app.example.com/payments/guest/callback",
@@ -66,6 +67,7 @@ X-CSRF-Token: <token>
 ```
 
 The amount is deliberately not accepted from the browser. The backend reads it from the selected due, preventing amount tampering.
+Guest due checkout adds Heightt's fixed ₦100 due fee to the student checkout total.
 
 The response contains `checkoutUrl`, `pendingPaymentId`, `guestPayerId`, and `accessToken`. Store `pendingPaymentId` and `accessToken` in `sessionStorage`, then redirect to `checkoutUrl`. The access token is shown only once and must not be logged or placed in a URL.
 

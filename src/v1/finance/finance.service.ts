@@ -28,6 +28,7 @@ import {
   CreditWalletDto,
   DebitWalletDto,
   CreateDueDto,
+  CreatePaymentOfferingDto,
   AssignDueDto,
   CreatePaymentDto,
   CreateManualPaymentDto,
@@ -659,6 +660,9 @@ export class FinanceService {
           assignment: { include: { due: true } },
         },
       },
+      paymentOffering: {
+        select: { id: true, name: true },
+      },
       receipt: { select: { id: true, receiptNumber: true } },
     } as const;
   }
@@ -840,6 +844,238 @@ export class FinanceService {
   // DUE MANAGEMENT
   // ============================================
 
+  async createPaymentOffering(userId: string, dto: CreatePaymentOfferingDto) {
+    const organization = await this.prisma.organization.findFirst({
+      where: { id: dto.organizationId, status: 'ACTIVE', deletedAt: null },
+      select: { id: true, institutionId: true },
+    });
+    if (!organization) {
+      throw new NotFoundException('Active organization not found');
+    }
+    if (dto.sessionId) {
+      if (!organization.institutionId) {
+        throw new BadRequestException(
+          'An academic session cannot be set for this organization',
+        );
+      }
+      const session = await this.prisma.academicSession.findFirst({
+        where: {
+          id: dto.sessionId,
+          institutionId: organization.institutionId,
+        },
+        select: { id: true },
+      });
+      if (!session) {
+        throw new BadRequestException(
+          'Academic session does not match the organization institution',
+        );
+      }
+    }
+
+    await this.walletService.getOrCreateWallet({
+      type: 'ORGANIZATION',
+      id: dto.organizationId,
+    });
+
+    const offering = await this.prisma.paymentOffering.create({
+      data: {
+        organizationId: dto.organizationId,
+        sessionId: dto.sessionId,
+        name: dto.name.trim(),
+        description: dto.description?.trim(),
+        amount: dto.amount,
+        status: dto.status ?? 'ACTIVE',
+      },
+    });
+
+    await this.prisma.activityLog.create({
+      data: {
+        userId,
+        activity: 'PAYMENT_OFFERING_CREATED',
+        details: JSON.stringify({
+          paymentOfferingId: offering.id,
+          name: offering.name,
+          amount: offering.amount,
+          organizationId: offering.organizationId,
+        }),
+      },
+    });
+
+    return offering;
+  }
+
+  async getPaymentOfferings(
+    organizationId: string,
+    page = 1,
+    limit = 10,
+    academicSessionId?: string,
+  ) {
+    const safePage = Math.max(1, page || 1);
+    const safeLimit = Math.min(100, Math.max(1, limit || 10));
+    const where = {
+      organizationId,
+      ...(academicSessionId ? { sessionId: academicSessionId } : {}),
+    };
+    const [offerings, total] = await Promise.all([
+      this.prisma.paymentOffering.findMany({
+        where,
+        skip: (safePage - 1) * safeLimit,
+        take: safeLimit,
+        include: { organization: true, session: true },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.paymentOffering.count({ where }),
+    ]);
+
+    const offeringIds = offerings.map((offering) => offering.id);
+    const paymentCounts = offeringIds.length
+      ? await this.prisma.payment.groupBy({
+          by: ['paymentOfferingId'],
+          where: {
+            paymentOfferingId: { in: offeringIds },
+            status: 'COMPLETED',
+          },
+          _count: { payerId: true },
+        })
+      : [];
+    const paidCountByOffering = new Map(
+      paymentCounts.map((item) => [
+        item.paymentOfferingId,
+        item._count.payerId,
+      ]),
+    );
+
+    return {
+      data: offerings.map((offering) => ({
+        ...offering,
+        paidStudentCount: paidCountByOffering.get(offering.id) || 0,
+      })),
+      meta: {
+        page: safePage,
+        limit: safeLimit,
+        total,
+        totalPages: Math.ceil(total / safeLimit),
+      },
+    };
+  }
+
+  async getMyPaymentOfferings(userId: string) {
+    const student = await this.prisma.studentProfile.findUnique({
+      where: { userId },
+      select: { id: true, institutionId: true },
+    });
+    if (!student) return [];
+
+    const [memberships, currentSession] = await Promise.all([
+      this.prisma.organizationMembership.findMany({
+        where: { userId, status: 'ACTIVE' },
+        select: { organizationId: true },
+      }),
+      this.prisma.academicSession.findFirst({
+        where: {
+          institutionId: student.institutionId,
+          scope: 'INSTITUTION',
+          isCurrent: true,
+        },
+        select: { id: true },
+      }),
+    ]);
+    const organizationIds = memberships.map((item) => item.organizationId);
+    if (!organizationIds.length) return [];
+
+    const offerings = await this.prisma.paymentOffering.findMany({
+      where: {
+        organizationId: { in: organizationIds },
+        status: 'ACTIVE',
+        organization: { status: 'ACTIVE', deletedAt: null },
+        OR: [
+          { sessionId: null },
+          ...(currentSession ? [{ sessionId: currentSession.id }] : []),
+        ],
+      },
+      include: {
+        organization: { select: { id: true, name: true, slug: true } },
+        session: { select: { id: true, name: true } },
+        payments: {
+          where: { payerId: userId, status: 'COMPLETED' },
+          select: { id: true },
+          take: 1,
+        },
+        pendingPayments: {
+          where: { userId, status: 'PENDING' },
+          select: { id: true },
+          take: 1,
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return offerings.map(({ payments, pendingPayments, ...offering }) => ({
+      ...offering,
+      isPaid: payments.length > 0,
+      isPending: pendingPayments.length > 0,
+    }));
+  }
+
+  async resolvePaymentOffering(
+    userId: string,
+    paymentOfferingId: string,
+    organizationId: string,
+    amount: number,
+  ) {
+    const offering = await this.prisma.paymentOffering.findFirst({
+      where: {
+        id: paymentOfferingId,
+        organizationId,
+        status: 'ACTIVE',
+        organization: { status: 'ACTIVE', deletedAt: null },
+      },
+    });
+    if (!offering) {
+      throw new NotFoundException('Active payment offering not found');
+    }
+    if (offering.amount !== amount) {
+      throw new BadRequestException(
+        `Payment amount must be exactly ${offering.amount} Kobo`,
+      );
+    }
+
+    const membership = await this.prisma.organizationMembership.findFirst({
+      where: {
+        userId,
+        organizationId: offering.organizationId,
+        status: 'ACTIVE',
+      },
+      select: { id: true },
+    });
+    if (!membership) {
+      throw new ForbiddenException(
+        'You are not a member of this organization',
+      );
+    }
+    const studentProfile = await this.prisma.studentProfile.findUnique({
+      where: { userId },
+      select: { id: true },
+    });
+    if (!studentProfile) {
+      throw new ForbiddenException('Student profile is required to pay');
+    }
+
+    const completedPayment = await this.prisma.payment.findFirst({
+      where: {
+        payerId: userId,
+        paymentOfferingId: offering.id,
+        status: 'COMPLETED',
+      },
+      select: { id: true },
+    });
+    if (completedPayment) {
+      throw new BadRequestException('This payment has already been paid');
+    }
+
+    return offering;
+  }
+
   async createDue(userId: string, dto: CreateDueDto) {
     this.logger.log(`Creating due: ${dto.name} - Amount: ${dto.amount} Kobo`);
 
@@ -943,7 +1179,6 @@ export class FinanceService {
               ],
             }
           : {
-              isDirectEntry: false,
               currentAcademicLevel: { numericLevel: { gte: 200 } },
             }),
       },
@@ -1058,10 +1293,18 @@ export class FinanceService {
     return { message: 'Due deleted successfully' };
   }
 
-  async getDues(organizationId?: string, page: number = 1, limit: number = 10) {
+  async getDues(
+    organizationId?: string,
+    page: number = 1,
+    limit: number = 10,
+    academicSessionId?: string,
+  ) {
     const where: any = { deletedAt: null };
     if (organizationId) {
       where.organizationId = organizationId;
+    }
+    if (academicSessionId) {
+      where.sessionId = academicSessionId;
     }
 
     const skip = (page - 1) * limit;
@@ -1079,20 +1322,37 @@ export class FinanceService {
       this.prisma.due.count({ where }),
     ]);
 
-    const duesWithCounts = await Promise.all(
-      dues.map(async (due) => {
-        const pendingCount = await this.prisma.dueAssignment.count({
-          where: {
-            dueId: due.id,
-            isPaid: false,
-          },
-        });
-        return {
-          ...due,
-          pendingAssignments: pendingCount,
-        };
-      }),
+    const dueIds = dues.map((due) => due.id);
+    const [assignmentCounts, paidCounts] = dueIds.length
+      ? await Promise.all([
+          this.prisma.dueAssignment.groupBy({
+            by: ['dueId'],
+            where: { dueId: { in: dueIds } },
+            _count: { _all: true },
+          }),
+          this.prisma.dueAssignment.groupBy({
+            by: ['dueId'],
+            where: { dueId: { in: dueIds }, isPaid: true },
+            _count: { _all: true },
+          }),
+        ])
+      : [[], []];
+    const assignmentCountByDue = new Map(
+      assignmentCounts.map((item) => [item.dueId, item._count._all]),
     );
+    const paidCountByDue = new Map(
+      paidCounts.map((item) => [item.dueId, item._count._all]),
+    );
+    const duesWithCounts = dues.map((due) => {
+      const totalAssignments = assignmentCountByDue.get(due.id) || 0;
+      const paidStudentCount = paidCountByDue.get(due.id) || 0;
+      return {
+        ...due,
+        totalAssignments,
+        paidStudentCount,
+        pendingAssignments: totalAssignments - paidStudentCount,
+      };
+    });
 
     return {
       data: duesWithCounts,
@@ -1130,7 +1390,12 @@ export class FinanceService {
     const level = studentProfile.currentAcademicLevel?.numericLevel;
     if (level !== 100 && !(level !== undefined && level >= 200)) return [];
     const dueAudience = studentProfile.isDirectEntry
-      ? { isFresher: true, isDirectEntryEligible: true }
+      ? {
+          OR: [
+            { isFresher: false },
+            { isFresher: true, isDirectEntryEligible: true },
+          ],
+        }
       : { isFresher: level === 100 };
 
     const [memberships, currentSession] = await Promise.all([
@@ -1158,11 +1423,15 @@ export class FinanceService {
           where: {
             organizationId: { in: organizationIds },
             deletedAt: null,
-            ...dueAudience,
             status: 'ACTIVE',
-            OR: [
-              { sessionId: null },
-              ...(currentSession ? [{ sessionId: currentSession.id }] : []),
+            AND: [
+              dueAudience,
+              {
+                OR: [
+                  { sessionId: null },
+                  ...(currentSession ? [{ sessionId: currentSession.id }] : []),
+                ],
+              },
             ],
           },
           include: { organization: true, session: true },
@@ -1339,8 +1608,7 @@ export class FinanceService {
     const isEligible = student.isDirectEntry
       ? level !== undefined &&
         level >= 200 &&
-        due.isFresher &&
-        due.isDirectEntryEligible
+        (!due.isFresher || due.isDirectEntryEligible)
       : due.isFresher
         ? level === 100
         : level !== undefined && level >= 200;
@@ -2565,6 +2833,9 @@ export class FinanceService {
             email: true,
             username: true,
             profile: true,
+            guestPayer: {
+              select: { email: true, firstName: true, lastName: true },
+            },
           },
         },
         organization: true,
@@ -2693,7 +2964,20 @@ export class FinanceService {
         id: p.id,
         amount: p.amount,
         amountFormatted: `₦${(p.amount / this.KOBO_PER_NAIRA).toFixed(2)}`,
-        payer: p.payer?.username || 'Unknown',
+        payer:
+          (p.metadata as any)?.guestName ||
+          (p.payer?.guestPayer
+            ? `${p.payer.guestPayer.firstName} ${p.payer.guestPayer.lastName}`.trim()
+            : null) ||
+          (p.payer?.profile?.firstName
+            ? `${p.payer.profile.firstName} ${p.payer.profile.lastName || ''}`.trim()
+            : p.payer?.username) ||
+          'Unknown',
+        payerEmail:
+          (p.metadata as any)?.guestEmail ||
+          p.payer?.guestPayer?.email ||
+          p.payer?.email ||
+          '',
         organization: p.organization?.name || 'Unknown',
         createdAt: p.createdAt,
         status: p.status,

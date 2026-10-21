@@ -148,7 +148,9 @@ Eligible students:
 Eligible students:
 
 - Regular students at 200 level or above.
-- Direct entry students are excluded.
+- Direct entry students at 200 level or above.
+
+When assigning any 200-level-and-above due, the backend includes direct entry students at 200 level or above.
 
 ## Successful response
 

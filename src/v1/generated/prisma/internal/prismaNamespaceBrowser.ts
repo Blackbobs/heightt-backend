@@ -88,6 +88,7 @@ export const ModelName = {
   Transaction: 'Transaction',
   Payment: 'Payment',
   Due: 'Due',
+  PaymentOffering: 'PaymentOffering',
   DueAssignment: 'DueAssignment',
   DuePayment: 'DuePayment',
   Withdrawal: 'Withdrawal',
@@ -747,6 +748,7 @@ export const PaymentScalarFieldEnum = {
   id: 'id',
   payerId: 'payerId',
   organizationId: 'organizationId',
+  paymentOfferingId: 'paymentOfferingId',
   transactionId: 'transactionId',
   amount: 'amount',
   serviceFee: 'serviceFee',
@@ -786,6 +788,21 @@ export const DueScalarFieldEnum = {
 } as const
 
 export type DueScalarFieldEnum = (typeof DueScalarFieldEnum)[keyof typeof DueScalarFieldEnum]
+
+
+export const PaymentOfferingScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  sessionId: 'sessionId',
+  name: 'name',
+  description: 'description',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentOfferingScalarFieldEnum = (typeof PaymentOfferingScalarFieldEnum)[keyof typeof PaymentOfferingScalarFieldEnum]
 
 
 export const DueAssignmentScalarFieldEnum = {
@@ -1400,6 +1417,7 @@ export const PendingPaymentScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   description: 'description',
   dueAssignmentId: 'dueAssignmentId',
+  paymentOfferingId: 'paymentOfferingId',
   category: 'category',
   reference: 'reference',
   status: 'status',

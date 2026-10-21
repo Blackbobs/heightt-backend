@@ -10,9 +10,9 @@ The backend now enforces these audiences:
 | --- | --- |
 | Regular 100 level student | All dues with `isFresher: true` |
 | Regular 200 level or above student | All dues with `isFresher: false` |
-| Direct entry student at 200 level or above | Only dues with both `isFresher: true` and `isDirectEntryEligible: true` |
+| Direct entry student at 200 level or above | All dues with `isFresher: false`, plus opted-in dues with `isFresher: true` and `isDirectEntryEligible: true` |
 
-Direct entry students do not receive 200-level-and-above dues. Existing membership, active status, session, payment, and arrears rules still apply.
+Existing membership, active status, session, payment, and arrears rules still apply.
 
 ## Student onboarding
 
@@ -142,7 +142,7 @@ const paymentInput = item.isAutoAssigned
 Eligibility is checked again for explicit assignments, automatic assignment, and direct internal payment. A direct entry student cannot pay:
 
 - a 100 level due that did not opt in to direct entry students;
-- a 200-level-and-above due;
+- a due outside the student's organization or session;
 - any due while their selected level is below 200.
 
 A rejected payment returns HTTP 403 with `This due is not available for your academic level`.
@@ -168,9 +168,9 @@ npm run build
 
 1. A regular 100 level student sees all 100 level dues.
 2. A regular 200 level student sees only 200-level-and-above dues.
-3. A direct entry 200 level student sees only opted-in 100 level dues.
-4. A direct entry student does not see ordinary 100 level dues or 200-level-and-above dues.
+3. A direct entry 200 level student sees normal 200-level-and-above dues and opted-in 100 level dues.
+4. A direct entry student does not see ordinary 100 level dues.
 5. A direct entry student can pay an opted-in due using either `dueId` or an existing `dueAssignmentId`.
-6. Payment attempts for any other audience return HTTP 403.
+6. Payment attempts for a 100 level due that did not opt in return HTTP 403.
 7. The admin form prevents the direct entry option on a 200-level-and-above due.
 8. Changing onboarding level to 100 clears the direct entry selection.

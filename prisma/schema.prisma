@@ -316,6 +316,7 @@ model AcademicSession {
   institution     Institution              @relation(fields: [institutionId], references: [id], onDelete: Cascade)
   admins          Admin[]
   dues            Due[]
+  paymentOfferings PaymentOffering[]
   memberships     OrganizationMembership[]
   organizations   Organization[]
   studentRecords  StudentAcademicRecord[]
@@ -473,6 +474,7 @@ model Organization {
   announcements        Announcement[]
   committees           Committee[]
   dues                 Due[]
+  paymentOfferings    PaymentOffering[]
   elections            Election[]
   events               Event[]
   executiveTerms       ExecutiveTerm[]
@@ -874,6 +876,7 @@ model Payment {
   id              String            @id @default(cuid())
   payerId         String
   organizationId  String
+  paymentOfferingId String?
   transactionId   String?           @unique
   amount          Int
   serviceFee      Int               @default(0)
@@ -890,6 +893,7 @@ model Payment {
   bachsCheckoutId String?
   bachsCustomerId String?
   duePayment      DuePayment?
+  paymentOffering PaymentOffering?  @relation(fields: [paymentOfferingId], references: [id])
   journalEntry    JournalEntry?     @relation(fields: [journalEntryId], references: [id])
   organization    Organization      @relation(fields: [organizationId], references: [id])
   payer           User              @relation(fields: [payerId], references: [id])
@@ -900,6 +904,8 @@ model Payment {
   @@index([payerId])
   @@index([payerId, status, createdAt(sort: Desc)])
   @@index([organizationId])
+  @@index([paymentOfferingId])
+  @@unique([payerId, paymentOfferingId])
   @@index([organizationId, status, paidAt])
   @@index([reference])
   @@index([status])
@@ -932,6 +938,26 @@ model Due {
   @@index([status])
   @@index([deletedAt])
   @@map("dues")
+}
+
+model PaymentOffering {
+  id             String                @id @default(cuid())
+  organizationId String
+  sessionId      String?
+  name           String
+  description    String?
+  amount         Int
+  status         PaymentOfferingStatus @default(ACTIVE)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  organization   Organization          @relation(fields: [organizationId], references: [id])
+  session        AcademicSession?      @relation(fields: [sessionId], references: [id])
+  payments       Payment[]
+  pendingPayments PendingPayment[]
+
+  @@index([organizationId, status, createdAt(sort: Desc)])
+  @@index([sessionId])
+  @@map("payment_offerings")
 }
 
 model DueAssignment {
@@ -1664,6 +1690,7 @@ model PendingPayment {
   paymentMethod   String
   description     String?
   dueAssignmentId String?
+  paymentOfferingId String?
   category        String               @default("OTHER")
   reference       String               @unique
   status          PendingPaymentStatus @default(PENDING)
@@ -1675,11 +1702,14 @@ model PendingPayment {
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
   dueAssignment   DueAssignment?       @relation(fields: [dueAssignmentId], references: [id])
+  paymentOffering PaymentOffering?     @relation(fields: [paymentOfferingId], references: [id])
   organization    Organization         @relation(fields: [organizationId], references: [id])
   user            User                 @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([organizationId])
+  @@index([paymentOfferingId])
+  @@unique([userId, paymentOfferingId, status])
   @@index([status])
   @@index([bachsCheckoutId])
   @@map("pending_payments")
@@ -1871,6 +1901,13 @@ enum PaymentMethodType {
 }
 
 enum DueStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentOfferingStatus {
   ACTIVE
   INACTIVE
   COMPLETED

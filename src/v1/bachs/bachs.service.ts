@@ -22,6 +22,7 @@ export interface PendingPaymentData {
   paymentMethod: string;
   description?: string;
   dueAssignmentId?: string;
+  paymentOfferingId?: string;
   category?: string;
   reference?: string;
   metadata?: Record<string, any>;
@@ -116,7 +117,13 @@ export class BachsService {
       'fees.platform.enabled',
       true,
     );
-    const platformFee = platformFeeEnabled ? platformFeeAmount : 0;
+    const platformFeeType =
+      paymentData.category === 'DUE' ? 'FIXED' : 'PERCENTAGE';
+    const platformFee = platformFeeEnabled
+      ? platformFeeType === 'FIXED'
+        ? platformFeeAmount
+        : Math.round(paymentData.amount * 0.03)
+      : 0;
     const settlementAmount = paymentData.amount + platformFee;
 
     // 1. Get user details
@@ -163,6 +170,8 @@ export class BachsService {
             userId,
             organizationId: paymentData.organizationId,
             dueAssignmentId: paymentData.dueAssignmentId || null,
+            paymentOfferingId: paymentData.paymentOfferingId || null,
+            category: paymentData.category || 'OTHER',
             status: 'PENDING',
           },
           orderBy: { createdAt: 'desc' },
@@ -255,13 +264,17 @@ export class BachsService {
             paymentMethod: paymentData.paymentMethod,
             description: paymentData.description,
             dueAssignmentId: paymentData.dueAssignmentId,
+            paymentOfferingId: paymentData.paymentOfferingId,
             category: paymentData.category || 'OTHER',
             reference,
             metadata: {
               ...(paymentData.metadata || {}),
               baseAmount: paymentData.amount,
               platformFee,
-              platformFeeType: 'FIXED',
+              platformFeeType,
+              ...(platformFeeType === 'PERCENTAGE'
+                ? { platformFeeRate: 3 }
+                : {}),
               expectedSettlementAmount: settlementAmount,
             },
             status: 'PENDING',
@@ -269,11 +282,16 @@ export class BachsService {
         });
       })
       .catch((error: any) => {
-        if (error?.code === 'P2002' && paymentData.dueAssignmentId) {
+        if (
+          error?.code === 'P2002' &&
+          (paymentData.dueAssignmentId || paymentData.paymentOfferingId)
+        ) {
           throw new ConflictException({
             statusCode: 409,
             code: 'PAYMENT_ALREADY_IN_PROGRESS',
-            message: 'A payment for this due is already in progress',
+            message: paymentData.dueAssignmentId
+              ? 'A payment for this due is already in progress'
+              : 'A payment for this offering is already in progress',
           });
         }
         throw error;
@@ -358,7 +376,10 @@ export class BachsService {
           ...((pendingPayment.metadata as any) || {}),
           baseAmount: paymentData.amount,
           platformFee,
-          platformFeeType: 'FIXED',
+          platformFeeType,
+          ...(platformFeeType === 'PERCENTAGE'
+            ? { platformFeeRate: 3 }
+            : {}),
           expectedSettlementAmount: settlementAmount,
           checkoutSession,
         },
@@ -668,6 +689,7 @@ export class BachsService {
             data: {
               payerId: pendingPayment.userId,
               organizationId: pendingPayment.organizationId,
+              paymentOfferingId: pendingPayment.paymentOfferingId,
               transactionId: transaction.id,
               amount: pendingPayment.amount,
               serviceFee: platformFee,

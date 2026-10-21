@@ -49,6 +49,7 @@ import {
   CreditWalletDto,
   DebitWalletDto,
   CreateDueDto,
+  CreatePaymentOfferingDto,
   AssignDueDto,
   CreatePaymentDto,
   CreateManualPaymentDto,
@@ -325,6 +326,49 @@ export class FinanceController {
     return this.financeService.createDue(req.user.id, dto);
   }
 
+  @Post('payment-offerings')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:due:create')
+  @InvalidateCache(['finance', 'payment-offerings'])
+  @ApiOperation({ summary: 'Create an organization payment offering' })
+  async createPaymentOffering(
+    @Request() req: any,
+    @Body() dto: CreatePaymentOfferingDto,
+  ) {
+    return this.financeService.createPaymentOffering(req.user.id, dto);
+  }
+
+  @Get('payment-offerings')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:read')
+  @ApiOperation({ summary: 'List organization payment offerings and paid counts' })
+  @ApiQuery({ name: 'organizationId', required: true })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'academicSessionId', required: false })
+  async getPaymentOfferings(
+    @Query('organizationId') organizationId: string,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('academicSessionId') academicSessionId?: string,
+  ) {
+    if (!organizationId) {
+      throw new BadRequestException('organizationId is required');
+    }
+    return this.financeService.getPaymentOfferings(
+      organizationId,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      academicSessionId,
+    );
+  }
+
+  @Get('payment-offerings/student')
+  @ApiOperation({ summary: 'List active payment offerings for the student' })
+  async getStudentPaymentOfferings(@Request() req: any) {
+    return this.financeService.getMyPaymentOfferings(req.user.id);
+  }
+
   @Post('dues/:id/assign')
   @UseGuards(AdminGuard)
   @RequirePermission('finance:due:assign')
@@ -368,8 +412,8 @@ export class FinanceController {
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      const { organizationId, page, limit } = request.query;
-      return `dues:${organizationId || 'all'}:${page || 1}:${limit || 10}`;
+      const { organizationId, page, limit, academicSessionId } = request.query;
+      return `dues:${organizationId || 'all'}:${academicSessionId || 'all'}:${page || 1}:${limit || 10}`;
     },
     ttl: 300,
     tags: ['finance', 'dues'],
@@ -382,6 +426,7 @@ export class FinanceController {
   })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({ name: 'academicSessionId', required: false })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Dues retrieved',
@@ -390,12 +435,14 @@ export class FinanceController {
     @Query('organizationId') organizationId?: string,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
+    @Query('academicSessionId') academicSessionId?: string,
   ) {
     this.logger.log('Get dues endpoint called');
     return this.financeService.getDues(
       organizationId,
       parseInt(page, 10),
       parseInt(limit, 10),
+      academicSessionId,
     );
   }
 
@@ -636,26 +683,48 @@ export class FinanceController {
       `Initiate payment endpoint called for user: ${req.user.id}`,
     );
 
-    // Resolve dueId/dueAssignmentId to a valid dueAssignmentId
-    const resolvedDueAssignmentId =
-      await this.financeService.resolveDueAssignment(
-        req.user.id,
-        dto.dueId,
-        dto.dueAssignmentId,
-        dto.amount,
+    if (
+      dto.paymentOfferingId &&
+      (dto.dueId || dto.dueAssignmentId)
+    ) {
+      throw new BadRequestException(
+        'A payment cannot target both a due and a payment offering',
       );
+    }
+
+    const offering = dto.paymentOfferingId
+      ? await this.financeService.resolvePaymentOffering(
+          req.user.id,
+          dto.paymentOfferingId,
+          dto.organizationId,
+          dto.amount,
+        )
+      : null;
+    const resolvedDueAssignmentId = offering
+      ? null
+      : await this.financeService.resolveDueAssignment(
+          req.user.id,
+          dto.dueId,
+          dto.dueAssignmentId,
+          dto.amount,
+        );
 
     // Create Bachs checkout session
     const result = await this.bachsService.initiatePayment(
       req.user.id,
       {
         userId: req.user.id,
-        organizationId: dto.organizationId,
+        organizationId: offering?.organizationId || dto.organizationId,
         amount: dto.amount,
         paymentMethod: dto.paymentMethod,
-        description: dto.description,
+        description: offering?.name || dto.description,
         dueAssignmentId: resolvedDueAssignmentId || undefined,
-        category: dto.dueId || dto.dueAssignmentId ? 'DUE' : 'OTHER',
+        paymentOfferingId: offering?.id,
+        category: offering
+          ? 'CONTRIBUTION'
+          : dto.dueId || dto.dueAssignmentId
+            ? 'DUE'
+            : 'OTHER',
       },
       dto.successUrl,
       dto.cancelUrl,

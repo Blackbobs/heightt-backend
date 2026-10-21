@@ -80,6 +80,13 @@ export class CreatePaymentDto {
   dueId?: string;
 
   @ApiPropertyOptional({
+    description: 'Payment offering ID for a non-due organization payment',
+  })
+  @IsOptional()
+  @IsCuidOrUUID()
+  paymentOfferingId?: string;
+
+  @ApiPropertyOptional({
     description: 'Description of the payment',
     example: 'Department Due Payment',
     maxLength: 255,

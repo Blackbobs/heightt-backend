@@ -393,7 +393,9 @@ export class DashboardService {
       pendingVerifications,
       totalTransactions,
     ] = await Promise.all([
-      this.prisma.user.count(),
+      this.prisma.user.count({
+        where: { guestPayer: { is: null } },
+      }),
       this.prisma.studentProfile.count(),
       this.prisma.organization.count(),
       this.prisma.institution.count(),

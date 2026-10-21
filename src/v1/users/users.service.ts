@@ -241,7 +241,7 @@ export class UsersService {
     },
   ) {
     const skip = (page - 1) * limit;
-    const where: any = {};
+    const where: any = { guestPayer: { is: null } };
     const search = filters?.search?.trim();
     const searchTerms = search?.split(/\s+/).filter(Boolean) ?? [];
 

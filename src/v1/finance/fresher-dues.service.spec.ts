@@ -34,7 +34,11 @@ describe('Fresher dues eligibility', () => {
       await serviceWith(prisma).getMyDues('user');
       expect(prisma.due.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ isFresher: numericLevel === 100 }),
+          where: expect.objectContaining({
+            AND: expect.arrayContaining([
+              { isFresher: numericLevel === 100 },
+            ]),
+          }),
         }),
       );
       expect(prisma.dueAssignment.findMany).toHaveBeenCalledWith(
@@ -259,20 +263,108 @@ describe('Fresher dues eligibility', () => {
     };
     expect(prisma.due.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: expect.objectContaining(audience),
+        where: expect.objectContaining({
+          AND: expect.arrayContaining([
+            expect.objectContaining({
+              OR: expect.arrayContaining([audience]),
+            }),
+          ]),
+        }),
       }),
     );
     expect(prisma.dueAssignment.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: expect.objectContaining({ due: audience }),
+        where: expect.objectContaining({
+          due: {
+            OR: expect.arrayContaining([
+              { isFresher: false },
+              audience,
+            ]),
+          },
+        }),
       }),
     );
+  });
+
+  it('returns regular dues to direct entry students at 200 level and above', async () => {
+    const prisma = {
+      studentProfile: {
+        findUnique: jest.fn().mockResolvedValue({
+          id: 'student',
+          institutionId: 'institution',
+          isDirectEntry: true,
+          currentAcademicLevel: { numericLevel: 200 },
+        }),
+      },
+      organizationMembership: {
+        findMany: jest.fn().mockResolvedValue([{ organizationId: 'org' }]),
+      },
+      academicSession: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'session' }),
+      },
+      due: { findMany: jest.fn().mockResolvedValue([]) },
+      dueAssignment: { findMany: jest.fn().mockResolvedValue([]) },
+    };
+
+    await serviceWith(prisma).getMyDues('user');
+
+    expect(prisma.due.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          AND: expect.arrayContaining([
+            expect.objectContaining({
+              OR: expect.arrayContaining([
+                { isFresher: false },
+                { isFresher: true, isDirectEntryEligible: true },
+              ]),
+            }),
+          ]),
+        }),
+      }),
+    );
+    expect(prisma.dueAssignment.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          due: {
+            OR: expect.arrayContaining([
+              { isFresher: false },
+              { isFresher: true, isDirectEntryEligible: true },
+            ]),
+          },
+        }),
+      }),
+    );
+  });
+
+  it('allows direct entry students at 200 level to pay regular dues', async () => {
+    const prisma = {
+      dueAssignment: {
+        findUnique: jest.fn().mockResolvedValue({
+          student: {
+            userId: 'user',
+            isDirectEntry: true,
+            currentAcademicLevel: { numericLevel: 200 },
+          },
+          due: {
+            isFresher: false,
+            isDirectEntryEligible: false,
+            status: 'ACTIVE',
+          },
+          duePayments: [],
+          isPaid: false,
+        }),
+      },
+    };
+
+    await expect(
+      serviceWith(prisma).resolveDueAssignment('user', undefined, 'assignment'),
+    ).resolves.toBe('assignment');
   });
 
   it.each([
     [true, true, true],
     [true, false, false],
-    [false, false, false],
+    [false, false, true],
   ])(
     'checks direct entry payment eligibility for isFresher=%s and optedIn=%s',
     async (isFresher, isDirectEntryEligible, allowed) => {

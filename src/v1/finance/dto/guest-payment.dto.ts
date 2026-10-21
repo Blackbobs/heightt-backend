@@ -7,6 +7,7 @@ import {
   IsUrl,
   Length,
   MaxLength,
+  IsBoolean,
 } from 'class-validator';
 import { IsCuidOrUUID } from './create-payment.dto';
 
@@ -56,6 +57,14 @@ export class CreateGuestPaymentDto {
   @IsCuidOrUUID()
   @ApiPropertyOptional()
   academicLevelId?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @ApiPropertyOptional({
+    description: 'Whether the guest is a direct-entry student',
+    default: false,
+  })
+  isDirectEntry?: boolean;
 
   @IsCuidOrUUID()
   @ApiProperty({ description: 'The active due being paid' })

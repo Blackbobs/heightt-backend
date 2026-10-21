@@ -35,7 +35,9 @@ export class AnalyticsService {
 
     const dashboard = {
       summary: {
-        totalUsers: await this.prisma.user.count(),
+        totalUsers: await this.prisma.user.count({
+          where: { guestPayer: { is: null } },
+        }),
         totalStudents: students.totalStudents,
         totalOrganizations: organizations.totalOrganizations,
         totalRevenue: revenue.totalRevenue,
@@ -237,7 +239,16 @@ export class AnalyticsService {
       where.institutionId = dto.institutionId;
     }
 
-    const [total, byStatus, byLevel, byDepartment, newStudents] =
+    const [
+      total,
+      byStatus,
+      byLevel,
+      byDepartment,
+      byInstitution,
+      byFaculty,
+      membershipsByOrganization,
+      newStudents,
+    ] =
       await Promise.all([
         this.prisma.studentProfile.count({ where }),
         this.prisma.studentProfile.groupBy({
@@ -254,6 +265,27 @@ export class AnalyticsService {
           by: ['departmentId'],
           where,
           _count: { id: true },
+        }),
+        this.prisma.studentProfile.groupBy({
+          by: ['institutionId'],
+          where,
+          _count: { id: true },
+        }),
+        this.prisma.studentProfile.groupBy({
+          by: ['facultyId'],
+          where,
+          _count: { id: true },
+        }),
+        this.prisma.organizationMembership.groupBy({
+          by: ['organizationId'],
+          where: {
+            status: 'ACTIVE',
+            user: { studentProfile: { isNot: null } },
+            ...(dto.institutionId
+              ? { organization: { institutionId: dto.institutionId } }
+              : {}),
+          },
+          _count: { userId: true },
         }),
         this.prisma.studentProfile.count({
           where: {
@@ -283,6 +315,30 @@ export class AnalyticsService {
       select: { id: true, name: true },
     });
     const deptMap = new Map(departments.map((d) => [d.id, d.name]));
+    const institutionIds = byInstitution.map((item) => item.institutionId);
+    const institutions = await this.prisma.institution.findMany({
+      where: { id: { in: institutionIds } },
+      select: { id: true, name: true },
+    });
+    const institutionMap = new Map(
+      institutions.map((institution) => [institution.id, institution.name]),
+    );
+    const facultyIds = byFaculty.map((item) => item.facultyId);
+    const faculties = await this.prisma.faculty.findMany({
+      where: { id: { in: facultyIds } },
+      select: { id: true, name: true },
+    });
+    const facultyMap = new Map(faculties.map((faculty) => [faculty.id, faculty.name]));
+    const organizationIds = membershipsByOrganization.map(
+      (item) => item.organizationId,
+    );
+    const organizations = await this.prisma.organization.findMany({
+      where: { id: { in: organizationIds } },
+      select: { id: true, name: true },
+    });
+    const organizationMap = new Map(
+      organizations.map((organization) => [organization.id, organization.name]),
+    );
 
     const activeStudents =
       byStatus.find((s) => s.academicStatus === 'ACTIVE')?._count.id || 0;
@@ -304,6 +360,23 @@ export class AnalyticsService {
         department: deptMap.get(item.departmentId as string) || 'Unknown',
         count: item._count.id,
       })),
+      studentsByInstitution: byInstitution.map((item) => ({
+        institutionId: item.institutionId,
+        institution:
+          institutionMap.get(item.institutionId) || 'Unknown institution',
+        count: item._count.id,
+      })),
+      studentsByFaculty: byFaculty.map((item) => ({
+        facultyId: item.facultyId,
+        faculty: facultyMap.get(item.facultyId) || 'Unknown faculty',
+        count: item._count.id,
+      })),
+      studentsByOrganization: membershipsByOrganization.map((item) => ({
+        organizationId: item.organizationId,
+        organization:
+          organizationMap.get(item.organizationId) || 'Unknown organization',
+        count: item._count.userId,
+      })),
       studentsByStatus: byStatus.map((item) => ({
         status: item.academicStatus,
         count: item._count.id,
@@ -314,7 +387,7 @@ export class AnalyticsService {
       cacheKey,
       analytics,
       ['analytics', 'students'],
-      3600,
+      300,
     );
     return analytics;
   }

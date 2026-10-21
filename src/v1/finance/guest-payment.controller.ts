@@ -67,12 +67,14 @@ export class GuestPaymentController {
   @ApiQuery({ name: 'departmentId', required: false })
   @ApiQuery({ name: 'organizationId', required: false })
   @ApiQuery({ name: 'academicLevelId', required: true })
+  @ApiQuery({ name: 'isDirectEntry', required: false, type: Boolean })
   dues(
     @Query('institutionId') institutionId: string,
     @Query('facultyId') facultyId?: string,
     @Query('departmentId') departmentId?: string,
     @Query('organizationId') organizationId?: string,
     @Query('academicLevelId') academicLevelId?: string,
+    @Query('isDirectEntry') isDirectEntry?: string,
   ) {
     return this.guestPayments.listDues({
       institutionId,
@@ -80,6 +82,7 @@ export class GuestPaymentController {
       departmentId,
       organizationId,
       academicLevelId,
+      isDirectEntry: isDirectEntry === 'true',
     });
   }
 

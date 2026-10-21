@@ -330,6 +330,7 @@ export type OrganizationWhereInput = {
   announcements?: Prisma.AnnouncementListRelationFilter
   committees?: Prisma.CommitteeListRelationFilter
   dues?: Prisma.DueListRelationFilter
+  paymentOfferings?: Prisma.PaymentOfferingListRelationFilter
   elections?: Prisma.ElectionListRelationFilter
   events?: Prisma.EventListRelationFilter
   executiveTerms?: Prisma.ExecutiveTermListRelationFilter
@@ -383,6 +384,7 @@ export type OrganizationOrderByWithRelationInput = {
   announcements?: Prisma.AnnouncementOrderByRelationAggregateInput
   committees?: Prisma.CommitteeOrderByRelationAggregateInput
   dues?: Prisma.DueOrderByRelationAggregateInput
+  paymentOfferings?: Prisma.PaymentOfferingOrderByRelationAggregateInput
   elections?: Prisma.ElectionOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
   executiveTerms?: Prisma.ExecutiveTermOrderByRelationAggregateInput
@@ -440,6 +442,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   announcements?: Prisma.AnnouncementListRelationFilter
   committees?: Prisma.CommitteeListRelationFilter
   dues?: Prisma.DueListRelationFilter
+  paymentOfferings?: Prisma.PaymentOfferingListRelationFilter
   elections?: Prisma.ElectionListRelationFilter
   events?: Prisma.EventListRelationFilter
   executiveTerms?: Prisma.ExecutiveTermListRelationFilter
@@ -544,6 +547,7 @@ export type OrganizationCreateInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -597,6 +601,7 @@ export type OrganizationUncheckedCreateInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -636,6 +641,7 @@ export type OrganizationUpdateInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -689,6 +695,7 @@ export type OrganizationUncheckedUpdateInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -1336,6 +1343,20 @@ export type OrganizationUpdateOneRequiredWithoutDuesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutDuesInput, Prisma.OrganizationUpdateWithoutDuesInput>, Prisma.OrganizationUncheckedUpdateWithoutDuesInput>
 }
 
+export type OrganizationCreateNestedOneWithoutPaymentOfferingsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPaymentOfferingsInput, Prisma.OrganizationUncheckedCreateWithoutPaymentOfferingsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPaymentOfferingsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutPaymentOfferingsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPaymentOfferingsInput, Prisma.OrganizationUncheckedCreateWithoutPaymentOfferingsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPaymentOfferingsInput
+  upsert?: Prisma.OrganizationUpsertWithoutPaymentOfferingsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPaymentOfferingsInput, Prisma.OrganizationUpdateWithoutPaymentOfferingsInput>, Prisma.OrganizationUncheckedUpdateWithoutPaymentOfferingsInput>
+}
+
 export type OrganizationCreateNestedOneWithoutSettlementsInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutSettlementsInput, Prisma.OrganizationUncheckedCreateWithoutSettlementsInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutSettlementsInput
@@ -1505,6 +1526,7 @@ export type OrganizationCreateWithoutCreatorInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -1556,6 +1578,7 @@ export type OrganizationUncheckedCreateWithoutCreatorInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1650,6 +1673,7 @@ export type OrganizationCreateWithoutInstitutionInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -1701,6 +1725,7 @@ export type OrganizationUncheckedCreateWithoutInstitutionInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1766,6 +1791,7 @@ export type OrganizationCreateWithoutFacultyInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -1817,6 +1843,7 @@ export type OrganizationUncheckedCreateWithoutFacultyInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1882,6 +1909,7 @@ export type OrganizationCreateWithoutDepartmentInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -1933,6 +1961,7 @@ export type OrganizationUncheckedCreateWithoutDepartmentInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -1998,6 +2027,7 @@ export type OrganizationCreateWithoutAcademicLevelInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2049,6 +2079,7 @@ export type OrganizationUncheckedCreateWithoutAcademicLevelInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2114,6 +2145,7 @@ export type OrganizationCreateWithoutAcademicSessionInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2165,6 +2197,7 @@ export type OrganizationUncheckedCreateWithoutAcademicSessionInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2230,6 +2263,7 @@ export type OrganizationCreateWithoutStudentEnrollmentsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2282,6 +2316,7 @@ export type OrganizationUncheckedCreateWithoutStudentEnrollmentsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2336,6 +2371,7 @@ export type OrganizationUpdateWithoutStudentEnrollmentsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -2388,6 +2424,7 @@ export type OrganizationUncheckedUpdateWithoutStudentEnrollmentsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2426,6 +2463,7 @@ export type OrganizationCreateWithoutChildrenInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2478,6 +2516,7 @@ export type OrganizationUncheckedCreateWithoutChildrenInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2521,6 +2560,7 @@ export type OrganizationCreateWithoutParentInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2572,6 +2612,7 @@ export type OrganizationUncheckedCreateWithoutParentInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2632,6 +2673,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -2684,6 +2726,7 @@ export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2738,6 +2781,7 @@ export type OrganizationCreateWithoutMembershipsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2790,6 +2834,7 @@ export type OrganizationUncheckedCreateWithoutMembershipsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -2844,6 +2889,7 @@ export type OrganizationUpdateWithoutMembershipsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -2896,6 +2942,7 @@ export type OrganizationUncheckedUpdateWithoutMembershipsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -2934,6 +2981,7 @@ export type OrganizationCreateWithoutJoinRequestsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -2986,6 +3034,7 @@ export type OrganizationUncheckedCreateWithoutJoinRequestsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3040,6 +3089,7 @@ export type OrganizationUpdateWithoutJoinRequestsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -3092,6 +3142,7 @@ export type OrganizationUncheckedUpdateWithoutJoinRequestsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3130,6 +3181,7 @@ export type OrganizationCreateWithoutRolesInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -3182,6 +3234,7 @@ export type OrganizationUncheckedCreateWithoutRolesInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3236,6 +3289,7 @@ export type OrganizationUpdateWithoutRolesInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -3288,6 +3342,7 @@ export type OrganizationUncheckedUpdateWithoutRolesInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3325,6 +3380,7 @@ export type OrganizationCreateWithoutAdminsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -3377,6 +3433,7 @@ export type OrganizationUncheckedCreateWithoutAdminsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3431,6 +3488,7 @@ export type OrganizationUpdateWithoutAdminsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -3483,6 +3541,7 @@ export type OrganizationUncheckedUpdateWithoutAdminsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3522,6 +3581,7 @@ export type OrganizationCreateWithoutWalletInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -3574,6 +3634,7 @@ export type OrganizationUncheckedCreateWithoutWalletInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3628,6 +3689,7 @@ export type OrganizationUpdateWithoutWalletInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -3680,6 +3742,7 @@ export type OrganizationUncheckedUpdateWithoutWalletInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3718,6 +3781,7 @@ export type OrganizationCreateWithoutLedgerAccountsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -3770,6 +3834,7 @@ export type OrganizationUncheckedCreateWithoutLedgerAccountsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -3824,6 +3889,7 @@ export type OrganizationUpdateWithoutLedgerAccountsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -3876,6 +3942,7 @@ export type OrganizationUncheckedUpdateWithoutLedgerAccountsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -3914,6 +3981,7 @@ export type OrganizationCreateWithoutPaymentsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -3966,6 +4034,7 @@ export type OrganizationUncheckedCreateWithoutPaymentsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -4020,6 +4089,7 @@ export type OrganizationUpdateWithoutPaymentsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -4072,6 +4142,7 @@ export type OrganizationUncheckedUpdateWithoutPaymentsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -4109,6 +4180,7 @@ export type OrganizationCreateWithoutDuesInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -4161,6 +4233,7 @@ export type OrganizationUncheckedCreateWithoutDuesInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -4215,6 +4288,7 @@ export type OrganizationUpdateWithoutDuesInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -4267,6 +4341,207 @@ export type OrganizationUncheckedUpdateWithoutDuesInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
+  elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
+  executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutOrganizationNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutOrganizationNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedUpdateManyWithoutOrganizationNestedInput
+  memberships?: Prisma.OrganizationMembershipUncheckedUpdateManyWithoutOrganizationNestedInput
+  children?: Prisma.OrganizationUncheckedUpdateManyWithoutParentNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedUpdateManyWithoutOrganizationNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUncheckedUpdateManyWithoutOrganizationNestedInput
+  settlements?: Prisma.SettlementUncheckedUpdateManyWithoutOrganizationNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedUpdateManyWithoutOrganizationNestedInput
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutPaymentOfferingsInput = {
+  id?: string
+  name: string
+  nameNormalized?: string | null
+  slug: string
+  description?: string | null
+  logo?: string | null
+  type: $Enums.OrganizationType
+  scope: $Enums.OrganizationScope
+  status?: $Enums.OrganizationStatus
+  updatedBy?: string | null
+  activatedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
+  announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
+  committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
+  dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
+  executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutOrganizationInput
+  files?: Prisma.FileCreateNestedManyWithoutOrganizationInput
+  ledgerAccounts?: Prisma.LedgerAccountCreateNestedManyWithoutOrganizationInput
+  joinRequests?: Prisma.OrganizationJoinRequestCreateNestedManyWithoutOrganizationInput
+  memberships?: Prisma.OrganizationMembershipCreateNestedManyWithoutOrganizationInput
+  academicLevel?: Prisma.AcademicLevelCreateNestedOneWithoutOrganizationsInput
+  academicSession?: Prisma.AcademicSessionCreateNestedOneWithoutOrganizationsInput
+  creator?: Prisma.UserCreateNestedOneWithoutCreatedOrganizationsInput
+  department?: Prisma.DepartmentCreateNestedOneWithoutOrganizationsInput
+  faculty?: Prisma.FacultyCreateNestedOneWithoutOrganizationsInput
+  institution?: Prisma.InstitutionCreateNestedOneWithoutOrganizationsInput
+  parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
+  children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentCreateNestedManyWithoutOrganizationInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleCreateNestedManyWithoutOrganizationInput
+  settlements?: Prisma.SettlementCreateNestedManyWithoutOrganizationInput
+  studentEnrollments?: Prisma.StudentEnrollmentCreateNestedManyWithoutOrganizationInput
+  wallet?: Prisma.WalletCreateNestedOneWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutPaymentOfferingsInput = {
+  id?: string
+  institutionId?: string | null
+  facultyId?: string | null
+  departmentId?: string | null
+  academicLevelId?: string | null
+  parentOrganizationId?: string | null
+  name: string
+  nameNormalized?: string | null
+  slug: string
+  description?: string | null
+  logo?: string | null
+  type: $Enums.OrganizationType
+  scope: $Enums.OrganizationScope
+  status?: $Enums.OrganizationStatus
+  createdBy?: string | null
+  updatedBy?: string | null
+  activatedAt?: Date | string | null
+  archivedAt?: Date | string | null
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  academicSessionId?: string | null
+  admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
+  announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
+  committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
+  dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
+  executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutOrganizationInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutOrganizationInput
+  ledgerAccounts?: Prisma.LedgerAccountUncheckedCreateNestedManyWithoutOrganizationInput
+  joinRequests?: Prisma.OrganizationJoinRequestUncheckedCreateNestedManyWithoutOrganizationInput
+  memberships?: Prisma.OrganizationMembershipUncheckedCreateNestedManyWithoutOrganizationInput
+  children?: Prisma.OrganizationUncheckedCreateNestedManyWithoutParentInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  pendingPayments?: Prisma.PendingPaymentUncheckedCreateNestedManyWithoutOrganizationInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutOrganizationInput
+  roles?: Prisma.RoleUncheckedCreateNestedManyWithoutOrganizationInput
+  settlements?: Prisma.SettlementUncheckedCreateNestedManyWithoutOrganizationInput
+  studentEnrollments?: Prisma.StudentEnrollmentUncheckedCreateNestedManyWithoutOrganizationInput
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutPaymentOfferingsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutPaymentOfferingsInput, Prisma.OrganizationUncheckedCreateWithoutPaymentOfferingsInput>
+}
+
+export type OrganizationUpsertWithoutPaymentOfferingsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutPaymentOfferingsInput, Prisma.OrganizationUncheckedUpdateWithoutPaymentOfferingsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutPaymentOfferingsInput, Prisma.OrganizationUncheckedCreateWithoutPaymentOfferingsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutPaymentOfferingsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutPaymentOfferingsInput, Prisma.OrganizationUncheckedUpdateWithoutPaymentOfferingsInput>
+}
+
+export type OrganizationUpdateWithoutPaymentOfferingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
+  announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
+  committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
+  dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
+  executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
+  featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutOrganizationNestedInput
+  files?: Prisma.FileUpdateManyWithoutOrganizationNestedInput
+  ledgerAccounts?: Prisma.LedgerAccountUpdateManyWithoutOrganizationNestedInput
+  joinRequests?: Prisma.OrganizationJoinRequestUpdateManyWithoutOrganizationNestedInput
+  memberships?: Prisma.OrganizationMembershipUpdateManyWithoutOrganizationNestedInput
+  academicLevel?: Prisma.AcademicLevelUpdateOneWithoutOrganizationsNestedInput
+  academicSession?: Prisma.AcademicSessionUpdateOneWithoutOrganizationsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutCreatedOrganizationsNestedInput
+  department?: Prisma.DepartmentUpdateOneWithoutOrganizationsNestedInput
+  faculty?: Prisma.FacultyUpdateOneWithoutOrganizationsNestedInput
+  institution?: Prisma.InstitutionUpdateOneWithoutOrganizationsNestedInput
+  parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutOrganizationNestedInput
+  pendingPayments?: Prisma.PendingPaymentUpdateManyWithoutOrganizationNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutOrganizationNestedInput
+  roles?: Prisma.RoleUpdateManyWithoutOrganizationNestedInput
+  settlements?: Prisma.SettlementUpdateManyWithoutOrganizationNestedInput
+  studentEnrollments?: Prisma.StudentEnrollmentUpdateManyWithoutOrganizationNestedInput
+  wallet?: Prisma.WalletUpdateOneWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutPaymentOfferingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  institutionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facultyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  departmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  academicLevelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentOrganizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nameNormalized?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  scope?: Prisma.EnumOrganizationScopeFieldUpdateOperationsInput | $Enums.OrganizationScope
+  status?: Prisma.EnumOrganizationStatusFieldUpdateOperationsInput | $Enums.OrganizationStatus
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  updatedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  archivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  academicSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
+  announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
+  committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
+  dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -4306,6 +4581,7 @@ export type OrganizationCreateWithoutSettlementsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -4358,6 +4634,7 @@ export type OrganizationUncheckedCreateWithoutSettlementsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -4412,6 +4689,7 @@ export type OrganizationUpdateWithoutSettlementsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -4464,6 +4742,7 @@ export type OrganizationUncheckedUpdateWithoutSettlementsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -4502,6 +4781,7 @@ export type OrganizationCreateWithoutReceiptsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -4554,6 +4834,7 @@ export type OrganizationUncheckedCreateWithoutReceiptsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -4608,6 +4889,7 @@ export type OrganizationUpdateWithoutReceiptsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -4660,6 +4942,7 @@ export type OrganizationUncheckedUpdateWithoutReceiptsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -4697,6 +4980,7 @@ export type OrganizationCreateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -4749,6 +5033,7 @@ export type OrganizationUncheckedCreateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -4803,6 +5088,7 @@ export type OrganizationUpdateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -4855,6 +5141,7 @@ export type OrganizationUncheckedUpdateWithoutAnnouncementsInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -4894,6 +5181,7 @@ export type OrganizationCreateWithoutFeatureFlagTargetsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -4946,6 +5234,7 @@ export type OrganizationUncheckedCreateWithoutFeatureFlagTargetsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -5000,6 +5289,7 @@ export type OrganizationUpdateWithoutFeatureFlagTargetsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -5052,6 +5342,7 @@ export type OrganizationUncheckedUpdateWithoutFeatureFlagTargetsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -5090,6 +5381,7 @@ export type OrganizationCreateWithoutElectionsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
   featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutOrganizationInput
@@ -5142,6 +5434,7 @@ export type OrganizationUncheckedCreateWithoutElectionsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutOrganizationInput
@@ -5196,6 +5489,7 @@ export type OrganizationUpdateWithoutElectionsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutOrganizationNestedInput
@@ -5248,6 +5542,7 @@ export type OrganizationUncheckedUpdateWithoutElectionsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -5286,6 +5581,7 @@ export type OrganizationCreateWithoutExecutiveTermsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutOrganizationInput
@@ -5338,6 +5634,7 @@ export type OrganizationUncheckedCreateWithoutExecutiveTermsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutOrganizationInput
@@ -5392,6 +5689,7 @@ export type OrganizationUpdateWithoutExecutiveTermsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutOrganizationNestedInput
@@ -5444,6 +5742,7 @@ export type OrganizationUncheckedUpdateWithoutExecutiveTermsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -5481,6 +5780,7 @@ export type OrganizationCreateWithoutCommitteesInput = {
   admins?: Prisma.AdminCreateNestedManyWithoutOrganizationInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -5533,6 +5833,7 @@ export type OrganizationUncheckedCreateWithoutCommitteesInput = {
   admins?: Prisma.AdminUncheckedCreateNestedManyWithoutOrganizationInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -5587,6 +5888,7 @@ export type OrganizationUpdateWithoutCommitteesInput = {
   admins?: Prisma.AdminUpdateManyWithoutOrganizationNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -5639,6 +5941,7 @@ export type OrganizationUncheckedUpdateWithoutCommitteesInput = {
   admins?: Prisma.AdminUncheckedUpdateManyWithoutOrganizationNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -5678,6 +5981,7 @@ export type OrganizationCreateWithoutEventsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
   featureFlagTargets?: Prisma.FeatureFlagTargetCreateNestedManyWithoutOrganizationInput
@@ -5730,6 +6034,7 @@ export type OrganizationUncheckedCreateWithoutEventsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedCreateNestedManyWithoutOrganizationInput
@@ -5784,6 +6089,7 @@ export type OrganizationUpdateWithoutEventsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUpdateManyWithoutOrganizationNestedInput
@@ -5836,6 +6142,7 @@ export type OrganizationUncheckedUpdateWithoutEventsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
   featureFlagTargets?: Prisma.FeatureFlagTargetUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -5874,6 +6181,7 @@ export type OrganizationCreateWithoutPendingPaymentsInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -5926,6 +6234,7 @@ export type OrganizationUncheckedCreateWithoutPendingPaymentsInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -5980,6 +6289,7 @@ export type OrganizationUpdateWithoutPendingPaymentsInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6032,6 +6342,7 @@ export type OrganizationUncheckedUpdateWithoutPendingPaymentsInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6070,6 +6381,7 @@ export type OrganizationCreateWithoutFilesInput = {
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermCreateNestedManyWithoutOrganizationInput
@@ -6122,6 +6434,7 @@ export type OrganizationUncheckedCreateWithoutFilesInput = {
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutOrganizationInput
   committees?: Prisma.CommitteeUncheckedCreateNestedManyWithoutOrganizationInput
   dues?: Prisma.DueUncheckedCreateNestedManyWithoutOrganizationInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedCreateNestedManyWithoutOrganizationInput
   elections?: Prisma.ElectionUncheckedCreateNestedManyWithoutOrganizationInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizationInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedCreateNestedManyWithoutOrganizationInput
@@ -6176,6 +6489,7 @@ export type OrganizationUpdateWithoutFilesInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6228,6 +6542,7 @@ export type OrganizationUncheckedUpdateWithoutFilesInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6291,6 +6606,7 @@ export type OrganizationUpdateWithoutCreatorInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6342,6 +6658,7 @@ export type OrganizationUncheckedUpdateWithoutCreatorInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6431,6 +6748,7 @@ export type OrganizationUpdateWithoutInstitutionInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6482,6 +6800,7 @@ export type OrganizationUncheckedUpdateWithoutInstitutionInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6571,6 +6890,7 @@ export type OrganizationUpdateWithoutFacultyInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6622,6 +6942,7 @@ export type OrganizationUncheckedUpdateWithoutFacultyInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6711,6 +7032,7 @@ export type OrganizationUpdateWithoutDepartmentInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6762,6 +7084,7 @@ export type OrganizationUncheckedUpdateWithoutDepartmentInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6851,6 +7174,7 @@ export type OrganizationUpdateWithoutAcademicLevelInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -6902,6 +7226,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicLevelInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -6991,6 +7316,7 @@ export type OrganizationUpdateWithoutAcademicSessionInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -7042,6 +7368,7 @@ export type OrganizationUncheckedUpdateWithoutAcademicSessionInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -7131,6 +7458,7 @@ export type OrganizationUpdateWithoutParentInput = {
   announcements?: Prisma.AnnouncementUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUpdateManyWithoutOrganizationNestedInput
@@ -7182,6 +7510,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutOrganizationNestedInput
   committees?: Prisma.CommitteeUncheckedUpdateManyWithoutOrganizationNestedInput
   dues?: Prisma.DueUncheckedUpdateManyWithoutOrganizationNestedInput
+  paymentOfferings?: Prisma.PaymentOfferingUncheckedUpdateManyWithoutOrganizationNestedInput
   elections?: Prisma.ElectionUncheckedUpdateManyWithoutOrganizationNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizationNestedInput
   executiveTerms?: Prisma.ExecutiveTermUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -7235,6 +7564,7 @@ export type OrganizationCountOutputType = {
   announcements: number
   committees: number
   dues: number
+  paymentOfferings: number
   elections: number
   events: number
   executiveTerms: number
@@ -7257,6 +7587,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   announcements?: boolean | OrganizationCountOutputTypeCountAnnouncementsArgs
   committees?: boolean | OrganizationCountOutputTypeCountCommitteesArgs
   dues?: boolean | OrganizationCountOutputTypeCountDuesArgs
+  paymentOfferings?: boolean | OrganizationCountOutputTypeCountPaymentOfferingsArgs
   elections?: boolean | OrganizationCountOutputTypeCountElectionsArgs
   events?: boolean | OrganizationCountOutputTypeCountEventsArgs
   executiveTerms?: boolean | OrganizationCountOutputTypeCountExecutiveTermsArgs
@@ -7310,6 +7641,13 @@ export type OrganizationCountOutputTypeCountCommitteesArgs<ExtArgs extends runti
  */
 export type OrganizationCountOutputTypeCountDuesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.DueWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountPaymentOfferingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentOfferingWhereInput
 }
 
 /**
@@ -7446,6 +7784,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   announcements?: boolean | Prisma.Organization$announcementsArgs<ExtArgs>
   committees?: boolean | Prisma.Organization$committeesArgs<ExtArgs>
   dues?: boolean | Prisma.Organization$duesArgs<ExtArgs>
+  paymentOfferings?: boolean | Prisma.Organization$paymentOfferingsArgs<ExtArgs>
   elections?: boolean | Prisma.Organization$electionsArgs<ExtArgs>
   events?: boolean | Prisma.Organization$eventsArgs<ExtArgs>
   executiveTerms?: boolean | Prisma.Organization$executiveTermsArgs<ExtArgs>
@@ -7570,6 +7909,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   announcements?: boolean | Prisma.Organization$announcementsArgs<ExtArgs>
   committees?: boolean | Prisma.Organization$committeesArgs<ExtArgs>
   dues?: boolean | Prisma.Organization$duesArgs<ExtArgs>
+  paymentOfferings?: boolean | Prisma.Organization$paymentOfferingsArgs<ExtArgs>
   elections?: boolean | Prisma.Organization$electionsArgs<ExtArgs>
   events?: boolean | Prisma.Organization$eventsArgs<ExtArgs>
   executiveTerms?: boolean | Prisma.Organization$executiveTermsArgs<ExtArgs>
@@ -7621,6 +7961,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     announcements: Prisma.$AnnouncementPayload<ExtArgs>[]
     committees: Prisma.$CommitteePayload<ExtArgs>[]
     dues: Prisma.$DuePayload<ExtArgs>[]
+    paymentOfferings: Prisma.$PaymentOfferingPayload<ExtArgs>[]
     elections: Prisma.$ElectionPayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
     executiveTerms: Prisma.$ExecutiveTermPayload<ExtArgs>[]
@@ -8067,6 +8408,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   announcements<T extends Prisma.Organization$announcementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$announcementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   committees<T extends Prisma.Organization$committeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$committeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommitteePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dues<T extends Prisma.Organization$duesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$duesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paymentOfferings<T extends Prisma.Organization$paymentOfferingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$paymentOfferingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentOfferingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   elections<T extends Prisma.Organization$electionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$electionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ElectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.Organization$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   executiveTerms<T extends Prisma.Organization$executiveTermsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$executiveTermsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExecutiveTermPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8636,6 +8978,30 @@ export type Organization$duesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.DueScalarFieldEnum | Prisma.DueScalarFieldEnum[]
+}
+
+/**
+ * Organization.paymentOfferings
+ */
+export type Organization$paymentOfferingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentOffering
+   */
+  select?: Prisma.PaymentOfferingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentOffering
+   */
+  omit?: Prisma.PaymentOfferingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentOfferingInclude<ExtArgs> | null
+  where?: Prisma.PaymentOfferingWhereInput
+  orderBy?: Prisma.PaymentOfferingOrderByWithRelationInput | Prisma.PaymentOfferingOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentOfferingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentOfferingScalarFieldEnum | Prisma.PaymentOfferingScalarFieldEnum[]
 }
 
 /**

@@ -231,6 +231,16 @@ export const DueStatus = {
 export type DueStatus = (typeof DueStatus)[keyof typeof DueStatus]
 
 
+export const PaymentOfferingStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type PaymentOfferingStatus = (typeof PaymentOfferingStatus)[keyof typeof PaymentOfferingStatus]
+
+
 export const WithdrawalStatus = {
   PENDING: 'PENDING',
   PROCESSING: 'PROCESSING',
