@@ -296,7 +296,11 @@ export class UsersService {
         take: limit,
         include: {
           profile: true,
-          studentProfile: true,
+          studentProfile: {
+            include: {
+              currentAcademicLevel: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
       }),
@@ -330,7 +334,11 @@ export class UsersService {
       where: { id },
       include: {
         profile: true,
-        studentProfile: true,
+        studentProfile: {
+          include: {
+            currentAcademicLevel: true,
+          },
+        },
       },
     });
 
@@ -338,10 +346,26 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    // Cache for 5 minutes with tags
-    await this.cacheService.setWithTag(cacheKey, user, ['users', 'user'], 300);
+    const normalizedUser = {
+      ...user,
+      studentProfile: user.studentProfile
+        ? {
+            ...user.studentProfile,
+            currentAcademicLevelName:
+              user.studentProfile.currentAcademicLevel?.name ?? null,
+          }
+        : null,
+    };
 
-    return user;
+    // Cache for 5 minutes with tags
+    await this.cacheService.setWithTag(
+      cacheKey,
+      normalizedUser,
+      ['users', 'user'],
+      300,
+    );
+
+    return normalizedUser;
   }
 
   /**
@@ -358,7 +382,11 @@ export class UsersService {
       where: { email: email.toLowerCase() },
       include: {
         profile: true,
-        studentProfile: true,
+        studentProfile: {
+          include: {
+            currentAcademicLevel: true,
+          },
+        },
       },
     });
 
@@ -366,10 +394,26 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    // Cache for 5 minutes with tags
-    await this.cacheService.setWithTag(cacheKey, user, ['users', 'user'], 300);
+    const normalizedUser = {
+      ...user,
+      studentProfile: user.studentProfile
+        ? {
+            ...user.studentProfile,
+            currentAcademicLevelName:
+              user.studentProfile.currentAcademicLevel?.name ?? null,
+          }
+        : null,
+    };
 
-    return user;
+    // Cache for 5 minutes with tags
+    await this.cacheService.setWithTag(
+      cacheKey,
+      normalizedUser,
+      ['users', 'user'],
+      300,
+    );
+
+    return normalizedUser;
   }
 
   /**
@@ -380,7 +424,11 @@ export class UsersService {
       where: { username: username.toLowerCase() },
       include: {
         profile: true,
-        studentProfile: true,
+        studentProfile: {
+          include: {
+            currentAcademicLevel: true,
+          },
+        },
       },
     });
 
@@ -388,7 +436,16 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return {
+      ...user,
+      studentProfile: user.studentProfile
+        ? {
+            ...user.studentProfile,
+            currentAcademicLevelName:
+              user.studentProfile.currentAcademicLevel?.name ?? null,
+          }
+        : null,
+    };
   }
 
   /**

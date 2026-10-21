@@ -59,8 +59,26 @@ export class StudentProfileResponseDto {
   @ApiProperty({ example: 'Computer Science', description: 'Department name' })
   departmentId: string;
 
-  @ApiProperty({ example: '300', description: 'Current academic level' })
+  @ApiProperty({ example: '300', description: 'Current academic level ID' })
   currentAcademicLevelId?: string;
+
+  @ApiProperty({
+    example: '300 Level',
+    description: 'Current academic level name',
+    required: false,
+  })
+  currentAcademicLevelName?: string;
+
+  @ApiProperty({
+    example: { id: 'lvl_123', name: '300 Level', numericLevel: 300 },
+    description: 'Current academic level details',
+    required: false,
+  })
+  currentAcademicLevel?: {
+    id: string;
+    name: string;
+    numericLevel?: number;
+  };
 
   @ApiProperty({
     example: 'MAT/2024/001',

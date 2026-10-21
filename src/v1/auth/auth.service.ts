@@ -466,7 +466,11 @@ export class AuthService {
       },
       include: {
         profile: true,
-        studentProfile: true,
+        studentProfile: {
+          include: {
+            currentAcademicLevel: true,
+          },
+        },
       },
     });
 
@@ -850,7 +854,11 @@ export class AuthService {
       where: { id: userId },
       include: {
         profile: true,
-        studentProfile: true,
+        studentProfile: {
+          include: {
+            currentAcademicLevel: true,
+          },
+        },
         admins: {
           where: {
             status: 'ACTIVE',
@@ -1035,6 +1043,14 @@ export class AuthService {
       userType = 'ADMIN';
     }
 
+    const studentProfile = user.studentProfile
+      ? {
+          ...user.studentProfile,
+          currentAcademicLevelName:
+            user.studentProfile.currentAcademicLevel?.name ?? null,
+        }
+      : null;
+
     const userData = {
       id: user.id,
       email: user.email,
@@ -1042,7 +1058,7 @@ export class AuthService {
       emailVerified: user.emailVerified,
       status: user.status,
       profile: user.profile,
-      studentProfile: user.studentProfile,
+      studentProfile,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       lastLoginAt: user.lastLoginAt,
@@ -1192,7 +1208,11 @@ export class AuthService {
       },
       include: {
         profile: true,
-        studentProfile: true,
+        studentProfile: {
+          include: {
+            currentAcademicLevel: true,
+          },
+        },
       },
     });
 
