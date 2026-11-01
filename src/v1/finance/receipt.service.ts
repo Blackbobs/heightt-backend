@@ -277,6 +277,74 @@ export class ReceiptService {
     };
   }
 
+  // ============================================
+  // SEARCH RECEIPTS BY PAYER EMAIL (ADMIN)
+  // ============================================
+
+  async searchReceiptsByPayerEmail(
+    email: string,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    this.logger.log(`Searching receipts by payer email: ${email}`);
+
+    // Find user by email (case-insensitive)
+    const user = await this.prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } },
+      select: { id: true, email: true, username: true },
+    });
+
+    if (!user) {
+      return {
+        data: [],
+        meta: { page, limit, total: 0, totalPages: 0 },
+      };
+    }
+
+    const where: any = {
+      userId: user.id,
+      payment: {
+        status: 'COMPLETED',
+      },
+    };
+
+    const skip = (page - 1) * limit;
+    const [receipts, total] = await Promise.all([
+      this.prisma.receipt.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          payment: {
+            include: {
+              organization: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              email: true,
+              username: true,
+              profile: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.receipt.count({ where }),
+    ]);
+
+    return {
+      data: receipts,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
   async getOrganizationReceipts(
     organizationId: string,
     userId: string,
