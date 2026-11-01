@@ -11,3 +11,5 @@ export * from './receipt-response.dto';
 export * from './bank-account.dto';
 export * from './withdrawal.dto';
 export * from './guest-payment.dto';
+
+export * from './search-receipt-by-email.dto';

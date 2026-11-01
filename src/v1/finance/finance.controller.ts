@@ -58,6 +58,7 @@ import {
   GenerateReceiptDto,
   ReceiptResponseDto,
   ReceiptListResponseDto,
+  SearchReceiptByEmailDto,
   WithdrawalFilterDto,
   PlatformWithdrawalRequestDto,
   OrganizationWithdrawalRequestDto,
@@ -987,6 +988,36 @@ export class FinanceController {
       parseInt(page, 10),
       parseInt(limit, 10),
       { startDate, endDate, organizationId },
+    );
+  }
+
+  @Get('receipts/search')
+  @UseGuards(AdminGuard)
+  @RequirePermission('finance:read')
+  @ApiOperation({
+    summary: 'Search receipts by payer email (admin)',
+    description:
+      'Search for completed-payment receipts by payer email address. Admins can look up a student receipt when the student cannot access their own.',
+  })
+  @ApiQuery({ name: 'email', description: 'Payer email address' })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Receipts found',
+    type: ReceiptListResponseDto,
+  })
+  async searchReceiptsByPayerEmail(
+    @Request() req: any,
+    @Query('email') email: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    this.logger.log(`Search receipts by email endpoint called: ${email}`);
+    return this.receiptService.searchReceiptsByPayerEmail(
+      email,
+      parseInt(page, 10),
+      parseInt(limit, 10),
     );
   }
 
