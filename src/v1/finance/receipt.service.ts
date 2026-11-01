@@ -288,21 +288,31 @@ export class ReceiptService {
   ) {
     this.logger.log(`Searching receipts by payer email: ${email}`);
 
-    // Find user by email (case-insensitive)
-    const user = await this.prisma.user.findFirst({
-      where: { email: { equals: email, mode: 'insensitive' } },
+    const searchTerm = email.trim();
+
+    // Find all users whose email contains the search term (case-insensitive partial match)
+    const users = await this.prisma.user.findMany({
+      where: {
+        email: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      },
       select: { id: true, email: true, username: true },
+      orderBy: { email: 'asc' },
     });
 
-    if (!user) {
+    if (users.length === 0) {
       return {
         data: [],
         meta: { page, limit, total: 0, totalPages: 0 },
       };
     }
 
+    const userIds = users.map((u) => u.id);
+
     const where: any = {
-      userId: user.id,
+      userId: { in: userIds },
       payment: {
         status: 'COMPLETED',
       },
