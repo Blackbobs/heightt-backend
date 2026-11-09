@@ -1,5 +1,7 @@
 // src/v1/dashboard/dashboard.service.ts
 import { Injectable, ForbiddenException, Logger } from '@nestjs/common';
+import { Prisma } from '../generated/prisma/client';
+import type { Admin } from '../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CacheService } from '../../redis/cache.service';
 
@@ -188,7 +190,7 @@ export class DashboardService {
   // ============================================
 
   async getAdminDashboard(userId: string) {
-    const cacheKey = `dashboard:admin:${userId}`;
+    const cacheKey = `dashboard:admin:v2:${userId}`;
     const cached = await this.cacheService.get(cacheKey);
     if (cached) {
       return cached;
@@ -209,23 +211,8 @@ export class DashboardService {
     }
 
     const primaryAdmin = admins[0];
-    const organizationIds = [
-      ...new Set(
-        admins
-          .filter((admin) => admin.organizationId)
-          .map((admin) => admin.organizationId)
-          .filter(Boolean) as string[],
-      ),
-    ];
-    const isPlatformAdmin = primaryAdmin.adminType === 'PLATFORM_ADMIN';
-    const institutionId = primaryAdmin.institutionId;
-
-    const where: any = {};
-    if (organizationIds.length > 0) {
-      where.organizationId = { in: organizationIds };
-    } else if (institutionId) {
-      where.institutionId = institutionId;
-    }
+    const studentWhere = this.getStudentScopeWhere(admins);
+    const organizationWhere = this.getOrganizationScopeWhere(admins);
 
     // Get statistics
     const [
@@ -236,30 +223,30 @@ export class DashboardService {
       totalRevenue,
       pendingVerifications,
     ] = await Promise.all([
-      this.prisma.studentProfile.count({ where }),
-      this.prisma.organization.count({ where }),
+      this.prisma.studentProfile.count({ where: studentWhere }),
+      this.prisma.organization.count({ where: organizationWhere }),
       this.prisma.event.count({
         where: {
-          ...where,
+          organization: { is: organizationWhere },
           status: 'PUBLISHED',
         },
       }),
       this.prisma.payment.count({
         where: {
-          organization: where,
+          organization: organizationWhere,
           status: 'COMPLETED',
         },
       }),
       this.prisma.payment.aggregate({
         where: {
-          organization: where,
+          organization: organizationWhere,
           status: 'COMPLETED',
         },
         _sum: { amount: true },
       }),
       this.prisma.studentVerification.count({
         where: {
-          student: where,
+          student: studentWhere,
           status: 'PENDING',
         },
       }),
@@ -268,7 +255,13 @@ export class DashboardService {
     // Get recent activities
     const recentActivities = await this.prisma.activityLog.findMany({
       where: {
-        OR: [{ userId: { in: await this.getUserIdsInScope(primaryAdmin) } }],
+        OR: [
+          {
+            userId: {
+              in: await this.getUserIdsInScope(studentWhere),
+            },
+          },
+        ],
       },
       take: 10,
       orderBy: { createdAt: 'desc' },
@@ -285,7 +278,7 @@ export class DashboardService {
 
     // Get recent registrations
     const recentRegistrations = await this.prisma.studentProfile.findMany({
-      where,
+      where: studentWhere,
       take: 10,
       orderBy: { createdAt: 'desc' },
       include: {
@@ -479,6 +472,7 @@ export class DashboardService {
         await this.cacheService.invalidateByTag(`user:${userId}`);
         await this.cacheService.delete(`dashboard:student:${userId}`);
         await this.cacheService.delete(`dashboard:admin:${userId}`);
+        await this.cacheService.delete(`dashboard:admin:v2:${userId}`);
         await this.cacheService.delete(`dashboard:platform:${userId}`);
         await this.cacheService.invalidatePattern(`dashboard:*:${userId}`);
       }
@@ -502,18 +496,138 @@ export class DashboardService {
   // HELPER METHODS
   // ============================================
 
-  private async getUserIdsInScope(admin: any): Promise<string[]> {
-    // Get all user IDs within admin's scope
+  private getStudentScopeWhere(
+    admins: Admin[],
+  ): Prisma.StudentProfileWhereInput {
+    if (admins.some((admin) => admin.adminType === 'PLATFORM_ADMIN')) {
+      return {};
+    }
+
+    const scopes: Prisma.StudentProfileWhereInput[] = [];
+
+    for (const admin of admins) {
+      switch (admin.adminType) {
+        case 'DEPARTMENT_ADMIN':
+          if (admin.departmentId) {
+            scopes.push({ departmentId: admin.departmentId });
+          }
+          break;
+        case 'FACULTY_ADMIN':
+          if (admin.facultyId) {
+            scopes.push({ facultyId: admin.facultyId });
+          }
+          break;
+        case 'INSTITUTION_ADMIN':
+          if (admin.institutionId) {
+            scopes.push({ institutionId: admin.institutionId });
+          }
+          break;
+        case 'ORGANIZATION_ADMIN':
+        case 'CLUB_ADMIN':
+          if (admin.organizationId) {
+            scopes.push({
+              user: {
+                is: {
+                  organizationMemberships: {
+                    some: {
+                      organizationId: admin.organizationId,
+                      status: 'ACTIVE',
+                    },
+                  },
+                },
+              },
+            });
+          }
+          break;
+        default:
+          if (admin.organizationId) {
+            scopes.push({
+              user: {
+                is: {
+                  organizationMemberships: {
+                    some: {
+                      organizationId: admin.organizationId,
+                      status: 'ACTIVE',
+                    },
+                  },
+                },
+              },
+            });
+          } else if (admin.departmentId) {
+            scopes.push({ departmentId: admin.departmentId });
+          } else if (admin.facultyId) {
+            scopes.push({ facultyId: admin.facultyId });
+          } else if (admin.institutionId) {
+            scopes.push({ institutionId: admin.institutionId });
+          }
+      }
+    }
+
+    if (!scopes.length) {
+      return { id: { in: [] } };
+    }
+
+    return scopes.length === 1 ? scopes[0] : { OR: scopes };
+  }
+
+  private getOrganizationScopeWhere(
+    admins: Admin[],
+  ): Prisma.OrganizationWhereInput {
+    if (admins.some((admin) => admin.adminType === 'PLATFORM_ADMIN')) {
+      return {};
+    }
+
+    const scopes: Prisma.OrganizationWhereInput[] = [];
+
+    for (const admin of admins) {
+      switch (admin.adminType) {
+        case 'DEPARTMENT_ADMIN':
+          if (admin.departmentId) {
+            scopes.push({ departmentId: admin.departmentId });
+          }
+          break;
+        case 'FACULTY_ADMIN':
+          if (admin.facultyId) {
+            scopes.push({ facultyId: admin.facultyId });
+          }
+          break;
+        case 'INSTITUTION_ADMIN':
+          if (admin.institutionId) {
+            scopes.push({ institutionId: admin.institutionId });
+          }
+          break;
+        case 'ORGANIZATION_ADMIN':
+        case 'CLUB_ADMIN':
+          if (admin.organizationId) {
+            scopes.push({ id: admin.organizationId });
+          }
+          break;
+        default:
+          if (admin.organizationId) {
+            scopes.push({ id: admin.organizationId });
+          } else if (admin.departmentId) {
+            scopes.push({ departmentId: admin.departmentId });
+          } else if (admin.facultyId) {
+            scopes.push({ facultyId: admin.facultyId });
+          } else if (admin.institutionId) {
+            scopes.push({ institutionId: admin.institutionId });
+          }
+      }
+    }
+
+    if (!scopes.length) {
+      return { id: { in: [] } };
+    }
+
+    return scopes.length === 1 ? scopes[0] : { OR: scopes };
+  }
+
+  private async getUserIdsInScope(
+    studentWhere: Prisma.StudentProfileWhereInput,
+  ): Promise<string[]> {
     const users = await this.prisma.user.findMany({
       where: {
-        OR: [
-          { studentProfile: { institutionId: admin.institutionId } },
-          {
-            organizationMemberships: {
-              some: { organizationId: admin.organizationId },
-            },
-          },
-        ],
+        studentProfile: { is: studentWhere },
       },
       select: { id: true },
     });
