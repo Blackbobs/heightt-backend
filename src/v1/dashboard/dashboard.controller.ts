@@ -58,7 +58,7 @@ export class DashboardController {
   @Cache({
     key: (context) => {
       const request = context.switchToHttp().getRequest();
-      return `dashboard:admin:${request.user.id}`;
+      return `dashboard:admin:v2:${request.user.id}`;
     },
     ttl: 300, // 5 minutes
     tags: ['dashboard', 'admin'],
