@@ -877,6 +877,12 @@ export class AuthService {
                     institution: true,
                   },
                 },
+                organizations: {
+                  where: {
+                    type: 'DEPARTMENT',
+                    status: 'ACTIVE',
+                  },
+                },
               },
             },
             organization: true,
@@ -972,10 +978,13 @@ export class AuthService {
 
         case 'DEPARTMENT_ADMIN':
           if (admin.department) {
+            const departmentOrganization =
+              this.getDepartmentOrganization(admin);
             scope.departmentId = admin.department.id;
             scope.department = admin.department;
-            scope.organizationId = admin.department.id;
-            scope.organization = {
+            scope.organizationId =
+              departmentOrganization?.id || admin.department.id;
+            scope.organization = departmentOrganization || {
               id: admin.department.id,
               name: admin.department.name,
               slug:
@@ -1101,6 +1110,30 @@ export class AuthService {
       default:
         return admin.id;
     }
+  }
+
+  private getDepartmentOrganization(admin: {
+    academicSessionId: string | null;
+    department?: {
+      organizations?: Array<{
+        id: string;
+        name: string;
+        slug: string;
+        type: string;
+        status: string;
+        academicSessionId: string | null;
+      }>;
+    } | null;
+  }) {
+    const organizations = admin.department?.organizations || [];
+    if (admin.academicSessionId) {
+      return organizations.find(
+        (organization) =>
+          organization.academicSessionId === admin.academicSessionId,
+      );
+    }
+
+    return organizations[0];
   }
 
   // ============================================
@@ -1255,6 +1288,12 @@ export class AuthService {
                 institution: true,
               },
             },
+            organizations: {
+              where: {
+                type: 'DEPARTMENT',
+                status: 'ACTIVE',
+              },
+            },
           },
         },
         organization: true,
@@ -1367,10 +1406,13 @@ export class AuthService {
 
         case 'DEPARTMENT_ADMIN':
           if (admin.department) {
+            const departmentOrganization =
+              this.getDepartmentOrganization(admin);
             scope.departmentId = admin.department.id;
             scope.department = admin.department;
-            scope.organizationId = admin.department.id;
-            scope.organization = {
+            scope.organizationId =
+              departmentOrganization?.id || admin.department.id;
+            scope.organization = departmentOrganization || {
               id: admin.department.id,
               name: admin.department.name,
               slug:
