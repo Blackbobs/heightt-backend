@@ -290,31 +290,19 @@ export class ReceiptService {
 
     const searchTerm = email.trim();
 
-    // Find all users whose email contains the search term (case-insensitive partial match)
-    const users = await this.prisma.user.findMany({
-      where: {
-        email: {
-          contains: searchTerm,
-          mode: 'insensitive',
+    // Guest payments use placeholder users with internal email addresses.
+    // Search the email recorded on the receipt as well as the account email.
+    const where = {
+      OR: [
+        { payerEmail: { contains: searchTerm, mode: 'insensitive' as const } },
+        {
+          user: {
+            email: { contains: searchTerm, mode: 'insensitive' as const },
+          },
         },
-      },
-      select: { id: true, email: true, username: true },
-      orderBy: { email: 'asc' },
-    });
-
-    if (users.length === 0) {
-      return {
-        data: [],
-        meta: { page, limit, total: 0, totalPages: 0 },
-      };
-    }
-
-    const userIds = users.map((u) => u.id);
-
-    const where: any = {
-      userId: { in: userIds },
+      ],
       payment: {
-        status: 'COMPLETED',
+        status: 'COMPLETED' as const,
       },
     };
 
@@ -664,7 +652,7 @@ export class ReceiptService {
       }
       const res = await axios.get(fetchUrl, {
         responseType: 'arraybuffer',
-        timeout: 10000,
+        timeout: 2500,
       });
       const type = String(res.headers['content-type'] || '');
       if (!type.includes('image/png') && !type.includes('image/jpeg')) {

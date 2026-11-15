@@ -19,6 +19,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { EmailService } from '../../email/email.service';
 import { renderHeighttEmail } from '../../email/heightt-email.template';
 import { BachsService } from '../bachs/bachs.service';
+import { ReceiptService } from './receipt.service';
 import { CreateGuestPaymentDto } from './dto';
 
 @Injectable()
@@ -26,6 +27,7 @@ export class GuestPaymentService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly bachsService: BachsService,
+    private readonly receiptService: ReceiptService,
     private readonly emailService: EmailService,
     private readonly configService: ConfigService,
   ) {}
@@ -303,6 +305,23 @@ export class GuestPaymentService {
       pendingPaymentId,
       guest.placeholderUserId,
     );
+  }
+
+  async downloadReceipt(receiptId: string, accessToken: string) {
+    const receipt = await this.prisma.receipt.findFirst({
+      where: {
+        id: receiptId,
+        payment: { status: 'COMPLETED' },
+        user: {
+          guestPayer: { accessTokenHash: this.tokenHash(accessToken) },
+        },
+      },
+      select: { userId: true },
+    });
+    if (!receipt) {
+      throw new ForbiddenException('Invalid guest receipt access token');
+    }
+    return this.receiptService.getReceiptPdfForUser(receiptId, receipt.userId);
   }
 
   async requestClaimCode(userId: string) {

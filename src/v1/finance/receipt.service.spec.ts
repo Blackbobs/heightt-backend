@@ -2,6 +2,43 @@ import { ReceiptService } from './receipt.service';
 import PDFDocument from 'pdfkit';
 
 describe('ReceiptService automatic delivery', () => {
+  it('searches the stored guest payer email without looking up a user', async () => {
+    const prisma = {
+      receipt: {
+        findMany: jest.fn().mockResolvedValue([{ id: 'receipt-1' }]),
+        count: jest.fn().mockResolvedValue(1),
+      },
+      user: { findMany: jest.fn() },
+    };
+    const service = new ReceiptService(
+      prisma as any,
+      {} as any,
+      {} as any,
+      {} as any,
+    );
+
+    const result =
+      await service.searchReceiptsByPayerEmail('Guest@Example.com');
+
+    expect(result.meta.total).toBe(1);
+    expect(prisma.user.findMany).not.toHaveBeenCalled();
+    expect(prisma.receipt.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: expect.arrayContaining([
+            {
+              payerEmail: {
+                contains: 'Guest@Example.com',
+                mode: 'insensitive',
+              },
+            },
+          ]),
+          payment: { status: 'COMPLETED' },
+        }),
+      }),
+    );
+  });
+
   it.each([true, false])(
     'emails the receipt to the payment contact (guest: %s)',
     async (isGuest) => {
