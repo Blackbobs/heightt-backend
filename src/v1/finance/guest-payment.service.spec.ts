@@ -48,6 +48,7 @@ describe('GuestPaymentService', () => {
       prisma,
       bachs as any,
       {} as any,
+      {} as any,
       { get: jest.fn().mockReturnValue('secret') } as any,
     );
 
@@ -96,6 +97,7 @@ describe('GuestPaymentService', () => {
         {} as any,
         {} as any,
         {} as any,
+        {} as any,
       );
       await service.listDues({
         institutionId: 'inst',
@@ -116,6 +118,7 @@ describe('GuestPaymentService', () => {
       {} as any,
       {} as any,
       {} as any,
+      {} as any,
     );
     expect(await service.listDues({ institutionId: 'inst' })).toEqual([]);
   });
@@ -126,17 +129,16 @@ describe('GuestPaymentService', () => {
         findFirst: jest.fn().mockResolvedValue({ numericLevel: 200 }),
       },
       due: {
-        findFirst: jest
-          .fn()
-          .mockResolvedValue({
-            isFresher: true,
-            organization: { status: 'ACTIVE' },
-          }),
+        findFirst: jest.fn().mockResolvedValue({
+          isFresher: true,
+          organization: { status: 'ACTIVE' },
+        }),
       },
       $transaction: jest.fn(),
     };
     const service = new GuestPaymentService(
       prisma,
+      {} as any,
       {} as any,
       {} as any,
       {} as any,
@@ -163,11 +165,56 @@ describe('GuestPaymentService', () => {
       prisma,
       {} as any,
       {} as any,
+      {} as any,
       { get: jest.fn() } as any,
     );
 
     await expect(service.status('pending-1', 'x'.repeat(32))).rejects.toThrow(
       'Invalid guest payment access token',
+    );
+  });
+
+  it('downloads only a completed receipt owned by the guest token', async () => {
+    const prisma: any = {
+      receipt: {
+        findFirst: jest.fn().mockResolvedValue({ userId: 'guest-1' }),
+      },
+    };
+    const receiptService = {
+      getReceiptPdfForUser: jest.fn().mockResolvedValue({
+        buffer: Buffer.from('pdf'),
+        filename: 'receipt.pdf',
+      }),
+    };
+    const service = new GuestPaymentService(
+      prisma,
+      {} as any,
+      receiptService as any,
+      {} as any,
+      {} as any,
+    );
+
+    await service.downloadReceipt('receipt-1', 'secret');
+    expect(prisma.receipt.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: 'receipt-1',
+        payment: { status: 'COMPLETED' },
+        user: {
+          guestPayer: {
+            accessTokenHash: expect.stringMatching(/^[0-9a-f]{64}$/),
+          },
+        },
+      },
+      select: { userId: true },
+    });
+    expect(receiptService.getReceiptPdfForUser).toHaveBeenCalledWith(
+      'receipt-1',
+      'guest-1',
+    );
+
+    prisma.receipt.findFirst.mockResolvedValue(null);
+    await expect(service.downloadReceipt('receipt-1', 'wrong')).rejects.toThrow(
+      'Invalid guest receipt access token',
     );
   });
 });

@@ -133,17 +133,23 @@ export class AuthService {
       orderBy: { createdAt: 'desc' },
     });
 
+    let verificationEmailSent = false;
     if (verification) {
       const frontendUrl = this.getFrontendUrl();
       const verificationLink = `${frontendUrl}/verify-email?token=${verification.token}`;
 
       try {
-        await this.emailService.sendVerificationEmailWithLink(
-          user.email,
-          user.username,
-          verificationLink,
-        );
-        this.logger.log(`Verification email sent to: ${user.email}`);
+        verificationEmailSent =
+          await this.emailService.sendVerificationEmailWithLink(
+            user.email,
+            user.username,
+            verificationLink,
+          );
+        if (!verificationEmailSent) {
+          this.logger.error(
+            `Verification email was not sent to: ${user.email}`,
+          );
+        }
       } catch (emailError) {
         this.logger.error(
           `Failed to send verification email: ${emailError.message}`,
@@ -159,8 +165,9 @@ export class AuthService {
       id: user.id,
       email: user.email,
       username: user.username,
-      message:
-        'Registration successful. Please check your email for verification.',
+      message: verificationEmailSent
+        ? 'Registration successful. Please check your email for verification.'
+        : 'Registration successful, but the verification email could not be sent. Please request a new verification email.',
     };
   }
 
@@ -267,13 +274,6 @@ export class AuthService {
       throw new BadRequestException('Email already verified');
     }
 
-    await this.prisma.emailVerification.deleteMany({
-      where: {
-        userId: user.id,
-        verifiedAt: null,
-      },
-    });
-
     const verificationToken = randomBytes(32).toString('hex');
     const verification = await this.prisma.emailVerification.create({
       data: {
@@ -296,7 +296,6 @@ export class AuthService {
       if (!sent) {
         throw new Error('Email provider returned an unsuccessful result');
       }
-      this.logger.log(`Verification email resent to: ${email}`);
     } catch (error) {
       await this.prisma.emailVerification.delete({
         where: { id: verification.id },
@@ -308,6 +307,20 @@ export class AuthService {
         'Failed to send verification email. Please try again.',
       );
     }
+    await this.prisma.emailVerification
+      .deleteMany({
+        where: {
+          userId: user.id,
+          verifiedAt: null,
+          id: { not: verification.id },
+        },
+      })
+      .catch((error) =>
+        this.logger.warn(
+          `Could not retire prior verification tokens: ${error.message}`,
+        ),
+      );
+    this.logger.log(`Verification email resent to: ${email}`);
 
     return {
       message: 'Verification email sent successfully. Please check your inbox.',

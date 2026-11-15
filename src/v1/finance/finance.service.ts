@@ -99,6 +99,9 @@ export class FinanceService {
       this.logger.error(
         `Failed to generate receipt for payment ${payload.paymentId}: ${error.message}`,
       );
+      // The payment is already committed. Reject the webhook so the provider
+      // can retry and the idempotent payment path can generate the receipt.
+      throw error;
     }
   }
 

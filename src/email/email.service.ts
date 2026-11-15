@@ -120,7 +120,7 @@ export class EmailService {
             'Content-Type': 'application/json',
             Accept: 'application/json',
           },
-          timeout: 30000,
+          timeout: 20000,
         },
       );
 

@@ -6,8 +6,10 @@ import {
   Post,
   Query,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -95,6 +97,26 @@ export class GuestPaymentController {
   })
   status(@Param('id') id: string, @Body() dto: GuestPaymentAccessDto) {
     return this.guestPayments.status(id, dto.accessToken);
+  }
+
+  @Post('receipts/:id/download')
+  @ApiOperation({ summary: 'Download a guest payment receipt' })
+  async downloadReceipt(
+    @Param('id') id: string,
+    @Body() dto: GuestPaymentAccessDto,
+    @Res() response: Response,
+  ) {
+    const { buffer, filename } = await this.guestPayments.downloadReceipt(
+      id,
+      dto.accessToken,
+    );
+    response.setHeader('Content-Type', 'application/pdf');
+    response.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${filename}"`,
+    );
+    response.setHeader('Content-Length', String(buffer.length));
+    response.end(buffer);
   }
 
   @Post('claim/request')
