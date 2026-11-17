@@ -12,6 +12,7 @@ import {
   HttpCode,
   HttpStatus,
   Logger,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -97,7 +98,7 @@ export class StudentsController {
         verificationStatus,
         search,
       } = request.query;
-      return `students:${page || 1}:${limit || 10}:${organizationId || 'all'}:${institutionId || 'all'}:${facultyId || 'all'}:${departmentId || 'all'}:${levelId || 'all'}:${academicSessionId || 'all'}:${status || 'all'}:${verificationStatus || 'all'}:${search || 'all'}`;
+      return `students:v2:${request.user.id}:${page || 1}:${limit || 10}:${organizationId || 'all'}:${institutionId || 'all'}:${facultyId || 'all'}:${departmentId || 'all'}:${levelId || 'all'}:${academicSessionId || 'all'}:${status || 'all'}:${verificationStatus || 'all'}:${search || 'all'}`;
     },
     ttl: 300, // 5 minutes
     tags: ['students'],
@@ -158,6 +159,7 @@ export class StudentsController {
     type: StudentListResponseDto,
   })
   async getAllStudents(
+    @Request() req: any,
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @Query('organizationId') organizationId?: string,
@@ -171,6 +173,42 @@ export class StudentsController {
     @Query('search') search?: string,
   ) {
     this.logger.log('Get all students endpoint called');
+    const admin = req.admin;
+    if (!admin) {
+      throw new ForbiddenException('Admin scope required');
+    }
+
+    if (admin.type === 'DEPARTMENT_ADMIN') {
+      if (!admin.departmentId) {
+        throw new ForbiddenException('Department admin scope required');
+      }
+      departmentId = admin.departmentId;
+      facultyId = admin.facultyId;
+      institutionId = admin.institutionId;
+    } else if (admin.type === 'FACULTY_ADMIN') {
+      if (!admin.facultyId) {
+        throw new ForbiddenException('Faculty admin scope required');
+      }
+      facultyId = admin.facultyId;
+      institutionId = admin.institutionId;
+    } else if (admin.type === 'INSTITUTION_ADMIN') {
+      if (!admin.institutionId) {
+        throw new ForbiddenException('Institution admin scope required');
+      }
+      institutionId = admin.institutionId;
+    } else if (
+      admin.type === 'ORGANIZATION_ADMIN' ||
+      admin.type === 'CLUB_ADMIN'
+    ) {
+      if (!admin.organizationId) {
+        throw new ForbiddenException('Organization admin scope required');
+      }
+      organizationId = admin.organizationId;
+      academicSessionId = admin.academicSessionId;
+    } else if (admin.type !== 'PLATFORM_ADMIN') {
+      throw new ForbiddenException('Unsupported admin scope');
+    }
+
     return this.studentsService.getAllStudents(
       parseInt(page, 10),
       parseInt(limit, 10),
